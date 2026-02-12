@@ -53,6 +53,7 @@ import Billing from './pages/Billing';
 import Tickets from './pages/Tickets';
 import Network from './pages/Network';
 import Employees from './pages/Employees';
+import AIAssistant from './pages/AIAssistant';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +64,7 @@ export const PAGES = {
     "Tickets": Tickets,
     "Network": Network,
     "Employees": Employees,
+    "AIAssistant": AIAssistant,
 }
 
 export const pagesConfig = {
