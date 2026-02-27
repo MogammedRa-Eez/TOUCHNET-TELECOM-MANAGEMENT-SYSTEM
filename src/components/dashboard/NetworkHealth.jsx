@@ -21,14 +21,14 @@ export default function NetworkHealth({ nodes }) {
     : 0;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+    <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-base font-semibold text-slate-800">Network Health</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Infrastructure overview</p>
+          <h3 className="text-[13px] font-semibold text-slate-200">Network Health</h3>
+          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Infrastructure overview</p>
         </div>
-        <div className="px-3 py-1.5 bg-emerald-50 rounded-full">
-          <span className="text-xs font-semibold text-emerald-600">{avgUptime}% Avg Uptime</span>
+        <div className="px-3 py-1 rounded-md" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
+          <span className="text-[11px] font-semibold mono" style={{ color: "#10b981", fontFamily: "'JetBrains Mono', monospace" }}>{avgUptime}% uptime</span>
         </div>
       </div>
 
@@ -36,11 +36,11 @@ export default function NetworkHealth({ nodes }) {
         {Object.entries(statusMap).map(([key, config]) => {
           const Icon = config.icon;
           return (
-            <div key={key} className={`${config.bg} rounded-xl p-4 flex items-center gap-3`}>
-              <Icon className={`w-5 h-5 ${config.color}`} />
+            <div key={key} className="rounded-lg p-3.5 flex items-center gap-3" style={{ background: config.bg, border: `1px solid ${config.border}` }}>
+              <Icon className="w-4 h-4 flex-shrink-0" style={{ color: config.color }} />
               <div>
-                <p className="text-xl font-bold text-slate-800">{counts[key]}</p>
-                <p className="text-xs text-slate-500">{config.label}</p>
+                <p className="text-[18px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{counts[key]}</p>
+                <p className="text-[10px]" style={{ color: config.color, opacity: 0.8 }}>{config.label}</p>
               </div>
             </div>
           );
