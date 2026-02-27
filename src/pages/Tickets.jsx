@@ -87,16 +87,19 @@ export default function Tickets() {
       {/* Quick stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Open", count: tickets.filter(t => t.status === "open").length, icon: Clock, color: "text-amber-500" },
-          { label: "In Progress", count: tickets.filter(t => t.status === "in_progress").length, icon: TicketCheck, color: "text-blue-500" },
-          { label: "Escalated", count: tickets.filter(t => t.status === "escalated").length, icon: AlertTriangle, color: "text-red-500" },
-          { label: "Resolved", count: tickets.filter(t => t.status === "resolved").length, icon: CheckCircle2, color: "text-emerald-500" },
+          { label: "Open", count: tickets.filter(t => t.status === "open").length, icon: Clock, iconBg: "bg-amber-50", iconColor: "text-amber-500", bar: "bg-amber-400" },
+          { label: "In Progress", count: tickets.filter(t => t.status === "in_progress").length, icon: TicketCheck, iconBg: "bg-blue-50", iconColor: "text-blue-500", bar: "bg-blue-400" },
+          { label: "Escalated", count: tickets.filter(t => t.status === "escalated").length, icon: AlertTriangle, iconBg: "bg-red-50", iconColor: "text-red-500", bar: "bg-red-400" },
+          { label: "Resolved", count: tickets.filter(t => t.status === "resolved").length, icon: CheckCircle2, iconBg: "bg-emerald-50", iconColor: "text-emerald-500", bar: "bg-emerald-400" },
         ].map(s => (
-          <div key={s.label} className="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-3">
-            <s.icon className={`w-5 h-5 ${s.color}`} />
+          <div key={s.label} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4 flex items-center gap-3 relative overflow-hidden">
+            <div className={`absolute top-0 left-0 w-1 h-full ${s.bar} rounded-l-xl`} />
+            <div className={`w-9 h-9 rounded-lg ${s.iconBg} flex items-center justify-center`}>
+              <s.icon className={`w-4.5 h-4.5 ${s.iconColor}`} style={{width:'18px',height:'18px'}} />
+            </div>
             <div>
               <p className="text-xl font-bold text-slate-800">{s.count}</p>
-              <p className="text-xs text-slate-400">{s.label}</p>
+              <p className="text-xs text-slate-500 font-medium">{s.label}</p>
             </div>
           </div>
         ))}
