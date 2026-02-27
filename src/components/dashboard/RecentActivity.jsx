@@ -38,7 +38,7 @@ export default function RecentActivity({ customers, tickets, invoices }) {
   activities.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100">
+    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
       <h3 className="text-base font-semibold text-slate-800 mb-1">Recent Activity</h3>
       <p className="text-xs text-slate-400 mb-4">Latest system events</p>
       
