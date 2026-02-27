@@ -3,10 +3,10 @@ import { Wifi, WifiOff, AlertTriangle, Wrench } from "lucide-react";
 
 export default function NetworkHealth({ nodes }) {
   const statusMap = {
-    online: { icon: Wifi, color: "text-emerald-500", bg: "bg-emerald-50", label: "Online" },
-    offline: { icon: WifiOff, color: "text-red-500", bg: "bg-red-50", label: "Offline" },
-    degraded: { icon: AlertTriangle, color: "text-amber-500", bg: "bg-amber-50", label: "Degraded" },
-    maintenance: { icon: Wrench, color: "text-blue-500", bg: "bg-blue-50", label: "Maintenance" },
+    online: { icon: Wifi, color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", label: "Online" },
+    offline: { icon: WifiOff, color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.2)", label: "Offline" },
+    degraded: { icon: AlertTriangle, color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.2)", label: "Degraded" },
+    maintenance: { icon: Wrench, color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)", label: "Maintenance" },
   };
 
   const counts = {

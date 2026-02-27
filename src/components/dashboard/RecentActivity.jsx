@@ -38,27 +38,27 @@ export default function RecentActivity({ customers, tickets, invoices }) {
   activities.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-      <h3 className="text-base font-semibold text-slate-800 mb-1">Recent Activity</h3>
-      <p className="text-xs text-slate-400 mb-4">Latest system events</p>
+    <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <h3 className="text-[13px] font-semibold text-slate-200 mb-1">Recent Activity</h3>
+      <p className="text-[11px] mb-4" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Latest system events</p>
       
-      <div className="space-y-4">
+      <div className="space-y-3">
         {activities.slice(0, 6).map((a, i) => {
           const Icon = a.icon;
           return (
-            <div key={i} className="flex items-start gap-3">
-              <div className={`w-8 h-8 rounded-lg ${a.color} flex items-center justify-center flex-shrink-0`}>
-                <Icon className="w-4 h-4 text-white" />
+            <div key={i} className="flex items-start gap-3 py-2" style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }}>
+              <div className={`w-7 h-7 rounded-md ${a.color} flex items-center justify-center flex-shrink-0`}>
+                <Icon className="w-3.5 h-3.5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-slate-700 truncate">{a.text}</p>
-                <p className="text-xs text-slate-400">{a.date ? format(new Date(a.date), "MMM d, h:mm a") : ""}</p>
+                <p className="text-[12px] text-slate-300 truncate">{a.text}</p>
+                <p className="text-[10px] mt-0.5" style={{ color: "#334155", fontFamily: "'JetBrains Mono', monospace" }}>{a.date ? format(new Date(a.date), "MMM d, h:mm a") : ""}</p>
               </div>
             </div>
           );
         })}
         {activities.length === 0 && (
-          <p className="text-sm text-slate-400 text-center py-4">No recent activity</p>
+          <p className="text-[12px] text-slate-600 text-center py-4">No recent activity</p>
         )}
       </div>
     </div>

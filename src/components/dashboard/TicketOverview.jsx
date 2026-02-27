@@ -19,9 +19,9 @@ export default function TicketOverview({ tickets }) {
   const total = tickets.length;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-      <h3 className="text-base font-semibold text-slate-800 mb-1">Ticket Status</h3>
-      <p className="text-xs text-slate-400 mb-4">Active support tickets</p>
+    <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <h3 className="text-[13px] font-semibold text-slate-200 mb-1">Ticket Status</h3>
+      <p className="text-[11px] mb-4" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Active support tickets</p>
       
       <div className="flex items-center gap-6">
         <div className="w-32 h-32 relative">
