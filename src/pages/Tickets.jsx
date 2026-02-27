@@ -135,7 +135,7 @@ export default function Tickets() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
