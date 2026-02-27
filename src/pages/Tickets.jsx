@@ -79,7 +79,7 @@ export default function Tickets() {
           <h1 className="text-2xl font-bold text-slate-800">Support Tickets</h1>
           <p className="text-sm text-slate-400 mt-0.5">Track and resolve customer issues</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
           <Plus className="w-4 h-4 mr-2" /> New Ticket
         </Button>
       </div>
