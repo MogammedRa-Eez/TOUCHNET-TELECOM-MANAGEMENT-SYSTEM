@@ -12,19 +12,19 @@ import { format } from "date-fns";
 import TicketForm from "../components/tickets/TicketForm";
 
 const statusColors = {
-  open: "bg-amber-50 text-amber-700 border-amber-200",
-  in_progress: "bg-blue-50 text-blue-700 border-blue-200",
-  waiting_customer: "bg-purple-50 text-purple-700 border-purple-200",
-  escalated: "bg-red-50 text-red-700 border-red-200",
-  resolved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  closed: "bg-slate-100 text-slate-600 border-slate-200",
+  open: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "rgba(245,158,11,0.3)" },
+  in_progress: { bg: "rgba(59,130,246,0.1)", color: "#3b82f6", border: "rgba(59,130,246,0.3)" },
+  waiting_customer: { bg: "rgba(139,92,246,0.1)", color: "#8b5cf6", border: "rgba(139,92,246,0.3)" },
+  escalated: { bg: "rgba(239,68,68,0.1)", color: "#ef4444", border: "rgba(239,68,68,0.3)" },
+  resolved: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)" },
+  closed: { bg: "rgba(100,116,139,0.1)", color: "#64748b", border: "rgba(100,116,139,0.3)" },
 };
 
 const priorityColors = {
-  low: "bg-slate-100 text-slate-600",
-  medium: "bg-blue-50 text-blue-600",
-  high: "bg-orange-50 text-orange-600",
-  critical: "bg-red-100 text-red-700",
+  low: { bg: "rgba(100,116,139,0.1)", color: "#64748b" },
+  medium: { bg: "rgba(59,130,246,0.1)", color: "#3b82f6" },
+  high: { bg: "rgba(249,115,22,0.1)", color: "#f97316" },
+  critical: { bg: "rgba(239,68,68,0.12)", color: "#ef4444" },
 };
 
 export default function Tickets() {

@@ -11,10 +11,10 @@ import { Plus, Search, Pencil, Trash2, Wifi, WifiOff, AlertTriangle, Wrench, Ser
 import { Skeleton } from "@/components/ui/skeleton";
 
 const statusConfig = {
-  online: { color: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: Wifi, dot: "bg-emerald-500" },
-  offline: { color: "bg-red-50 text-red-700 border-red-200", icon: WifiOff, dot: "bg-red-500" },
-  degraded: { color: "bg-amber-50 text-amber-700 border-amber-200", icon: AlertTriangle, dot: "bg-amber-500" },
-  maintenance: { color: "bg-blue-50 text-blue-700 border-blue-200", icon: Wrench, dot: "bg-blue-500" },
+  online: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)", dot: "bg-emerald-500", icon: Wifi },
+  offline: { bg: "rgba(239,68,68,0.1)", color: "#ef4444", border: "rgba(239,68,68,0.3)", dot: "bg-red-500", icon: WifiOff },
+  degraded: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "rgba(245,158,11,0.3)", dot: "bg-amber-500", icon: AlertTriangle },
+  maintenance: { bg: "rgba(59,130,246,0.1)", color: "#3b82f6", border: "rgba(59,130,246,0.3)", dot: "bg-blue-500", icon: Wrench },
 };
 
 function NodeForm({ node, onSubmit, onCancel }) {
