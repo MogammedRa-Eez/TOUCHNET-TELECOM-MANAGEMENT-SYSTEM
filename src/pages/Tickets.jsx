@@ -139,7 +139,7 @@ export default function Tickets() {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-50/80">
+              <TableRow className="bg-slate-50 border-b border-slate-100">
                 <TableHead className="font-semibold">Ticket #</TableHead>
                 <TableHead className="font-semibold">Subject</TableHead>
                 <TableHead className="font-semibold">Customer</TableHead>
