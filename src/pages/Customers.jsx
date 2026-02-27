@@ -65,23 +65,23 @@ export default function Customers() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Customer Management</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Manage subscriber accounts and service plans</p>
+          <h1 className="text-xl font-bold text-white">Customer Management</h1>
+          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Manage subscriber accounts and service plans</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
           <Plus className="w-4 h-4 mr-2" /> Add Customer
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col sm:flex-row gap-3">
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input placeholder="Search customers..." className="pl-10" value={search} onChange={e => setSearch(e.target.value)} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Input placeholder="Search customers..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40"><SelectValue placeholder="Status" /></SelectTrigger>
-          <SelectContent>
+          <SelectTrigger className="w-40 bg-transparent border-slate-700 text-slate-300"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
@@ -92,67 +92,69 @@ export default function Customers() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="rounded-xl overflow-hidden" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-50 border-b border-slate-100">
-                <TableHead className="font-semibold">Customer</TableHead>
-                <TableHead className="font-semibold">Account #</TableHead>
-                <TableHead className="font-semibold">Plan</TableHead>
-                <TableHead className="font-semibold">Connection</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="font-semibold">Rate</TableHead>
-                <TableHead className="font-semibold text-right">Actions</TableHead>
+              <TableRow style={{ background: "#080f1e", borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Customer</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Account #</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Plan</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Connection</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Status</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Rate</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 [...Array(5)].map((_, i) => (
-                  <TableRow key={i}><TableCell colSpan={7}><Skeleton className="h-10 w-full" /></TableCell></TableRow>
+                  <TableRow key={i} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }}><TableCell colSpan={7}><Skeleton className="h-8 w-full bg-slate-800" /></TableCell></TableRow>
                 ))
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-12 text-slate-400">
-                    <User className="w-10 h-10 mx-auto mb-2 text-slate-300" />
+                  <TableCell colSpan={7} className="text-center py-12 text-slate-500">
+                    <User className="w-8 h-8 mx-auto mb-2 text-slate-700" />
                     No customers found
                   </TableCell>
                 </TableRow>
               ) : (
-                filtered.map(c => (
-                  <TableRow key={c.id} className="hover:bg-slate-50/50 transition-colors">
+                filtered.map(c => {
+                  const sc = statusColors[c.status] || statusColors.pending;
+                  return (
+                  <TableRow key={c.id} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }} className="hover:bg-cyan-500/5 transition-colors">
                     <TableCell>
                       <div>
-                        <p className="font-medium text-slate-800">{c.full_name}</p>
-                        <p className="text-xs text-slate-400">{c.email}</p>
+                        <p className="font-medium text-slate-200 text-[13px]">{c.full_name}</p>
+                        <p className="text-[11px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{c.email}</p>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-slate-500">{c.account_number || "—"}</TableCell>
+                    <TableCell className="text-[11px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{c.account_number || "—"}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1.5">
-                        <Wifi className="w-3.5 h-3.5 text-blue-500" />
-                        <span className="text-sm">{c.service_plan?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
+                        <Wifi className="w-3.5 h-3.5 text-cyan-500" />
+                        <span className="text-[12px] text-slate-300">{c.service_plan?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm capitalize">{c.connection_type || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-400 capitalize">{c.connection_type || "—"}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={`${statusColors[c.status] || statusColors.pending} text-xs`}>
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>
                         {c.status}
-                      </Badge>
+                      </span>
                     </TableCell>
-                    <TableCell className="font-semibold">${c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
+                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>${c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(c); setShowForm(true); }}>
-                          <Pencil className="w-4 h-4 text-slate-400" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(c); setShowForm(true); }}>
+                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { if (confirm("Delete this customer?")) deleteMut.mutate(c.id); }}>
-                          <Trash2 className="w-4 h-4 text-red-400" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this customer?")) deleteMut.mutate(c.id); }}>
+                          <Trash2 className="w-3.5 h-3.5 text-red-500" />
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))
+                )})
               )}
             </TableBody>
           </Table>
