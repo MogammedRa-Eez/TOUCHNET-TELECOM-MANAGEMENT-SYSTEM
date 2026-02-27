@@ -3,20 +3,21 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 
 export default function KPICard({ title, value, subtitle, icon: Icon, trend, trendValue, color = "blue" }) {
   const colors = {
-    blue: { bg: "bg-blue-50", icon: "bg-blue-500", text: "text-blue-600", glow: "shadow-blue-500/20" },
-    emerald: { bg: "bg-emerald-50", icon: "bg-emerald-500", text: "text-emerald-600", glow: "shadow-emerald-500/20" },
-    amber: { bg: "bg-amber-50", icon: "bg-amber-500", text: "text-amber-600", glow: "shadow-amber-500/20" },
-    rose: { bg: "bg-rose-50", icon: "bg-rose-500", text: "text-rose-600", glow: "shadow-rose-500/20" },
-    violet: { bg: "bg-violet-50", icon: "bg-violet-500", text: "text-violet-600", glow: "shadow-violet-500/20" },
-    cyan: { bg: "bg-cyan-50", icon: "bg-cyan-500", text: "text-cyan-600", glow: "shadow-cyan-500/20" },
+    blue: { iconBg: "bg-indigo-600", iconShadow: "shadow-indigo-200", bar: "bg-indigo-500" },
+    emerald: { iconBg: "bg-emerald-500", iconShadow: "shadow-emerald-200", bar: "bg-emerald-500" },
+    amber: { iconBg: "bg-amber-500", iconShadow: "shadow-amber-200", bar: "bg-amber-500" },
+    rose: { iconBg: "bg-rose-500", iconShadow: "shadow-rose-200", bar: "bg-rose-500" },
+    violet: { iconBg: "bg-violet-600", iconShadow: "shadow-violet-200", bar: "bg-violet-500" },
+    cyan: { iconBg: "bg-cyan-500", iconShadow: "shadow-cyan-200", bar: "bg-cyan-500" },
   };
   const c = colors[color] || colors.blue;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100 hover:shadow-lg hover:shadow-slate-200/50 transition-all duration-300 group">
+    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+      <div className={`absolute top-0 left-0 w-1 h-full ${c.bar} rounded-l-2xl`} />
       <div className="flex items-start justify-between mb-4">
-        <div className={`w-12 h-12 rounded-xl ${c.icon} ${c.glow} shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className="w-6 h-6 text-white" />
+        <div className={`w-11 h-11 rounded-xl ${c.iconBg} shadow-lg ${c.iconShadow} flex items-center justify-center`}>
+          <Icon className="w-5 h-5 text-white" />
         </div>
         {trend && (
           <div className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${
@@ -27,9 +28,9 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
           </div>
         )}
       </div>
-      <p className="text-2xl font-bold text-slate-800 mb-1">{value}</p>
-      <p className="text-sm font-medium text-slate-500">{title}</p>
-      {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+      <p className="text-[26px] font-bold text-slate-800 leading-tight">{value}</p>
+      <p className="text-sm font-semibold text-slate-500 mt-1">{title}</p>
+      {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
     </div>
   );
 }
