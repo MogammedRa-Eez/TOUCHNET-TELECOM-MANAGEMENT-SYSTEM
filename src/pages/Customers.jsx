@@ -96,7 +96,7 @@ export default function Customers() {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-50/80">
+              <TableRow className="bg-slate-50 border-b border-slate-100">
                 <TableHead className="font-semibold">Customer</TableHead>
                 <TableHead className="font-semibold">Account #</TableHead>
                 <TableHead className="font-semibold">Plan</TableHead>
