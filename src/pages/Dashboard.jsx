@@ -89,7 +89,7 @@ export default function Dashboard() {
           value={`${onlineNodes}/${nodes.length}`}
           subtitle="Currently online"
           icon={Wifi}
-          color="cyan"
+          color="violet"
         />
       </div>
 
