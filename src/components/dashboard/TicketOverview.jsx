@@ -44,8 +44,8 @@ export default function TicketOverview({ tickets }) {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <p className="text-xl font-bold text-slate-800">{total}</p>
-              <p className="text-[10px] text-slate-400">Total</p>
+              <p className="text-xl font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{total}</p>
+              <p className="text-[10px]" style={{ color: "#475569" }}>Total</p>
             </div>
           </div>
         </div>
@@ -53,10 +53,10 @@ export default function TicketOverview({ tickets }) {
           {data.map(item => (
             <div key={item.name} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="text-sm text-slate-600">{item.name}</span>
+                <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: item.color }} />
+                <span className="text-[12px] text-slate-400">{item.name}</span>
               </div>
-              <span className="text-sm font-semibold text-slate-800">{item.value}</span>
+              <span className="text-[12px] font-semibold text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{item.value}</span>
             </div>
           ))}
         </div>
