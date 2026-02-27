@@ -149,23 +149,23 @@ export default function Network() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Network Infrastructure</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Monitor and manage network nodes</p>
+          <h1 className="text-xl font-bold text-white">Network Infrastructure</h1>
+          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Monitor and manage network nodes</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
           <Plus className="w-4 h-4 mr-2" /> Add Node
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col sm:flex-row gap-3">
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input placeholder="Search nodes..." className="pl-10" value={search} onChange={e => setSearch(e.target.value)} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Input placeholder="Search nodes..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40"><SelectValue placeholder="Status" /></SelectTrigger>
-          <SelectContent>
+          <SelectTrigger className="w-40 bg-transparent border-slate-700 text-slate-300"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="online">Online</SelectItem>
             <SelectItem value="offline">Offline</SelectItem>
@@ -178,12 +178,12 @@ export default function Network() {
       {/* Node cards */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}
+          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl bg-slate-800" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-100 py-16 text-center text-slate-400">
-          <Server className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-          <p>No network nodes found</p>
+        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+          <Server className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+          <p className="text-[13px]">No network nodes found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -191,53 +191,62 @@ export default function Network() {
             const sc = statusConfig[node.status] || statusConfig.online;
             const capacityPct = node.max_capacity ? Math.round((node.connected_customers || 0) / node.max_capacity * 100) : 0;
             return (
-              <div key={node.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-md transition-all duration-300 group">
+              <div key={node.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0d1527", border: `1px solid rgba(6,182,212,0.12)` }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = sc.border}
+                onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
+              >
+                {/* Top accent */}
+                <div className="h-[2px] rounded-t-xl -mt-5 -mx-5 mb-4 rounded-tl-xl rounded-tr-xl" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${sc.dot} animate-pulse`} />
+                    <div className={`w-2.5 h-2.5 rounded-full ${sc.dot} animate-pulse`} />
                     <div>
-                      <h3 className="font-semibold text-slate-800">{node.name}</h3>
-                      <p className="text-xs text-slate-400">{node.type?.replace(/_/g, " ").toUpperCase()}</p>
+                      <h3 className="font-semibold text-slate-200 text-[13px]">{node.name}</h3>
+                      <p className="text-[10px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.type?.replace(/_/g, " ").toUpperCase()}</p>
                     </div>
                   </div>
-                  <Badge variant="outline" className={`${sc.color} text-xs`}>{node.status}</Badge>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{node.status}</span>
                 </div>
 
-                <div className="space-y-3 text-sm">
+                <div className="space-y-2.5 text-[12px]">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">IP Address</span>
-                    <span className="font-mono text-xs text-slate-600">{node.ip_address || "—"}</span>
+                    <span className="text-slate-500">IP Address</span>
+                    <span className="text-slate-300" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.ip_address || "—"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Location</span>
-                    <span className="text-slate-600">{node.location || "—"}</span>
+                    <span className="text-slate-500">Location</span>
+                    <span className="text-slate-300">{node.location || "—"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Uptime</span>
-                    <span className="text-slate-600">{node.uptime_percent?.toFixed(1) || 0}%</span>
+                    <span className="text-slate-500">Uptime</span>
+                    <span className="text-emerald-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.uptime_percent?.toFixed(1) || 0}%</span>
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-slate-400">Bandwidth</span>
-                      <span className="text-slate-600">{node.bandwidth_utilization || 0}%</span>
+                      <span className="text-slate-500">Bandwidth</span>
+                      <span className="text-slate-300" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.bandwidth_utilization || 0}%</span>
                     </div>
-                    <Progress value={node.bandwidth_utilization || 0} className="h-1.5" />
+                    <div className="h-1 rounded-full overflow-hidden" style={{ background: "#1e293b" }}>
+                      <div className="h-full rounded-full transition-all" style={{ width: `${node.bandwidth_utilization || 0}%`, background: node.bandwidth_utilization > 80 ? "#ef4444" : "#06b6d4" }} />
+                    </div>
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-slate-400">Capacity</span>
-                      <span className="text-slate-600">{node.connected_customers || 0}/{node.max_capacity || 0}</span>
+                      <span className="text-slate-500">Capacity</span>
+                      <span className="text-slate-300" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.connected_customers || 0}/{node.max_capacity || 0}</span>
                     </div>
-                    <Progress value={capacityPct} className="h-1.5" />
+                    <div className="h-1 rounded-full overflow-hidden" style={{ background: "#1e293b" }}>
+                      <div className="h-full rounded-full transition-all" style={{ width: `${capacityPct}%`, background: capacityPct > 80 ? "#f59e0b" : "#8b5cf6" }} />
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex justify-end gap-1 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(node); setShowForm(true); }}>
-                    <Pencil className="w-4 h-4 text-slate-400" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(node); setShowForm(true); }}>
+                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { if (confirm("Delete this node?")) deleteMut.mutate(node.id); }}>
-                    <Trash2 className="w-4 h-4 text-red-400" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this node?")) deleteMut.mutate(node.id); }}>
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
                   </Button>
                 </div>
               </div>

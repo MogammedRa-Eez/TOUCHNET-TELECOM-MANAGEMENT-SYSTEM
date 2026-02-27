@@ -76,10 +76,10 @@ export default function Tickets() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Support Tickets</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Track and resolve customer issues</p>
+          <h1 className="text-xl font-bold text-white">Support Tickets</h1>
+          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Track and resolve customer issues</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-indigo-600 hover:bg-indigo-700 shadow-sm shadow-indigo-200">
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
           <Plus className="w-4 h-4 mr-2" /> New Ticket
         </Button>
       </div>
@@ -87,33 +87,32 @@ export default function Tickets() {
       {/* Quick stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Open", count: tickets.filter(t => t.status === "open").length, icon: Clock, iconBg: "bg-amber-50", iconColor: "text-amber-500", bar: "bg-amber-400" },
-          { label: "In Progress", count: tickets.filter(t => t.status === "in_progress").length, icon: TicketCheck, iconBg: "bg-blue-50", iconColor: "text-blue-500", bar: "bg-blue-400" },
-          { label: "Escalated", count: tickets.filter(t => t.status === "escalated").length, icon: AlertTriangle, iconBg: "bg-red-50", iconColor: "text-red-500", bar: "bg-red-400" },
-          { label: "Resolved", count: tickets.filter(t => t.status === "resolved").length, icon: CheckCircle2, iconBg: "bg-emerald-50", iconColor: "text-emerald-500", bar: "bg-emerald-400" },
+          { label: "Open", count: tickets.filter(t => t.status === "open").length, color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.2)", icon: Clock },
+          { label: "In Progress", count: tickets.filter(t => t.status === "in_progress").length, color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)", icon: TicketCheck },
+          { label: "Escalated", count: tickets.filter(t => t.status === "escalated").length, color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.2)", icon: AlertTriangle },
+          { label: "Resolved", count: tickets.filter(t => t.status === "resolved").length, color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", icon: CheckCircle2 },
         ].map(s => (
-          <div key={s.label} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4 flex items-center gap-3 relative overflow-hidden">
-            <div className={`absolute top-0 left-0 w-1 h-full ${s.bar} rounded-l-xl`} />
-            <div className={`w-9 h-9 rounded-lg ${s.iconBg} flex items-center justify-center`}>
-              <s.icon className={`w-4.5 h-4.5 ${s.iconColor}`} style={{width:'18px',height:'18px'}} />
+          <div key={s.label} className="rounded-xl p-4 flex items-center gap-3" style={{ background: "#0d1527", border: `1px solid ${s.border}` }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: s.bg }}>
+              <s.icon style={{ width: 18, height: 18, color: s.color }} />
             </div>
             <div>
-              <p className="text-xl font-bold text-slate-800">{s.count}</p>
-              <p className="text-xs text-slate-500 font-medium">{s.label}</p>
+              <p className="text-[20px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{s.count}</p>
+              <p className="text-[11px] font-medium" style={{ color: s.color }}>{s.label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col sm:flex-row gap-3">
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input placeholder="Search tickets..." className="pl-10" value={search} onChange={e => setSearch(e.target.value)} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Input placeholder="Search tickets..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40"><SelectValue placeholder="Status" /></SelectTrigger>
-          <SelectContent>
+          <SelectTrigger className="w-40 bg-transparent border-slate-700 text-slate-300"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="open">Open</SelectItem>
             <SelectItem value="in_progress">In Progress</SelectItem>
@@ -123,8 +122,8 @@ export default function Tickets() {
           </SelectContent>
         </Select>
         <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-          <SelectTrigger className="w-36"><SelectValue placeholder="Priority" /></SelectTrigger>
-          <SelectContent>
+          <SelectTrigger className="w-36 bg-transparent border-slate-700 text-slate-300"><SelectValue placeholder="Priority" /></SelectTrigger>
+          <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
             <SelectItem value="all">All Priority</SelectItem>
             <SelectItem value="low">Low</SelectItem>
             <SelectItem value="medium">Medium</SelectItem>
@@ -135,59 +134,62 @@ export default function Tickets() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="rounded-xl overflow-hidden" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-50 border-b border-slate-100">
-                <TableHead className="font-semibold">Ticket #</TableHead>
-                <TableHead className="font-semibold">Subject</TableHead>
-                <TableHead className="font-semibold">Customer</TableHead>
-                <TableHead className="font-semibold">Priority</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="font-semibold">Department</TableHead>
-                <TableHead className="font-semibold">Assigned</TableHead>
-                <TableHead className="font-semibold text-right">Actions</TableHead>
+              <TableRow style={{ background: "#080f1e", borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Ticket #</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Subject</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Customer</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Priority</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Status</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Department</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Assigned</TableHead>
+                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                [...Array(5)].map((_, i) => <TableRow key={i}><TableCell colSpan={8}><Skeleton className="h-10 w-full" /></TableCell></TableRow>)
+                [...Array(5)].map((_, i) => <TableRow key={i} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }}><TableCell colSpan={8}><Skeleton className="h-8 w-full bg-slate-800" /></TableCell></TableRow>)
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-12 text-slate-400">
-                    <TicketCheck className="w-10 h-10 mx-auto mb-2 text-slate-300" />
+                  <TableCell colSpan={8} className="text-center py-12 text-slate-500">
+                    <TicketCheck className="w-8 h-8 mx-auto mb-2 text-slate-700" />
                     No tickets found
                   </TableCell>
                 </TableRow>
               ) : (
-                filtered.map(t => (
-                  <TableRow key={t.id} className="hover:bg-slate-50/50 transition-colors">
-                    <TableCell className="font-mono text-xs text-slate-500">{t.ticket_number || "—"}</TableCell>
+                filtered.map(t => {
+                  const sc = statusColors[t.status] || statusColors.open;
+                  const pc = priorityColors[t.priority] || priorityColors.medium;
+                  return (
+                  <TableRow key={t.id} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }} className="hover:bg-cyan-500/5 transition-colors">
+                    <TableCell className="text-[11px] text-cyan-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{t.ticket_number || "—"}</TableCell>
                     <TableCell>
-                      <p className="font-medium text-slate-800 max-w-[200px] truncate">{t.subject}</p>
+                      <p className="font-medium text-[13px] text-slate-200 max-w-[200px] truncate">{t.subject}</p>
                     </TableCell>
-                    <TableCell className="text-sm">{t.customer_name || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-400">{t.customer_name || "—"}</TableCell>
                     <TableCell>
-                      <Badge className={`${priorityColors[t.priority]} text-xs border-0`}>{t.priority}</Badge>
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: pc.bg, color: pc.color, fontFamily: "'JetBrains Mono', monospace" }}>{t.priority}</span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className={`${statusColors[t.status]} text-xs`}>{t.status?.replace(/_/g, " ")}</Badge>
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{t.status?.replace(/_/g, " ")}</span>
                     </TableCell>
-                    <TableCell className="text-sm capitalize">{t.department?.replace(/_/g, " ") || "—"}</TableCell>
-                    <TableCell className="text-sm">{t.assigned_to || "Unassigned"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-400 capitalize">{t.department?.replace(/_/g, " ") || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-400">{t.assigned_to || "Unassigned"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(t); setShowForm(true); }}>
-                          <Pencil className="w-4 h-4 text-slate-400" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(t); setShowForm(true); }}>
+                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { if (confirm("Delete this ticket?")) deleteMut.mutate(t.id); }}>
-                          <Trash2 className="w-4 h-4 text-red-400" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this ticket?")) deleteMut.mutate(t.id); }}>
+                          <Trash2 className="w-3.5 h-3.5 text-red-500" />
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))
+                )})
               )}
             </TableBody>
           </Table>
