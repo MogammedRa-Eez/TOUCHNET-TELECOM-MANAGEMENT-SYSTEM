@@ -30,23 +30,23 @@ function NodeForm({ node, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-800">{node ? "Edit Node" : "Add Network Node"}</h2>
-          <button onClick={onCancel} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.2)" }}>
+        <div className="flex items-center justify-between p-6" style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+          <h2 className="text-[15px] font-semibold text-white">{node ? "Edit Node" : "Add Network Node"}</h2>
+          <button onClick={onCancel} className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"><X className="w-4 h-4" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Name *</Label>
-              <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+              <Label className="text-[11px] font-medium text-slate-400">Name *</Label>
+              <Input value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Type *</Label>
+              <Label className="text-[11px] font-medium text-slate-400">Type *</Label>
               <Select value={form.type} onValueChange={v => setForm({...form, type: v})}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="bg-transparent border-slate-700 text-slate-300"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
                   <SelectItem value="core_router">Core Router</SelectItem>
                   <SelectItem value="distribution_switch">Distribution Switch</SelectItem>
                   <SelectItem value="access_point">Access Point</SelectItem>
@@ -57,18 +57,18 @@ function NodeForm({ node, onSubmit, onCancel }) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">IP Address</Label>
-              <Input value={form.ip_address} onChange={e => setForm({...form, ip_address: e.target.value})} placeholder="192.168.1.1" />
+              <Label className="text-[11px] font-medium text-slate-400">IP Address</Label>
+              <Input value={form.ip_address} onChange={e => setForm({...form, ip_address: e.target.value})} placeholder="192.168.1.1" className="bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Location</Label>
-              <Input value={form.location} onChange={e => setForm({...form, location: e.target.value})} />
+              <Label className="text-[11px] font-medium text-slate-400">Location</Label>
+              <Input value={form.location} onChange={e => setForm({...form, location: e.target.value})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Status</Label>
+              <Label className="text-[11px] font-medium text-slate-400">Status</Label>
               <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="bg-transparent border-slate-700 text-slate-300"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
                   <SelectItem value="online">Online</SelectItem>
                   <SelectItem value="offline">Offline</SelectItem>
                   <SelectItem value="degraded">Degraded</SelectItem>
@@ -77,29 +77,29 @@ function NodeForm({ node, onSubmit, onCancel }) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Uptime (%)</Label>
-              <Input type="number" step="0.1" max="100" value={form.uptime_percent} onChange={e => setForm({...form, uptime_percent: parseFloat(e.target.value)})} />
+              <Label className="text-[11px] font-medium text-slate-400">Uptime (%)</Label>
+              <Input type="number" step="0.1" max="100" value={form.uptime_percent} onChange={e => setForm({...form, uptime_percent: parseFloat(e.target.value)})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Bandwidth Utilization (%)</Label>
-              <Input type="number" max="100" value={form.bandwidth_utilization} onChange={e => setForm({...form, bandwidth_utilization: parseFloat(e.target.value)})} />
+              <Label className="text-[11px] font-medium text-slate-400">Bandwidth Utilization (%)</Label>
+              <Input type="number" max="100" value={form.bandwidth_utilization} onChange={e => setForm({...form, bandwidth_utilization: parseFloat(e.target.value)})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Connected Customers</Label>
-              <Input type="number" value={form.connected_customers} onChange={e => setForm({...form, connected_customers: parseInt(e.target.value)})} />
+              <Label className="text-[11px] font-medium text-slate-400">Connected Customers</Label>
+              <Input type="number" value={form.connected_customers} onChange={e => setForm({...form, connected_customers: parseInt(e.target.value)})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Max Capacity</Label>
-              <Input type="number" value={form.max_capacity} onChange={e => setForm({...form, max_capacity: parseInt(e.target.value)})} />
+              <Label className="text-[11px] font-medium text-slate-400">Max Capacity</Label>
+              <Input type="number" value={form.max_capacity} onChange={e => setForm({...form, max_capacity: parseInt(e.target.value)})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Firmware Version</Label>
-              <Input value={form.firmware_version} onChange={e => setForm({...form, firmware_version: e.target.value})} />
+              <Label className="text-[11px] font-medium text-slate-400">Firmware Version</Label>
+              <Input value={form.firmware_version} onChange={e => setForm({...form, firmware_version: e.target.value})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">{node ? "Update" : "Add Node"}</Button>
+            <Button type="button" variant="outline" onClick={onCancel} className="border-slate-700 text-slate-300 hover:bg-slate-800">Cancel</Button>
+            <Button type="submit" className="bg-cyan-600 hover:bg-cyan-500 text-white">{node ? "Update" : "Add Node"}</Button>
           </div>
         </form>
       </div>
