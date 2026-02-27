@@ -13,10 +13,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CustomerForm from "../components/customers/CustomerForm";
 
 const statusColors = {
-  active: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  pending: "bg-amber-50 text-amber-700 border-amber-200",
-  suspended: "bg-red-50 text-red-700 border-red-200",
-  terminated: "bg-slate-100 text-slate-600 border-slate-200",
+  active: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)" },
+  pending: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "rgba(245,158,11,0.3)" },
+  suspended: { bg: "rgba(239,68,68,0.1)", color: "#ef4444", border: "rgba(239,68,68,0.3)" },
+  terminated: { bg: "rgba(100,116,139,0.1)", color: "#64748b", border: "rgba(100,116,139,0.3)" },
 };
 
 export default function Customers() {

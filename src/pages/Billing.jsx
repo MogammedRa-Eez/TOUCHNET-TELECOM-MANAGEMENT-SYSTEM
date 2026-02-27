@@ -13,11 +13,11 @@ import InvoiceForm from "../components/billing/InvoiceForm";
 import KPICard from "../components/dashboard/KPICard";
 
 const statusColors = {
-  draft: "bg-slate-100 text-slate-600 border-slate-200",
-  sent: "bg-blue-50 text-blue-700 border-blue-200",
-  paid: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  overdue: "bg-red-50 text-red-700 border-red-200",
-  cancelled: "bg-slate-100 text-slate-500 border-slate-200",
+  draft: { bg: "rgba(100,116,139,0.1)", color: "#64748b", border: "rgba(100,116,139,0.3)" },
+  sent: { bg: "rgba(59,130,246,0.1)", color: "#3b82f6", border: "rgba(59,130,246,0.3)" },
+  paid: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)" },
+  overdue: { bg: "rgba(239,68,68,0.1)", color: "#ef4444", border: "rgba(239,68,68,0.3)" },
+  cancelled: { bg: "rgba(100,116,139,0.08)", color: "#475569", border: "rgba(100,116,139,0.2)" },
 };
 
 export default function Billing() {
