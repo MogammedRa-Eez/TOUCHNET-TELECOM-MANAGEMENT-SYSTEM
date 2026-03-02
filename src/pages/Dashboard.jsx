@@ -8,8 +8,11 @@ import TicketOverview from "../components/dashboard/TicketOverview";
 import NetworkHealth from "../components/dashboard/NetworkHealth";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRBAC } from "@/components/rbac/RBACContext";
+import AccessDenied from "@/components/rbac/AccessDenied";
 
 export default function Dashboard() {
+  const { can, loading: rbacLoading } = useRBAC();
   const { data: customers = [], isLoading: loadingCustomers } = useQuery({
     queryKey: ["customers"],
     queryFn: () => base44.entities.Customer.list("-created_date", 100),

@@ -10,6 +10,8 @@ import { Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock, CheckC
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import TicketForm from "../components/tickets/TicketForm";
+import { useRBAC } from "@/components/rbac/RBACContext";
+import AccessDenied from "@/components/rbac/AccessDenied";
 
 const statusColors = {
   open: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "rgba(245,158,11,0.3)" },

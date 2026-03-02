@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Plus, MessageSquare, Loader2, Trash2 } from "lucide-react";
 import MessageBubble from "../components/ai/MessageBubble";
+import { useRBAC } from "@/components/rbac/RBACContext";
+import AccessDenied from "@/components/rbac/AccessDenied";
 
 export default function AIAssistant() {
+  const { can, loading: rbacLoading } = useRBAC();
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
   const [messages, setMessages] = useState([]);

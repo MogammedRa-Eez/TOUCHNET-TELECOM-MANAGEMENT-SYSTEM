@@ -11,6 +11,8 @@ import {
 import { Plus, Search, Pencil, Trash2, User, Wifi } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import CustomerForm from "../components/customers/CustomerForm";
+import { useRBAC } from "@/components/rbac/RBACContext";
+import AccessDenied from "@/components/rbac/AccessDenied";
 
 const statusColors = {
   active: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)" },

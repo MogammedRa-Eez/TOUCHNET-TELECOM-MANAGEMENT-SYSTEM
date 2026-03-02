@@ -11,6 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import InvoiceForm from "../components/billing/InvoiceForm";
 import KPICard from "../components/dashboard/KPICard";
+import { useRBAC } from "@/components/rbac/RBACContext";
+import AccessDenied from "@/components/rbac/AccessDenied";
 
 const statusColors = {
   draft: { bg: "rgba(100,116,139,0.1)", color: "#64748b", border: "rgba(100,116,139,0.3)" },
