@@ -316,7 +316,7 @@ export default function Network() {
             );
           })}
         </div>
-      )}
+      ))}
 
       {showForm && (
         <NodeForm
