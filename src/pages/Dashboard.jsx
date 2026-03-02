@@ -7,6 +7,7 @@ import RevenueChart from "../components/dashboard/RevenueChart";
 import TicketOverview from "../components/dashboard/TicketOverview";
 import NetworkHealth from "../components/dashboard/NetworkHealth";
 import RecentActivity from "../components/dashboard/RecentActivity";
+import UserActivityPanel from "../components/dashboard/UserActivityPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
