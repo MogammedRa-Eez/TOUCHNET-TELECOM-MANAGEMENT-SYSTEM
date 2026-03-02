@@ -147,7 +147,7 @@ export default function Customers() {
                         {c.status}
                       </span>
                     </TableCell>
-                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>${c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
+                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>R{c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(c); setShowForm(true); }}>

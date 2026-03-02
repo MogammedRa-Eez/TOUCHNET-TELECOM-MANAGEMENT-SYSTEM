@@ -85,9 +85,9 @@ export default function Billing() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <KPICard title="Total Collected" value={`$${totalPaid.toLocaleString()}`} icon={CheckCircle2} color="emerald" />
-        <KPICard title="Overdue" value={`$${totalOverdue.toLocaleString()}`} icon={AlertCircle} color="rose" />
-        <KPICard title="Pending" value={`$${totalPending.toLocaleString()}`} icon={DollarSign} color="amber" />
+        <KPICard title="Total Collected" value={`R${totalPaid.toLocaleString()}`} icon={CheckCircle2} color="emerald" />
+        <KPICard title="Overdue" value={`R${totalOverdue.toLocaleString()}`} icon={AlertCircle} color="rose" />
+        <KPICard title="Pending" value={`R${totalPending.toLocaleString()}`} icon={DollarSign} color="amber" />
       </div>
 
       <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
@@ -139,7 +139,7 @@ export default function Billing() {
                   <TableRow key={inv.id} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }} className="hover:bg-cyan-500/5 transition-colors">
                     <TableCell className="text-[11px] text-cyan-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{inv.invoice_number || "—"}</TableCell>
                     <TableCell className="font-medium text-[13px] text-slate-200">{inv.customer_name}</TableCell>
-                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>${inv.total?.toFixed(2) || inv.amount?.toFixed(2)}</TableCell>
+                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>R{inv.total?.toFixed(2) || inv.amount?.toFixed(2)}</TableCell>
                     <TableCell>
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{inv.status}</span>
                     </TableCell>

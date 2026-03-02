@@ -73,7 +73,7 @@ export default function Dashboard() {
         />
         <KPICard
           title="Monthly Revenue"
-          value={`$${totalRevenue.toLocaleString()}`}
+          value={`R${totalRevenue.toLocaleString()}`}
           subtitle="From paid invoices"
           icon={DollarSign}
           color="emerald"

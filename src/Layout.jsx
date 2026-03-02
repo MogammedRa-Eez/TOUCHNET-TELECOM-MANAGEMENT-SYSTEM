@@ -115,17 +115,17 @@ function LayoutInner({ children, currentPageName }) {
   const pageLabel = pageLabels[currentPageName] || currentPageName;
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#070d1a" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#0f1a2e" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #070d1a; }
+        body { font-family: 'Inter', sans-serif; background: #0f1a2e; }
         .tn-sidebar { scrollbar-width: none; }
         .tn-sidebar::-webkit-scrollbar { display: none; }
         .nav-item-hover:hover { background: rgba(6,182,212,0.08); }
         .sidebar-glow { box-shadow: 1px 0 0 0 rgba(6,182,212,0.1), 4px 0 24px rgba(0,0,0,0.4); }
         .active-nav { background: linear-gradient(90deg, rgba(6,182,212,0.15) 0%, rgba(6,182,212,0.04) 100%); border-left: 2px solid #06b6d4; }
         .topbar-border { border-bottom: 1px solid rgba(6,182,212,0.1); }
-        .main-content { background: #070d1a; }
+        .main-content { background: #0f1a2e; }
         .card-dark { background: #0d1527; border: 1px solid rgba(6,182,212,0.12); }
         .card-dark:hover { border-color: rgba(6,182,212,0.25); box-shadow: 0 0 20px rgba(6,182,212,0.06); }
         .pulse-dot { animation: pulse-cyan 2s infinite; }

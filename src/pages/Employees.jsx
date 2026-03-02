@@ -237,7 +237,7 @@ export default function Employees() {
                 )}
                 {emp.salary > 0 && can("view_salaries") && (
                   <div className="text-[11px] text-slate-600" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                    ${emp.salary?.toLocaleString()} / yr
+                    R{emp.salary?.toLocaleString()} / yr
                   </div>
                 )}
               </div>
