@@ -11,12 +11,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
 const deptColors = {
-  sales: "bg-blue-50 text-blue-700 border-blue-200",
-  projects: "bg-purple-50 text-purple-700 border-purple-200",
-  finance: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  cyber_security: "bg-red-50 text-red-700 border-red-200",
-  technical: "bg-amber-50 text-amber-700 border-amber-200",
-  hr: "bg-pink-50 text-pink-700 border-pink-200",
+  sales: { bg: "rgba(59,130,246,0.1)", color: "#3b82f6", border: "rgba(59,130,246,0.3)", avatar: "from-blue-600 to-blue-400" },
+  projects: { bg: "rgba(139,92,246,0.1)", color: "#8b5cf6", border: "rgba(139,92,246,0.3)", avatar: "from-violet-600 to-violet-400" },
+  finance: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)", avatar: "from-emerald-600 to-emerald-400" },
+  cyber_security: { bg: "rgba(239,68,68,0.1)", color: "#ef4444", border: "rgba(239,68,68,0.3)", avatar: "from-red-600 to-red-400" },
+  technical: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b", border: "rgba(245,158,11,0.3)", avatar: "from-amber-600 to-amber-400" },
+  hr: { bg: "rgba(236,72,153,0.1)", color: "#ec4899", border: "rgba(236,72,153,0.3)", avatar: "from-pink-600 to-pink-400" },
 };
 
 function EmployeeForm({ employee, onSubmit, onCancel }) {
