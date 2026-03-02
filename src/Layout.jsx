@@ -72,7 +72,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
           onClick={() => setCollapsed(!collapsed)}
           className="hidden lg:flex items-center justify-center w-6 h-6 rounded text-slate-500 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0">
 
-          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+          {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="bg-slate-50 text-red-600 lucide lucide-chevron-left w-3.5 h-3.5" />}
         </button>
       </div>
 
@@ -93,7 +93,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       }
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto tn-sidebar px-2 pb-4 flex flex-col space-y-0.5 pt-2">
+      <nav className="bg-slate-100 text-black pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5">
         {!collapsed &&
         <p className="text-[9px] font-semibold text-slate-600 tracking-widest uppercase px-2 py-2 mono">Navigation</p>
         }
