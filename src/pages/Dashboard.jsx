@@ -112,6 +112,9 @@ export default function Dashboard() {
         <NetworkHealth nodes={nodes} />
         <RecentActivity customers={customers} tickets={tickets} invoices={invoices} />
       </div>
+
+      {/* User Activity */}
+      <UserActivityPanel customers={customers} tickets={tickets} invoices={invoices} />
     </div>);
 
 }
