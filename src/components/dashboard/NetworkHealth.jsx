@@ -21,11 +21,11 @@ export default function NetworkHealth({ nodes }) {
     : 0;
 
   return (
-    <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+    <div className="rounded-xl p-6" style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.07)", boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[13px] font-semibold text-slate-200">Network Health</h3>
-          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Infrastructure overview</p>
+          <h3 className="text-[13px] font-semibold text-slate-700">Network Health</h3>
+          <p className="text-[11px] mt-0.5" style={{ color: "#94a3b8", fontFamily: "'JetBrains Mono', monospace" }}>Infrastructure overview</p>
         </div>
         <div className="px-3 py-1 rounded-md" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
           <span className="text-[11px] font-semibold mono" style={{ color: "#10b981", fontFamily: "'JetBrains Mono', monospace" }}>{avgUptime}% uptime</span>
@@ -39,7 +39,7 @@ export default function NetworkHealth({ nodes }) {
             <div key={key} className="rounded-lg p-3.5 flex items-center gap-3" style={{ background: config.bg, border: `1px solid ${config.border}` }}>
               <Icon className="w-4 h-4 flex-shrink-0" style={{ color: config.color }} />
               <div>
-                <p className="text-[18px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{counts[key]}</p>
+                <p className="text-[18px] font-bold text-slate-800" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{counts[key]}</p>
                 <p className="text-[10px]" style={{ color: config.color, opacity: 0.8 }}>{config.label}</p>
               </div>
             </div>
