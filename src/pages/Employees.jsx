@@ -31,31 +31,31 @@ function EmployeeForm({ employee, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-800">{employee ? "Edit Employee" : "Add Employee"}</h2>
-          <button onClick={onCancel} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.2)" }}>
+        <div className="flex items-center justify-between p-6" style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+          <h2 className="text-[15px] font-semibold text-white">{employee ? "Edit Employee" : "Add Employee"}</h2>
+          <button onClick={onCancel} className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"><X className="w-4 h-4" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Full Name *</Label>
-              <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} required />
+              <Label className="text-[11px] font-medium text-slate-400">Full Name *</Label>
+              <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} required className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Email *</Label>
-              <Input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+              <Label className="text-[11px] font-medium text-slate-400">Email *</Label>
+              <Input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Phone</Label>
-              <Input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+              <Label className="text-[11px] font-medium text-slate-400">Phone</Label>
+              <Input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Department *</Label>
+              <Label className="text-[11px] font-medium text-slate-400">Department *</Label>
               <Select value={form.department} onValueChange={v => setForm({...form, department: v})}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="bg-transparent border-slate-700 text-slate-300"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
                   <SelectItem value="sales">Sales</SelectItem>
                   <SelectItem value="projects">Projects</SelectItem>
                   <SelectItem value="finance">Finance</SelectItem>
@@ -66,14 +66,14 @@ function EmployeeForm({ employee, onSubmit, onCancel }) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Job Title</Label>
-              <Input value={form.role} onChange={e => setForm({...form, role: e.target.value})} />
+              <Label className="text-[11px] font-medium text-slate-400">Job Title</Label>
+              <Input value={form.role} onChange={e => setForm({...form, role: e.target.value})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Status</Label>
+              <Label className="text-[11px] font-medium text-slate-400">Status</Label>
               <Select value={form.status} onValueChange={v => setForm({...form, status: v})}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
+                <SelectTrigger className="bg-transparent border-slate-700 text-slate-300"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="on_leave">On Leave</SelectItem>
                   <SelectItem value="terminated">Terminated</SelectItem>
@@ -81,17 +81,17 @@ function EmployeeForm({ employee, onSubmit, onCancel }) {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Hire Date</Label>
-              <Input type="date" value={form.hire_date} onChange={e => setForm({...form, hire_date: e.target.value})} />
+              <Label className="text-[11px] font-medium text-slate-400">Hire Date</Label>
+              <Input type="date" value={form.hire_date} onChange={e => setForm({...form, hire_date: e.target.value})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-600">Salary</Label>
-              <Input type="number" value={form.salary} onChange={e => setForm({...form, salary: parseFloat(e.target.value)})} />
+              <Label className="text-[11px] font-medium text-slate-400">Salary</Label>
+              <Input type="number" value={form.salary} onChange={e => setForm({...form, salary: parseFloat(e.target.value)})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">{employee ? "Update" : "Add Employee"}</Button>
+            <Button type="button" variant="outline" onClick={onCancel} className="border-slate-700 text-slate-300 hover:bg-slate-800">Cancel</Button>
+            <Button type="submit" className="bg-cyan-600 hover:bg-cyan-500 text-white">{employee ? "Update" : "Add Employee"}</Button>
           </div>
         </form>
       </div>
