@@ -102,6 +102,18 @@ function NodeForm({ node, onSubmit, onCancel, allNodes = [] }) {
               <Label className="text-[11px] font-medium text-slate-400">Firmware Version</Label>
               <Input value={form.firmware_version} onChange={e => setForm({...form, firmware_version: e.target.value})} className="bg-transparent border-slate-700 text-slate-200" />
             </div>
+            <div className="space-y-1.5 md:col-span-2">
+              <Label className="text-[11px] font-medium text-slate-400">Parent Node (for topology)</Label>
+              <Select value={form.parent_node_id || "none"} onValueChange={v => setForm({...form, parent_node_id: v === "none" ? "" : v})}>
+                <SelectTrigger className="bg-transparent border-slate-700 text-slate-300"><SelectValue placeholder="No parent (top-level)" /></SelectTrigger>
+                <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
+                  <SelectItem value="none">No parent (top-level)</SelectItem>
+                  {allNodes.filter(n => n.id !== node?.id).map(n => (
+                    <SelectItem key={n.id} value={n.id}>{n.name} ({n.type?.replace(/_/g, " ")})</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="outline" onClick={onCancel} className="border-slate-700 text-slate-300 hover:bg-slate-800">Cancel</Button>
