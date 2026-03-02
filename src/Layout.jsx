@@ -85,12 +85,12 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen }) {
             <Link
               key={item.page}
               to={createPageUrl(item.page)}
-              onClick={() => setMobileOpen(false)}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium
-                transition-all duration-150 group relative
-                ${isActive ? "active-nav text-red-300" : "text-slate-400 hover:text-slate-200 nav-item-hover"}
-              `}>
+              onClick={() => setMobileOpen(false)} className="text-[#e51010] my-2 pt-10 pr-3 pl-1 text-base font-extrabold text-left underline uppercase rounded-md flex items-center gap-3 transition-all duration-150 group relative hover:text-slate-200 nav-item-hover">
+
+
+
+
+
 
               <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-red-400" : "text-slate-500 group-hover:text-slate-300"}`} />
               <span className="flex-1 text-[13px]">{item.name}</span>
