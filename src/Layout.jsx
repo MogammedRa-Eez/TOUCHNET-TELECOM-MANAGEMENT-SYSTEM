@@ -32,6 +32,7 @@ const ALL_NAV = [
 
 
 const pageLabels = {
+  Home: "Home",
   AIAssistant: "AI Assistant",
   RolesManagement: "Roles & Permissions"
 };
