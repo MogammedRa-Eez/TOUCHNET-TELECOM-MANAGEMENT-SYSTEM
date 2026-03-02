@@ -96,7 +96,7 @@ export default function Dashboard() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <RevenueChart />
+          <RevenueChart invoices={invoices} />
         </div>
         <TicketOverview tickets={tickets} />
       </div>
