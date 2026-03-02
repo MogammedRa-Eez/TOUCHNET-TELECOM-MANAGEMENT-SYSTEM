@@ -13,6 +13,7 @@ import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 import NetworkMetricsChart from "@/components/network/NetworkMetricsChart";
 import NetworkTrends from "@/components/network/NetworkTrends";
+import NetworkTopology from "@/components/network/NetworkTopology";
 
 const statusConfig = {
   online: { bg: "rgba(16,185,129,0.1)", color: "#10b981", border: "rgba(16,185,129,0.3)", dot: "bg-emerald-500", icon: Wifi },
