@@ -248,6 +248,7 @@ export default function Network() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map(node => {
+
             const sc = statusConfig[node.status] || statusConfig.online;
             const capacityPct = node.max_capacity ? Math.round((node.connected_customers || 0) / node.max_capacity * 100) : 0;
             return (
