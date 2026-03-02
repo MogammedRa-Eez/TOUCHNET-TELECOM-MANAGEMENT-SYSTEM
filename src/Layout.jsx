@@ -56,10 +56,10 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       {/* Logo */}
       <div className="flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(220,38,38,0.15)" }}>
         <div className="flex items-center gap-3 overflow-hidden">
-          <div className="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center relative" style={{ background: "linear-gradient(135deg, #dc2626, #991b1b)" }}>
-            <Signal className="w-4 h-4 text-white" />
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-400 pulse-dot" />
-          </div>
+          
+
+
+
           {!collapsed &&
           <div className="overflow-hidden">
               <h1 className="text-white font-bold text-[14px] leading-tight tracking-tight whitespace-nowrap">TOUCHNET</h1>
