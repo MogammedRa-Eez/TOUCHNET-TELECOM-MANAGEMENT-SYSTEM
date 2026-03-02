@@ -171,6 +171,7 @@ export default function Network() {
       <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         {[
           { id: "nodes", label: "Nodes", icon: Server },
+          { id: "topology", label: "Topology", icon: GitFork },
           { id: "metrics", label: "Live Metrics", icon: Activity },
           { id: "trends", label: "Trends & Capacity", icon: TrendingUp },
         ].map(tab => {
