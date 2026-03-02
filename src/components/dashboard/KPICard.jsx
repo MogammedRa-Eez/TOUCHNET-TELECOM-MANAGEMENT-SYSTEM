@@ -17,12 +17,12 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
     <div
       className="rounded-xl p-5 relative overflow-hidden transition-all duration-300 cursor-default"
       style={{
-        background: "#0d1527",
-        border: `1px solid rgba(6,182,212,0.12)`,
-        boxShadow: `0 0 0 0 transparent`,
+        background: "#ffffff",
+        border: `1px solid rgba(0,0,0,0.07)`,
+        boxShadow: `0 2px 8px rgba(0,0,0,0.05)`,
       }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = c.accent + "55"}
-      onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = c.accent + "66"; e.currentTarget.style.boxShadow = `0 4px 20px ${c.glow}`; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,0,0,0.07)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.05)"; }}
     >
       {/* Top accent bar */}
       <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl" style={{ background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
@@ -39,9 +39,9 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
         )}
       </div>
 
-      <p className="text-[28px] font-bold text-white leading-tight" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{value}</p>
-      <p className="text-[12px] font-semibold mt-1" style={{ color: "#94a3b8" }}>{title}</p>
-      {subtitle && <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>{subtitle}</p>}
+      <p className="text-[28px] font-bold text-slate-800 leading-tight" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{value}</p>
+      <p className="text-[12px] font-semibold mt-1" style={{ color: "#475569" }}>{title}</p>
+      {subtitle && <p className="text-[11px] mt-0.5" style={{ color: "#94a3b8", fontFamily: "'JetBrains Mono', monospace" }}>{subtitle}</p>}
     </div>
   );
 }
