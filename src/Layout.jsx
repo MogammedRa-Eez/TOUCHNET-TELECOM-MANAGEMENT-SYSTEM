@@ -52,10 +52,10 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
         ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         flex flex-col transition-all duration-300 ease-in-out sidebar-glow
       `}
-      style={{ background: "#0a0f1e" }}>
+      style={{ background: "#1e2a4a" }}>
 
       {/* Logo */}
-      <div className="bg-transparent text-black my-1 pt-3 pr-2 pb-2 pl-5 rounded-[4px_4px_12px_4px] flex items-center justify-between h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(220,38,38,0.15)" }}>
+      <div className="bg-transparent flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
         <div className="flex items-center overflow-hidden flex-1">
           {collapsed ?
           <img src={LOGO_URL} alt="TouchNet Logo" className="w-8 h-8 object-contain" /> :
