@@ -177,16 +177,16 @@ function LayoutInner({ children, currentPageName }) {
           </button>
 
           <div className="flex-1">
-            <h2 className="text-[15px] font-bold text-white leading-tight tracking-wide">{pageLabel}</h2>
-            <p className="text-[10px] text-red-600/60 hidden sm:block mono">touchnet.local / admin</p>
+            <h2 className="text-[15px] font-bold text-slate-800 leading-tight tracking-wide">{pageLabel}</h2>
+            <p className="text-[10px] text-slate-400 hidden sm:block mono">touchnet.local / admin</p>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#111827", border: "1px solid rgba(220,38,38,0.12)" }}>
-            <Search className="w-3.5 h-3.5 text-slate-500" />
-            <span className="text-sm text-slate-600">Search...</span>
+          <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#f1f5f9", border: "1px solid rgba(0,0,0,0.1)" }}>
+            <Search className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-sm text-slate-400">Search...</span>
           </div>
 
-          <button className="relative w-9 h-9 flex items-center justify-center rounded-md text-slate-400 hover:text-white transition-colors" style={{ background: "#111827", border: "1px solid rgba(220,38,38,0.12)" }}>
+          <button className="relative w-9 h-9 flex items-center justify-center rounded-md text-slate-500 hover:text-slate-800 transition-colors" style={{ background: "#f1f5f9", border: "1px solid rgba(0,0,0,0.1)" }}>
             <Bell className="w-4 h-4" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0a0f1e]" />
           </button>
