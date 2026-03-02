@@ -350,6 +350,7 @@ export default function Network() {
       {showForm && (
         <NodeForm
           node={editing}
+          allNodes={nodes}
           onSubmit={handleSubmit}
           onCancel={() => { setShowForm(false); setEditing(null); }}
         />
