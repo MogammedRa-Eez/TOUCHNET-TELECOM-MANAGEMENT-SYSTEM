@@ -22,11 +22,12 @@ const statusConfig = {
   maintenance: { bg: "rgba(59,130,246,0.1)", color: "#3b82f6", border: "rgba(59,130,246,0.3)", dot: "bg-blue-500", icon: Wrench },
 };
 
-function NodeForm({ node, onSubmit, onCancel }) {
+function NodeForm({ node, onSubmit, onCancel, allNodes = [] }) {
   const [form, setForm] = useState(node || {
     name: "", type: "access_point", location: "", ip_address: "",
     status: "online", uptime_percent: 99.9, bandwidth_utilization: 0,
     connected_customers: 0, max_capacity: 100, firmware_version: "",
+    parent_node_id: "",
   });
 
   const handleSubmit = (e) => {
