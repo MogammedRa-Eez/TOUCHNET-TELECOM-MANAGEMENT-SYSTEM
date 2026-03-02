@@ -141,92 +141,117 @@ export default function Employees() {
   const deptCounts = {};
   employees.forEach(e => { deptCounts[e.department] = (deptCounts[e.department] || 0) + 1; });
 
+  const statusStyle = {
+    active: { bg: "rgba(16,185,129,0.1)", color: "#10b981" },
+    on_leave: { bg: "rgba(245,158,11,0.1)", color: "#f59e0b" },
+    terminated: { bg: "rgba(100,116,139,0.1)", color: "#64748b" },
+  };
+
   return (
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Employee Directory</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Manage staff across all departments</p>
+          <h1 className="text-xl font-bold text-white">Employee Directory</h1>
+          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Manage staff across all departments</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
           <Plus className="w-4 h-4 mr-2" /> Add Employee
         </Button>
       </div>
 
       {/* Department summary */}
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-        {["sales", "projects", "finance", "cyber_security", "technical", "hr"].map(dept => (
-          <div key={dept} className={`${deptColors[dept]?.split(" ")[0] || "bg-slate-50"} rounded-xl p-3 text-center cursor-pointer border ${deptFilter === dept ? "ring-2 ring-blue-400" : "border-transparent"}`} onClick={() => setDeptFilter(deptFilter === dept ? "all" : dept)}>
-            <p className="text-xl font-bold text-slate-800">{deptCounts[dept] || 0}</p>
-            <p className="text-xs text-slate-500 capitalize">{dept.replace(/_/g, " ")}</p>
-          </div>
-        ))}
+        {["sales", "projects", "finance", "cyber_security", "technical", "hr"].map(dept => {
+          const dc = deptColors[dept];
+          const isActive = deptFilter === dept;
+          return (
+            <div key={dept} className="rounded-xl p-3 text-center cursor-pointer transition-all"
+              style={{ background: isActive ? dc.bg : "#0d1527", border: `1px solid ${isActive ? dc.border : "rgba(6,182,212,0.1)"}` }}
+              onClick={() => setDeptFilter(deptFilter === dept ? "all" : dept)}>
+              <p className="text-[18px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{deptCounts[dept] || 0}</p>
+              <p className="text-[10px] capitalize" style={{ color: isActive ? dc.color : "#475569" }}>{dept.replace(/_/g, " ")}</p>
+            </div>
+          );
+        })}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 p-4 flex flex-col sm:flex-row gap-3">
+      <div className="rounded-xl p-4 flex gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input placeholder="Search employees..." className="pl-10" value={search} onChange={e => setSearch(e.target.value)} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Input placeholder="Search employees..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
 
       {/* Employee cards */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-2xl" />)}
+          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl bg-slate-800" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-100 py-16 text-center text-slate-400">
-          <UserCog className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-          <p>No employees found</p>
+        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+          <UserCog className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+          <p className="text-[13px]">No employees found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filtered.map(emp => (
-            <div key={emp.id} className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-lg transition-all duration-300 group">
+          {filtered.map(emp => {
+            const dc = deptColors[emp.department] || deptColors.technical;
+            const ss = statusStyle[emp.status] || statusStyle.active;
+            return (
+            <div key={emp.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = dc.border}
+              onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
+            >
+              {/* Top accent */}
+              <div className="h-[2px] -mt-5 -mx-5 mb-4 rounded-tl-xl rounded-tr-xl" style={{ background: `linear-gradient(90deg, ${dc.color}, transparent)` }} />
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white font-bold text-lg">
+                  <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${dc.avatar} flex items-center justify-center text-white font-bold text-base flex-shrink-0`}>
                     {emp.full_name?.charAt(0)?.toUpperCase() || "?"}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-800">{emp.full_name}</h3>
-                    <p className="text-xs text-slate-400">{emp.role || "No title"}</p>
+                    <h3 className="font-semibold text-slate-200 text-[13px]">{emp.full_name}</h3>
+                    <p className="text-[11px] text-slate-500">{emp.role || "No title"}</p>
                   </div>
                 </div>
-                <Badge variant="outline" className={`${deptColors[emp.department]} text-xs`}>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md" style={{ background: dc.bg, color: dc.color, border: `1px solid ${dc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>
                   {emp.department?.replace(/_/g, " ")}
-                </Badge>
+                </span>
               </div>
 
-              <div className="space-y-2 text-sm">
+              <div className="space-y-1.5 text-[12px]">
                 <div className="flex items-center gap-2 text-slate-500">
-                  <Mail className="w-3.5 h-3.5" />
-                  <span className="truncate">{emp.email}</span>
+                  <Mail className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate text-slate-400">{emp.email}</span>
                 </div>
                 {emp.phone && (
                   <div className="flex items-center gap-2 text-slate-500">
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>{emp.phone}</span>
+                    <Phone className="w-3 h-3 flex-shrink-0" />
+                    <span className="text-slate-400">{emp.phone}</span>
+                  </div>
+                )}
+                {emp.salary > 0 && (
+                  <div className="text-[11px] text-slate-600" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                    ${emp.salary?.toLocaleString()} / yr
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-50">
-                <Badge className={`text-xs border-0 ${emp.status === "active" ? "bg-emerald-50 text-emerald-600" : emp.status === "on_leave" ? "bg-amber-50 text-amber-600" : "bg-slate-100 text-slate-500"}`}>
+              <div className="flex items-center justify-between mt-4 pt-3" style={{ borderTop: "1px solid rgba(6,182,212,0.08)" }}>
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: ss.bg, color: ss.color, fontFamily: "'JetBrains Mono', monospace" }}>
                   {emp.status?.replace(/_/g, " ")}
-                </Badge>
+                </span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(emp); setShowForm(true); }}>
-                    <Pencil className="w-4 h-4 text-slate-400" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(emp); setShowForm(true); }}>
+                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { if (confirm("Delete this employee?")) deleteMut.mutate(emp.id); }}>
-                    <Trash2 className="w-4 h-4 text-red-400" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this employee?")) deleteMut.mutate(emp.id); }}>
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
                   </Button>
                 </div>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       )}
 
