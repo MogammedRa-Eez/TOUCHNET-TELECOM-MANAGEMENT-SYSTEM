@@ -57,8 +57,8 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen }) {
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyan-400 pulse-dot" />
           </div>
           <div>
-            <h1 className="text-white font-bold text-[14px] leading-tight tracking-tight">TouchNet</h1>
-            <p className="text-cyan-500/60 text-[9px] font-medium tracking-widest uppercase mono">ISP Management</p>
+            <h1 className="text-white font-bold text-[14px] leading-tight tracking-tight">TOUCHNET</h1>
+            <p className="text-cyan-500/60 text-[9px] font-medium tracking-widest uppercase mono">TELECOMMUNICATION MANAGEMENT SYSTEM</p>
           </div>
         </div>
         <button onClick={() => setMobileOpen(false)} className="lg:hidden text-white/40 hover:text-white p-1">
