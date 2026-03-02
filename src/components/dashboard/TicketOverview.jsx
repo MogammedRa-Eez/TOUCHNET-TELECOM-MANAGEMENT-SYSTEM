@@ -19,9 +19,9 @@ export default function TicketOverview({ tickets }) {
   const total = tickets.length;
 
   return (
-    <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
-      <h3 className="text-[13px] font-semibold text-slate-200 mb-1">Ticket Status</h3>
-      <p className="text-[11px] mb-4" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Active support tickets</p>
+    <div className="rounded-xl p-6" style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.07)", boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
+      <h3 className="text-[13px] font-semibold text-slate-700 mb-1">Ticket Status</h3>
+      <p className="text-[11px] mb-4" style={{ color: "#94a3b8", fontFamily: "'JetBrains Mono', monospace" }}>Active support tickets</p>
       
       <div className="flex items-center gap-6">
         <div className="w-32 h-32 relative">
@@ -44,8 +44,8 @@ export default function TicketOverview({ tickets }) {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <p className="text-xl font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{total}</p>
-              <p className="text-[10px]" style={{ color: "#475569" }}>Total</p>
+              <p className="text-xl font-bold text-slate-800" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{total}</p>
+               <p className="text-[10px]" style={{ color: "#94a3b8" }}>Total</p>
             </div>
           </div>
         </div>
