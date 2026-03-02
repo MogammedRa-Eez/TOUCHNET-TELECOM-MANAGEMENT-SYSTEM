@@ -117,6 +117,8 @@ export default function Network() {
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [activeTab, setActiveTab] = useState("nodes");
+  const [monitoringNode, setMonitoringNode] = useState(null);
   const queryClient = useQueryClient();
 
   if (!rbacLoading && !can("network")) return <AccessDenied />;
