@@ -85,33 +85,34 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-slate-50">
+    <div className="flex h-[calc(100vh-4rem)]" style={{ background: "#070d1a" }}>
       {/* Sidebar */}
-      <div className="w-72 bg-white border-r border-slate-200 flex flex-col hidden lg:flex">
-        <div className="p-4 border-b border-slate-100">
-          <Button onClick={createConversation} className="w-full bg-blue-600 hover:bg-blue-700">
+      <div className="w-64 flex-col hidden lg:flex" style={{ background: "#080f1e", borderRight: "1px solid rgba(6,182,212,0.1)" }}>
+        <div className="p-4" style={{ borderBottom: "1px solid rgba(6,182,212,0.08)" }}>
+          <Button onClick={createConversation} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
             <Plus className="w-4 h-4 mr-2" /> New Chat
           </Button>
         </div>
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+              <Loader2 className="w-4 h-4 animate-spin text-cyan-500" />
             </div>
           ) : conversations.length === 0 ? (
-            <p className="text-xs text-slate-400 text-center py-8">No conversations yet</p>
+            <p className="text-[11px] text-slate-600 text-center py-8 mono">No conversations yet</p>
           ) : (
             conversations.map(conv => (
               <button
                 key={conv.id}
                 onClick={() => selectConversation(conv)}
-                className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 ${
+                className={`w-full text-left px-3 py-2.5 rounded-md text-[12px] transition-all flex items-center gap-2 ${
                   activeConv?.id === conv.id
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-slate-600 hover:bg-slate-50"
+                    ? "text-cyan-300"
+                    : "text-slate-500 hover:text-slate-300"
                 }`}
+                style={activeConv?.id === conv.id ? { background: "rgba(6,182,212,0.1)", borderLeft: "2px solid #06b6d4" } : {}}
               >
-                <MessageSquare className="w-4 h-4 flex-shrink-0" />
+                <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
                 <span className="truncate">{conv.metadata?.name || "Untitled"}</span>
               </button>
             ))
@@ -120,25 +121,25 @@ export default function AIAssistant() {
       </div>
 
       {/* Chat area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile new chat */}
-        <div className="lg:hidden p-3 border-b border-slate-100 bg-white">
-          <Button onClick={createConversation} size="sm" className="bg-blue-600 hover:bg-blue-700">
+        <div className="lg:hidden p-3" style={{ borderBottom: "1px solid rgba(6,182,212,0.08)", background: "#080f1e" }}>
+          <Button onClick={createConversation} size="sm" className="bg-cyan-600 hover:bg-cyan-500 text-white">
             <Plus className="w-4 h-4 mr-1" /> New Chat
           </Button>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-4">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center max-w-md">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
-                  <MessageSquare className="w-8 h-8 text-white" />
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "linear-gradient(135deg, #0891b2, #0e7490)", boxShadow: "0 0 30px rgba(6,182,212,0.3)" }}>
+                  <MessageSquare className="w-7 h-7 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-slate-800 mb-2">TouchNet AI Assistant</h2>
-                <p className="text-sm text-slate-400 mb-6">
-                  I can help you manage customers, invoices, tickets, employees, and network infrastructure. Ask me anything!
+                <h2 className="text-[16px] font-bold text-white mb-2">TouchNet AI Assistant</h2>
+                <p className="text-[12px] text-slate-500 mb-6" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Manage customers, invoices, tickets, employees, and network infrastructure.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
                   {[
@@ -149,8 +150,9 @@ export default function AIAssistant() {
                   ].map(q => (
                     <button
                       key={q}
-                      onClick={() => { setInput(q); }}
-                      className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 hover:border-blue-200 transition-all text-left"
+                      onClick={() => setInput(q)}
+                      className="px-3 py-2.5 rounded-lg text-[12px] text-slate-400 hover:text-slate-200 transition-all text-left"
+                      style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}
                     >
                       {q}
                     </button>
@@ -165,20 +167,21 @@ export default function AIAssistant() {
         </div>
 
         {/* Input */}
-        <div className="p-4 bg-white border-t border-slate-100">
+        <div className="p-4" style={{ borderTop: "1px solid rgba(6,182,212,0.1)", background: "#080f1e" }}>
           <div className="max-w-3xl mx-auto flex gap-3">
             <Input
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask TouchNet AI anything..."
-              className="flex-1 rounded-xl"
+              className="flex-1 bg-transparent text-slate-200 placeholder-slate-600"
+              style={{ border: "1px solid rgba(6,182,212,0.2)" }}
               disabled={sending}
             />
             <Button
               onClick={sendMessage}
               disabled={!input.trim() || sending}
-              className="bg-blue-600 hover:bg-blue-700 rounded-xl px-5"
+              className="bg-cyan-600 hover:bg-cyan-500 text-white px-5"
             >
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </Button>
