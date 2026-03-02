@@ -79,10 +79,10 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       {/* System status pill */}
       {!collapsed &&
       <div className="px-4 py-3">
-          <div className="flex items-center gap-2 rounded-md px-3 py-1.5" style={{ background: "rgba(220,38,38,0.07)", border: "1px solid rgba(220,38,38,0.15)" }}>
+          <div className="flex items-center gap-2 rounded-md px-3 py-1.5" style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)" }}>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" />
-            <span className="text-[10px] text-emerald-400 font-semibold mono">SYS ONLINE</span>
-            <span className="ml-auto text-[10px] text-slate-500 mono">99.9%</span>
+            <span className="text-[10px] text-emerald-300 font-semibold mono">SYS ONLINE</span>
+            <span className="ml-auto text-[10px] text-slate-300 mono">99.9%</span>
           </div>
         </div>
       }
@@ -95,7 +95,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       {/* Nav */}
       <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5" style={{ background: "#1e2a4a" }}>
         {!collapsed &&
-        <p className="text-[9px] font-semibold text-slate-600 tracking-widest uppercase px-2 py-2 mono">Navigation</p>
+        <p className="text-[9px] font-semibold text-slate-400 tracking-widest uppercase px-2 py-2 mono">Navigation</p>
         }
         {navItems.map((item) => {
           const isActive = currentPageName === item.page;
