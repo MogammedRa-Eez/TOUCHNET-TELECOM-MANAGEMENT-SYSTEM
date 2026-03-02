@@ -186,6 +186,20 @@ export default function Network() {
         })}
       </div>
 
+      {/* Topology Tab */}
+      {activeTab === "topology" && (
+        <div className="rounded-xl p-6" style={{ background: "#0a0f1e", border: "1px solid rgba(6,182,212,0.12)" }}>
+          {nodes.length === 0 ? (
+            <div className="py-16 text-center text-slate-500">
+              <GitFork className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+              <p className="text-[13px]">No nodes to visualize</p>
+            </div>
+          ) : (
+            <NetworkTopology nodes={nodes} />
+          )}
+        </div>
+      )}
+
       {/* Trends Tab */}
       {activeTab === "trends" && (
         <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
