@@ -138,7 +138,7 @@ function LayoutInner({ children, currentPageName }) {
   const pageLabel = pageLabels[currentPageName] || currentPageName;
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#0d1225" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#f1f5f9" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
@@ -171,7 +171,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden main-content">
-        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "#0a0f1e" }}>
+        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "#ffffff" }}>
           <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 text-slate-500 hover:text-white rounded-md transition-colors">
             <Menu className="w-5 h-5" />
           </button>
