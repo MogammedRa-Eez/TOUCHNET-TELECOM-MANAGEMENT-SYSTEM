@@ -90,7 +90,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]" style={{ background: "#070d1a" }}>
+    <div className="flex h-[calc(100vh-4rem)]" style={{ background: "#0f1a2e" }}>
       {/* Sidebar */}
       <div className="w-64 flex-col hidden lg:flex" style={{ background: "#080f1e", borderRight: "1px solid rgba(6,182,212,0.1)" }}>
         <div className="p-4" style={{ borderBottom: "1px solid rgba(6,182,212,0.08)" }}>
