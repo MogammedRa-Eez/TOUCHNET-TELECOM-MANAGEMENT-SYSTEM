@@ -54,6 +54,7 @@ import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import Network from './pages/Network';
 import Tickets from './pages/Tickets';
+import RolesManagement from './pages/RolesManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "Employees": Employees,
     "Network": Network,
     "Tickets": Tickets,
+    "RolesManagement": RolesManagement,
 }
 
 export const pagesConfig = {
