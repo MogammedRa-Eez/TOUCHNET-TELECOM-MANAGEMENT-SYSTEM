@@ -46,8 +46,8 @@ export default function RevenueChart({ invoices = [] }) {
               <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="costGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#334155" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#334155" stopOpacity={0} />
+              <stop offset="0%" stopColor="#ef4444" stopOpacity={0.2} />
+              <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(6,182,212,0.06)" />
