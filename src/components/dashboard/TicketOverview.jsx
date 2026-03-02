@@ -54,9 +54,9 @@ export default function TicketOverview({ tickets }) {
             <div key={item.name} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: item.color }} />
-                <span className="text-[12px] text-slate-400">{item.name}</span>
+                <span className="text-[12px] text-slate-600">{item.name}</span>
               </div>
-              <span className="text-[12px] font-semibold text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{item.value}</span>
+              <span className="text-[12px] font-semibold text-slate-800" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{item.value}</span>
             </div>
           ))}
         </div>
