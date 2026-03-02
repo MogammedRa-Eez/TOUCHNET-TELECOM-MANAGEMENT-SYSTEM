@@ -166,6 +166,24 @@ export default function Network() {
         </Button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+        {[
+          { id: "nodes", label: "Nodes", icon: Server },
+          { id: "metrics", label: "Live Metrics", icon: Activity },
+          { id: "trends", label: "Trends & Capacity", icon: TrendingUp },
+        ].map(tab => {
+          const Icon = tab.icon;
+          return (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+              style={activeTab === tab.id ? { background: "linear-gradient(135deg, #dc2626, #b91c1c)" } : {}}>
+              <Icon className="w-3.5 h-3.5" /> {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Filters */}
       <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="relative flex-1">
