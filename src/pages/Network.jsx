@@ -110,11 +110,14 @@ function NodeForm({ node, onSubmit, onCancel }) {
 }
 
 export default function Network() {
+  const { can, loading: rbacLoading } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
+
+  if (!rbacLoading && !can("network")) return <AccessDenied />;
 
   const { data: nodes = [], isLoading } = useQuery({
     queryKey: ["network-nodes"],

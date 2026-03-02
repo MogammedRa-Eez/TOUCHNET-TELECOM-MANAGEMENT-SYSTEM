@@ -30,12 +30,15 @@ const priorityColors = {
 };
 
 export default function Tickets() {
+  const { can, loading: rbacLoading } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const queryClient = useQueryClient();
+
+  if (!rbacLoading && !can("tickets")) return <AccessDenied />;
 
   const { data: tickets = [], isLoading } = useQuery({
     queryKey: ["tickets"],

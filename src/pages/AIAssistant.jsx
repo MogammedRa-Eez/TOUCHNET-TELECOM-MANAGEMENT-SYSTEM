@@ -9,6 +9,8 @@ import AccessDenied from "@/components/rbac/AccessDenied";
 
 export default function AIAssistant() {
   const { can, loading: rbacLoading } = useRBAC();
+  if (!rbacLoading && !can("ai_assistant")) return <AccessDenied />;
+
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
   const [messages, setMessages] = useState([]);

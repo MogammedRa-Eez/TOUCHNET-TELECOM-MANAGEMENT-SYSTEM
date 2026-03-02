@@ -23,11 +23,14 @@ const statusColors = {
 };
 
 export default function Billing() {
+  const { can, loading: rbacLoading } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
+
+  if (!rbacLoading && !can("billing")) return <AccessDenied />;
 
   const { data: invoices = [], isLoading } = useQuery({
     queryKey: ["invoices"],

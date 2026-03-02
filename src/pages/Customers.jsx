@@ -22,11 +22,14 @@ const statusColors = {
 };
 
 export default function Customers() {
+  const { can, loading: rbacLoading } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
+
+  if (!rbacLoading && !can("customers")) return <AccessDenied />;
 
   const { data: customers = [], isLoading } = useQuery({
     queryKey: ["customers"],

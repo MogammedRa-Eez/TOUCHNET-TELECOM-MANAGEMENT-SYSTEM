@@ -102,11 +102,14 @@ function EmployeeForm({ employee, onSubmit, onCancel }) {
 }
 
 export default function Employees() {
+  const { can, loading: rbacLoading } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [deptFilter, setDeptFilter] = useState("all");
   const queryClient = useQueryClient();
+
+  if (!rbacLoading && !can("employees")) return <AccessDenied />;
 
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],
