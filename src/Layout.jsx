@@ -96,33 +96,40 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       {/* Nav */}
       <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5" style={{ background: "#1e2a4a" }}>
         {!collapsed &&
-        <p className="text-[9px] font-semibold text-slate-400 tracking-widest uppercase px-2 py-2 mono">Navigation</p>
+        <p className="text-[9px] font-semibold text-slate-500 tracking-widest uppercase px-2 py-2 mono">Main Menu</p>
         }
-        {navItems.map((item) => {
+        {navItems.map((item, idx) => {
           const isActive = currentPageName === item.page;
           const Icon = item.icon;
+          // Add divider before "Roles"
+          const showDivider = item.page === "RolesManagement";
           return (
-            <Link
-              key={item.page}
-              to={createPageUrl(item.page)}
-              onClick={() => setMobileOpen(false)}
-              title={collapsed ? item.name : undefined}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium
-                transition-all duration-150 group relative
-                ${collapsed ? "justify-center" : ""}
-                ${isActive ? "active-nav text-red-300" : "text-slate-400 hover:text-slate-200 nav-item-hover"}
-              `}>
-
-              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-red-400" : "text-slate-500 group-hover:text-slate-300"}`} />
-              {!collapsed && <span className="flex-1 text-[13px]">{item.name}</span>}
-              {!collapsed && isActive && <ChevronRight className="w-3 h-3 text-red-500/60" />}
-            </Link>);
-
+            <React.Fragment key={item.page}>
+              {showDivider && (
+                <div className="mx-2 my-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }} />
+              )}
+              <Link
+                to={createPageUrl(item.page)}
+                onClick={() => setMobileOpen(false)}
+                title={collapsed ? item.name : undefined}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                  transition-all duration-150 group relative
+                  ${collapsed ? "justify-center" : ""}
+                  ${isActive ? "active-nav text-red-300" : "text-slate-400 hover:text-slate-200 nav-item-hover"}
+                `}>
+                <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-red-600/20" : "group-hover:bg-white/5"}`}>
+                  <Icon className={`w-4 h-4 ${isActive ? "text-red-400" : "text-slate-500 group-hover:text-slate-300"}`} />
+                </div>
+                {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
+                {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-red-400" />}
+              </Link>
+            </React.Fragment>
+          );
         })}
 
-        {/* Footer pinned below nav items */}
-        <div className="mt-auto pt-4" style={{ borderTop: "1px solid rgba(220,38,38,0.1)" }}>
+        {/* Footer */}
+        <div className="mt-auto pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
           {collapsed ?
           <p className="text-[8px] text-slate-600 mono text-center">TN</p> :
           <p className="text-[10px] text-slate-600 mono text-center">© TOUCHNET v2.4.1</p>
