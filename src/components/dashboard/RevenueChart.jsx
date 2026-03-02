@@ -33,8 +33,8 @@ export default function RevenueChart({ invoices = [] }) {
             <span className="text-slate-500">Revenue</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: "#334155" }} />
-            <span className="text-slate-500">Costs</span>
+            <div className="w-2 h-2 rounded-full bg-red-500" />
+            <span className="text-slate-500">Overdue</span>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function RevenueChart({ invoices = [] }) {
             formatter={(value) => [`$${value.toLocaleString()}`, '']}
           />
           <Area type="monotone" dataKey="revenue" stroke="#06b6d4" strokeWidth={2} fill="url(#revGrad)" />
-          <Area type="monotone" dataKey="costs" stroke="#334155" strokeWidth={1.5} fill="url(#costGrad)" />
+          <Area type="monotone" dataKey="overdue" stroke="#ef4444" strokeWidth={1.5} fill="url(#costGrad)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
