@@ -58,9 +58,9 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       <div className="bg-transparent flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
         <div className="flex items-center overflow-hidden flex-1">
           {collapsed ?
-          <img src={LOGO_URL} alt="TouchNet Logo" className="w-8 h-8 object-contain" /> :
+          <img src={LOGO_URL} alt="TouchNet Logo" className="w-50 h-50 object-contain" /> :
 
-          <img src={LOGO_URL} alt="TouchNet Logo" className="h-10 w-10 max-w-[150px]" style={{ filter: "brightness(0) invert(1)" }} />
+          <img src={LOGO_URL} alt="TouchNet Logo" className="h-50 w-100 max-w-[150px]" style={{ filter: "brightness(0) invert(1)" }} />
           }
         </div>
         {/* Mobile close */}
