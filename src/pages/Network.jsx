@@ -184,8 +184,40 @@ export default function Network() {
         })}
       </div>
 
-      {/* Filters */}
-      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      {/* Trends Tab */}
+      {activeTab === "trends" && (
+        <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+          <NetworkTrends nodes={nodes} />
+        </div>
+      )}
+
+      {/* Live Metrics Tab */}
+      {activeTab === "metrics" && (
+        <div className="space-y-4">
+          {nodes.length === 0 ? (
+            <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+              <Activity className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+              <p className="text-[13px]">No nodes to monitor</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {nodes.map(node => (
+                <div key={node.id} className="rounded-xl p-5" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className={`w-2 h-2 rounded-full ${statusConfig[node.status]?.dot || "bg-slate-500"}`} />
+                    <h3 className="text-sm font-semibold text-slate-200">{node.name}</h3>
+                    <span className="text-[10px] font-mono text-slate-500 ml-auto">{node.ip_address}</span>
+                  </div>
+                  <NetworkMetricsChart node={node} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Filters (nodes tab only) */}
+      {activeTab === "nodes" && <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search nodes..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
