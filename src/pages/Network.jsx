@@ -303,6 +303,9 @@ export default function Network() {
                 </div>
 
                 <div className="flex justify-end gap-1 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-blue-900/20" title="Live Metrics" onClick={() => { setActiveTab("metrics"); }}>
+                    <Activity className="w-3.5 h-3.5 text-blue-400" />
+                  </Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(node); setShowForm(true); }}>
                     <Pencil className="w-3.5 h-3.5 text-slate-500" />
                   </Button>
