@@ -50,7 +50,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen }) {
     `} style={{ background: "#0a0f1e" }}>
 
       {/* Logo */}
-      <div className="flex items-center justify-between px-5 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(220,38,38,0.15)" }}>
+      <div className="mr-1 ml-3 pt-5 pr-4 pb-4 pl-5 flex items-center justify-between h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(220,38,38,0.15)" }}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center relative" style={{ background: "linear-gradient(135deg, #dc2626, #991b1b)" }}>
             <Signal className="w-4 h-4 text-white" />
@@ -76,7 +76,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen }) {
 
 
       {/* Nav */}
-      <nav className="bg-[#ffffff] text-black mt-6 mb-1 pt-3 pr-4 pb-2 pl-3 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5">
+      <nav className="bg-[#ffffff] text-black mb-1 pt-3 pr-4 pb-2 pl-3 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5">
         <p className="text-[9px] font-semibold text-slate-600 tracking-widest uppercase px-2 py-2 mono">Navigation</p>
         {navItems.map((item) => {
           const isActive = currentPageName === item.page;
@@ -85,7 +85,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen }) {
             <Link
               key={item.page}
               to={createPageUrl(item.page)}
-              onClick={() => setMobileOpen(false)} className="text-[#e51010] my-2 pt-10 pr-3 pl-1 text-base font-extrabold text-left underline uppercase rounded-md flex items-center gap-3 transition-all duration-150 group relative hover:text-slate-200 nav-item-hover">
+              onClick={() => setMobileOpen(false)} className="bg-[#f7ebff] text-[#e51010] my-2 pt-10 pr-3 pl-1 text-base font-extrabold text-left underline uppercase rounded-md flex items-center gap-3 transition-all duration-150 group relative hover:text-slate-200 nav-item-hover">
 
 
 
