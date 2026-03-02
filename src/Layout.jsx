@@ -200,6 +200,8 @@ function LayoutInner({ children, currentPageName }) {
             <Bell className="w-4 h-4" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0a0f1e]" />
           </button>
+
+          <UserMenu />
         </header>
 
         <main className="flex-1 overflow-y-auto grid-bg">
