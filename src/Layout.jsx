@@ -43,7 +43,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
 
   const navItems = loading ?
   ALL_NAV :
-  ALL_NAV.filter((item) => can(item.perm));
+  ALL_NAV.filter((item) => item.perm === null || can(item.perm));
 
   return (
     <aside
