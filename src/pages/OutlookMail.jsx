@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useRBAC } from "@/components/rbac/RBACContext";
+import AccessDenied from "@/components/rbac/AccessDenied";
 import { Mail, Send, Inbox, RefreshCw, Eye, Reply, ChevronLeft, Loader2, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

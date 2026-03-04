@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   const isLoading = loadingCustomers || loadingInvoices || loadingTickets || loadingNodes;
 
-  // if (!rbacLoading && !can("dashboard")) return <AccessDenied />;
+  if (!rbacLoading && !can("dashboard")) return <AccessDenied />;
 
   const activeCustomers = customers.filter((c) => c.status === "active").length;
   const totalRevenue = invoices.filter((i) => i.status === "paid").reduce((a, i) => a + (i.total || i.amount || 0), 0);
