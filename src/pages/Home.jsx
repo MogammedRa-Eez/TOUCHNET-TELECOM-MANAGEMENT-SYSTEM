@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { Wifi, Shield, Zap, LogIn, Loader2 } from "lucide-react";
+import { Wifi, Shield, Zap, LogIn, Loader2, KeyRound } from "lucide-react";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
