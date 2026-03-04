@@ -149,7 +149,12 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
 function LayoutInner({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const pageLabel = pageLabels[currentPageName] || currentPageName;
+
+  React.useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "#f1f5f9" }}>

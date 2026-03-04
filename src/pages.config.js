@@ -49,6 +49,7 @@
  */
 import AIAssistant from './pages/AIAssistant';
 import Billing from './pages/Billing';
+import CustomerPortal from './pages/CustomerPortal';
 import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
@@ -58,13 +59,13 @@ import Network from './pages/Network';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
-import CustomerPortal from './pages/CustomerPortal';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AIAssistant": AIAssistant,
     "Billing": Billing,
+    "CustomerPortal": CustomerPortal,
     "Customers": Customers,
     "Dashboard": Dashboard,
     "Employees": Employees,
@@ -74,7 +75,6 @@ export const PAGES = {
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "UserSettings": UserSettings,
-    "CustomerPortal": CustomerPortal,
 }
 
 export const pagesConfig = {
