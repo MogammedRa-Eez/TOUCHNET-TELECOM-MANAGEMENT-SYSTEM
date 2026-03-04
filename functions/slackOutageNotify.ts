@@ -5,31 +5,77 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const payload = await req.json();
 
-        const { event, data, old_data } = payload;
+        const { data, old_data } = payload;
 
-        // Only notify when status changes TO "offline"
-        if (data?.status !== "offline" || old_data?.status === "offline") {
-            return Response.json({ skipped: true });
+        const newStatus = data?.status;
+        const oldStatus = old_data?.status;
+
+        // Only act if status actually changed
+        if (!newStatus || newStatus === oldStatus) {
+            return Response.json({ skipped: true, reason: "no status change" });
         }
 
         const webhookUrl = Deno.env.get("slack_url");
         if (!webhookUrl) {
-            return Response.json({ error: "SLACK_WEBHOOK_URL not set" }, { status: 500 });
+            return Response.json({ error: "slack_url secret not set" }, { status: 500 });
+        }
+
+        // Fetch all users and check their notification preferences
+        const users = await base44.asServiceRole.entities.User.list();
+
+        // Find at least one user who has this event type enabled
+        const eventKeyMap = {
+            offline: "notify_offline",
+            degraded: "notify_degraded",
+            maintenance: "notify_maintenance",
+            online: "notify_back_online",
+        };
+
+        const eventKey = eventKeyMap[newStatus];
+        if (!eventKey) {
+            return Response.json({ skipped: true, reason: "unmapped status" });
+        }
+
+        // Check if any admin/user has this notification enabled
+        const anyEnabled = users.some((u) => {
+            const prefs = u.notification_preferences;
+            if (!prefs) {
+                // Default: notify_offline and notify_back_online are true by default
+                return eventKey === "notify_offline" || eventKey === "notify_back_online";
+            }
+            return prefs.slack_enabled !== false && prefs[eventKey] === true;
+        });
+
+        if (!anyEnabled) {
+            return Response.json({ skipped: true, reason: "no users have this notification enabled" });
         }
 
         const nodeName = data.name || "Unknown Node";
-        const nodeType = data.type || "unknown";
+        const nodeType = (data.type || "unknown").replace(/_/g, " ");
         const nodeLocation = data.location || "N/A";
         const nodeIp = data.ip_address || "N/A";
 
+        const statusEmoji = {
+            offline: "🔴",
+            degraded: "🟡",
+            maintenance: "🔵",
+            online: "🟢",
+        }[newStatus] || "⚪";
+
+        const statusLabel = {
+            offline: "Offline",
+            degraded: "Degraded",
+            maintenance: "Maintenance",
+            online: "Back Online",
+        }[newStatus] || newStatus;
+
         const message = {
-            text: `🚨 *Service Outage Detected*`,
             blocks: [
                 {
                     type: "header",
                     text: {
                         type: "plain_text",
-                        text: "🚨 Service Outage Detected",
+                        text: `${statusEmoji} Network Node ${statusLabel}`,
                         emoji: true
                     }
                 },
@@ -37,9 +83,11 @@ Deno.serve(async (req) => {
                     type: "section",
                     fields: [
                         { type: "mrkdwn", text: `*Node:*\n${nodeName}` },
-                        { type: "mrkdwn", text: `*Type:*\n${nodeType.replace(/_/g, " ")}` },
+                        { type: "mrkdwn", text: `*Type:*\n${nodeType}` },
                         { type: "mrkdwn", text: `*Location:*\n${nodeLocation}` },
-                        { type: "mrkdwn", text: `*IP Address:*\n${nodeIp}` }
+                        { type: "mrkdwn", text: `*IP Address:*\n${nodeIp}` },
+                        { type: "mrkdwn", text: `*Previous Status:*\n${oldStatus || "N/A"}` },
+                        { type: "mrkdwn", text: `*New Status:*\n${statusLabel}` },
                     ]
                 },
                 {
@@ -65,7 +113,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: `Slack error: ${text}` }, { status: 500 });
         }
 
-        return Response.json({ success: true, node: nodeName });
+        return Response.json({ success: true, node: nodeName, status: newStatus });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
