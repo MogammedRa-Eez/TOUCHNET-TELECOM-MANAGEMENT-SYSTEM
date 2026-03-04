@@ -228,6 +228,96 @@ export default function CustomerPortal() {
   );
 }
 
+function ActivityDashboard({ customer, invoices, tickets }) {
+  const totalBilled = invoices.reduce((s, i) => s + (i.total || i.amount || 0), 0);
+  const totalPaid = invoices.filter(i => i.status === "paid").reduce((s, i) => s + (i.total || i.amount || 0), 0);
+  const outstanding = invoices.filter(i => ["sent", "overdue"].includes(i.status)).reduce((s, i) => s + (i.total || i.amount || 0), 0);
+  const openTickets = tickets.filter(t => !["resolved", "closed"].includes(t.status)).length;
+
+  // Build a combined timeline of recent events
+  const events = [
+    ...invoices.slice(0, 5).map(i => ({
+      id: i.id,
+      date: i.created_date,
+      icon: <CreditCard className="w-3.5 h-3.5 text-blue-500" />,
+      iconBg: "bg-blue-50 border-blue-100",
+      title: `Invoice ${i.invoice_number || ""}`,
+      desc: `R${(i.total || i.amount || 0).toFixed(2)} — ${i.status}`,
+      badge: i.status === "paid" ? "text-emerald-600 bg-emerald-50" : i.status === "overdue" ? "text-red-600 bg-red-50" : "text-blue-600 bg-blue-50",
+    })),
+    ...tickets.slice(0, 5).map(t => ({
+      id: t.id,
+      date: t.created_date,
+      icon: <HeadphonesIcon className="w-3.5 h-3.5 text-purple-500" />,
+      iconBg: "bg-purple-50 border-purple-100",
+      title: t.subject,
+      desc: `${t.category} · ${t.priority} priority`,
+      badge: t.status === "resolved" ? "text-emerald-600 bg-emerald-50" : "text-purple-600 bg-purple-50",
+      status: t.status,
+    })),
+  ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 8);
+
+  const stats = [
+    { label: "Total Billed", value: `R${totalBilled.toFixed(2)}`, icon: <TrendingUp className="w-4 h-4 text-blue-500" />, bg: "bg-blue-50", border: "border-blue-100" },
+    { label: "Total Paid", value: `R${totalPaid.toFixed(2)}`, icon: <CheckCircle className="w-4 h-4 text-emerald-500" />, bg: "bg-emerald-50", border: "border-emerald-100" },
+    { label: "Outstanding", value: `R${outstanding.toFixed(2)}`, icon: <AlertCircle className="w-4 h-4 text-orange-500" />, bg: "bg-orange-50", border: "border-orange-100" },
+    { label: "Open Tickets", value: openTickets, icon: <Activity className="w-4 h-4 text-purple-500" />, bg: "bg-purple-50", border: "border-purple-100" },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* Stats row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {stats.map(s => (
+          <div key={s.label} className={`${s.bg} ${s.border} border rounded-xl p-4`}>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">{s.label}</p>
+              {s.icon}
+            </div>
+            <p className="text-lg font-bold text-slate-800">{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent Activity Timeline */}
+      {events.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <Activity className="w-4 h-4 text-slate-500" />
+            <h3 className="font-semibold text-slate-700 text-sm">Recent Activity</h3>
+          </div>
+          <div className="space-y-3">
+            {events.map((e, idx) => (
+              <div key={e.id + idx} className="flex items-start gap-3">
+                <div className={`w-7 h-7 rounded-lg border flex items-center justify-center flex-shrink-0 mt-0.5 ${e.iconBg}`}>
+                  {e.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <p className="text-sm font-medium text-slate-700 truncate">{e.title}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold capitalize flex-shrink-0 ${e.badge}`}>
+                      {e.status || (e.desc.includes("paid") ? "paid" : e.desc.split("—")[1]?.trim())}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-0.5">{e.desc}</p>
+                  {e.date && (
+                    <p className="text-[10px] text-slate-300 mt-0.5">
+                      {format(new Date(e.date), "dd MMM yyyy, HH:mm")}
+                    </p>
+                  )}
+                </div>
+                {idx < events.length - 1 && (
+                  <div className="absolute left-[27px] top-7 w-px h-3 bg-slate-100" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function InfoItem({ label, value, icon, valueClass = "text-slate-800" }) {
   return (
     <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
