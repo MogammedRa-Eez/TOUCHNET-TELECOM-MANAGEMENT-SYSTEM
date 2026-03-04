@@ -198,7 +198,7 @@ function LayoutInner({ children, currentPageName }) {
 
           <div className="flex-1">
             <h2 className="text-[15px] font-bold text-slate-800 leading-tight tracking-wide">{pageLabel}</h2>
-            <p className="text-[10px] text-slate-400 hidden sm:block mono">touchnet.local / admin</p>
+            <p className="text-[10px] text-slate-400 hidden sm:block mono">{currentUser?.full_name || currentUser?.email || "touchnet.local"}</p>
           </div>
 
           <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#f1f5f9", border: "1px solid rgba(0,0,0,0.1)" }}>
