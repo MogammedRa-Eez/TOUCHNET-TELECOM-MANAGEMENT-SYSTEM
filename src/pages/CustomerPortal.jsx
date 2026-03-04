@@ -184,6 +184,16 @@ export default function CustomerPortal() {
             <InvoiceSection invoices={invoices} customer={customer} />
           </TabsContent>
 
+          {/* Profile & History */}
+          <TabsContent value="profile" className="mt-4">
+            <CustomerProfileDetail
+              customer={customer}
+              invoices={invoices}
+              tickets={tickets}
+              isAdmin={isAdmin}
+            />
+          </TabsContent>
+
           {/* Tickets */}
           <TabsContent value="tickets" className="mt-4 space-y-3">
             {tickets.length === 0 ? (
