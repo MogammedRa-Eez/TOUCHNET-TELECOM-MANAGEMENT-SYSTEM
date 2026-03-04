@@ -15,6 +15,7 @@ export const ALL_PERMISSIONS = [
   { key: "employees",        label: "Employees",         group: "Pages" },
   { key: "ai_assistant",     label: "AI Assistant",      group: "Pages" },
   { key: "roles_management", label: "Roles Management",  group: "Pages" },
+  { key: "outlook",          label: "Outlook Mail",      group: "Pages" },
   { key: "view_salaries",    label: "View Salaries",     group: "Data" },
   { key: "view_financials",  label: "View Financials",   group: "Data" },
   { key: "delete_records",   label: "Delete Records",    group: "Actions" },
