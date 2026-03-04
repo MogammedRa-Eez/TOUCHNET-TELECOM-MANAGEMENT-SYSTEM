@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Bell, Slack, Save, CheckCircle } from "lucide-react";
+import { Bell, Save, CheckCircle, BellRing } from "lucide-react";
 
 const DEFAULT_PREFS = {
   slack_enabled: true,
