@@ -32,7 +32,8 @@ const ALL_NAV = [
 { name: "Inventory", page: "Inventory", icon: Package, perm: "network" },
 { name: "Employees", page: "Employees", icon: UserCog, perm: "employees" },
 { name: "AI Assistant", page: "AIAssistant", icon: Bot, perm: "ai_assistant" },
-{ name: "Roles", page: "RolesManagement", icon: Shield, perm: "roles_management" }];
+{ name: "Roles", page: "RolesManagement", icon: Shield, perm: "roles_management" },
+{ name: "Settings", page: "UserSettings", icon: Settings, perm: null }];
 
 
 const pageLabels = {
