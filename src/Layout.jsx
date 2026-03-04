@@ -201,10 +201,7 @@ function LayoutInner({ children, currentPageName }) {
             <span className="text-sm text-slate-400">Search...</span>
           </div>
 
-          <button className="relative w-9 h-9 flex items-center justify-center rounded-md text-slate-500 hover:text-slate-800 transition-colors" style={{ background: "#f1f5f9", border: "1px solid rgba(0,0,0,0.1)" }}>
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#0a0f1e]" />
-          </button>
+          <NotificationBell />
 
           <UserMenu />
         </header>
