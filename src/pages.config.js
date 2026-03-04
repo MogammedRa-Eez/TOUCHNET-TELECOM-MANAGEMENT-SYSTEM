@@ -59,6 +59,7 @@ import Network from './pages/Network';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
+import OutlookMail from './pages/OutlookMail';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "UserSettings": UserSettings,
+    "OutlookMail": OutlookMail,
 }
 
 export const pagesConfig = {
