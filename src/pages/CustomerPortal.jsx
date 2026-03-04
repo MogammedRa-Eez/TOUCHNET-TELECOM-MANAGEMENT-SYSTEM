@@ -174,6 +174,9 @@ export default function CustomerPortal() {
             <TabsTrigger value="tickets" className="gap-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-white rounded-lg">
               <TicketCheck className="w-4 h-4" /> Support Tickets
             </TabsTrigger>
+            <TabsTrigger value="profile" className="gap-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-white rounded-lg">
+              <User className="w-4 h-4" /> Profile & History
+            </TabsTrigger>
           </TabsList>
 
           {/* Invoices */}
