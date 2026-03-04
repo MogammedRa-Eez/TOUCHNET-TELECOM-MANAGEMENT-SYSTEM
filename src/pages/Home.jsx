@@ -6,31 +6,59 @@ import { Wifi, Shield, Zap, LogIn, Loader2, KeyRound } from "lucide-react";
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
 export default function Home() {
-  const [status, setStatus] = useState("loading"); // loading | redirecting | show_login
+  const [status, setStatus] = useState("loading"); // loading | pin | redirecting | show_login
+  const [user, setUser] = useState(null);
+  const [pin, setPin] = useState("");
+  const [pinError, setPinError] = useState("");
 
   useEffect(() => {
     async function detectAndRedirect() {
       try {
-        const user = await base44.auth.me();
-        if (!user) {
+        const me = await base44.auth.me();
+        if (!me) {
           setStatus("show_login");
           return;
         }
-
-        // Check if the logged-in user is a customer
-        const customers = await base44.entities.Customer.filter({ email: user.email });
-        if (customers.length > 0) {
-          window.location.href = createPageUrl("CustomerPortal");
-        } else {
-          window.location.href = createPageUrl("Dashboard");
-        }
-        setStatus("redirecting");
+        setUser(me);
+        setStatus("pin");
       } catch {
         setStatus("show_login");
       }
     }
     detectAndRedirect();
   }, []);
+
+  async function handlePinSubmit(e) {
+    e.preventDefault();
+    if (!pin.trim()) {
+      setPinError("Please enter your unique ID.");
+      return;
+    }
+    // Verify: check if ID matches user's email prefix or account_number for customers
+    try {
+      const customers = await base44.entities.Customer.filter({ email: user.email });
+      if (customers.length > 0) {
+        const customer = customers[0];
+        const validId = customer.account_number || customer.email.split("@")[0];
+        if (pin.trim().toLowerCase() !== validId.toLowerCase()) {
+          setPinError("Invalid unique ID. Please try again.");
+          return;
+        }
+        window.location.href = createPageUrl("CustomerPortal");
+      } else {
+        // Staff: use their email prefix as ID
+        const validId = user.email.split("@")[0];
+        if (pin.trim().toLowerCase() !== validId.toLowerCase()) {
+          setPinError("Invalid unique ID. Please try again.");
+          return;
+        }
+        window.location.href = createPageUrl("Dashboard");
+      }
+      setStatus("redirecting");
+    } catch {
+      setPinError("Verification failed. Please try again.");
+    }
+  }
 
   if (status === "loading" || status === "redirecting") {
     return (
