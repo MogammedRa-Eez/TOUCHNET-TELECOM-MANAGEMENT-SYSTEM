@@ -8,7 +8,20 @@ const DEFAULT_PREFS = {
   notify_degraded: false,
   notify_maintenance: false,
   notify_back_online: true,
+  inapp_network: true,
+  inapp_billing: true,
+  inapp_ticket: true,
+  inapp_customer: false,
+  inapp_system: true,
 };
+
+const INAPP_OPTIONS = [
+  { key: "inapp_network", label: "Network events", description: "Node status changes and alerts", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-200" },
+  { key: "inapp_billing", label: "Billing updates", description: "Invoice created, paid or overdue", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200" },
+  { key: "inapp_ticket", label: "Ticket updates", description: "New tickets and status changes", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-200" },
+  { key: "inapp_customer", label: "Customer events", description: "New or updated customer accounts", color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-200" },
+  { key: "inapp_system", label: "System notifications", description: "General system alerts and updates", color: "text-slate-600", bg: "bg-slate-50", border: "border-slate-200" },
+];
 
 const EVENT_OPTIONS = [
   { key: "notify_offline", label: "Node goes offline", description: "Alert when a node status changes to offline", color: "text-red-600", bg: "bg-red-50", border: "border-red-200" },
