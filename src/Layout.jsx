@@ -35,6 +35,7 @@ const ALL_NAV = [
 { name: "Employees", page: "Employees", icon: UserCog, perm: "employees" },
 { name: "AI Assistant", page: "AIAssistant", icon: Bot, perm: "ai_assistant" },
 { name: "Roles", page: "RolesManagement", icon: Shield, perm: "roles_management" },
+{ name: "Outlook", page: "OutlookMail", icon: Mail, perm: null },
 { name: "Settings", page: "UserSettings", icon: Settings, perm: null }];
 
 
