@@ -6,9 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   User, Receipt, TicketCheck, Wifi, LogOut, AlertCircle,
   CheckCircle, Clock, XCircle, ArrowUpCircle, TrendingUp,
-  Activity, CreditCard, HeadphonesIcon
+  Activity, CreditCard, HeadphonesIcon, Download, Filter,
+  ArrowUpDown, ChevronDown, ChevronUp, Calendar, DollarSign
 } from "lucide-react";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
