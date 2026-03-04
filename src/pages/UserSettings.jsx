@@ -168,6 +168,9 @@ export default function UserSettings() {
         </div>
       </div>
 
+      {/* Sage Sync — admin only */}
+      {user?.role === "admin" && <SageSyncPanel />}
+
       {/* Save Button */}
       <div className="flex justify-end">
         <button
