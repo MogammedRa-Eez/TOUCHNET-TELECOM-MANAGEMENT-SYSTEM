@@ -159,6 +159,9 @@ export default function CustomerPortal() {
           )}
         </div>
 
+        {/* Activity Dashboard */}
+        <ActivityDashboard customer={customer} invoices={invoices} tickets={tickets} />
+
         {/* Tabs */}
         <Tabs defaultValue="invoices">
           <TabsList className="bg-white border border-slate-200 rounded-xl p-1">
