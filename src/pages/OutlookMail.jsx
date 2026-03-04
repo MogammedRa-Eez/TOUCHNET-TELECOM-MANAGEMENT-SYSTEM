@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
 export default function OutlookMail() {
+    const { can, loading: rbacLoading } = useRBAC();
+    if (!rbacLoading && !can("outlook")) return <AccessDenied />;
+
     const [view, setView] = useState("inbox"); // inbox | compose | read
     const [emails, setEmails] = useState([]);
     const [selectedEmail, setSelectedEmail] = useState(null);
