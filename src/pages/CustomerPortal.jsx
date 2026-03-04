@@ -52,7 +52,7 @@ export default function CustomerPortal() {
 
   useEffect(() => {
     base44.auth.me()
-      .then(setUser)
+      .then(u => { setUser(u); setIsAdmin(u?.role === "admin"); })
       .catch(() => base44.auth.redirectToLogin(window.location.pathname))
       .finally(() => setLoadingUser(false));
   }, []);
