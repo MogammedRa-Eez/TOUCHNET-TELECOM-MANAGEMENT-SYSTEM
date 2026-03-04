@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Bell, Save, CheckCircle, BellRing } from "lucide-react";
+import SageSyncPanel from "@/components/settings/SageSyncPanel";
 
 const DEFAULT_PREFS = {
   slack_enabled: true,
