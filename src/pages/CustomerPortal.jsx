@@ -212,6 +212,215 @@ export default function CustomerPortal() {
   );
 }
 
+function InvoiceSection({ invoices, customer }) {
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("date");
+  const [sortDir, setSortDir] = useState("desc");
+  const [expanded, setExpanded] = useState(null);
+  const [downloading, setDownloading] = useState(null);
+
+  const filtered = invoices
+    .filter(i => statusFilter === "all" || i.status === statusFilter)
+    .sort((a, b) => {
+      let va, vb;
+      if (sortBy === "date") { va = new Date(a.created_date); vb = new Date(b.created_date); }
+      else if (sortBy === "amount") { va = a.total || a.amount || 0; vb = b.total || b.amount || 0; }
+      else if (sortBy === "due") { va = a.due_date ? new Date(a.due_date) : 0; vb = b.due_date ? new Date(b.due_date) : 0; }
+      return sortDir === "desc" ? vb - va : va - vb;
+    });
+
+  const toggleSort = (field) => {
+    if (sortBy === field) setSortDir(d => d === "desc" ? "asc" : "desc");
+    else { setSortBy(field); setSortDir("desc"); }
+  };
+
+  const downloadInvoice = async (inv) => {
+    setDownloading(inv.id);
+    try {
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.setTextColor(30, 42, 74);
+      doc.text("INVOICE", 20, 25);
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Invoice #: ${inv.invoice_number || inv.id}`, 20, 38);
+      doc.text(`Date: ${inv.created_date ? format(new Date(inv.created_date), "dd MMM yyyy") : "—"}`, 20, 45);
+      if (inv.due_date) doc.text(`Due Date: ${format(new Date(inv.due_date), "dd MMM yyyy")}`, 20, 52);
+      doc.setFontSize(11);
+      doc.setTextColor(30);
+      doc.text("Bill To:", 20, 65);
+      doc.setFontSize(10);
+      doc.setTextColor(60);
+      doc.text(customer.full_name, 20, 72);
+      doc.text(customer.email, 20, 78);
+      if (customer.address) doc.text(customer.address, 20, 84);
+      doc.setDrawColor(200);
+      doc.line(20, 95, 190, 95);
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text("Description", 20, 103);
+      doc.text("Amount", 160, 103);
+      doc.setDrawColor(220);
+      doc.line(20, 107, 190, 107);
+      doc.setTextColor(30);
+      doc.text(inv.description || `Service: ${customer.service_plan?.replace(/_/g, " ") || "Internet Service"}`, 20, 115);
+      doc.text(`R${(inv.amount || 0).toFixed(2)}`, 160, 115);
+      if (inv.tax) {
+        doc.setTextColor(100);
+        doc.text("Tax", 20, 123);
+        doc.text(`R${inv.tax.toFixed(2)}`, 160, 123);
+      }
+      doc.line(20, 128, 190, 128);
+      doc.setFontSize(12);
+      doc.setTextColor(30, 42, 74);
+      doc.text("Total", 20, 137);
+      doc.text(`R${(inv.total || inv.amount || 0).toFixed(2)}`, 160, 137);
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text(`Status: ${inv.status?.toUpperCase()}`, 20, 150);
+      if (inv.paid_date) doc.text(`Paid on: ${format(new Date(inv.paid_date), "dd MMM yyyy")}`, 20, 157);
+      if (inv.payment_method) doc.text(`Payment Method: ${inv.payment_method?.replace(/_/g, " ")}`, 20, 164);
+      doc.save(`Invoice-${inv.invoice_number || inv.id}.pdf`);
+    } finally {
+      setDownloading(null);
+    }
+  };
+
+  const SortBtn = ({ field, label, icon }) => (
+    <button
+      onClick={() => toggleSort(field)}
+      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${sortBy === field ? "bg-slate-800 text-white border-slate-800" : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"}`}>
+      {icon}{label}
+      {sortBy === field && (sortDir === "desc" ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />)}
+    </button>
+  );
+
+  if (invoices.length === 0) return <Empty icon={<Receipt className="w-8 h-8 text-slate-300" />} text="No invoices found" />;
+
+  return (
+    <div className="space-y-3">
+      {/* Filters & Sort */}
+      <div className="bg-white rounded-xl border border-slate-200 p-3 flex flex-wrap items-center gap-3 shadow-sm">
+        <div className="flex items-center gap-2">
+          <Filter className="w-3.5 h-3.5 text-slate-400" />
+          <span className="text-xs text-slate-500 font-medium">Status:</span>
+          {["all", "paid", "sent", "overdue", "draft", "cancelled"].map(s => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors capitalize ${statusFilter === s ? "bg-slate-800 text-white border-slate-800" : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300"}`}>
+              {s}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 ml-auto">
+          <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+          <span className="text-xs text-slate-500 font-medium">Sort:</span>
+          <SortBtn field="date" label="Date" icon={<Calendar className="w-3 h-3" />} />
+          <SortBtn field="amount" label="Amount" icon={<DollarSign className="w-3 h-3" />} />
+          <SortBtn field="due" label="Due" icon={<Clock className="w-3 h-3" />} />
+        </div>
+      </div>
+
+      {/* Invoice cards */}
+      {filtered.length === 0 ? (
+        <Empty icon={<Receipt className="w-8 h-8 text-slate-300" />} text="No invoices match your filter" />
+      ) : filtered.map(inv => {
+        const ic = invoiceStatusColor[inv.status] || invoiceStatusColor.draft;
+        const isExpanded = expanded === inv.id;
+        return (
+          <div key={inv.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-4 flex items-center justify-between gap-4 flex-wrap">
+              <button className="flex-1 text-left" onClick={() => setExpanded(isExpanded ? null : inv.id)}>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <Receipt className="w-4 h-4 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-800 text-sm">{inv.invoice_number || "Invoice"}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {inv.billing_period_start ? `Period: ${inv.billing_period_start} — ${inv.billing_period_end || ""}` : inv.description || "—"}
+                    </p>
+                    <div className="flex items-center gap-3 mt-1">
+                      {inv.due_date && <span className="text-[10px] text-slate-400">Due: {inv.due_date}</span>}
+                      {inv.created_date && <span className="text-[10px] text-slate-400">Issued: {format(new Date(inv.created_date), "dd MMM yyyy")}</span>}
+                    </div>
+                  </div>
+                </div>
+              </button>
+              <div className="flex items-center gap-3">
+                <span className="font-bold text-slate-800">R{(inv.total || inv.amount || 0).toFixed(2)}</span>
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${ic.bg} ${ic.text}`}>{inv.status}</span>
+                <button
+                  onClick={() => downloadInvoice(inv)}
+                  disabled={downloading === inv.id}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-white hover:bg-slate-700 transition-colors disabled:opacity-60">
+                  <Download className="w-3.5 h-3.5" />
+                  {downloading === inv.id ? "..." : "PDF"}
+                </button>
+                <button onClick={() => setExpanded(isExpanded ? null : inv.id)} className="text-slate-400 hover:text-slate-600">
+                  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Expanded: Payment History */}
+            {isExpanded && (
+              <div className="border-t border-slate-100 px-4 pb-4 pt-3 bg-slate-50">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Payment Details</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+                  <div className="bg-white rounded-lg p-3 border border-slate-200">
+                    <p className="text-[10px] text-slate-400 uppercase">Subtotal</p>
+                    <p className="text-sm font-semibold text-slate-800">R{(inv.amount || 0).toFixed(2)}</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-slate-200">
+                    <p className="text-[10px] text-slate-400 uppercase">Tax</p>
+                    <p className="text-sm font-semibold text-slate-800">R{(inv.tax || 0).toFixed(2)}</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-slate-200">
+                    <p className="text-[10px] text-slate-400 uppercase">Total</p>
+                    <p className="text-sm font-bold text-slate-800">R{(inv.total || inv.amount || 0).toFixed(2)}</p>
+                  </div>
+                </div>
+                {inv.status === "paid" ? (
+                  <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-lg px-4 py-3">
+                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs font-semibold text-emerald-700">Payment Received</p>
+                      <p className="text-xs text-emerald-600">
+                        {inv.paid_date ? `Paid on ${format(new Date(inv.paid_date), "dd MMM yyyy")}` : "Payment date not recorded"}
+                        {inv.payment_method ? ` via ${inv.payment_method.replace(/_/g, " ")}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                ) : inv.status === "overdue" ? (
+                  <div className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
+                    <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs font-semibold text-red-700">Payment Overdue</p>
+                      <p className="text-xs text-red-600">
+                        {inv.due_date ? `Was due on ${inv.due_date}` : "Please contact support to arrange payment."}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+                    <Clock className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                    <p className="text-xs text-blue-700">
+                      {inv.status === "draft" ? "Invoice not yet sent." : `Payment pending${inv.due_date ? ` — due ${inv.due_date}` : ""}.`}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function ActivityDashboard({ customer, invoices, tickets }) {
   const totalBilled = invoices.reduce((s, i) => s + (i.total || i.amount || 0), 0);
   const totalPaid = invoices.filter(i => i.status === "paid").reduce((s, i) => s + (i.total || i.amount || 0), 0);
