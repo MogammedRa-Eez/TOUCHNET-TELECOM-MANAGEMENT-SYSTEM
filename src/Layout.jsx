@@ -15,7 +15,8 @@ import {
   ChevronLeft,
   Bell,
   Search,
-  Shield } from
+  Shield,
+  Package } from
 "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
