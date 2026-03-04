@@ -21,6 +21,7 @@ import {
 "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 const ALL_NAV = [
 { name: "Home", page: "Home", icon: LayoutDashboard, perm: null },
