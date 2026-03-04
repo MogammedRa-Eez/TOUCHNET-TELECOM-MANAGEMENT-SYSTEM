@@ -10,6 +10,7 @@ import {
   ArrowUpDown, ChevronDown, ChevronUp, Calendar, DollarSign
 } from "lucide-react";
 import { format } from "date-fns";
+import CustomerProfileDetail from "@/components/portal/CustomerProfileDetail";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
