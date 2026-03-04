@@ -175,25 +175,8 @@ export default function CustomerPortal() {
           </TabsList>
 
           {/* Invoices */}
-          <TabsContent value="invoices" className="mt-4 space-y-3">
-            {invoices.length === 0 ? (
-              <Empty icon={<Receipt className="w-8 h-8 text-slate-300" />} text="No invoices found" />
-            ) : invoices.map(inv => {
-              const ic = invoiceStatusColor[inv.status] || invoiceStatusColor.draft;
-              return (
-                <div key={inv.id} className="bg-white rounded-xl border border-slate-200 p-4 flex items-center justify-between gap-4 flex-wrap shadow-sm">
-                  <div>
-                    <p className="font-semibold text-slate-800 text-sm">{inv.invoice_number || `Invoice`}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{inv.description || inv.billing_period_start ? `Period: ${inv.billing_period_start || ""} — ${inv.billing_period_end || ""}` : "—"}</p>
-                    {inv.due_date && <p className="text-xs text-slate-400">Due: {inv.due_date}</p>}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-bold text-slate-800">R{(inv.total || inv.amount || 0).toFixed(2)}</span>
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${ic.bg} ${ic.text}`}>{inv.status}</span>
-                  </div>
-                </div>
-              );
-            })}
+          <TabsContent value="invoices" className="mt-4">
+            <InvoiceSection invoices={invoices} customer={customer} />
           </TabsContent>
 
           {/* Tickets */}
