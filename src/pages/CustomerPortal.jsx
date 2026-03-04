@@ -48,6 +48,7 @@ const priorityColor = {
 export default function CustomerPortal() {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     base44.auth.me()
