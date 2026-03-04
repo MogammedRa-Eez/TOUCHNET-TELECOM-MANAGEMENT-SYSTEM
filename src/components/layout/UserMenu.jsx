@@ -24,8 +24,8 @@ export default function UserMenu() {
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.auth.updateMe({ full_name: name });
-    setUser((u) => ({ ...u, full_name: name }));
+    await base44.auth.updateMe({ display_name: name });
+    setUser((u) => ({ ...u, display_name: name }));
     setSaving(false);
     setEditOpen(false);
     setOpen(false);
