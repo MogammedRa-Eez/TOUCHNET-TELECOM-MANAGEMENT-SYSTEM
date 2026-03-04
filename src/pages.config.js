@@ -53,11 +53,12 @@ import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import Home from './pages/Home';
+import Inventory from './pages/Inventory';
 import Network from './pages/Network';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
-import Inventory from './pages/Inventory';
 import UserSettings from './pages/UserSettings';
+import CustomerPortal from './pages/CustomerPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -68,11 +69,12 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "Employees": Employees,
     "Home": Home,
+    "Inventory": Inventory,
     "Network": Network,
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
-    "Inventory": Inventory,
     "UserSettings": UserSettings,
+    "CustomerPortal": CustomerPortal,
 }
 
 export const pagesConfig = {
