@@ -13,7 +13,6 @@ import {
   X,
   ChevronRight,
   ChevronLeft,
-  Bell,
   Search,
   Shield,
   Package,
