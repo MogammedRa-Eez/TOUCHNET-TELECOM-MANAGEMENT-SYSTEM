@@ -16,7 +16,8 @@ import {
   Bell,
   Search,
   Shield,
-  Package } from
+  Package,
+  Settings } from
 "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
