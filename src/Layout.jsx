@@ -17,7 +17,8 @@ import {
   Search,
   Shield,
   Package,
-  Settings } from
+  Settings,
+  Mail } from
 "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
