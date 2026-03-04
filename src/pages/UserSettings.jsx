@@ -136,6 +136,37 @@ export default function UserSettings() {
         </div>
       </div>
 
+      {/* In-App Notifications */}
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center">
+              <BellRing className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <p className="font-semibold text-slate-800 text-sm">In-App Notifications</p>
+              <p className="text-xs text-slate-400">Choose which events trigger in-app alerts</p>
+            </div>
+          </div>
+        </div>
+        <div className="px-5 py-4 space-y-3">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Notification Categories</p>
+          {INAPP_OPTIONS.map((opt) => (
+            <div key={opt.key} className={`flex items-center justify-between p-3 rounded-lg border ${opt.bg} ${opt.border}`}>
+              <div>
+                <p className={`text-sm font-medium ${opt.color}`}>{opt.label}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{opt.description}</p>
+              </div>
+              <button
+                onClick={() => toggle(opt.key)}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${prefs[opt.key] ? "bg-emerald-500" : "bg-slate-300"}`}>
+                <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${prefs[opt.key] ? "translate-x-4" : "translate-x-0.5"}`} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Save Button */}
       <div className="flex justify-end">
         <button
