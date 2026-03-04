@@ -25,46 +25,19 @@ export default function Home() {
 
   useEffect(() => {
     base44.auth.me()
-      .then(me => {
-        if (me) {
-          setUser(me);
-          setStatus("pin");
+      .then(async me => {
+        if (!me) { setStatus("show_login"); return; }
+        setUser(me);
+        // Redirect based on role: customers → CustomerPortal, everyone else → Dashboard
+        const customers = await base44.entities.Customer.filter({ email: me.email });
+        if (customers.length > 0) {
+          window.location.href = createPageUrl("CustomerPortal");
         } else {
-          setStatus("show_login");
+          window.location.href = createPageUrl("Dashboard");
         }
       })
       .catch(() => setStatus("show_login"));
   }, []);
-
-  async function handlePinSubmit(e) {
-    e.preventDefault();
-    if (!pin.trim()) { setPinError("Please enter your unique ID."); return; }
-    setSubmitting(true);
-    try {
-      const customers = await base44.entities.Customer.filter({ email: user.email });
-      if (customers.length > 0) {
-        const customer = customers[0];
-        const validId = (customer.account_number || customer.email.split("@")[0]).toLowerCase();
-        if (pin.trim().toLowerCase() !== validId) {
-          setPinError("Invalid unique ID. Please try again.");
-          setSubmitting(false);
-          return;
-        }
-        window.location.href = createPageUrl("CustomerPortal");
-      } else {
-        const validId = user.email.split("@")[0].toLowerCase();
-        if (pin.trim().toLowerCase() !== validId) {
-          setPinError("Invalid unique ID. Please try again.");
-          setSubmitting(false);
-          return;
-        }
-        window.location.href = createPageUrl("Dashboard");
-      }
-    } catch {
-      setPinError("Verification failed. Please try again.");
-      setSubmitting(false);
-    }
-  }
 
   const wrapper = (content) => (
     <div className="min-h-screen flex flex-col items-center justify-center px-4"
