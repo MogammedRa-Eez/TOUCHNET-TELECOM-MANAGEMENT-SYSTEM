@@ -28,6 +28,7 @@ const ALL_NAV = [
 { name: "Billing", page: "Billing", icon: Receipt, perm: "billing" },
 { name: "Tickets", page: "Tickets", icon: TicketCheck, perm: "tickets" },
 { name: "Network", page: "Network", icon: Network, perm: "network" },
+{ name: "Inventory", page: "Inventory", icon: Package, perm: "network" },
 { name: "Employees", page: "Employees", icon: UserCog, perm: "employees" },
 { name: "AI Assistant", page: "AIAssistant", icon: Bot, perm: "ai_assistant" },
 { name: "Roles", page: "RolesManagement", icon: Shield, perm: "roles_management" }];
