@@ -57,6 +57,7 @@ import Network from './pages/Network';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import Inventory from './pages/Inventory';
+import UserSettings from './pages/UserSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +72,7 @@ export const PAGES = {
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "Inventory": Inventory,
+    "UserSettings": UserSettings,
 }
 
 export const pagesConfig = {
