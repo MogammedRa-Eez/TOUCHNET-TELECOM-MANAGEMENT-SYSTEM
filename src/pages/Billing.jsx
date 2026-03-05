@@ -76,8 +76,8 @@ export default function Billing() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white">Billing & Invoices</h1>
-          <p className="text-[11px] mt-0.5" style={{ color: "#475569", fontFamily: "'JetBrains Mono', monospace" }}>Manage invoices and track payments</p>
+          <h1 className="text-xl font-bold text-slate-800">Billing & Invoices</h1>
+          <p className="text-[11px] mt-0.5 text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Manage invoices and track payments</p>
         </div>
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
           <Plus className="w-4 h-4 mr-2" /> Create Invoice

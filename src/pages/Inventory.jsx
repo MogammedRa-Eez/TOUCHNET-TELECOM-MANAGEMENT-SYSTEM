@@ -269,7 +269,7 @@ export default function Inventory() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2"><Package className="w-5 h-5 text-cyan-400" />Node Inventory</h1>
+          <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2"><Package className="w-5 h-5 text-cyan-500" />Node Inventory</h1>
           <p className="text-[11px] mt-0.5 text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
             {nodes.length} total nodes · {nodes.filter(n => n.status === "online").length} online
           </p>
