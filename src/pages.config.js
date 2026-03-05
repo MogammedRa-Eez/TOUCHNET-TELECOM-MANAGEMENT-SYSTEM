@@ -56,10 +56,10 @@ import Employees from './pages/Employees';
 import Home from './pages/Home';
 import Inventory from './pages/Inventory';
 import Network from './pages/Network';
+import OutlookMail from './pages/OutlookMail';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
-import OutlookMail from './pages/OutlookMail';
 import __Layout from './Layout.jsx';
 
 
@@ -73,10 +73,10 @@ export const PAGES = {
     "Home": Home,
     "Inventory": Inventory,
     "Network": Network,
+    "OutlookMail": OutlookMail,
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "UserSettings": UserSettings,
-    "OutlookMail": OutlookMail,
 }
 
 export const pagesConfig = {
