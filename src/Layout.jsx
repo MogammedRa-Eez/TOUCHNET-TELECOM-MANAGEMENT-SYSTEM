@@ -164,23 +164,25 @@ function LayoutInner({ children, currentPageName }) {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f1f5f9" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f4ff" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4ff; }
         .tn-sidebar { scrollbar-width: none; }
         .tn-sidebar::-webkit-scrollbar { display: none; }
-        .nav-item-hover:hover { background: rgba(255,255,255,0.08); }
-        .sidebar-glow { box-shadow: 2px 0 16px rgba(0,0,0,0.15); }
-        .active-nav { background: linear-gradient(90deg, rgba(220,38,38,0.3) 0%, rgba(220,38,38,0.08) 100%); border-left: 2px solid #ef4444; }
-        .topbar-border { border-bottom: 1px solid rgba(0,0,0,0.08); }
-        .main-content { background: #f1f5f9; }
-        .card-dark { background: #ffffff; border: 1px solid rgba(0,0,0,0.08); }
-        .card-dark:hover { border-color: rgba(220,38,38,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        .pulse-dot { animation: pulse-green 2s infinite; }
-        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); } 50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+        .nav-item-hover:hover { background: rgba(255,255,255,0.07); }
+        .sidebar-glow { box-shadow: 4px 0 24px rgba(99,102,241,0.18); }
+        .active-nav { background: linear-gradient(90deg, rgba(99,102,241,0.35) 0%, rgba(99,102,241,0.08) 100%); border-left: 2px solid #818cf8; }
+        .topbar-border { border-bottom: 1px solid rgba(99,102,241,0.1); }
+        .main-content { background: #f0f4ff; }
+        .card-dark { background: #ffffff; border: 1px solid rgba(99,102,241,0.1); }
+        .card-dark:hover { border-color: rgba(99,102,241,0.3); box-shadow: 0 4px 20px rgba(99,102,241,0.12); }
+        .pulse-dot { animation: pulse-signal 2s infinite; }
+        @keyframes pulse-signal { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); } 50% { box-shadow: 0 0 0 7px rgba(16,185,129,0); } }
         .mono { font-family: 'JetBrains Mono', monospace; }
-        .grid-bg { background: #f1f5f9; }
+        .grid-bg { background: #f0f4ff; }
+        .signal-bar { animation: signal-flash 3s ease-in-out infinite; }
+        @keyframes signal-flash { 0%,100%{opacity:0.7} 50%{opacity:1} }
       `}</style>
 
       {mobileOpen &&
