@@ -15,12 +15,16 @@ export default function InvoiceForm({ invoice, customers, onSubmit, onCancel }) 
 
   const handleCustomerChange = (id) => {
     const cust = customers.find(c => c.id === id);
+    const seq = String(Date.now()).slice(-4);
+    const prefix = cust?.account_number || "INV";
+    const invoiceNum = form.invoice_number || `${prefix}-${seq}`;
     setForm(prev => ({
       ...prev,
       customer_id: id,
       customer_name: cust?.full_name || "",
       amount: cust?.monthly_rate || prev.amount,
       total: (cust?.monthly_rate || prev.amount) + (prev.tax || 0),
+      invoice_number: invoiceNum,
     }));
   };
 
@@ -39,6 +43,9 @@ export default function InvoiceForm({ invoice, customers, onSubmit, onCancel }) 
     const invNum = form.invoice_number || `INV-${Date.now().toString(36).toUpperCase()}`;
     onSubmit({ ...form, invoice_number: invNum });
   };
+
+  // Show the auto-generated invoice number preview
+  const invoiceNumPreview = form.invoice_number || (form.customer_id ? `${customers.find(c=>c.id===form.customer_id)?.account_number || "INV"}-XXXX` : "—");
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
