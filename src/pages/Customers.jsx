@@ -74,7 +74,7 @@ export default function Customers() {
           <h1 className="text-xl font-bold text-slate-800">Customer Management</h1>
           <p className="text-[11px] mt-0.5 text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Manage subscriber accounts and service plans</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
           <Plus className="w-4 h-4 mr-2" /> Add Customer
         </Button>
       </div>
