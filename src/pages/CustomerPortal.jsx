@@ -50,7 +50,6 @@ export default function CustomerPortal() {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showTicketForm, setShowTicketForm] = useState(false);
 
   useEffect(() => {
     base44.auth.me()
@@ -233,6 +232,13 @@ export default function CustomerPortal() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {showTicketForm && (
+        <SubmitTicketForm
+          customer={customer}
+          onClose={() => setShowTicketForm(false)}
+        />
+      )}
     </div>
   );
 }
