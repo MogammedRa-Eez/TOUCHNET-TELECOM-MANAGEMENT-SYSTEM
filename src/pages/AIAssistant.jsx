@@ -94,7 +94,7 @@ export default function AIAssistant() {
       {/* Sidebar */}
       <div className="w-64 flex-col hidden lg:flex" style={{ background: "#070b1f", borderRight: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="p-4" style={{ borderBottom: "1px solid rgba(6,182,212,0.08)" }}>
-          <Button onClick={createConversation} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
+          <Button onClick={createConversation} className="w-full text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
             <Plus className="w-4 h-4 mr-2" /> New Chat
           </Button>
         </div>
@@ -112,10 +112,10 @@ export default function AIAssistant() {
                 onClick={() => selectConversation(conv)}
                 className={`w-full text-left px-3 py-2.5 rounded-md text-[12px] transition-all flex items-center gap-2 ${
                   activeConv?.id === conv.id
-                    ? "text-cyan-300"
+                    ? "text-indigo-300"
                     : "text-slate-500 hover:text-slate-300"
                 }`}
-                style={activeConv?.id === conv.id ? { background: "rgba(6,182,212,0.1)", borderLeft: "2px solid #06b6d4" } : {}}
+                style={activeConv?.id === conv.id ? { background: "rgba(99,102,241,0.12)", borderLeft: "2px solid #818cf8" } : {}}
               >
                 <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
                 <span className="truncate">{conv.metadata?.name || "Untitled"}</span>
@@ -139,7 +139,7 @@ export default function AIAssistant() {
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center max-w-md">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "linear-gradient(135deg, #0891b2, #0e7490)", boxShadow: "0 0 30px rgba(6,182,212,0.3)" }}>
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)", boxShadow: "0 0 30px rgba(99,102,241,0.4)" }}>
                   <MessageSquare className="w-7 h-7 text-white" />
                 </div>
                 <h2 className="text-[16px] font-bold text-white mb-2">TouchNet AI Assistant</h2>
@@ -157,7 +157,7 @@ export default function AIAssistant() {
                       key={q}
                       onClick={() => setInput(q)}
                       className="px-3 py-2.5 rounded-lg text-[12px] text-slate-400 hover:text-slate-200 transition-all text-left"
-                      style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}
+                      style={{ background: "#0f1438", border: "1px solid rgba(99,102,241,0.15)" }}
                     >
                       {q}
                     </button>
@@ -172,7 +172,7 @@ export default function AIAssistant() {
         </div>
 
         {/* Input */}
-        <div className="p-4" style={{ borderTop: "1px solid rgba(6,182,212,0.1)", background: "#080f1e" }}>
+        <div className="p-4" style={{ borderTop: "1px solid rgba(99,102,241,0.15)", background: "#070b1f" }}>
           <div className="max-w-3xl mx-auto flex gap-3">
             <Input
               value={input}
@@ -180,13 +180,13 @@ export default function AIAssistant() {
               onKeyDown={handleKeyDown}
               placeholder="Ask TouchNet AI anything..."
               className="flex-1 bg-transparent text-slate-200 placeholder-slate-600"
-              style={{ border: "1px solid rgba(6,182,212,0.2)" }}
+              style={{ border: "1px solid rgba(99,102,241,0.25)" }}
               disabled={sending}
             />
             <Button
               onClick={sendMessage}
               disabled={!input.trim() || sending}
-              className="bg-cyan-600 hover:bg-cyan-500 text-white px-5"
+              className="text-white px-5" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
             >
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </Button>
