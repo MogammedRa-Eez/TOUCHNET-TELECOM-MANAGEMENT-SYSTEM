@@ -110,7 +110,7 @@ export default function Tickets() {
       </div>
 
       {/* Filters */}
-      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search tickets..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
@@ -139,11 +139,11 @@ export default function Tickets() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow style={{ background: "#080f1e", borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+              <TableRow style={{ background: "#070b1f", borderBottom: "1px solid rgba(99,102,241,0.12)" }}>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Ticket #</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Subject</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Customer</TableHead>
