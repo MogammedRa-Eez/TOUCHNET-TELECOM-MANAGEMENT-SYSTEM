@@ -1,13 +1,14 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Users, Receipt, TicketCheck, Network, DollarSign, Wifi } from "lucide-react";
+import { Users, Receipt, TicketCheck, Network, DollarSign, Wifi, Activity, Globe } from "lucide-react";
 import KPICard from "../components/dashboard/KPICard";
 import RevenueChart from "../components/dashboard/RevenueChart";
 import TicketOverview from "../components/dashboard/TicketOverview";
 import NetworkHealth from "../components/dashboard/NetworkHealth";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import UserActivityPanel from "../components/dashboard/UserActivityPanel";
+import NetworkGlobe from "../components/dashboard/NetworkGlobe";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
