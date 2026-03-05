@@ -90,9 +90,9 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]" style={{ background: "#0f1a2e" }}>
+    <div className="flex h-[calc(100vh-4rem)]" style={{ background: "#0a0f2e" }}>
       {/* Sidebar */}
-      <div className="w-64 flex-col hidden lg:flex" style={{ background: "#080f1e", borderRight: "1px solid rgba(6,182,212,0.1)" }}>
+      <div className="w-64 flex-col hidden lg:flex" style={{ background: "#070b1f", borderRight: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="p-4" style={{ borderBottom: "1px solid rgba(6,182,212,0.08)" }}>
           <Button onClick={createConversation} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-sm">
             <Plus className="w-4 h-4 mr-2" /> New Chat
