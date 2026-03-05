@@ -199,7 +199,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden main-content">
-        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "#ffffff" }}>
+        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)" }}>
           <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 text-slate-500 hover:text-white rounded-md transition-colors">
             <Menu className="w-5 h-5" />
           </button>
@@ -209,7 +209,7 @@ function LayoutInner({ children, currentPageName }) {
             <p className="text-[10px] text-slate-400 hidden sm:block mono">{currentUser?.full_name || currentUser?.email || "touchnet.local"}</p>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#f1f5f9", border: "1px solid rgba(0,0,0,0.1)" }}>
+          <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#ede9fe", border: "1px solid rgba(99,102,241,0.15)" }}>
             <Search className="w-3.5 h-3.5 text-slate-400" />
             <span className="text-sm text-slate-400">Search...</span>
           </div>
