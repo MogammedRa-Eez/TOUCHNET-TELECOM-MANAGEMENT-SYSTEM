@@ -66,6 +66,15 @@ export default function InvoiceForm({ invoice, customers, onSubmit, onCancel }) 
               </Select>
             </div>
             <div className="space-y-1.5">
+              <Label className="text-xs font-medium text-slate-600">Invoice Number</Label>
+              <Input
+                value={form.invoice_number || invoiceNumPreview}
+                onChange={e => setForm({...form, invoice_number: e.target.value})}
+                placeholder="Auto-generated from account number"
+                className="font-mono text-sm"
+              />
+            </div>
+            <div className="space-y-1.5">
               <Label className="text-xs font-medium text-slate-600">Amount ($)</Label>
               <Input type="number" step="0.01" value={form.amount} onChange={e => handleAmountChange(e.target.value)} />
             </div>
