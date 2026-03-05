@@ -58,6 +58,7 @@ export default function Dashboard() {
 
   }
 
+  const onlineNodes = nodes.filter((n) => n.status === "online").length;
   const offlineNodes = nodes.filter((n) => n.status === "offline").length;
   const degradedNodes = nodes.filter((n) => n.status === "degraded").length;
 
