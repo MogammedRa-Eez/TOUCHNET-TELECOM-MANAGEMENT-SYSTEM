@@ -42,8 +42,6 @@ export default function Dashboard() {
   const activeCustomers = customers.filter((c) => c.status === "active").length;
   const totalRevenue = invoices.filter((i) => i.status === "paid").reduce((a, i) => a + (i.total || i.amount || 0), 0);
   const openTickets = tickets.filter((t) => !["resolved", "closed"].includes(t.status)).length;
-  const onlineNodes = nodes.filter((n) => n.status === "online").length;
-
   if (isLoading) {
     return (
       <div className="p-6 lg:p-8 space-y-6">
