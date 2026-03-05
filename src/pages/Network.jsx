@@ -181,7 +181,7 @@ export default function Network() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         {[
           { id: "nodes", label: "Nodes", icon: Server },
           { id: "topology", label: "Topology", icon: GitFork },
@@ -192,7 +192,7 @@ export default function Network() {
           return (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
-              style={activeTab === tab.id ? { background: "linear-gradient(135deg, #dc2626, #b91c1c)" } : {}}>
+              style={activeTab === tab.id ? { background: "linear-gradient(135deg, #6366f1, #8b5cf6)" } : {}}>
               <Icon className="w-3.5 h-3.5" /> {tab.label}
             </button>
           );
@@ -201,7 +201,7 @@ export default function Network() {
 
       {/* Topology Tab */}
       {activeTab === "topology" && (
-        <div className="rounded-xl p-6" style={{ background: "#0a0f1e", border: "1px solid rgba(6,182,212,0.12)" }}>
+        <div className="rounded-xl p-6" style={{ background: "#070b1f", border: "1px solid rgba(99,102,241,0.15)" }}>
           {nodes.length === 0 ? (
             <div className="py-16 text-center text-slate-500">
               <GitFork className="w-10 h-10 mx-auto mb-3 text-slate-700" />
@@ -215,7 +215,7 @@ export default function Network() {
 
       {/* Trends Tab */}
       {activeTab === "trends" && (
-        <div className="rounded-xl p-6" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+        <div className="rounded-xl p-6" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
           <NetworkTrends nodes={nodes} />
         </div>
       )}
@@ -224,14 +224,14 @@ export default function Network() {
       {activeTab === "metrics" && (
         <div className="space-y-4">
           {nodes.length === 0 ? (
-            <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+            <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
               <Activity className="w-10 h-10 mx-auto mb-3 text-slate-700" />
               <p className="text-[13px]">No nodes to monitor</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {nodes.map(node => (
-                <div key={node.id} className="rounded-xl p-5" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+                <div key={node.id} className="rounded-xl p-5" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
                   <div className="flex items-center gap-2 mb-4">
                     <div className={`w-2 h-2 rounded-full ${statusConfig[node.status]?.dot || "bg-slate-500"}`} />
                     <h3 className="text-sm font-semibold text-slate-200">{node.name}</h3>
@@ -246,7 +246,7 @@ export default function Network() {
       )}
 
       {/* Filters (nodes tab only) */}
-      {activeTab === "nodes" && <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      {activeTab === "nodes" && <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search nodes..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
@@ -269,7 +269,7 @@ export default function Network() {
           {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl bg-slate-800" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
           <Server className="w-10 h-10 mx-auto mb-3 text-slate-700" />
           <p className="text-[13px]">No network nodes found</p>
         </div>
@@ -280,7 +280,7 @@ export default function Network() {
             const sc = statusConfig[node.status] || statusConfig.online;
             const capacityPct = node.max_capacity ? Math.round((node.connected_customers || 0) / node.max_capacity * 100) : 0;
             return (
-              <div key={node.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0d1527", border: `1px solid rgba(6,182,212,0.12)` }}
+              <div key={node.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0a0f2e", border: `1px solid rgba(99,102,241,0.12)` }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = sc.border}
                 onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
               >
