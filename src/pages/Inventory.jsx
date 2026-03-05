@@ -277,7 +277,7 @@ export default function Inventory() {
       </div>
 
       {/* Filters */}
-      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search name, IP, location, firmware…" className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
@@ -312,7 +312,7 @@ export default function Inventory() {
       )}
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         {isLoading ? (
           <div className="py-16 text-center text-slate-500 text-sm">Loading inventory…</div>
         ) : filtered.length === 0 ? (
@@ -323,7 +323,7 @@ export default function Inventory() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+              <thead style={{ borderBottom: "1px solid rgba(99,102,241,0.12)" }}>
                 <tr>
                   <th className="px-4 py-3 w-10">
                     <Checkbox checked={allSelected} onCheckedChange={toggleAll} className="border-slate-600 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600" />

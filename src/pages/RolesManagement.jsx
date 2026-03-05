@@ -194,7 +194,7 @@ export default function RolesManagement() {
           {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-44 rounded-xl bg-slate-800" />)}
         </div>
       ) : roles.length === 0 ? (
-        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
           <Shield className="w-10 h-10 mx-auto mb-3 text-slate-700" />
           <p className="text-[13px]">No roles created yet</p>
           <p className="text-[11px] text-slate-600 mt-1">Create your first role to start assigning permissions</p>
@@ -206,7 +206,7 @@ export default function RolesManagement() {
             const count = permCount(role);
             const userCount = role.assigned_user_emails?.length || 0;
             return (
-              <div key={role.id} className="rounded-xl p-5 group transition-all" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}
+              <div key={role.id} className="rounded-xl p-5 group transition-all" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.12)" }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = color + "55"}
                 onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}>
                 {/* Accent bar */}
@@ -225,11 +225,11 @@ export default function RolesManagement() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 mb-4">
-                  <div className="rounded-lg px-3 py-2 text-center" style={{ background: "#070d1a", border: "1px solid rgba(6,182,212,0.08)" }}>
+                  <div className="rounded-lg px-3 py-2 text-center" style={{ background: "#070b1f", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <p className="text-[16px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{count}</p>
                     <p className="text-[10px] text-slate-600">Permissions</p>
                   </div>
-                  <div className="rounded-lg px-3 py-2 text-center" style={{ background: "#070d1a", border: "1px solid rgba(6,182,212,0.08)" }}>
+                  <div className="rounded-lg px-3 py-2 text-center" style={{ background: "#070b1f", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <p className="text-[16px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{userCount}</p>
                     <p className="text-[10px] text-slate-600">Users</p>
                   </div>
@@ -245,7 +245,7 @@ export default function RolesManagement() {
                   {count > 5 && <span className="text-[10px] px-1.5 py-0.5 rounded text-slate-600" style={{ background: "#070d1a" }}>+{count - 5} more</span>}
                 </div>
 
-                <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid rgba(6,182,212,0.08)" }}>
+                <div className="flex items-center justify-between pt-3" style={{ borderTop: "1px solid rgba(99,102,241,0.1)" }}>
                   <div className="flex items-center gap-1 text-[11px] text-slate-600">
                     <Users className="w-3 h-3" />
                     {userCount} assigned

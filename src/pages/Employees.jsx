@@ -171,7 +171,7 @@ export default function Employees() {
           const isActive = deptFilter === dept;
           return (
             <div key={dept} className="rounded-xl p-3 text-center cursor-pointer transition-all"
-              style={{ background: isActive ? dc.bg : "#0d1527", border: `1px solid ${isActive ? dc.border : "rgba(6,182,212,0.1)"}` }}
+              style={{ background: isActive ? dc.bg : "#0a0f2e", border: `1px solid ${isActive ? dc.border : "rgba(99,102,241,0.12)"}` }}
               onClick={() => setDeptFilter(deptFilter === dept ? "all" : dept)}>
               <p className="text-[18px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{deptCounts[dept] || 0}</p>
               <p className="text-[10px] capitalize" style={{ color: isActive ? dc.color : "#475569" }}>{dept.replace(/_/g, " ")}</p>
@@ -180,7 +180,7 @@ export default function Employees() {
         })}
       </div>
 
-      <div className="rounded-xl p-4 flex gap-3" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+      <div className="rounded-xl p-4 flex gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search employees..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
@@ -193,7 +193,7 @@ export default function Employees() {
           {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl bg-slate-800" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}>
+        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
           <UserCog className="w-10 h-10 mx-auto mb-3 text-slate-700" />
           <p className="text-[13px]">No employees found</p>
         </div>
@@ -203,7 +203,7 @@ export default function Employees() {
             const dc = deptColors[emp.department] || deptColors.technical;
             const ss = statusStyle[emp.status] || statusStyle.active;
             return (
-            <div key={emp.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0d1527", border: "1px solid rgba(6,182,212,0.12)" }}
+            <div key={emp.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.12)" }}
               onMouseEnter={e => e.currentTarget.style.borderColor = dc.border}
               onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
             >
@@ -242,7 +242,7 @@ export default function Employees() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between mt-4 pt-3" style={{ borderTop: "1px solid rgba(6,182,212,0.08)" }}>
+              <div className="flex items-center justify-between mt-4 pt-3" style={{ borderTop: "1px solid rgba(99,102,241,0.1)" }}>
                 <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: ss.bg, color: ss.color, fontFamily: "'JetBrains Mono', monospace" }}>
                   {emp.status?.replace(/_/g, " ")}
                 </span>
