@@ -50,7 +50,6 @@ export default function CustomerPortal() {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showTicketForm, setShowTicketForm] = useState(false);
 
   useEffect(() => {
     base44.auth.me()
@@ -198,8 +197,16 @@ export default function CustomerPortal() {
 
           {/* Tickets */}
           <TabsContent value="tickets" className="mt-4 space-y-3">
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowTicketForm(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                style={{ background: "linear-gradient(90deg, #dc2626, #b91c1c)" }}>
+                <TicketCheck className="w-4 h-4" /> New Ticket
+              </button>
+            </div>
             {tickets.length === 0 ? (
-              <Empty icon={<TicketCheck className="w-8 h-8 text-slate-300" />} text="No support tickets found" />
+              <Empty icon={<TicketCheck className="w-8 h-8 text-slate-300" />} text="No support tickets yet — submit one above!" />
             ) : tickets.map(t => (
               <div key={t.id} className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
