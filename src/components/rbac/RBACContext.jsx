@@ -3,6 +3,7 @@
  */
 import { useState, useEffect, createContext, useContext } from "react";
 import { base44 } from "@/api/base44Client";
+import { getDemoRoleOverride } from "@/components/layout/DemoUserSwitcher";
 
 const RBACContext = createContext(null);
 
