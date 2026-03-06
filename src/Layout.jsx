@@ -121,7 +121,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
           return (
             <React.Fragment key={item.page}>
               {showDivider && (
-                <div className="mx-2 my-1.5" style={{ borderTop: "1px solid rgba(99,102,241,0.12)" }} />
+                <div className="mx-2 my-1.5" style={{ borderTop: "1px solid rgba(192,21,42,0.15)" }} />
               )}
               <Link
                 to={createPageUrl(item.page)}
