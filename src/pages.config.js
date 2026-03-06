@@ -50,9 +50,10 @@
 import AIAssistant from './pages/AIAssistant';
 import Billing from './pages/Billing';
 import CustomerPortal from './pages/CustomerPortal';
+import CustomerProjectPortal from './pages/CustomerProjectPortal';
 import Customers from './pages/Customers';
-import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
+import FibreProjects from './pages/FibreProjects';
 import Home from './pages/Home';
 import Inventory from './pages/Inventory';
 import Network from './pages/Network';
@@ -60,8 +61,7 @@ import OutlookMail from './pages/OutlookMail';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
-import FibreProjects from './pages/FibreProjects';
-import CustomerProjectPortal from './pages/CustomerProjectPortal';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -69,9 +69,10 @@ export const PAGES = {
     "AIAssistant": AIAssistant,
     "Billing": Billing,
     "CustomerPortal": CustomerPortal,
+    "CustomerProjectPortal": CustomerProjectPortal,
     "Customers": Customers,
-    "Dashboard": Dashboard,
     "Employees": Employees,
+    "FibreProjects": FibreProjects,
     "Home": Home,
     "Inventory": Inventory,
     "Network": Network,
@@ -79,8 +80,7 @@ export const PAGES = {
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "UserSettings": UserSettings,
-    "FibreProjects": FibreProjects,
-    "CustomerProjectPortal": CustomerProjectPortal,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {

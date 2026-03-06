@@ -232,6 +232,9 @@ function LayoutInner({ children, currentPageName }) {
 }
 
 export default function Layout({ children, currentPageName }) {
+  if (currentPageName === "Home") {
+    return <>{children}</>;
+  }
   return (
     <RBACProvider>
       <LayoutInner currentPageName={currentPageName}>{children}</LayoutInner>
