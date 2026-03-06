@@ -42,7 +42,7 @@ export default function UserMenu() {
         className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all hover:bg-slate-100"
         style={{ border: "1px solid rgba(0,0,0,0.08)" }}>
         <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-          style={{ background: "linear-gradient(135deg, #dc2626, #1e2a4a)" }}>
+          style={{ background: "linear-gradient(135deg, #c0152a, #1a2550)" }}>
           {initials}
         </div>
         <div className="hidden sm:block text-left">
