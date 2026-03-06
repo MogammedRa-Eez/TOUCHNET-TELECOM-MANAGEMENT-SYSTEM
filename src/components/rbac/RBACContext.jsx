@@ -41,6 +41,18 @@ export function RBACProvider({ children }) {
         const me = await base44.auth.me();
         setUser(me);
 
+        // Check for demo role override (for presentations)
+        const demoOverride = getDemoRoleOverride();
+        if (demoOverride) {
+          if (demoOverride._isAdmin) {
+            setRole({ name: "Admin", permissions: buildAllTrue(), is_system: true });
+          } else {
+            setRole(demoOverride);
+          }
+          setLoading(false);
+          return;
+        }
+
         // App admin gets all permissions
         if (me?.role === "admin") {
           setRole({ name: "Admin", permissions: buildAllTrue(), is_system: true });
