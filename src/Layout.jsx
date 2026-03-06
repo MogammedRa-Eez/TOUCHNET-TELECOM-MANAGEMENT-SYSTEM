@@ -166,7 +166,7 @@ function LayoutInner({ children, currentPageName }) {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f4ff" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f2f8" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
         body { font-family: 'Inter', sans-serif; background: #f0f2f8; }
