@@ -61,6 +61,7 @@ import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
 import FibreProjects from './pages/FibreProjects';
+import CustomerProjectPortal from './pages/CustomerProjectPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +80,7 @@ export const PAGES = {
     "Tickets": Tickets,
     "UserSettings": UserSettings,
     "FibreProjects": FibreProjects,
+    "CustomerProjectPortal": CustomerProjectPortal,
 }
 
 export const pagesConfig = {
