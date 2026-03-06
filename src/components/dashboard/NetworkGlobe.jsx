@@ -286,9 +286,31 @@ export default function NetworkGlobe({ nodes = [] }) {
     };
   }, []);
 
+  const statusLabel = { online: "Online", offline: "Offline", degraded: "Degraded", maintenance: "Maintenance" };
+  const statusColors = { online: "#34d399", offline: "#ef4444", degraded: "#fbbf24", maintenance: "#818cf8" };
+
   return (
     <div className="relative w-full h-full">
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+      {tooltip && (
+        <div
+          className="absolute pointer-events-none z-20 px-3 py-2 rounded-lg text-xs font-medium shadow-lg"
+          style={{
+            left: tooltip.x + 14,
+            top: tooltip.y - 10,
+            background: "rgba(10,22,40,0.92)",
+            border: `1px solid ${statusColors[tooltip.status] || "#6366f1"}`,
+            color: "#f1f5f9",
+            backdropFilter: "blur(4px)",
+          }}
+        >
+          <div className="font-semibold text-white">{tooltip.label}</div>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColors[tooltip.status] }} />
+            <span style={{ color: statusColors[tooltip.status] }}>{statusLabel[tooltip.status] || tooltip.status}</span>
+          </div>
+        </div>
+      )}
       {/* Logo centered over the globe */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img
