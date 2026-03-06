@@ -254,6 +254,22 @@ export default function NetworkGlobe({ nodes = [] }) {
   }, []);
 
   return (
-    <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+    <div className="relative w-full h-full">
+      <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+      {/* Logo centered over the globe */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/639f45c03_CHARLYCRESTFINAL1.pdf"
+          alt="TouchNet Crest"
+          className="w-24 h-24 object-contain"
+          style={{ filter: "drop-shadow(0 0 12px rgba(192,21,42,0.6))" }}
+          onError={(e) => {
+            // fallback to the TouchNet logo if PDF doesn't render as image
+            e.target.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
+            e.target.style.filter = "brightness(0) invert(1) drop-shadow(0 0 12px rgba(192,21,42,0.6))";
+          }}
+        />
+      </div>
+    </div>
   );
 }
