@@ -170,6 +170,10 @@ export default function NetworkGlobe({ nodes = [] }) {
     dirLight2.position.set(-2, -1, -1);
     scene.add(dirLight2);
 
+    // Raycaster for hover tooltips
+    const raycaster = new THREE.Raycaster();
+    const mouseVec = new THREE.Vector2();
+
     // Mouse drag
     let isDragging = false;
     let prevMouse = { x: 0, y: 0 };
@@ -178,6 +182,28 @@ export default function NetworkGlobe({ nodes = [] }) {
     const onMouseDown = (e) => { isDragging = true; prevMouse = { x: e.clientX, y: e.clientY }; };
     const onMouseUp = () => { isDragging = false; };
     const onMouseMove = (e) => {
+      // Tooltip raycasting
+      const rect = mount.getBoundingClientRect();
+      mouseVec.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseVec.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouseVec, camera);
+      // Transform dots into world space for raycasting
+      const worldDots = dotMeshes.map((d) => {
+        const clone = d.clone();
+        clone.position.copy(d.position).applyMatrix4(dotGroup.matrixWorld);
+        return clone;
+      });
+      const hits = raycaster.intersectObjects(worldDots);
+      if (hits.length > 0) {
+        const idx = worldDots.indexOf(hits[0].object);
+        const data = dotMeshes[idx]?.userData;
+        if (data) {
+          setTooltip({ x: e.clientX - rect.left, y: e.clientY - rect.top, label: data.label, status: data.status });
+        }
+      } else {
+        setTooltip(null);
+      }
+
       if (!isDragging) return;
       const dx = e.clientX - prevMouse.x;
       const dy = e.clientY - prevMouse.y;
@@ -185,6 +211,9 @@ export default function NetworkGlobe({ nodes = [] }) {
       rotVel.x = dy * 0.005;
       prevMouse = { x: e.clientX, y: e.clientY };
     };
+
+    const onMouseLeave = () => setTooltip(null);
+    mount.addEventListener("mouseleave", onMouseLeave);
 
     mount.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mouseup", onMouseUp);
