@@ -23,6 +23,7 @@ import {
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 
 const ALL_NAV = [
 { name: "Home", page: "Home", icon: LayoutDashboard, perm: null },
