@@ -26,7 +26,7 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 
 const ALL_NAV = [
-
+{ name: "Home", page: "Home", icon: LayoutDashboard, perm: null },
 { name: "Dashboard", page: "Dashboard", icon: LayoutDashboard, perm: "dashboard" },
 { name: "Customers", page: "Customers", icon: Users, perm: "customers" },
 { name: "Billing", page: "Billing", icon: Receipt, perm: "billing" },
