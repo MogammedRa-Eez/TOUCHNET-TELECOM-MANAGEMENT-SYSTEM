@@ -33,6 +33,7 @@ export default function FibreProjects() {
   const [showForm, setShowForm] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [showReport, setShowReport] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["fibre-projects"],
