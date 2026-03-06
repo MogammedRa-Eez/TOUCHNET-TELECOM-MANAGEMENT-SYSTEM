@@ -140,6 +140,7 @@ export default function FibreProjects() {
       )}
 
       {showReport && <ProjectForecastReport projects={projects} onClose={() => setShowReport(false)} />}
+      {showDemo && <GuidedDemo onClose={() => setShowDemo(false)} />}
     </div>
   );
 }
