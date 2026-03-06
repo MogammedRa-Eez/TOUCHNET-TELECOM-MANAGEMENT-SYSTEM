@@ -93,7 +93,7 @@ export default function UserMenu() {
                   onClick={handleSave}
                   disabled={saving}
                   className="flex-1 text-xs font-semibold py-1.5 rounded-lg text-white transition-colors"
-                  style={{ background: "#dc2626" }}>
+                  style={{ background: "#c0152a" }}>
                   {saving ? "Saving…" : "Save"}
                 </button>
                 <button
