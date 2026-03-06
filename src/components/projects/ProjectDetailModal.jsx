@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { X, CheckCircle2, Circle, Clock, AlertTriangle, Upload, Send, ThumbsUp, ThumbsDown, Hash, ChevronRight, Lock } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { X, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -122,46 +122,23 @@ function ProjectDetailsTab({ project, onSave, saving }) {
   return (
     <div className="p-6 space-y-4">
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Site Address</label>
-          <Input value={form.site_address} onChange={e => set("site_address", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Service Plan</label>
-          <Input value={form.service_plan} onChange={e => set("service_plan", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Assigned Engineer</label>
-          <Input value={form.assigned_engineer} onChange={e => set("assigned_engineer", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Circuit ID</label>
-          <Input value={form.circuit_id} onChange={e => set("circuit_id", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Monitoring IP</label>
-          <Input value={form.monitoring_ip} onChange={e => set("monitoring_ip", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Annuity (R/mo)</label>
-          <Input type="number" value={form.annuity_amount} onChange={e => set("annuity_amount", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Once-Off (R)</label>
-          <Input type="number" value={form.once_off_amount} onChange={e => set("once_off_amount", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Forecasted Go-Live</label>
-          <Input type="date" value={form.forecasted_go_live_date} onChange={e => set("forecasted_go_live_date", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Actual Go-Live</label>
-          <Input type="date" value={form.actual_go_live_date} onChange={e => set("actual_go_live_date", e.target.value)} />
-        </div>
-        <div>
-          <label className="text-xs font-semibold text-slate-500 mb-1 block">Billing Start Date</label>
-          <Input type="date" value={form.billing_start_date} onChange={e => set("billing_start_date", e.target.value)} />
-        </div>
+        {[
+          ["site_address", "Site Address", "text"],
+          ["service_plan", "Service Plan", "text"],
+          ["assigned_engineer", "Assigned Engineer", "text"],
+          ["circuit_id", "Circuit ID", "text"],
+          ["monitoring_ip", "Monitoring IP", "text"],
+          ["annuity_amount", "Annuity (R/mo)", "number"],
+          ["once_off_amount", "Once-Off (R)", "number"],
+          ["forecasted_go_live_date", "Forecasted Go-Live", "date"],
+          ["actual_go_live_date", "Actual Go-Live", "date"],
+          ["billing_start_date", "Billing Start Date", "date"],
+        ].map(([key, label, type]) => (
+          <div key={key}>
+            <label className="text-xs font-semibold text-slate-500 mb-1 block">{label}</label>
+            <Input type={type} value={form[key]} onChange={e => set(key, e.target.value)} />
+          </div>
+        ))}
       </div>
       <div>
         <label className="text-xs font-semibold text-slate-500 mb-1 block">Notes</label>
