@@ -277,6 +277,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     return () => {
       cancelAnimationFrame(frameId);
       mount.removeEventListener("mousedown", onMouseDown);
+      mount.removeEventListener("mouseleave", onMouseLeave);
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize", onResize);
