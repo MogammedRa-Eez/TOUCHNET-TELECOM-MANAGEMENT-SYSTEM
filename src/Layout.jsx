@@ -64,7 +64,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
         ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         flex flex-col transition-all duration-300 ease-in-out sidebar-glow
       `}
-      style={{ background: "linear-gradient(180deg, #111936 0%, #1a2550 60%, #111936 100%)" }}>
+      style={{ background: "linear-gradient(180deg, #0e1530 0%, #1a2550 50%, #1e1020 100%)" }}>
 
       {/* Logo */}
       <div className="bg-transparent flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(99,102,241,0.2)" }}>
