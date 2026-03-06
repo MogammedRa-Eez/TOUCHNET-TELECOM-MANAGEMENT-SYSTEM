@@ -59,8 +59,8 @@ export default function UserMenu() {
           <div className="px-4 py-3" style={{ borderBottom: "1px solid rgba(0,0,0,0.07)", background: "#f8fafc" }}>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #dc2626, #1e2a4a)" }}>
-                {initials}
+                style={{ background: "linear-gradient(135deg, #c0152a, #1a2550)" }}>
+                   {initials}
               </div>
               <div>
                 <p className="text-sm font-semibold text-slate-800">{user?.full_name || "User"}</p>
