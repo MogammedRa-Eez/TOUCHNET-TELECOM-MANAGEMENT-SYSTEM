@@ -131,13 +131,13 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
                   transition-all duration-150 group relative
                   ${collapsed ? "justify-center" : ""}
-                  ${isActive ? "active-nav text-indigo-300" : "text-slate-400 hover:text-slate-200 nav-item-hover"}
-                `}>
-                <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-indigo-600/20" : "group-hover:bg-white/5"}`}>
-                  <Icon className={`w-4 h-4 ${isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"}`} />
-                </div>
-                {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
-                {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />}
+                  ${isActive ? "active-nav text-red-300" : "text-slate-400 hover:text-slate-200 nav-item-hover"}
+                  `}>
+                  <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-red-700/20" : "group-hover:bg-white/5"}`}>
+                   <Icon className={`w-4 h-4 ${isActive ? "text-red-400" : "text-slate-500 group-hover:text-slate-300"}`} />
+                  </div>
+                  {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
+                  {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-red-400" />}
               </Link>
             </React.Fragment>
           );
