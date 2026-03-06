@@ -216,6 +216,8 @@ function LayoutInner({ children, currentPageName }) {
             <span className="text-sm text-slate-400">Search...</span>
           </div>
 
+          <DemoUserSwitcher />
+
           <NotificationBell />
 
           <UserMenu />
