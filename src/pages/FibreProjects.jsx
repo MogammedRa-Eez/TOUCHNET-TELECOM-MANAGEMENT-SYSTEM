@@ -94,6 +94,9 @@ export default function FibreProjects() {
           </Select>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowDemo(true)} className="gap-2">
+            <Play className="w-4 h-4" /> Demo
+          </Button>
           <Button variant="outline" onClick={() => setShowReport(true)} className="gap-2">
             <TrendingUp className="w-4 h-4" /> Reports
           </Button>
