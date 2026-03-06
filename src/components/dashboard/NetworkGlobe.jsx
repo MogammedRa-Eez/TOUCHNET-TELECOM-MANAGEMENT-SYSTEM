@@ -259,7 +259,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       {/* Logo centered over the globe */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/639f45c03_CHARLYCRESTFINAL1.pdf"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/8e5c8dcd8_generated_image.png"
           alt="TouchNet Crest"
           className="w-24 h-24 object-contain"
           style={{ filter: "drop-shadow(0 0 12px rgba(192,21,42,0.6))" }}
