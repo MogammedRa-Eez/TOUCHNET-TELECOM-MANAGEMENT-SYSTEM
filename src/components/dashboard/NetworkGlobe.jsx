@@ -262,7 +262,7 @@ export default function NetworkGlobe({ nodes = [] }) {
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/8e5c8dcd8_generated_image.png"
           alt="TouchNet Crest"
           className="w-24 h-24 object-contain"
-          style={{ filter: "drop-shadow(0 0 12px rgba(192,21,42,0.6))" }}
+          style={{ filter: "drop-shadow(0 0 12px rgba(192,21,42,0.6))", mixBlendMode: "multiply" }}
           onError={(e) => {
             // fallback to the TouchNet logo if PDF doesn't render as image
             e.target.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
