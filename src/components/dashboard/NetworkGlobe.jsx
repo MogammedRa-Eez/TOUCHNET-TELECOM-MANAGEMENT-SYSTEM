@@ -85,22 +85,21 @@ export default function NetworkGlobe({ nodes = [] }) {
 
     // Simulated node positions (Africa/southern hemisphere focused)
     const nodePts = [
-      { lat: -26.2, lon: 28.0, status: "online" },
-      { lat: -33.9, lon: 18.4, status: "online" },
-      { lat: -29.8, lon: 31.0, status: "degraded" },
-      { lat: -25.7, lon: 28.3, status: "online" },
-      { lat: -23.0, lon: 29.5, status: "offline" },
-      { lat: -22.9, lon: 30.4, status: "online" },
-      { lat: -24.5, lon: 26.8, status: "online" },
-      { lat: -28.0, lon: 26.5, status: "maintenance" },
-      { lat: -26.7, lon: 27.1, status: "online" },
-      { lat: -27.5, lon: 29.9, status: "online" },
-      // extra decorative points globally
-      { lat: 40.7, lon: -74.0, status: "online" },
-      { lat: 51.5, lon: -0.1, status: "online" },
-      { lat: 35.7, lon: 139.7, status: "online" },
-      { lat: -23.5, lon: -46.6, status: "online" },
-      { lat: 1.3, lon: 103.8, status: "online" },
+      { lat: -26.2, lon: 28.0, status: "online",      label: "Johannesburg" },
+      { lat: -33.9, lon: 18.4, status: "online",      label: "Cape Town" },
+      { lat: -29.8, lon: 31.0, status: "degraded",    label: "Durban" },
+      { lat: -25.7, lon: 28.3, status: "online",      label: "Pretoria" },
+      { lat: -23.0, lon: 29.5, status: "offline",     label: "Polokwane" },
+      { lat: -22.9, lon: 30.4, status: "online",      label: "Limpopo Node" },
+      { lat: -24.5, lon: 26.8, status: "online",      label: "Gaborone" },
+      { lat: -28.0, lon: 26.5, status: "maintenance", label: "Bloemfontein" },
+      { lat: -26.7, lon: 27.1, status: "online",      label: "West Rand" },
+      { lat: -27.5, lon: 29.9, status: "online",      label: "Ermelo" },
+      { lat: 40.7,  lon: -74.0, status: "online",     label: "New York" },
+      { lat: 51.5,  lon: -0.1,  status: "online",     label: "London" },
+      { lat: 35.7,  lon: 139.7, status: "online",     label: "Tokyo" },
+      { lat: -23.5, lon: -46.6, status: "online",     label: "São Paulo" },
+      { lat: 1.3,   lon: 103.8, status: "online",     label: "Singapore" },
     ];
 
     const statusColor = {
