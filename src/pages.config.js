@@ -52,7 +52,6 @@ import Billing from './pages/Billing';
 import CustomerPortal from './pages/CustomerPortal';
 import CustomerProjectPortal from './pages/CustomerProjectPortal';
 import Customers from './pages/Customers';
-import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import FibreProjects from './pages/FibreProjects';
 import Home from './pages/Home';
@@ -71,7 +70,6 @@ export const PAGES = {
     "CustomerPortal": CustomerPortal,
     "CustomerProjectPortal": CustomerProjectPortal,
     "Customers": Customers,
-    "Dashboard": Dashboard,
     "Employees": Employees,
     "FibreProjects": FibreProjects,
     "Home": Home,
