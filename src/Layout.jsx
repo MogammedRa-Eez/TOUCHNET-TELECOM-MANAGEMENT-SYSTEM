@@ -211,7 +211,7 @@ function LayoutInner({ children, currentPageName }) {
             <p className="text-[10px] text-slate-400 hidden sm:block mono">{currentUser?.full_name || currentUser?.email || "touchnet.local"}</p>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#ede9fe", border: "1px solid rgba(99,102,241,0.15)" }}>
+          <div className="hidden md:flex items-center gap-2 rounded-md px-3.5 py-2 w-52" style={{ background: "#e8ecf5", border: "1px solid rgba(30,45,107,0.12)" }}>
             <Search className="w-3.5 h-3.5 text-slate-400" />
             <span className="text-sm text-slate-400">Search...</span>
           </div>
