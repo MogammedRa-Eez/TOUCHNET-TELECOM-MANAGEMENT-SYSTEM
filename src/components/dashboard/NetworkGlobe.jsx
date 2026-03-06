@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 export default function NetworkGlobe({ nodes = [] }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
+  const [tooltip, setTooltip] = useState(null); // { x, y, label, status }
 
   useEffect(() => {
     const mount = mountRef.current;
