@@ -201,7 +201,7 @@ function LayoutInner({ children, currentPageName }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden main-content">
-        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)" }}>
+        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f0f2f8 100%)" }}>
           <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 text-slate-500 hover:text-white rounded-md transition-colors">
             <Menu className="w-5 h-5" />
           </button>
