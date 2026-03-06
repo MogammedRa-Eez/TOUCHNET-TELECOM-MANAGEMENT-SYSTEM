@@ -109,6 +109,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       maintenance: 0x818cf8,
     };
 
+    const dotMeshes = []; // for raycasting
     const dotGroup = new THREE.Group();
     nodePts.forEach((pt) => {
       const pos = latLonToVec3(pt.lat, pt.lon);
@@ -116,7 +117,9 @@ export default function NetworkGlobe({ nodes = [] }) {
       const dotMat = new THREE.MeshBasicMaterial({ color: statusColor[pt.status] || 0x34d399 });
       const dot = new THREE.Mesh(dotGeo, dotMat);
       dot.position.copy(pos);
+      dot.userData = { label: pt.label, status: pt.status };
       dotGroup.add(dot);
+      dotMeshes.push(dot);
 
       // Pulse ring
       const pulseGeo = new THREE.RingGeometry(0.03, 0.048, 16);
