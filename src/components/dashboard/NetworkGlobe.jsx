@@ -259,15 +259,10 @@ export default function NetworkGlobe({ nodes = [] }) {
       {/* Logo centered over the globe */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/8e5c8dcd8_generated_image.png"
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/20f8d3d1b_tnet2-removebg-preview.png"
           alt="TouchNet Crest"
-          className="w-24 h-24 object-contain"
-          style={{ filter: "drop-shadow(0 0 12px rgba(192,21,42,0.6))", mixBlendMode: "multiply" }}
-          onError={(e) => {
-            // fallback to the TouchNet logo if PDF doesn't render as image
-            e.target.src = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
-            e.target.style.filter = "brightness(0) invert(1) drop-shadow(0 0 12px rgba(192,21,42,0.6))";
-          }}
+          className="w-28 h-28 object-contain"
+          style={{ filter: "drop-shadow(0 0 10px rgba(192,21,42,0.5))" }}
         />
       </div>
     </div>
