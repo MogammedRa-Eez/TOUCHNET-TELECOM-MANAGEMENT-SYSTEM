@@ -68,7 +68,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       style={{ background: "linear-gradient(180deg, #f8faff 0%, #f0f4ff 50%, #f5f0ff 100%)" }}>
 
       {/* Logo */}
-      <div className="bg-transparent flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(99,102,241,0.2)" }}>
+      <div className="bg-transparent flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(99,102,241,0.15)" }}>
         <div className="flex items-center overflow-hidden flex-1">
           {collapsed ?
           <img src={LOGO_URL} alt="TouchNet Logo" className="w-50 h-50 object-contain" /> :
