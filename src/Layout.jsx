@@ -54,6 +54,7 @@ const NAV_GROUPS = [
     label: "Team",
     items: [
       { name: "Employees", page: "Employees", icon: UserCog, perm: "employees" },
+      { name: "HR Dashboard", page: "HRDashboard", icon: UserCog, perm: "employees" },
       { name: "Outlook", page: "OutlookMail", icon: Mail, perm: "outlook" },
     ]
   },
