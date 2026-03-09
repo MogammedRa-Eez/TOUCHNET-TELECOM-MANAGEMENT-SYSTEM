@@ -373,19 +373,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ minHeight: 320 }}>
       {/* Galaxy background */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 50%, #0d1b3e 0%, #060d1f 55%, #020508 100%)" }}>
-        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <filter id="glow"><feGaussianBlur stdDeviation="1.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          {Array.from({ length: 120 }, (_, i) => {
-            const x  = ((i * 137.5) % 100).toFixed(2);
-            const y  = ((i * 73.1 + 13) % 100).toFixed(2);
-            const r  = (0.5 + (i % 5) * 0.3).toFixed(1);
-            const op = (0.3 + (i % 7) * 0.1).toFixed(2);
-            return <circle key={i} cx={`${x}%`} cy={`${y}%`} r={r} fill="white" opacity={op} />;
-          })}
-          {[{cx:18,cy:22},{cx:72,cy:14},{cx:85,cy:68},{cx:30,cy:80},{cx:60,cy:55}].map((s,i) => (
-            <circle key={`b${i}`} cx={`${s.cx}%`} cy={`${s.cy}%`} r="1.5" fill="#a5b4fc" opacity="0.7" filter="url(#glow)" />
-          ))}
-        </svg>
+        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(99,102,241,0.08) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 80% 70%, rgba(139,92,246,0.07) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 55% 50%, rgba(192,21,42,0.05) 0%, transparent 70%)" }} />
       </div>
 
