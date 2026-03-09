@@ -76,7 +76,11 @@ const ALL_NAV = NAV_GROUPS.flatMap(g => g.items);
 const pageLabels = {
   Home: "Home",
   AIAssistant: "AI Assistant",
-  RolesManagement: "Roles & Permissions"
+  RolesManagement: "Roles & Permissions",
+  HRDashboard: "HR Dashboard",
+  FibreProjects: "Fibre Projects",
+  OutlookMail: "Outlook Mail",
+  UserSettings: "Settings",
 };
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
