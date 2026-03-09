@@ -73,7 +73,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
           {collapsed ?
           <img src={LOGO_URL} alt="TouchNet Logo" className="w-50 h-50 object-contain" /> :
 
-          <img src={LOGO_URL} alt="TouchNet Logo" className="h-8 w-auto object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+          <img src={LOGO_URL} alt="TouchNet Logo" className="h-8 w-auto object-contain" />
           }
         </div>
         {/* Mobile close */}
