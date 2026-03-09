@@ -110,7 +110,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       }
 
       {/* Nav */}
-      <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5" style={{ background: "#162040" }}>
+      <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5" style={{ background: "transparent" }}>
         {!collapsed &&
         <p className="text-[9px] font-semibold text-slate-500 tracking-widest uppercase px-2 py-2 mono">Main Menu</p>
         }
