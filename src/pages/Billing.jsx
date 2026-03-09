@@ -10,6 +10,7 @@ import { Plus, Search, Pencil, Trash2, Receipt, DollarSign, AlertCircle, CheckCi
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import InvoiceForm from "../components/billing/InvoiceForm";
+import BatchInvoiceGenerator from "../components/billing/BatchInvoiceGenerator";
 import KPICard from "../components/dashboard/KPICard";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";

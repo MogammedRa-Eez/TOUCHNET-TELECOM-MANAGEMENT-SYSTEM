@@ -51,6 +51,7 @@ import AIAssistant from './pages/AIAssistant';
 import Billing from './pages/Billing';
 import CustomerPortal from './pages/CustomerPortal';
 import CustomerProjectPortal from './pages/CustomerProjectPortal';
+import CustomerSelfService from './pages/CustomerSelfService';
 import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
@@ -62,7 +63,6 @@ import OutlookMail from './pages/OutlookMail';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
-import CustomerSelfService from './pages/CustomerSelfService';
 import __Layout from './Layout.jsx';
 
 
@@ -71,6 +71,7 @@ export const PAGES = {
     "Billing": Billing,
     "CustomerPortal": CustomerPortal,
     "CustomerProjectPortal": CustomerProjectPortal,
+    "CustomerSelfService": CustomerSelfService,
     "Customers": Customers,
     "Dashboard": Dashboard,
     "Employees": Employees,
@@ -82,7 +83,6 @@ export const PAGES = {
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "UserSettings": UserSettings,
-    "CustomerSelfService": CustomerSelfService,
 }
 
 export const pagesConfig = {
