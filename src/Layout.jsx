@@ -18,7 +18,8 @@ import {
   Shield,
   Package,
   Settings,
-  Mail } from
+  Mail,
+  HeartHandshake } from
 "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
