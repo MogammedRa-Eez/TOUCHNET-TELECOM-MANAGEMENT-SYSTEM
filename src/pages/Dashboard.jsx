@@ -86,7 +86,7 @@ export default function Dashboard() {
           style={{ background: "linear-gradient(135deg, #060d1f 0%, #0d1845 60%, #070b1f 100%)", border: "1px solid rgba(99,102,241,0.2)", boxShadow: "0 8px 32px rgba(99,102,241,0.12)", minHeight: 380 }}>
           <div className="absolute top-4 left-5 z-10">
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-indigo-400" />
+              <Network className="w-4 h-4 text-indigo-400" />
               <span className="text-[11px] font-bold text-indigo-300 tracking-widest uppercase" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Network Coverage</span>
             </div>
             <p className="text-[9px] text-slate-600 mt-0.5 ml-6">Drag to rotate · hover for details</p>
