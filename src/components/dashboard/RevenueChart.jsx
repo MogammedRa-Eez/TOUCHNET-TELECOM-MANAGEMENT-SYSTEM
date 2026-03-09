@@ -152,7 +152,7 @@ export default function RevenueChart({ invoices = [] }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
 
             {/* Forecast zone divider */}
-            <ReferenceLine x={historical[historical.length - 1].month} stroke="rgba(167,139,250,0.35)" strokeDasharray="4 3" label={{ value: "Forecast →", position: "insideTopRight", fontSize: 9, fill: "#a78bfa", fontFamily: "JetBrains Mono" }} />
+            <ReferenceLine yAxisId="left" x={historical[historical.length - 1].month} stroke="rgba(167,139,250,0.35)" strokeDasharray="4 3" label={{ value: "Forecast →", position: "insideTopRight", fontSize: 9, fill: "#a78bfa", fontFamily: "JetBrains Mono" }} />
 
             <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} />
             <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} tickFormatter={v => `R${v / 1000}k`} width={52} />
