@@ -96,10 +96,10 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       {/* System status pill */}
       {!collapsed &&
       <div className="px-4 py-3">
-          <div className="flex items-center gap-2 rounded-md px-3 py-1.5" style={{ background: "rgba(192,21,42,0.15)", border: "1px solid rgba(192,21,42,0.3)" }}>
+          <div className="flex items-center gap-2 rounded-md px-3 py-1.5" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" />
-            <span className="text-[10px] text-red-300 font-semibold mono">NETWORK LIVE</span>
-            <span className="ml-auto text-[10px] text-slate-300 mono">99.9%</span>
+            <span className="text-[10px] text-emerald-600 font-semibold mono">NETWORK LIVE</span>
+            <span className="ml-auto text-[10px] text-slate-400 mono">99.9%</span>
           </div>
         </div>
       }
