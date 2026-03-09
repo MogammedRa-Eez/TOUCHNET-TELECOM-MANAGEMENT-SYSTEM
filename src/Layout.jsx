@@ -134,8 +134,8 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
                   ${collapsed ? "justify-center" : ""}
                   ${isActive ? "active-nav text-indigo-700" : "text-slate-500 hover:text-slate-800 nav-item-hover"}
                   `}>
-                  <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-red-700/20" : "group-hover:bg-white/5"}`}>
-                   <Icon className={`w-4 h-4 ${isActive ? "text-red-400" : "text-slate-500 group-hover:text-slate-300"}`} />
+                  <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-indigo-100" : "group-hover:bg-slate-100"}`}>
+                   <Icon className={`w-4 h-4 ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
                   </div>
                   {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
                   {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-red-400" />}
