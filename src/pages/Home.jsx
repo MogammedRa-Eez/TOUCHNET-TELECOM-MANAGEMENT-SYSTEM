@@ -64,17 +64,7 @@ export default function Home() {
   const [status, setStatus] = useState("loading"); // loading | ready
 
   useEffect(() => {
-    base44.auth.me()
-      .then(async me => {
-        if (!me) { setStatus("ready"); return; }
-        const customers = await base44.entities.Customer.filter({ email: me.email });
-        if (customers.length > 0) {
-          window.location.href = createPageUrl("CustomerPortal");
-        } else {
-          window.location.href = createPageUrl("Dashboard");
-        }
-      })
-      .catch(() => setStatus("ready"));
+    setStatus("ready");
   }, []);
 
   if (status === "loading") {
