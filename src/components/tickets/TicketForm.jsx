@@ -51,10 +51,28 @@ export default function TicketForm({ ticket, customers, onSubmit, onCancel }) {
     status: "open", priority: "medium", category: "general",
     department: "technical", assigned_to: "", resolution_notes: "",
   });
+  const [autoAssignHint, setAutoAssignHint] = useState(null);
 
   const handleCustomerChange = (id) => {
     const cust = customers.find(c => c.id === id);
     setForm({ ...form, customer_id: id, customer_name: cust?.full_name || "" });
+  };
+
+  const handleSubjectOrDescChange = (field, value) => {
+    const newForm = { ...form, [field]: value };
+    // Auto-detect region from combined subject+description
+    const detected = detectRegionAssignment(newForm.subject + " " + newForm.description);
+    if (detected && !ticket) {
+      newForm.assigned_to = detected;
+      setAutoAssignHint(detected);
+    } else if (!detected) {
+      setAutoAssignHint(null);
+    }
+    setForm(newForm);
+  };
+
+  const applyTemplate = (template) => {
+    setForm({ ...form, description: template.text });
   };
 
   const handleSubmit = (e) => {
