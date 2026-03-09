@@ -138,7 +138,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
                    <Icon className={`w-4 h-4 ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
                   </div>
                   {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
-                  {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-red-400" />}
+                  {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
               </Link>
             </React.Fragment>
           );
