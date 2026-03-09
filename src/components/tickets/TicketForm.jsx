@@ -4,7 +4,46 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { X } from "lucide-react";
+import { X, Zap, UserCheck } from "lucide-react";
+
+// Region keyword → assigned engineer
+const REGION_ASSIGNMENTS = {
+  "johannesburg": "Sipho Dlamini",
+  "joburg": "Sipho Dlamini",
+  "jhb": "Sipho Dlamini",
+  "pretoria": "Sipho Dlamini",
+  "gauteng": "Sipho Dlamini",
+  "cape town": "Anri van der Berg",
+  "cpt": "Anri van der Berg",
+  "western cape": "Anri van der Berg",
+  "durban": "Thabo Nkosi",
+  "kwazulu": "Thabo Nkosi",
+  "kzn": "Thabo Nkosi",
+  "polokwane": "Lerato Mokoena",
+  "limpopo": "Lerato Mokoena",
+  "bloemfontein": "Lerato Mokoena",
+  "free state": "Lerato Mokoena",
+  "ermelo": "Thabo Nkosi",
+  "gaborone": "Sipho Dlamini",
+  "west rand": "Sipho Dlamini",
+};
+
+const QUICK_TEMPLATES = [
+  { label: "No Connectivity", text: "Customer is experiencing a complete loss of internet connectivity. All lights on the CPE device are normal. Remote ping to the device is failing. Please investigate the upstream link and check for any port errors on the OLT." },
+  { label: "Slow Speed", text: "Customer is reporting speeds significantly below their subscribed plan. Speed tests show degraded throughput. Please check bandwidth utilisation on the assigned node, verify QoS profiles, and inspect for any traffic shaping issues." },
+  { label: "Intermittent Drops", text: "Customer is reporting intermittent connection drops throughout the day. The connection restores itself after a few minutes. Please review interface error counters on the access switch and check for any physical layer issues on the fibre run." },
+  { label: "Hardware Fault", text: "Customer's CPE device appears to be faulty. LEDs indicate an error state and the device is not registering on the OLT. A replacement unit needs to be dispatched and an onsite technician visit scheduled." },
+  { label: "DNS Issues", text: "Customer can ping IP addresses but is unable to resolve domain names. DNS resolution appears to be failing. Please verify DNS server configuration on the customer's profile and check upstream DNS availability." },
+  { label: "After-Hours Outage", text: "Customer has reported a complete outage outside of business hours. This has been logged as a critical ticket. The on-call engineer has been notified and will investigate immediately." },
+];
+
+function detectRegionAssignment(text) {
+  const lower = (text || "").toLowerCase();
+  for (const [keyword, assignee] of Object.entries(REGION_ASSIGNMENTS)) {
+    if (lower.includes(keyword)) return assignee;
+  }
+  return null;
+}
 
 export default function TicketForm({ ticket, customers, onSubmit, onCancel }) {
   const [form, setForm] = useState(ticket || {
