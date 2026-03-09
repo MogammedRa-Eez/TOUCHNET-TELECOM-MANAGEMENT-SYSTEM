@@ -22,6 +22,15 @@ export default function PageNotFound() {
         }
     });
 
+    // Redirect authenticated users to Dashboard
+    React.useEffect(() => {
+        if (isFetched && authData?.isAuthenticated) {
+            window.location.href = createPageUrl("Dashboard");
+        } else if (isFetched && !authData?.isAuthenticated) {
+            base44.auth.redirectToLogin(createPageUrl("Dashboard"));
+        }
+    }, [isFetched, authData]);
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "#060d1f" }}>
 
