@@ -495,6 +495,11 @@ export default function HRDashboard() {
         </div>
       )}
 
+      {/* ── TASKS TAB ── */}
+      {tab === "tasks" && (
+        <TaskPanel employees={employees} currentUser={currentUser} />
+      )}
+
       {showForm && (
         <EmployeeModal
           employee={editing}
