@@ -173,9 +173,9 @@ function LayoutInner({ children, currentPageName }) {
         body { font-family: 'Inter', sans-serif; background: #f0f2f8; }
         .tn-sidebar { scrollbar-width: none; }
         .tn-sidebar::-webkit-scrollbar { display: none; }
-        .nav-item-hover:hover { background: rgba(255,255,255,0.07); }
-        .sidebar-glow { box-shadow: 4px 0 24px rgba(30,45,107,0.28); }
-        .active-nav { background: linear-gradient(90deg, rgba(192,21,42,0.28) 0%, rgba(192,21,42,0.06) 100%); border-left: 2px solid #c0152a; }
+        .nav-item-hover:hover { background: rgba(99,102,241,0.06); }
+        .sidebar-glow { box-shadow: 4px 0 24px rgba(99,102,241,0.1), 1px 0 0 rgba(99,102,241,0.08); }
+        .active-nav { background: linear-gradient(90deg, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.03) 100%); border-left: 2px solid #6366f1; }
         .topbar-border { border-bottom: 1px solid rgba(30,45,107,0.1); }
         .main-content { background: #f0f2f8; }
         .card-dark { background: #ffffff; border: 1px solid rgba(30,45,107,0.1); }
