@@ -8,10 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, Pencil, Trash2, User, Wifi, Send } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, User, Wifi, Send, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import CustomerForm from "../components/customers/CustomerForm";
+import CustomerImport from "../components/customers/CustomerImport";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
