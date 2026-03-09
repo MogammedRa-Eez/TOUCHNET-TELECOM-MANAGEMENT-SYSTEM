@@ -77,7 +77,7 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
           }
         </div>
         {/* Mobile close */}
-        <button onClick={() => setMobileOpen(false)} className="lg:hidden text-white/40 hover:text-white p-1">
+        <button onClick={() => setMobileOpen(false)} className="lg:hidden text-slate-400 hover:text-slate-700 p-1">
           <X className="w-4 h-4" />
         </button>
         {/* Desktop collapse toggle */}
