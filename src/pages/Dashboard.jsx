@@ -1,14 +1,14 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Users, Receipt, TicketCheck, Network, DollarSign, Wifi, Activity } from "lucide-react";
+import { Users, Receipt, TicketCheck, Network, DollarSign, Wifi, Activity, Globe } from "lucide-react";
 import KPICard from "../components/dashboard/KPICard";
 import RevenueChart from "../components/dashboard/RevenueChart";
 import TicketOverview from "../components/dashboard/TicketOverview";
 import NetworkHealth from "../components/dashboard/NetworkHealth";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import UserActivityPanel from "../components/dashboard/UserActivityPanel";
-import NetworkMap from "../components/dashboard/NetworkMap";
+import NetworkGlobe from "../components/dashboard/NetworkGlobe";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
@@ -86,7 +86,7 @@ export default function Dashboard() {
           style={{ background: "linear-gradient(135deg, #060d1f 0%, #0d1845 60%, #070b1f 100%)", border: "1px solid rgba(99,102,241,0.2)", boxShadow: "0 8px 32px rgba(99,102,241,0.12)", minHeight: 380 }}>
           <div className="absolute top-4 left-5 z-10">
             <div className="flex items-center gap-2">
-              <Network className="w-4 h-4 text-indigo-400" />
+              <Globe className="w-4 h-4 text-indigo-400" />
               <span className="text-[11px] font-bold text-indigo-300 tracking-widest uppercase" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Network Coverage</span>
             </div>
             <p className="text-[9px] text-slate-600 mt-0.5 ml-6">Drag to rotate · hover for details</p>
@@ -104,7 +104,7 @@ export default function Dashboard() {
             ))}
           </div>
           <div className="w-full h-full" style={{ minHeight: 380 }}>
-            <NetworkMap nodes={nodes} />
+            <NetworkGlobe nodes={nodes} />
           </div>
         </div>
 
