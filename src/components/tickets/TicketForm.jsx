@@ -91,12 +91,39 @@ export default function TicketForm({ ticket, customers, onSubmit, onCancel }) {
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-slate-600">Subject *</Label>
-            <Input value={form.subject} onChange={e => setForm({...form, subject: e.target.value})} required />
+            <Input value={form.subject} onChange={e => handleSubjectOrDescChange("subject", e.target.value)} required />
           </div>
+
+          {/* Quick Response Templates */}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium text-slate-600 flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-amber-500" /> Quick Response Templates
+            </Label>
+            <div className="flex flex-wrap gap-2">
+              {QUICK_TEMPLATES.map(t => (
+                <button
+                  key={t.label}
+                  type="button"
+                  onClick={() => applyTemplate(t)}
+                  className="text-[11px] px-2.5 py-1 rounded-full border border-indigo-200 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition-colors font-medium"
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <Label className="text-xs font-medium text-slate-600">Description *</Label>
-            <Textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} required />
+            <Textarea value={form.description} onChange={e => handleSubjectOrDescChange("description", e.target.value)} rows={3} required />
           </div>
+
+          {autoAssignHint && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-700">
+              <UserCheck className="w-3.5 h-3.5 flex-shrink-0" />
+              Auto-assigned to <strong>{autoAssignHint}</strong> based on region detected in ticket.
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-xs font-medium text-slate-600">Customer</Label>
