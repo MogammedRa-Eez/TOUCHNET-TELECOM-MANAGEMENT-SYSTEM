@@ -1,7 +1,8 @@
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Home, AlertTriangle } from 'lucide-react';
+import { Home, AlertTriangle, Loader2 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
