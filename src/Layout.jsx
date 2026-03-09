@@ -82,10 +82,6 @@ const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/pub
 function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, setCollapsed }) {
   const { can, loading } = useRBAC();
 
-  const navItems = loading ?
-  ALL_NAV :
-  ALL_NAV.filter((item) => item.perm === null || can(item.perm));
-
   return (
     <aside
       className={`
