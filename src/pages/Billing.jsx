@@ -85,6 +85,8 @@ export default function Billing() {
         </Button>
       </div>
 
+      <BatchInvoiceGenerator onInvoicesCreated={() => queryClient.invalidateQueries({ queryKey: ["invoices"] })} />
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KPICard title="Total Collected" value={`R${totalPaid.toLocaleString()}`} icon={CheckCircle2} color="emerald" />
         <KPICard title="Overdue" value={`R${totalOverdue.toLocaleString()}`} icon={AlertCircle} color="rose" />
