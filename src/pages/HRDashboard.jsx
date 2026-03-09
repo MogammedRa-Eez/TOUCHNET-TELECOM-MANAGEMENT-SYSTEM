@@ -114,6 +114,11 @@ function EmployeeModal({ employee, onSubmit, onCancel }) {
 export default function HRDashboard() {
   const { can, loading: rbacLoading } = useRBAC();
   const [tab, setTab] = useState("overview");
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
