@@ -1,90 +1,188 @@
-import React from "react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
-import { TrendingUp } from "lucide-react";
+import React, { useState } from "react";
+import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { format, subMonths, addMonths, startOfMonth, endOfMonth } from "date-fns";
+import { TrendingUp, Brain } from "lucide-react";
+
+// Simple linear regression over [y0, y1, ...yn] => returns slope + intercept
+function linearRegression(values) {
+  const n = values.length;
+  const xs = values.map((_, i) => i);
+  const sumX = xs.reduce((a, x) => a + x, 0);
+  const sumY = values.reduce((a, y) => a + y, 0);
+  const sumXY = xs.reduce((a, x, i) => a + x * values[i], 0);
+  const sumX2 = xs.reduce((a, x) => a + x * x, 0);
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX || 1);
+  const intercept = (sumY - slope * sumX) / n;
+  return { slope, intercept };
+}
 
 function buildChartData(invoices) {
   const months = [];
   for (let i = 7; i >= 0; i--) {
     const d = subMonths(new Date(), i);
-    months.push({ month: format(d, "MMM"), start: startOfMonth(d), end: endOfMonth(d), revenue: 0, overdue: 0 });
+    months.push({ month: format(d, "MMM"), start: startOfMonth(d), end: endOfMonth(d), revenue: 0, overdue: 0, paid: 0, total: 0 });
   }
   invoices.forEach(inv => {
     const d = new Date(inv.created_date);
     const bucket = months.find(m => d >= m.start && d <= m.end);
     if (!bucket) return;
-    if (inv.status === "paid") bucket.revenue += inv.total || inv.amount || 0;
+    bucket.total += 1;
+    if (inv.status === "paid") { bucket.revenue += inv.total || inv.amount || 0; bucket.paid += 1; }
     else if (inv.status === "overdue") bucket.overdue += inv.total || inv.amount || 0;
   });
-  return months.map(({ month, revenue, overdue }) => ({ month, revenue, overdue }));
+
+  // Health score per month: high paid ratio + low overdue = healthy (0–100)
+  return months.map(({ month, revenue, overdue, paid, total }) => {
+    const paidRatio = total > 0 ? paid / total : 1;
+    const overdueWeight = revenue > 0 ? Math.min(overdue / (revenue + overdue), 1) : 0;
+    const health = Math.round((paidRatio * 0.6 + (1 - overdueWeight) * 0.4) * 100);
+    return { month, revenue, overdue, health };
+  });
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl px-4 py-3 shadow-xl" style={{ background: "rgba(15,23,42,0.92)", border: "1px solid rgba(99,102,241,0.3)", backdropFilter: "blur(8px)" }}>
-      <p className="text-[11px] font-bold text-slate-400 mb-2" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{label}</p>
-      {payload.map((p, i) => (
-        <p key={i} className="text-[12px] font-semibold" style={{ color: p.stroke, fontFamily: "'JetBrains Mono', monospace" }}>
-          {p.name === "revenue" ? "Revenue" : "Overdue"}: R{Number(p.value).toLocaleString()}
-        </p>
-      ))}
+    <div className="rounded-xl px-4 py-3 shadow-2xl" style={{ background: "rgba(10,15,35,0.95)", border: "1px solid rgba(99,102,241,0.35)", backdropFilter: "blur(12px)", minWidth: 160 }}>
+      <p className="text-[11px] font-bold text-slate-400 mb-2.5 border-b border-white/10 pb-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{label}</p>
+      {payload.map((p, i) => {
+        if (p.value == null) return null;
+        const labels = { revenue: "Revenue", overdue: "Overdue", health: "Health Score", predictedHealth: "Predicted Health" };
+        const colors = { revenue: "#06b6d4", overdue: "#f43f5e", health: "#10b981", predictedHealth: "#a78bfa" };
+        const isRand = p.dataKey === "revenue" || p.dataKey === "overdue";
+        return (
+          <p key={i} className="text-[11px] font-semibold mb-0.5" style={{ color: colors[p.dataKey] || "#f1f5f9", fontFamily: "'JetBrains Mono', monospace" }}>
+            {labels[p.dataKey] || p.dataKey}: {isRand ? `R${Number(p.value).toLocaleString()}` : `${Number(p.value).toFixed(1)}%`}
+          </p>
+        );
+      })}
     </div>
   );
 };
 
 export default function RevenueChart({ invoices = [] }) {
-  const data = buildChartData(invoices);
-  const totalRev = data.reduce((a, d) => a + d.revenue, 0);
+  const [showPrediction, setShowPrediction] = useState(true);
+
+  const historical = buildChartData(invoices);
+  const healthValues = historical.map(d => d.health);
+  const { slope, intercept } = linearRegression(healthValues);
+
+  // Project 3 months forward
+  const predictions = [1, 2, 3].map(offset => {
+    const d = addMonths(new Date(), offset);
+    const idx = historical.length + offset - 1;
+    const predicted = Math.min(100, Math.max(0, Math.round(slope * idx + intercept)));
+    return { month: format(d, "MMM"), revenue: null, overdue: null, health: null, predictedHealth: predicted, isForecast: true };
+  });
+
+  // Bridge: last historical point gets predictedHealth = its health value so line is continuous
+  const data = historical.map((d, i) =>
+    i === historical.length - 1
+      ? { ...d, predictedHealth: d.health }
+      : { ...d, predictedHealth: null }
+  ).concat(predictions);
+
+  const totalRev = historical.reduce((a, d) => a + d.revenue, 0);
+  const lastHealth = healthValues[healthValues.length - 1] ?? 0;
+  const trend = slope >= 0 ? "stable" : "declining";
+  const trendColor = slope >= 0 ? "#10b981" : "#f59e0b";
 
   return (
     <div className="rounded-2xl p-6 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}>
-      {/* Subtle bg gradient */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6,182,212,0.04) 0%, transparent 70%)" }} />
 
-      <div className="flex items-start justify-between mb-6 relative">
+      {/* Header */}
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-5 relative">
         <div>
-          <h3 className="text-[14px] font-bold text-slate-800">Revenue Overview</h3>
-          <p className="text-[11px] mt-0.5 text-slate-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Last 8 months performance</p>
+          <h3 className="text-[14px] font-bold text-slate-800">Revenue & Network Health</h3>
+          <p className="text-[11px] mt-0.5 text-slate-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>8-month history · 3-month AI forecast</p>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Predicted health toggle */}
+          <button
+            onClick={() => setShowPrediction(p => !p)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all"
+            style={{
+              background: showPrediction ? "rgba(167,139,250,0.15)" : "rgba(148,163,184,0.1)",
+              border: `1px solid ${showPrediction ? "rgba(167,139,250,0.4)" : "rgba(148,163,184,0.2)"}`,
+              color: showPrediction ? "#a78bfa" : "#94a3b8",
+            }}
+          >
+            <Brain className="w-3 h-3" />
+            Predicted Health
+          </button>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}>
             <TrendingUp className="w-3 h-3 text-cyan-500" />
-            <span className="text-[11px] font-bold text-cyan-600">R{(totalRev/1000).toFixed(1)}k total</span>
-          </div>
-          <div className="flex items-center gap-4 text-[11px]">
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-cyan-500" style={{ boxShadow: "0 0 6px rgba(6,182,212,0.5)" }} />
-              <span className="text-slate-500">Revenue</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-rose-500" style={{ boxShadow: "0 0 6px rgba(244,63,94,0.5)" }} />
-              <span className="text-slate-500">Overdue</span>
-            </div>
+            <span className="text-[11px] font-bold text-cyan-600">R{(totalRev / 1000).toFixed(1)}k</span>
           </div>
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={240}>
-        <AreaChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="overdueGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="#f43f5e" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
-          <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} />
-          <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} tickFormatter={(v) => `R${v/1000}k`} width={52} />
-          <Tooltip content={<CustomTooltip />} />
-          <Area type="monotone" dataKey="revenue" stroke="#06b6d4" strokeWidth={2.5} fill="url(#revGrad)" dot={false} activeDot={{ r: 5, fill: "#06b6d4", strokeWidth: 2, stroke: "#fff" }} />
-          <Area type="monotone" dataKey="overdue" stroke="#f43f5e" strokeWidth={2} fill="url(#overdueGrad)" dot={false} activeDot={{ r: 4, fill: "#f43f5e", strokeWidth: 2, stroke: "#fff" }} />
-        </AreaChart>
-      </ResponsiveContainer>
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-4 mb-4 text-[11px]">
+        {[
+          { color: "#06b6d4", label: "Revenue", dashed: false },
+          { color: "#f43f5e", label: "Overdue",  dashed: false },
+          { color: "#10b981", label: "Health Score", dashed: false },
+          ...(showPrediction ? [{ color: "#a78bfa", label: "Predicted Health", dashed: true }] : []),
+        ].map(({ color, label, dashed }) => (
+          <div key={label} className="flex items-center gap-1.5">
+            <svg width="18" height="8">
+              <line x1="0" y1="4" x2="18" y2="4" stroke={color} strokeWidth="2" strokeDasharray={dashed ? "4 2" : "0"} />
+            </svg>
+            <span className="text-slate-500">{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Forecast zone label */}
+      <div className="relative">
+        <ResponsiveContainer width="100%" height={260}>
+          <ComposedChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.28} />
+                <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="overdueGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.22} />
+                <stop offset="100%" stopColor="#f43f5e" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
+
+            {/* Forecast zone divider */}
+            <ReferenceLine x={historical[historical.length - 1].month} stroke="rgba(167,139,250,0.35)" strokeDasharray="4 3" label={{ value: "Forecast →", position: "insideTopRight", fontSize: 9, fill: "#a78bfa", fontFamily: "JetBrains Mono" }} />
+
+            <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} />
+            <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} tickFormatter={v => `R${v / 1000}k`} width={52} />
+            <YAxis yAxisId="right" orientation="right" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#a78bfa', fontFamily: 'JetBrains Mono' }} tickFormatter={v => `${v}%`} width={36} />
+
+            <Tooltip content={<CustomTooltip />} />
+
+            <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="#06b6d4" strokeWidth={2.5} fill="url(#revGrad)" dot={false} connectNulls activeDot={{ r: 5, fill: "#06b6d4", strokeWidth: 2, stroke: "#fff" }} />
+            <Area yAxisId="left" type="monotone" dataKey="overdue" stroke="#f43f5e" strokeWidth={2} fill="url(#overdueGrad)" dot={false} connectNulls activeDot={{ r: 4, fill: "#f43f5e", strokeWidth: 2, stroke: "#fff" }} />
+
+            {/* Actual health */}
+            <Line yAxisId="right" type="monotone" dataKey="health" stroke="#10b981" strokeWidth={2} dot={{ r: 3, fill: "#10b981", strokeWidth: 0 }} activeDot={{ r: 5, fill: "#10b981", stroke: "#fff", strokeWidth: 2 }} connectNulls />
+
+            {/* Predicted health */}
+            {showPrediction && (
+              <Line yAxisId="right" type="monotone" dataKey="predictedHealth" stroke="#a78bfa" strokeWidth={2.5} strokeDasharray="6 3" dot={(props) => {
+                const { cx, cy, payload } = props;
+                if (!payload.isForecast) return <g key={`dot-${cx}`} />;
+                return <circle key={`dot-${cx}`} cx={cx} cy={cy} r={4} fill="#a78bfa" stroke="#fff" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px #a78bfa)" }} />;
+              }} connectNulls activeDot={{ r: 5, fill: "#a78bfa", stroke: "#fff", strokeWidth: 2 }} />
+            )}
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Health insight pill */}
+      <div className="mt-3 flex items-center gap-2 text-[11px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+        <Brain className="w-3.5 h-3.5" style={{ color: trendColor }} />
+        <span className="text-slate-500">Network health is <span className="font-bold" style={{ color: trendColor }}>{trend}</span> at <span className="font-bold" style={{ color: trendColor }}>{lastHealth}%</span> — projected to {slope >= 0 ? "hold steady" : `drop ~${Math.abs(Math.round(slope * 3))}% over next 3 months`}</span>
+      </div>
     </div>
   );
 }
