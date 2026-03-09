@@ -206,6 +206,7 @@ export default function HRDashboard() {
     { id: "overview", label: "Overview" },
     { id: "directory", label: "Directory" },
     { id: "analytics", label: "Analytics" },
+    { id: "tasks", label: "Tasks" },
   ];
 
   const TENURE_COLORS = ["#6366f1", "#8b5cf6", "#a78bfa", "#c4b5fd"];
