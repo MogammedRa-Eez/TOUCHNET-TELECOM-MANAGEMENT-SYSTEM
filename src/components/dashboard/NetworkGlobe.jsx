@@ -135,6 +135,12 @@ export default function NetworkGlobe({ nodes = [] }) {
     const globe    = new THREE.Mesh(globeGeo, globeMat);
     scene.add(globe);
 
+    // Continent overlay
+    const continentGeo = new THREE.SphereGeometry(1.003, 64, 64);
+    const continentMat = new THREE.MeshBasicMaterial({ map: createContinentTexture(), transparent: true, opacity: 1, depthWrite: false });
+    const continentMesh = new THREE.Mesh(continentGeo, continentMat);
+    scene.add(continentMesh);
+
     // Wireframe
     const wireMesh = new THREE.Mesh(
       new THREE.SphereGeometry(1.005, 24, 24),
