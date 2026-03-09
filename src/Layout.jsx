@@ -26,20 +26,49 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 import GlobalSearch from "@/components/layout/GlobalSearch";
 
-const ALL_NAV = [
-{ name: "Home", page: "Home", icon: LayoutDashboard, perm: null },
-{ name: "Dashboard", page: "Dashboard", icon: LayoutDashboard, perm: "dashboard" },
-{ name: "Customers", page: "Customers", icon: Users, perm: "customers" },
-{ name: "Billing", page: "Billing", icon: Receipt, perm: "billing" },
-{ name: "Tickets", page: "Tickets", icon: TicketCheck, perm: "tickets" },
-{ name: "Network", page: "Network", icon: Network, perm: "network" },
-{ name: "Inventory", page: "Inventory", icon: Package, perm: "network" },
-{ name: "Fibre Projects", page: "FibreProjects", icon: Network, perm: "projects" },
-{ name: "Employees", page: "Employees", icon: UserCog, perm: "employees" },
-{ name: "AI Assistant", page: "AIAssistant", icon: Bot, perm: "ai_assistant" },
-{ name: "Roles", page: "RolesManagement", icon: Shield, perm: "roles_management" },
-{ name: "Outlook", page: "OutlookMail", icon: Mail, perm: "outlook" },
-{ name: "Settings", page: "UserSettings", icon: Settings, perm: null }];
+const NAV_GROUPS = [
+  {
+    label: null,
+    items: [
+      { name: "Home", page: "Home", icon: LayoutDashboard, perm: null },
+      { name: "Dashboard", page: "Dashboard", icon: LayoutDashboard, perm: "dashboard" },
+    ]
+  },
+  {
+    label: "Operations",
+    items: [
+      { name: "Customers", page: "Customers", icon: Users, perm: "customers" },
+      { name: "Billing", page: "Billing", icon: Receipt, perm: "billing" },
+      { name: "Tickets", page: "Tickets", icon: TicketCheck, perm: "tickets" },
+    ]
+  },
+  {
+    label: "Infrastructure",
+    items: [
+      { name: "Network", page: "Network", icon: Network, perm: "network" },
+      { name: "Inventory", page: "Inventory", icon: Package, perm: "network" },
+      { name: "Fibre Projects", page: "FibreProjects", icon: Network, perm: "projects" },
+    ]
+  },
+  {
+    label: "Team",
+    items: [
+      { name: "Employees", page: "Employees", icon: UserCog, perm: "employees" },
+      { name: "Outlook", page: "OutlookMail", icon: Mail, perm: "outlook" },
+    ]
+  },
+  {
+    label: "System",
+    items: [
+      { name: "AI Assistant", page: "AIAssistant", icon: Bot, perm: "ai_assistant" },
+      { name: "Roles", page: "RolesManagement", icon: Shield, perm: "roles_management" },
+      { name: "Settings", page: "UserSettings", icon: Settings, perm: null },
+    ]
+  },
+];
+
+// Flatten for legacy usage
+const ALL_NAV = NAV_GROUPS.flatMap(g => g.items);
 
 
 const pageLabels = {
