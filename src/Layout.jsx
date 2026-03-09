@@ -145,11 +145,11 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
         })}
 
         {/* Footer */}
-        <div className="mt-auto pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-          {collapsed ?
-          <p className="text-[8px] text-slate-600 mono text-center">TN</p> :
-          <p className="text-[10px] text-slate-600 mono text-center">© TOUCHNET v2.4.1</p>
-          }
+        <div className="mt-auto pt-4" style={{ borderTop: "1px solid rgba(99,102,241,0.1)" }}>
+        {collapsed ?
+        <p className="text-[8px] text-slate-400 mono text-center">TN</p> :
+        <p className="text-[10px] text-slate-400 mono text-center">© TOUCHNET v2.4.1</p>
+        }
         </div>
       </nav>
     </aside>);
