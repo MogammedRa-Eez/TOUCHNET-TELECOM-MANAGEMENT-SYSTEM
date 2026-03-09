@@ -277,7 +277,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     window.addEventListener("mousemove", onMouseMove);
 
     let frameId, t = 0;
-    const allRotating = [globe, dotGroup, arcGroup, wireMesh, heatmapGroup];
+    const allRotating = [globe, continentMesh, dotGroup, arcGroup, wireMesh, heatmapGroup];
     const animate = () => {
       frameId = requestAnimationFrame(animate);
       t += 0.016;
