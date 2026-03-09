@@ -324,6 +324,51 @@ export default function NetworkGlobe({ nodes = [] }) {
   const statusLabel  = { online: "Online", offline: "Offline", degraded: "Degraded", maintenance: "Maintenance" };
   const statusColors = { online: "#34d399", offline: "#ef4444", degraded: "#fbbf24", maintenance: "#818cf8" };
 
+  const starsCanvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = starsCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const stars = Array.from({ length: 160 }, (_, i) => ({
+      x: ((i * 137.5) % 100),
+      y: ((i * 73.1 + 13) % 100),
+      r: 0.4 + (i % 5) * 0.28,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.6 + Math.random() * 1.2,
+      base: 0.25 + (i % 7) * 0.09,
+    }));
+    let raf;
+    const draw = () => {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      const now = performance.now() / 1000;
+      stars.forEach(s => {
+        const op = s.base + 0.45 * Math.abs(Math.sin(now * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x / 100 * w, s.y / 100 * h, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${op.toFixed(2)})`;
+        ctx.fill();
+      });
+      // bright glowing stars
+      [[18,22],[72,14],[85,68],[30,80],[60,55]].forEach(([cx,cy]) => {
+        const op = 0.45 + 0.55 * Math.abs(Math.sin(now * 0.8 + cx));
+        const grad = ctx.createRadialGradient(cx/100*w, cy/100*h, 0, cx/100*w, cy/100*h, 4);
+        grad.addColorStop(0, `rgba(165,180,252,${op.toFixed(2)})`);
+        grad.addColorStop(1, 'rgba(165,180,252,0)');
+        ctx.beginPath();
+        ctx.arc(cx/100*w, cy/100*h, 4, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+      raf = requestAnimationFrame(draw);
+    };
+    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    resize();
+    window.addEventListener('resize', resize);
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+  }, []);
+
   return (
     <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ minHeight: 320 }}>
       {/* Galaxy background */}
