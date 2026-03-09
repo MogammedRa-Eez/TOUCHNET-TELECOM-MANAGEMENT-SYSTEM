@@ -139,46 +139,53 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
       }
 
       {/* Nav */}
-      <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col space-y-0.5" style={{ background: "transparent" }}>
-        {!collapsed &&
-        <p className="text-[9px] font-semibold text-slate-400 tracking-widest uppercase px-2 py-2 mono">Main Menu</p>
-        }
-        {navItems.map((item, idx) => {
-          const isActive = currentPageName === item.page;
-          const Icon = item.icon;
-          // Add divider before "Roles"
-          const showDivider = item.page === "RolesManagement";
+      <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col" style={{ background: "transparent" }}>
+        {NAV_GROUPS.map((group, gi) => {
+          const groupItems = loading ? group.items : group.items.filter(item => item.perm === null || can(item.perm));
+          if (groupItems.length === 0) return null;
           return (
-            <React.Fragment key={item.page}>
-              {showDivider && (
+            <div key={gi} className={gi > 0 ? "mt-2" : ""}>
+              {!collapsed && group.label && (
+                <p className="text-[9px] font-semibold text-slate-400 tracking-widest uppercase px-2 py-1.5 mono">{group.label}</p>
+              )}
+              {collapsed && gi > 0 && (
                 <div className="mx-2 my-1.5" style={{ borderTop: "1px solid rgba(99,102,241,0.12)" }} />
               )}
-              <Link
-                to={createPageUrl(item.page)}
-                onClick={() => setMobileOpen(false)}
-                title={collapsed ? item.name : undefined}
-                className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                  transition-all duration-150 group relative
-                  ${collapsed ? "justify-center" : ""}
-                  ${isActive ? "active-nav text-indigo-700" : "text-slate-500 hover:text-slate-800 nav-item-hover"}
-                  `}>
-                  <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-indigo-100" : "group-hover:bg-slate-100"}`}>
-                   <Icon className={`w-4 h-4 ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
-                  </div>
-                  {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
-                  {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
-              </Link>
-            </React.Fragment>
+              <div className="flex flex-col space-y-0.5">
+                {groupItems.map((item) => {
+                  const isActive = currentPageName === item.page;
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.page}
+                      to={createPageUrl(item.page)}
+                      onClick={() => setMobileOpen(false)}
+                      title={collapsed ? item.name : undefined}
+                      className={`
+                        flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                        transition-all duration-150 group relative
+                        ${collapsed ? "justify-center" : ""}
+                        ${isActive ? "active-nav text-indigo-700" : "text-slate-500 hover:text-slate-800 nav-item-hover"}
+                      `}>
+                      <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-indigo-100" : "group-hover:bg-slate-100"}`}>
+                        <Icon className={`w-4 h-4 ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
+                      </div>
+                      {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
+                      {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
 
         {/* Footer */}
         <div className="mt-auto pt-4" style={{ borderTop: "1px solid rgba(99,102,241,0.1)" }}>
-        {collapsed ?
-        <p className="text-[8px] text-slate-400 mono text-center">TN</p> :
-        <p className="text-[10px] text-slate-400 mono text-center">© TOUCHNET v2.4.1</p>
-        }
+          {collapsed ?
+            <p className="text-[8px] text-slate-400 mono text-center">TN</p> :
+            <p className="text-[10px] text-slate-400 mono text-center">© TOUCHNET v2.4.1</p>
+          }
         </div>
       </nav>
     </aside>);
