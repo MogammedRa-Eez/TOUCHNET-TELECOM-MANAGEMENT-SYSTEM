@@ -104,7 +104,7 @@ export default function Dashboard() {
             ))}
           </div>
           <div className="w-full h-full" style={{ minHeight: 380 }}>
-            <NetworkGlobe nodes={nodes} />
+            <NetworkMap nodes={nodes} />
           </div>
         </div>
 
