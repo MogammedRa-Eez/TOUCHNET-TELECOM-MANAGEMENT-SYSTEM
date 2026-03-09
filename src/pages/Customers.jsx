@@ -177,6 +177,8 @@ export default function Customers() {
         </div>
       </div>
 
+      {showImport && <CustomerImport onClose={() => setShowImport(false)} />}
+
       {showForm && (
         <CustomerForm
           customer={editing}
