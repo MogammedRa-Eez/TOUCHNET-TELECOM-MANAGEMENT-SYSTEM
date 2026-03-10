@@ -4,99 +4,104 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* ═══════════════════════════════════════
-   QUANTARA DESIGN SYSTEM
-   Deep navy · Electric blue · Gold
-═══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   OPTIMATIA DESIGN SYSTEM
+   Deep navy · Violet primary · Teal secondary
+═══════════════════════════════════════════════ */
 
 :root {
-  --q-bg:        #080c18;
-  --q-surface:   #0d1427;
-  --q-surface2:  #111b35;
-  --q-border:    rgba(56, 114, 224, 0.2);
-  --q-border-hi: rgba(56, 114, 224, 0.45);
-  --q-blue:      #3872e0;
-  --q-blue-hi:   #5b90f5;
-  --q-gold:      #f0a500;
-  --q-gold-hi:   #fbbf24;
-  --q-cyan:      #22d3ee;
-  --q-text:      #cbd5e1;
-  --q-text-hi:   #f1f5f9;
-  --q-muted:     rgba(148, 163, 184, 0.5);
+  --op-bg:        #0a0e1a;
+  --op-surface:   #111827;
+  --op-surface2:  #1a2235;
+  --op-surface3:  #1e2a42;
+  --op-border:    rgba(124, 58, 237, 0.16);
+  --op-border-hi: rgba(124, 58, 237, 0.35);
+  --op-violet:    #7c3aed;
+  --op-violet-hi: #a78bfa;
+  --op-teal:      #14b8a6;
+  --op-teal-hi:   #2dd4bf;
+  --op-text:      #e2e8f0;
+  --op-text-2:    #94a3b8;
+  --op-text-3:    rgba(148, 163, 184, 0.5);
+  --op-success:   #10b981;
+  --op-warning:   #f59e0b;
+  --op-danger:    #ef4444;
+  --op-info:      #3b82f6;
 }
 
 @layer base {
   body {
-    background-color: var(--q-bg);
+    background-color: var(--op-bg);
     font-family: 'Inter', sans-serif;
-    color: var(--q-text);
+    color: var(--op-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  * { box-sizing: border-box; }
 }
 
 @layer utilities {
   .mono { font-family: 'JetBrains Mono', monospace !important; }
 
-  /* Quantara surface cards */
-  .q-card {
-    background: var(--q-surface);
-    border: 1px solid var(--q-border);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+  /* ── Optimatia card surfaces ── */
+  .op-card {
+    background: var(--op-surface);
+    border: 1px solid var(--op-border);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
   }
-  .q-card-hi {
-    background: var(--q-surface2);
-    border: 1px solid var(--q-border-hi);
-    box-shadow: 0 0 0 1px rgba(56,114,224,0.05), 0 8px 32px rgba(0,0,0,0.5);
+  .op-card-raised {
+    background: var(--op-surface2);
+    border: 1px solid var(--op-border-hi);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.06);
   }
 
-  /* Quantara glow accents */
-  .q-glow-blue { box-shadow: 0 0 16px rgba(56,114,224,0.35), 0 4px 16px rgba(0,0,0,0.4); }
-  .q-glow-gold { box-shadow: 0 0 16px rgba(240,165,0,0.35), 0 4px 16px rgba(0,0,0,0.4); }
+  /* ── Glow utilities ── */
+  .op-glow-violet { box-shadow: 0 0 20px rgba(124,58,237,0.3), 0 4px 16px rgba(0,0,0,0.4); }
+  .op-glow-teal   { box-shadow: 0 0 20px rgba(20,184,166,0.3), 0 4px 16px rgba(0,0,0,0.4); }
 
-  /* Scrollbar */
-  .q-scroll::-webkit-scrollbar { width: 4px; }
-  .q-scroll::-webkit-scrollbar-track { background: transparent; }
-  .q-scroll::-webkit-scrollbar-thumb { background: rgba(56,114,224,0.3); border-radius: 4px; }
-  .q-scroll::-webkit-scrollbar-thumb:hover { background: rgba(56,114,224,0.5); }
+  /* ── Scrollbar ── */
+  .op-scroll::-webkit-scrollbar { width: 4px; }
+  .op-scroll::-webkit-scrollbar-track { background: transparent; }
+  .op-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 4px; }
+  .op-scroll::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.5); }
 }
 
 @layer components {
-  /* Primary action button */
-  .btn-q {
+  /* Primary button */
+  .btn-op {
     @apply font-semibold rounded-lg text-white;
-    background: linear-gradient(135deg, #3872e0, #5b90f5);
-    box-shadow: 0 0 0 1px rgba(56,114,224,0.3), 0 4px 16px rgba(56,114,224,0.3);
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    box-shadow: 0 0 0 1px rgba(124,58,237,0.3), 0 4px 16px rgba(124,58,237,0.3);
     transition: all 0.2s ease;
   }
-  .btn-q:hover {
-    box-shadow: 0 0 0 1px rgba(91,144,245,0.5), 0 8px 24px rgba(56,114,224,0.45);
+  .btn-op:hover {
+    box-shadow: 0 0 0 1px rgba(168,85,247,0.5), 0 8px 24px rgba(124,58,237,0.45);
     transform: translateY(-1px);
   }
 
-  /* Gold accent button */
-  .btn-q-gold {
+  /* Outline button */
+  .btn-op-outline {
     @apply font-semibold rounded-lg;
-    color: #080c18;
-    background: linear-gradient(135deg, #f0a500, #fbbf24);
-    box-shadow: 0 0 0 1px rgba(240,165,0,0.3), 0 4px 16px rgba(240,165,0,0.25);
+    color: var(--op-violet-hi);
+    border: 1px solid var(--op-border-hi);
+    background: rgba(124,58,237,0.06);
     transition: all 0.2s ease;
   }
-  .btn-q-gold:hover {
-    box-shadow: 0 0 0 1px rgba(251,191,36,0.5), 0 8px 24px rgba(240,165,0,0.4);
-    transform: translateY(-1px);
+  .btn-op-outline:hover {
+    background: rgba(124,58,237,0.12);
+    border-color: rgba(167,139,250,0.5);
   }
 
-  /* Outline variant */
-  .btn-q-outline {
-    @apply font-semibold rounded-lg;
-    color: var(--q-blue-hi);
-    border: 1px solid var(--q-border-hi);
-    background: rgba(56,114,224,0.06);
+  /* Teal variant */
+  .btn-op-teal {
+    @apply font-semibold rounded-lg text-white;
+    background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+    box-shadow: 0 0 0 1px rgba(20,184,166,0.3), 0 4px 16px rgba(20,184,166,0.25);
     transition: all 0.2s ease;
   }
-  .btn-q-outline:hover {
-    background: rgba(56,114,224,0.12);
-    border-color: rgba(91,144,245,0.6);
+  .btn-op-teal:hover {
+    box-shadow: 0 0 0 1px rgba(45,212,191,0.5), 0 8px 24px rgba(20,184,166,0.4);
+    transform: translateY(-1px);
   }
 }
