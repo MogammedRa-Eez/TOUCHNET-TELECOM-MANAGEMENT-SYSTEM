@@ -65,10 +65,10 @@ function MoreDropdown({ currentPageName, can, loading }) {
         <div
           className="absolute top-full mt-2 right-0 w-52 rounded-2xl overflow-hidden z-50"
           style={{
-            background: "rgba(255,255,255,0.98)",
-            border: "1px solid rgba(99,102,241,0.12)",
-            boxShadow: "0 20px 60px rgba(99,102,241,0.15), 0 4px 16px rgba(0,0,0,0.08)",
-            backdropFilter: "blur(20px)"
+            background: "rgba(5,5,20,0.97)",
+            border: "1px solid rgba(0,255,247,0.18)",
+            boxShadow: "0 0 40px rgba(0,255,247,0.1), 0 20px 60px rgba(0,0,0,0.8)",
+            backdropFilter: "blur(24px)"
           }}
         >
           <div className="p-1.5">
@@ -80,15 +80,17 @@ function MoreDropdown({ currentPageName, can, loading }) {
                   key={item.page}
                   to={createPageUrl(item.page)}
                   onClick={() => setOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 ${
-                    isActive ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150"
+                  style={isActive
+                    ? { background: "rgba(0,255,247,0.1)", color: "#00fff7", border: "1px solid rgba(0,255,247,0.2)", textShadow: "0 0 6px rgba(0,255,247,0.5)" }
+                    : { color: "rgba(148,163,184,0.8)" }
+                  }
                 >
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${isActive ? "bg-indigo-100" : "bg-slate-100"}`}>
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? "text-indigo-600" : "text-slate-500"}`} />
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(0,255,247,0.12)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(0,255,247,0.25)" : "rgba(255,255,255,0.06)"}` }}>
+                    <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#00fff7" : "rgba(148,163,184,0.6)" }} />
                   </div>
                   {item.name}
-                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-500" />}
+                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#00fff7", boxShadow: "0 0 6px #00fff7" }} />}
                 </Link>
               );
             })}
