@@ -58,19 +58,19 @@ export default function Dashboard() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#e2e8f0" }}>Operations Overview</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#1e293b" }}>Operations Overview</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
             {new Date().toLocaleDateString("en-ZA", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-lg text-[11px] font-bold"
-            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
+            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#059669" }}>
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="mono">All Systems Operational</span>
           </div>
           <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold"
-            style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.25)", color: "#a78bfa" }}>
+            style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.2)", color: "#6366f1" }}>
             <Zap className="w-3.5 h-3.5" />
             <span className="mono">LIVE</span>
           </div>
@@ -91,9 +91,9 @@ export default function Dashboard() {
         <div
           className="lg:col-span-3 rounded-3xl overflow-hidden relative"
           style={{
-            background: "linear-gradient(135deg, #0e0b1e 0%, #160d33 60%, #0d1a2e 100%)",
-            border: "1px solid rgba(124,58,237,0.2)",
-            boxShadow: "0 8px 40px rgba(124,58,237,0.15), 0 2px 8px rgba(0,0,0,0.3)",
+            background: "linear-gradient(135deg, #1e1b4b 0%, #2e1065 60%, #0c1a3e 100%)",
+            border: "1px solid rgba(99,102,241,0.2)",
+            boxShadow: "0 8px 40px rgba(99,102,241,0.15), 0 2px 8px rgba(0,0,0,0.15)",
             minHeight: 420
           }}
         >
@@ -135,14 +135,14 @@ export default function Dashboard() {
           {/* Quick stats card */}
           <div
             className="rounded-2xl p-5 flex-1"
-            style={{ background: "#111827", border: "1px solid rgba(124,58,237,0.14)", boxShadow: "0 4px 24px rgba(0,0,0,0.35)" }}
+            style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}
           >
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#e2e8f0" }}>
-                <Activity className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
+              <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#1e293b" }}>
+                <Activity className="w-3.5 h-3.5" style={{ color: "#6366f1" }} />
                 Quick Stats
               </p>
-              <span className="text-[10px] mono" style={{ color: "rgba(148,163,184,0.5)" }}>Live</span>
+              <span className="text-[10px] mono" style={{ color: "rgba(100,116,139,0.5)" }}>Live</span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -153,7 +153,7 @@ export default function Dashboard() {
               ].map(stat => (
                 <div key={stat.label} className="rounded-xl p-3" style={{ background: stat.bg, border: `1px solid ${stat.color}20` }}>
                   <p className="text-[18px] font-black mono" style={{ color: stat.color }}>{stat.value}</p>
-                  <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "#64748b" }}>{stat.label}</p>
+                  <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "#94a3b8" }}>{stat.label}</p>
                 </div>
               ))}
             </div>
