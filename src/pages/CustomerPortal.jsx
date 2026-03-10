@@ -193,7 +193,7 @@ export default function CustomerPortal() {
         {/* Tabs */}
         <Tabs defaultValue="invoices">
           <TabsList className="rounded-2xl p-1 gap-1" style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.12)" }}>
-            <TabsTrigger value="invoices" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold" style={{ "--active-bg": "linear-gradient(135deg,#6366f1,#8b5cf6)" } as any}>
+            <TabsTrigger value="invoices" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold" style={{}}>
               <Receipt className="w-3.5 h-3.5" /> Invoices
             </TabsTrigger>
             <TabsTrigger value="tickets" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
