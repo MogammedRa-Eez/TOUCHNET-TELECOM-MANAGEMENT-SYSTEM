@@ -108,7 +108,7 @@ function MobileDrawer({ currentPageName, open, onClose, can, loading }) {
       {open && <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={onClose} />}
       <div
         className={`fixed top-0 left-0 h-full w-72 z-50 flex flex-col transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}
-        style={{ background: "rgba(8,12,24,0.99)", borderRight: "1px solid rgba(56,114,224,0.2)", boxShadow: "8px 0 48px rgba(0,0,0,0.7)" }}
+        style={{ background: "rgba(10,14,26,0.99)", borderRight: "1px solid rgba(124,58,237,0.18)", boxShadow: "8px 0 48px rgba(0,0,0,0.7)" }}
       >
         <div className="flex items-center justify-between px-5 h-16" style={{ borderBottom: "1px solid rgba(56,114,224,0.12)" }}>
           <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
