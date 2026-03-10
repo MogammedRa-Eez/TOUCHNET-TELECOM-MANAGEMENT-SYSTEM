@@ -4,11 +4,32 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* ═══════════════════════════════════════
+   QUANTARA DESIGN SYSTEM
+   Deep navy · Electric blue · Gold
+═══════════════════════════════════════ */
+
+:root {
+  --q-bg:        #080c18;
+  --q-surface:   #0d1427;
+  --q-surface2:  #111b35;
+  --q-border:    rgba(56, 114, 224, 0.2);
+  --q-border-hi: rgba(56, 114, 224, 0.45);
+  --q-blue:      #3872e0;
+  --q-blue-hi:   #5b90f5;
+  --q-gold:      #f0a500;
+  --q-gold-hi:   #fbbf24;
+  --q-cyan:      #22d3ee;
+  --q-text:      #cbd5e1;
+  --q-text-hi:   #f1f5f9;
+  --q-muted:     rgba(148, 163, 184, 0.5);
+}
+
 @layer base {
   body {
-    background-color: #050510;
+    background-color: var(--q-bg);
     font-family: 'Inter', sans-serif;
-    color: #e2e8f0;
+    color: var(--q-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -17,61 +38,65 @@
 @layer utilities {
   .mono { font-family: 'JetBrains Mono', monospace !important; }
 
-  /* Neon glow utilities */
-  .neon-cyan  { box-shadow: 0 0 8px #00fff7, 0 0 24px rgba(0,255,247,0.4); }
-  .neon-pink  { box-shadow: 0 0 8px #ff00c8, 0 0 24px rgba(255,0,200,0.4); }
-  .neon-green { box-shadow: 0 0 8px #00ff88, 0 0 24px rgba(0,255,136,0.4); }
-  .neon-blue  { box-shadow: 0 0 8px #4d7cff, 0 0 24px rgba(77,124,255,0.4); }
-  .neon-text-cyan  { color: #00fff7; text-shadow: 0 0 8px #00fff7, 0 0 20px rgba(0,255,247,0.5); }
-  .neon-text-pink  { color: #ff00c8; text-shadow: 0 0 8px #ff00c8, 0 0 20px rgba(255,0,200,0.5); }
-  .neon-text-green { color: #00ff88; text-shadow: 0 0 8px #00ff88, 0 0 20px rgba(0,255,136,0.5); }
-
-  .glass-neon {
-    background: rgba(10, 10, 30, 0.85);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 255, 247, 0.15);
-    box-shadow: 0 0 0 1px rgba(0,255,247,0.05), 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  /* Quantara surface cards */
+  .q-card {
+    background: var(--q-surface);
+    border: 1px solid var(--q-border);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  .q-card-hi {
+    background: var(--q-surface2);
+    border: 1px solid var(--q-border-hi);
+    box-shadow: 0 0 0 1px rgba(56,114,224,0.05), 0 8px 32px rgba(0,0,0,0.5);
   }
 
-  .card-neon {
-    background: rgba(8, 8, 24, 0.9);
-    border: 1px solid rgba(0, 255, 247, 0.12);
-    box-shadow: 0 0 20px rgba(0,255,247,0.04), 0 4px 24px rgba(0,0,0,0.5);
-  }
+  /* Quantara glow accents */
+  .q-glow-blue { box-shadow: 0 0 16px rgba(56,114,224,0.35), 0 4px 16px rgba(0,0,0,0.4); }
+  .q-glow-gold { box-shadow: 0 0 16px rgba(240,165,0,0.35), 0 4px 16px rgba(0,0,0,0.4); }
 
-  .scanline {
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,255,247,0.015) 2px,
-      rgba(0,255,247,0.015) 4px
-    );
-    pointer-events: none;
-  }
+  /* Scrollbar */
+  .q-scroll::-webkit-scrollbar { width: 4px; }
+  .q-scroll::-webkit-scrollbar-track { background: transparent; }
+  .q-scroll::-webkit-scrollbar-thumb { background: rgba(56,114,224,0.3); border-radius: 4px; }
+  .q-scroll::-webkit-scrollbar-thumb:hover { background: rgba(56,114,224,0.5); }
 }
 
 @layer components {
-  .btn-neon {
-    @apply text-black font-bold rounded-xl;
-    background: linear-gradient(135deg, #00fff7, #4d7cff);
-    box-shadow: 0 0 16px rgba(0,255,247,0.5), 0 4px 16px rgba(77,124,255,0.3);
-    transition: all 0.2s;
+  /* Primary action button */
+  .btn-q {
+    @apply font-semibold rounded-lg text-white;
+    background: linear-gradient(135deg, #3872e0, #5b90f5);
+    box-shadow: 0 0 0 1px rgba(56,114,224,0.3), 0 4px 16px rgba(56,114,224,0.3);
+    transition: all 0.2s ease;
   }
-  .btn-neon:hover {
-    box-shadow: 0 0 28px rgba(0,255,247,0.7), 0 8px 24px rgba(77,124,255,0.5);
+  .btn-q:hover {
+    box-shadow: 0 0 0 1px rgba(91,144,245,0.5), 0 8px 24px rgba(56,114,224,0.45);
     transform: translateY(-1px);
   }
-  .btn-neon-outline {
-    @apply font-semibold rounded-xl;
-    color: #00fff7;
-    border: 1px solid rgba(0,255,247,0.4);
-    background: rgba(0,255,247,0.05);
-    box-shadow: 0 0 12px rgba(0,255,247,0.1);
-    transition: all 0.2s;
+
+  /* Gold accent button */
+  .btn-q-gold {
+    @apply font-semibold rounded-lg;
+    color: #080c18;
+    background: linear-gradient(135deg, #f0a500, #fbbf24);
+    box-shadow: 0 0 0 1px rgba(240,165,0,0.3), 0 4px 16px rgba(240,165,0,0.25);
+    transition: all 0.2s ease;
   }
-  .btn-neon-outline:hover {
-    background: rgba(0,255,247,0.1);
-    box-shadow: 0 0 20px rgba(0,255,247,0.3);
+  .btn-q-gold:hover {
+    box-shadow: 0 0 0 1px rgba(251,191,36,0.5), 0 8px 24px rgba(240,165,0,0.4);
+    transform: translateY(-1px);
+  }
+
+  /* Outline variant */
+  .btn-q-outline {
+    @apply font-semibold rounded-lg;
+    color: var(--q-blue-hi);
+    border: 1px solid var(--q-border-hi);
+    background: rgba(56,114,224,0.06);
+    transition: all 0.2s ease;
+  }
+  .btn-q-outline:hover {
+    background: rgba(56,114,224,0.12);
+    border-color: rgba(91,144,245,0.6);
   }
 }

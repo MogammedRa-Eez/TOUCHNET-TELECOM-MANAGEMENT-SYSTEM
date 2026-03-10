@@ -155,83 +155,84 @@ function LayoutInner({ children, currentPageName }) {
   const topItems = loading ? NAV_TOP : NAV_TOP.filter(i => i.perm === null || can(i.perm));
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#050510" }}>
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#080c18" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
-        *, *::before, *::after { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: border-box; }
         .mono { font-family: 'JetBrains Mono', monospace !important; }
 
-        .tn-scroll::-webkit-scrollbar { width: 4px; }
-        .tn-scroll::-webkit-scrollbar-track { background: transparent; }
-        .tn-scroll::-webkit-scrollbar-thumb { background: rgba(0,255,247,0.2); border-radius: 4px; }
+        /* Quantara scrollbar */
+        .q-scroll::-webkit-scrollbar { width: 4px; }
+        .q-scroll::-webkit-scrollbar-track { background: transparent; }
+        .q-scroll::-webkit-scrollbar-thumb { background: rgba(56,114,224,0.3); border-radius: 4px; }
 
+        /* Page background — deep navy with subtle dot grid */
         .page-bg {
-          background: #050510;
+          background-color: #080c18;
           background-image:
-            radial-gradient(ellipse 80% 50% at 10% 0%, rgba(0,255,247,0.06) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 40% at 90% 100%, rgba(255,0,200,0.05) 0%, transparent 60%),
-            repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,255,247,0.015) 40px, rgba(0,255,247,0.015) 41px),
-            repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,255,247,0.015) 40px, rgba(0,255,247,0.015) 41px);
+            radial-gradient(ellipse 70% 45% at 15% 0%,   rgba(56,114,224,0.08) 0%, transparent 55%),
+            radial-gradient(ellipse 55% 40% at 85% 100%, rgba(240,165,0,0.05)  0%, transparent 55%),
+            radial-gradient(circle, rgba(56,114,224,0.12) 1px, transparent 1px);
+          background-size: auto, auto, 28px 28px;
         }
 
-        .neon-topbar {
-          background: rgba(5, 5, 18, 0.95);
+        /* Quantara top bar */
+        .q-topbar {
+          background: rgba(8, 12, 24, 0.97);
           backdrop-filter: blur(24px);
-          border-bottom: 1px solid rgba(0,255,247,0.12);
-          box-shadow: 0 0 40px rgba(0,255,247,0.05), 0 1px 0 rgba(0,255,247,0.08);
+          border-bottom: 1px solid rgba(56,114,224,0.18);
+          box-shadow: 0 1px 0 rgba(56,114,224,0.08), 0 4px 24px rgba(0,0,0,0.4);
         }
 
+        /* Nav active pill */
         .nav-pill-active {
-          background: rgba(0,255,247,0.12) !important;
-          color: #00fff7 !important;
-          border: 1px solid rgba(0,255,247,0.35) !important;
-          box-shadow: 0 0 16px rgba(0,255,247,0.2), inset 0 0 8px rgba(0,255,247,0.05);
-          text-shadow: 0 0 8px rgba(0,255,247,0.6);
+          background: rgba(56,114,224,0.14) !important;
+          color: #5b90f5 !important;
+          border: 1px solid rgba(56,114,224,0.4) !important;
+          box-shadow: 0 0 12px rgba(56,114,224,0.15), inset 0 1px 0 rgba(255,255,255,0.04);
         }
-
         .nav-pill-hover:hover {
-          background: rgba(255,255,255,0.05) !important;
-          color: rgba(255,255,255,0.9) !important;
+          background: rgba(56,114,224,0.07) !important;
+          color: #cbd5e1 !important;
         }
 
-        .pulse-dot { animation: neon-pulse 2s infinite; }
-        @keyframes neon-pulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.6); }
-          50%      { box-shadow: 0 0 0 5px rgba(0,255,136,0); }
+        /* Live indicator pulse */
+        .pulse-dot { animation: q-pulse 2.5s infinite; }
+        @keyframes q-pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.5); }
+          50%      { box-shadow: 0 0 0 5px rgba(34,211,238,0);  }
         }
-
-        /* Neon scrollbar for page */
-        .page-bg::-webkit-scrollbar { width: 4px; }
-        .page-bg::-webkit-scrollbar-thumb { background: rgba(0,255,247,0.2); border-radius: 4px; }
       `}</style>
 
       {/* ── TOP NAV BAR ── */}
-      <header className="neon-topbar h-[60px] flex items-center px-4 lg:px-6 z-30 flex-shrink-0 gap-3">
+      <header className="q-topbar h-[60px] flex items-center px-4 lg:px-6 z-30 flex-shrink-0 gap-3">
         {/* Mobile menu */}
         <button
           onClick={() => setMobileOpen(true)}
-          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl transition-colors"
-          style={{ color: "rgba(0,255,247,0.7)", border: "1px solid rgba(0,255,247,0.15)" }}
+          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
+          style={{ color: "rgba(91,144,245,0.8)", border: "1px solid rgba(56,114,224,0.2)", background: "rgba(56,114,224,0.06)" }}
         >
           <Menu className="w-5 h-5" />
         </button>
 
         {/* Logo */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 flex-shrink-0 mr-2">
-          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 6px rgba(0,255,247,0.6))" }} />
+          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
         </Link>
+
+        {/* Quantara wordmark accent line */}
+        <div className="hidden xl:block w-px h-5 mx-1" style={{ background: "linear-gradient(180deg, transparent, rgba(56,114,224,0.4), transparent)" }} />
 
         {/* Status pill */}
         <div
-          className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mono flex-shrink-0"
-          style={{ background: "rgba(0,255,136,0.08)", border: "1px solid rgba(0,255,136,0.25)", color: "#00ff88", textShadow: "0 0 6px rgba(0,255,136,0.5)" }}
+          className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold mono flex-shrink-0"
+          style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.2)", color: "#22d3ee" }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" style={{ background: "#00ff88" }} />
-          LIVE
+          <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: "#22d3ee" }} />
+          SYS·LIVE
         </div>
 
         {/* Main nav links */}
-        <nav className="hidden lg:flex items-center gap-1 flex-1 mx-2">
+        <nav className="hidden lg:flex items-center gap-0.5 flex-1 mx-2">
           {topItems.map(item => {
             const Icon = item.icon;
             const isActive = currentPageName === item.page;
@@ -239,8 +240,8 @@ function LayoutInner({ children, currentPageName }) {
               <Link
                 key={item.page}
                 to={createPageUrl(item.page)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold transition-all duration-150 nav-pill-hover ${isActive ? "nav-pill-active" : ""}`}
-                style={!isActive ? { color: "rgba(148,163,184,0.8)", border: "1px solid transparent" } : {}}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all duration-150 nav-pill-hover ${isActive ? "nav-pill-active" : ""}`}
+                style={!isActive ? { color: "rgba(148,163,184,0.7)", border: "1px solid transparent" } : {}}
               >
                 <Icon className="w-3.5 h-3.5" />
                 {item.name}
@@ -269,7 +270,7 @@ function LayoutInner({ children, currentPageName }) {
       />
 
       {/* ── PAGE CONTENT ── */}
-      <main className="flex-1 overflow-y-auto tn-scroll page-bg">
+      <main className="flex-1 overflow-y-auto q-scroll page-bg">
         {children}
       </main>
     </div>
