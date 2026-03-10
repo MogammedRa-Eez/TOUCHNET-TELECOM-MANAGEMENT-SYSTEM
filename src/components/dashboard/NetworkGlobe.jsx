@@ -191,7 +191,7 @@ export default function NetworkGlobe({ nodes = [] }) {
 
     // Globe
     const globeGeo = new THREE.SphereGeometry(1, 64, 64);
-    const globeMat = new THREE.MeshPhongMaterial({ color: 0x0a1628, emissive: 0x0d1f3c, shininess: 80, transparent: true, opacity: 0.95 });
+    const globeMat = new THREE.MeshPhongMaterial({ color: 0x3730a3, emissive: 0x1e1b4b, shininess: 80, transparent: true, opacity: 0.75 });
     const globe    = new THREE.Mesh(globeGeo, globeMat);
     scene.add(globe);
 
