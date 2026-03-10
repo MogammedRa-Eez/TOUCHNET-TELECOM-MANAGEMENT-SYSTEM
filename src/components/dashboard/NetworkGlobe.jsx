@@ -437,6 +437,73 @@ export default function NetworkGlobe({ nodes = [] }) {
     if (heatmapRef.current) heatmapRef.current.visible = showHeatmap;
   }, [showHeatmap]);
 
+  // ── Real-time node simulation + alert detection ──────────────────
+  useEffect(() => {
+    const INTERVAL = 4000; // simulate every 4s
+    const timer = setInterval(() => {
+      setLiveNodes(prev => {
+        const updated = prev.map(node => {
+          // Randomly fluctuate latency ±15%, occasional spike/drop
+          const spike  = Math.random() < 0.05; // 5% chance of big spike
+          const recover= Math.random() < 0.08; // 8% chance of recovery
+          let newLatency = node.latency;
+          if (recover && node.latency > 100) {
+            newLatency = Math.max(10, node.latency * 0.6 + Math.random() * 10);
+          } else if (spike) {
+            newLatency = Math.min(1200, node.latency * (1.5 + Math.random()));
+          } else {
+            const delta = (Math.random() - 0.5) * 0.3 * node.latency;
+            newLatency = Math.max(5, node.latency + delta);
+          }
+          newLatency = Math.round(newLatency);
+
+          // Offline nodes occasionally come back
+          let newStatus = node.status;
+          if (node.status === "offline" && Math.random() < 0.1) newStatus = "degraded";
+          else if (node.status === "online" && newLatency > 400 && Math.random() < 0.15) newStatus = "degraded";
+          else if (node.status === "degraded" && newLatency < 80 && Math.random() < 0.2) newStatus = "online";
+
+          return { ...node, latency: newLatency, status: newStatus };
+        });
+
+        // Detect newly critical nodes
+        const newAlerts = [];
+        updated.forEach((node, i) => {
+          const prev_node = prev[i];
+          const nowCritical   = node.status === "offline" || node.latency >= LATENCY_THRESHOLD;
+          const wasCritical   = prev_node.status === "offline" || prev_node.latency >= LATENCY_THRESHOLD;
+          if (nowCritical && !wasCritical) {
+            newAlerts.push({
+              id: Date.now() + i,
+              label: node.label,
+              type: node.status === "offline" ? "offline" : "latency",
+              latency: node.latency,
+              status: node.status,
+            });
+          }
+          // Update Three.js alert rings
+          if (alertRingsRef.current[i]) {
+            alertRingsRef.current[i].userData.isAlert = nowCritical;
+            if (!nowCritical) alertRingsRef.current[i].material.opacity = 0;
+          }
+        });
+
+        if (newAlerts.length > 0) {
+          setAlerts(a => [...newAlerts, ...a].slice(0, 6));
+        }
+        return updated;
+      });
+    }, INTERVAL);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Auto-dismiss alerts after 8s
+  useEffect(() => {
+    if (alerts.length === 0) return;
+    const t = setTimeout(() => setAlerts(a => a.slice(0, -1)), 8000);
+    return () => clearTimeout(t);
+  }, [alerts]);
+
   const statusLabel  = { online: "Online", offline: "Offline", degraded: "Degraded", maintenance: "Maintenance" };
   const statusColors = { online: "#34d399", offline: "#ef4444", degraded: "#fbbf24", maintenance: "#818cf8" };
 
