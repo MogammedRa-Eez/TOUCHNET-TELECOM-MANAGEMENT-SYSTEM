@@ -58,19 +58,19 @@ export default function Dashboard() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Operations Overview</h1>
-          <p className="text-[11px] text-slate-400 mt-0.5 mono">
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#e2e8f0" }}>Operations Overview</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>
             {new Date().toLocaleDateString("en-ZA", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold"
-            style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: "#059669" }}>
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-lg text-[11px] font-bold"
+            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="mono">All Systems Operational</span>
           </div>
-          <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold"
-            style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1))", border: "1px solid rgba(99,102,241,0.2)", color: "#6366f1" }}>
+          <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold"
+            style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.25)", color: "#a78bfa" }}>
             <Zap className="w-3.5 h-3.5" />
             <span className="mono">LIVE</span>
           </div>
@@ -91,19 +91,19 @@ export default function Dashboard() {
         <div
           className="lg:col-span-3 rounded-3xl overflow-hidden relative"
           style={{
-            background: "linear-gradient(135deg, #0f0c29 0%, #302b63 60%, #24243e 100%)",
-            border: "1px solid rgba(99,102,241,0.18)",
-            boxShadow: "0 8px 40px rgba(99,102,241,0.18), 0 2px 8px rgba(0,0,0,0.06)",
+            background: "linear-gradient(135deg, #0e0b1e 0%, #160d33 60%, #0d1a2e 100%)",
+            border: "1px solid rgba(124,58,237,0.2)",
+            boxShadow: "0 8px 40px rgba(124,58,237,0.15), 0 2px 8px rgba(0,0,0,0.3)",
             minHeight: 420
           }}
         >
           <div
             className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-5 pt-4 pb-12"
-            style={{ background: "linear-gradient(180deg, rgba(15,12,41,0.95) 0%, transparent 100%)" }}
+            style={{ background: "linear-gradient(180deg, rgba(10,8,28,0.95) 0%, transparent 100%)" }}
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl flex items-center justify-center" style={{ background: "rgba(99,102,241,0.25)", border: "1px solid rgba(99,102,241,0.35)" }}>
-                <Globe className="w-4 h-4 text-indigo-300" />
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.35)" }}>
+                <Globe className="w-4 h-4" style={{ color: "#a78bfa" }} />
               </div>
               <div>
                 <p className="text-[13px] font-bold text-white leading-tight">Network Coverage</p>
@@ -135,25 +135,25 @@ export default function Dashboard() {
           {/* Quick stats card */}
           <div
             className="rounded-2xl p-5 flex-1"
-            style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 12px rgba(99,102,241,0.08)" }}
+            style={{ background: "#111827", border: "1px solid rgba(124,58,237,0.14)", boxShadow: "0 4px 24px rgba(0,0,0,0.35)" }}
           >
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[13px] font-bold text-slate-800 flex items-center gap-2">
-                <Activity className="w-3.5 h-3.5 text-indigo-500" />
+              <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#e2e8f0" }}>
+                <Activity className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
                 Quick Stats
               </p>
-              <span className="text-[10px] mono text-slate-400">Live</span>
+              <span className="text-[10px] mono" style={{ color: "rgba(148,163,184,0.5)" }}>Live</span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Avg Uptime", value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.08)" },
-                { label: "Paid Invoices", value: invoices.filter(i=>i.status==="paid").length, color: "#3b82f6", bg: "rgba(59,130,246,0.08)" },
-                { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.08)" },
-                { label: "Suspended", value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
+                { label: "Avg Uptime", value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.07)" },
+                { label: "Paid Invoices", value: invoices.filter(i=>i.status==="paid").length, color: "#3b82f6", bg: "rgba(59,130,246,0.07)" },
+                { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.07)" },
+                { label: "Suspended", value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.07)" },
               ].map(stat => (
-                <div key={stat.label} className="rounded-xl p-3" style={{ background: stat.bg }}>
+                <div key={stat.label} className="rounded-xl p-3" style={{ background: stat.bg, border: `1px solid ${stat.color}20` }}>
                   <p className="text-[18px] font-black mono" style={{ color: stat.color }}>{stat.value}</p>
-                  <p className="text-[10px] text-slate-500 mt-0.5 leading-tight">{stat.label}</p>
+                  <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "#64748b" }}>{stat.label}</p>
                 </div>
               ))}
             </div>
