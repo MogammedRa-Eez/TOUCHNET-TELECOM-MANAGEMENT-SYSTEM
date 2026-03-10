@@ -54,8 +54,8 @@ function MoreDropdown({ currentPageName, can, loading }) {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(v => !v)}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold transition-all duration-150 ${hasActive || open ? "nav-pill-active" : "nav-pill-hover"}`}
-        style={!(hasActive || open) ? { color: "rgba(148,163,184,0.8)", border: "1px solid transparent" } : {}}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all duration-150 ${hasActive || open ? "nav-pill-active" : "nav-pill-hover"}`}
+        style={!(hasActive || open) ? { color: "rgba(148,163,184,0.65)", border: "1px solid transparent" } : {}}
       >
         More
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
