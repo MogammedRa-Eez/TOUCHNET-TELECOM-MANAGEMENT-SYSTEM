@@ -81,8 +81,8 @@ export default function Tickets() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Support Tickets</h1>
-          <p className="text-[11px] mt-0.5 text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Track and resolve customer issues</p>
+          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>Support Tickets</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>Track and resolve customer issues</p>
         </div>
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
           <Plus className="w-4 h-4 mr-2" /> New Ticket

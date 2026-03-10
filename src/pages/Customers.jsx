@@ -73,8 +73,8 @@ export default function Customers() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Customer Management</h1>
-          <p className="text-[11px] mt-0.5 text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Manage subscriber accounts and service plans</p>
+          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>Customer Management</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>Manage subscriber accounts and service plans</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm border-indigo-600/40 text-indigo-400 hover:bg-indigo-900/20">
