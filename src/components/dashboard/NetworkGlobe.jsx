@@ -470,10 +470,11 @@ export default function NetworkGlobe({ nodes = [] }) {
         onClick={() => setShowHeatmap(v => !v)}
         className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
         style={{
-          background: showHeatmap ? "rgba(239,68,68,0.25)" : "rgba(10,22,40,0.75)",
-          border: `1px solid ${showHeatmap ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.35)"}`,
-          color: showHeatmap ? "#fca5a5" : "#a5b4fc",
+          background: showHeatmap ? "rgba(239,68,68,0.12)" : "rgba(255,255,255,0.75)",
+          border: `1px solid ${showHeatmap ? "rgba(239,68,68,0.4)" : "rgba(99,102,241,0.3)"}`,
+          color: showHeatmap ? "#dc2626" : "#6366f1",
           backdropFilter: "blur(6px)",
+          boxShadow: "0 2px 8px rgba(99,102,241,0.1)",
         }}>
         <span className={`w-1.5 h-1.5 rounded-full ${showHeatmap ? "bg-red-400" : "bg-indigo-400"}`} />
         {showHeatmap ? "Heatmap ON" : "Heatmap"}
