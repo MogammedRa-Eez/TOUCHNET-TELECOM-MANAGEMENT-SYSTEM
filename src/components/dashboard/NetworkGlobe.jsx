@@ -466,6 +466,14 @@ export default function NetworkGlobe({ nodes = [] }) {
           return { ...node, latency: newLatency, status: newStatus };
         });
 
+        // Sync dot userData for live tooltip
+        updated.forEach((node, i) => {
+          if (dotMeshesRef.current[i]) {
+            dotMeshesRef.current[i].userData.latency = node.latency;
+            dotMeshesRef.current[i].userData.status  = node.status;
+          }
+        });
+
         // Detect newly critical nodes
         const newAlerts = [];
         updated.forEach((node, i) => {
