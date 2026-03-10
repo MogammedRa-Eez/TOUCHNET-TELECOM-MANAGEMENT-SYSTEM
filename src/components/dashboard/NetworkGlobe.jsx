@@ -264,6 +264,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     const statusColor = { online: 0x34d399, offline: 0xef4444, degraded: 0xfbbf24, maintenance: 0x818cf8 };
     const dotMeshes   = [];
     const dotGroup    = new THREE.Group();
+    const alertRings  = [];
     NODE_PTS.forEach((pt) => {
       const pos    = latLonToVec3(pt.lat, pt.lon);
       const dot    = new THREE.Mesh(
@@ -282,8 +283,23 @@ export default function NetworkGlobe({ nodes = [] }) {
       pulse.position.copy(pos);
       pulse.lookAt(new THREE.Vector3(0, 0, 0));
       dotGroup.add(pulse);
+
+      // Alert ring — hidden by default, shown when node is critical
+      const isAlert = pt.status === "offline" || pt.latency >= LATENCY_THRESHOLD;
+      const alertRing = new THREE.Mesh(
+        new THREE.RingGeometry(0.055, 0.085, 32),
+        new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: isAlert ? 0.7 : 0, side: THREE.DoubleSide })
+      );
+      alertRing.position.copy(pos);
+      alertRing.lookAt(new THREE.Vector3(0, 0, 0));
+      alertRing.userData.isAlert = isAlert;
+      dotGroup.add(alertRing);
+      alertRings.push(alertRing);
     });
     scene.add(dotGroup);
+    dotGroupRef.current   = dotGroup;
+    dotMeshesRef.current  = dotMeshes;
+    alertRingsRef.current = alertRings;
 
     // Arcs
     function arcBetween(p1, p2, color = 0x6366f1) {
