@@ -63,11 +63,11 @@ function MoreDropdown({ currentPageName, can, loading }) {
 
       {open && (
         <div
-          className="absolute top-full mt-2 right-0 w-52 rounded-2xl overflow-hidden z-50"
+          className="absolute top-full mt-2 right-0 w-52 rounded-xl overflow-hidden z-50"
           style={{
-            background: "rgba(5,5,20,0.97)",
-            border: "1px solid rgba(0,255,247,0.18)",
-            boxShadow: "0 0 40px rgba(0,255,247,0.1), 0 20px 60px rgba(0,0,0,0.8)",
+            background: "rgba(10,14,30,0.98)",
+            border: "1px solid rgba(56,114,224,0.25)",
+            boxShadow: "0 0 0 1px rgba(56,114,224,0.06), 0 20px 48px rgba(0,0,0,0.7)",
             backdropFilter: "blur(24px)"
           }}
         >
@@ -80,17 +80,17 @@ function MoreDropdown({ currentPageName, can, loading }) {
                   key={item.page}
                   to={createPageUrl(item.page)}
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150"
                   style={isActive
-                    ? { background: "rgba(0,255,247,0.1)", color: "#00fff7", border: "1px solid rgba(0,255,247,0.2)", textShadow: "0 0 6px rgba(0,255,247,0.5)" }
-                    : { color: "rgba(148,163,184,0.8)" }
+                    ? { background: "rgba(56,114,224,0.12)", color: "#5b90f5", border: "1px solid rgba(56,114,224,0.3)" }
+                    : { color: "rgba(148,163,184,0.75)", border: "1px solid transparent" }
                   }
                 >
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(0,255,247,0.12)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(0,255,247,0.25)" : "rgba(255,255,255,0.06)"}` }}>
-                    <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#00fff7" : "rgba(148,163,184,0.6)" }} />
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(56,114,224,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(56,114,224,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                    <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#5b90f5" : "rgba(148,163,184,0.55)" }} />
                   </div>
                   {item.name}
-                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#00fff7", boxShadow: "0 0 6px #00fff7" }} />}
+                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#3872e0", boxShadow: "0 0 6px rgba(56,114,224,0.6)" }} />}
                 </Link>
               );
             })}
@@ -108,11 +108,11 @@ function MobileDrawer({ currentPageName, open, onClose, can, loading }) {
       {open && <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={onClose} />}
       <div
         className={`fixed top-0 left-0 h-full w-72 z-50 flex flex-col transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}
-        style={{ background: "rgba(5,5,18,0.98)", borderRight: "1px solid rgba(0,255,247,0.15)", boxShadow: "8px 0 60px rgba(0,255,247,0.08), 0 0 40px rgba(0,0,0,0.8)" }}
+        style={{ background: "rgba(8,12,24,0.99)", borderRight: "1px solid rgba(56,114,224,0.2)", boxShadow: "8px 0 48px rgba(0,0,0,0.7)" }}
       >
-        <div className="flex items-center justify-between px-5 h-16" style={{ borderBottom: "1px solid rgba(0,255,247,0.1)" }}>
-          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 6px rgba(0,255,247,0.6))" }} />
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl transition-colors" style={{ color: "rgba(0,255,247,0.6)", border: "1px solid rgba(0,255,247,0.15)" }}>
+        <div className="flex items-center justify-between px-5 h-16" style={{ borderBottom: "1px solid rgba(56,114,224,0.12)" }}>
+          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors" style={{ color: "rgba(91,144,245,0.7)", border: "1px solid rgba(56,114,224,0.2)", background: "rgba(56,114,224,0.06)" }}>
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -125,23 +125,23 @@ function MobileDrawer({ currentPageName, open, onClose, can, loading }) {
                 key={item.page}
                 to={createPageUrl(item.page)}
                 onClick={onClose}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150"
                 style={isActive
-                  ? { background: "rgba(0,255,247,0.08)", color: "#00fff7", border: "1px solid rgba(0,255,247,0.2)", textShadow: "0 0 6px rgba(0,255,247,0.4)" }
-                  : { color: "rgba(148,163,184,0.7)" }
+                  ? { background: "rgba(56,114,224,0.12)", color: "#5b90f5", border: "1px solid rgba(56,114,224,0.28)" }
+                  : { color: "rgba(148,163,184,0.7)", border: "1px solid transparent" }
                 }
               >
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(0,255,247,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(0,255,247,0.2)" : "rgba(255,255,255,0.05)"}` }}>
-                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#00fff7" : "rgba(148,163,184,0.5)" }} />
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(56,114,224,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(56,114,224,0.28)" : "rgba(255,255,255,0.05)"}` }}>
+                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#5b90f5" : "rgba(148,163,184,0.5)" }} />
                 </div>
                 {item.name}
-                {isActive && <div className="ml-auto w-1 h-4 rounded-full" style={{ background: "#00fff7", boxShadow: "0 0 8px #00fff7" }} />}
+                {isActive && <div className="ml-auto w-1 h-5 rounded-full" style={{ background: "linear-gradient(180deg,#3872e0,#5b90f5)", boxShadow: "0 0 8px rgba(56,114,224,0.5)" }} />}
               </Link>
             );
           })}
         </nav>
-        <div className="p-4" style={{ borderTop: "1px solid rgba(0,255,247,0.08)" }}>
-          <p className="text-[9px] mono tracking-widest text-center" style={{ color: "rgba(0,255,247,0.3)" }}>TOUCHNET PLATFORM v2.4.1</p>
+        <div className="p-4" style={{ borderTop: "1px solid rgba(56,114,224,0.1)" }}>
+          <p className="text-[9px] mono tracking-widest text-center" style={{ color: "rgba(56,114,224,0.35)" }}>TOUCHNET · QUANTARA UI</p>
         </div>
       </div>
     </>
