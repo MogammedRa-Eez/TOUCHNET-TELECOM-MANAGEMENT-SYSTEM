@@ -47,7 +47,6 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import AIAssistant from './pages/AIAssistant';
 import Billing from './pages/Billing';
 import CustomerPortal from './pages/CustomerPortal';
 import CustomerProjectPortal from './pages/CustomerProjectPortal';
@@ -68,7 +67,6 @@ import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AIAssistant": AIAssistant,
     "Billing": Billing,
     "CustomerPortal": CustomerPortal,
     "CustomerProjectPortal": CustomerProjectPortal,
@@ -88,7 +86,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "AIAssistant",
+    mainPage: "Billing",
     Pages: PAGES,
     Layout: __Layout,
 };
