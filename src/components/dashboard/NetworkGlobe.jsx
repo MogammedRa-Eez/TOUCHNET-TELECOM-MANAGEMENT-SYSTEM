@@ -165,12 +165,19 @@ function latLonToVec3(lat, lon, r = 1.02) {
   );
 }
 
+const LATENCY_THRESHOLD = 200; // ms — alert if exceeded
+
 export default function NetworkGlobe({ nodes = [] }) {
   const mountRef   = useRef(null);
   const sceneRef   = useRef(null);
   const [tooltip,     setTooltip]     = useState(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
-  const heatmapRef = useRef(null); // THREE.Group ref so we can toggle
+  const heatmapRef = useRef(null);
+  const [alerts, setAlerts] = useState([]);
+  const [liveNodes, setLiveNodes] = useState(NODE_PTS.map(n => ({ ...n })));
+  const alertRingsRef = useRef([]); // { mesh, baseOpacity }
+  const dotGroupRef = useRef(null);
+  const dotMeshesRef = useRef([]);
 
   useEffect(() => {
     const mount = mountRef.current;
