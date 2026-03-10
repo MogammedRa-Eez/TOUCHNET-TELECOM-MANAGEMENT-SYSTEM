@@ -65,7 +65,6 @@ export default function CustomerPortal() {
       .finally(() => setLoadingUser(false));
   }, []);
 
-  // Match customer by email
   const { data: customers = [], isLoading: loadingCustomer } = useQuery({
     queryKey: ["portal-customer", user?.email],
     queryFn: () => base44.entities.Customer.filter({ email: user?.email }),
@@ -73,6 +72,13 @@ export default function CustomerPortal() {
   });
 
   const customer = customers[0] || null;
+
+  const { data: nodes = [] } = useQuery({
+    queryKey: ["portal-node", customer?.assigned_node],
+    queryFn: () => base44.entities.NetworkNode.filter({ name: customer?.assigned_node }),
+    enabled: !!customer?.assigned_node,
+  });
+  const node = nodes[0] || null;
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["portal-invoices", customer?.id],
