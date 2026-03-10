@@ -154,51 +154,78 @@ function LayoutInner({ children, currentPageName }) {
   const topItems = loading ? NAV_TOP : NAV_TOP.filter(i => i.perm === null || can(i.perm));
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#f4f6fc" }}>
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#050510" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
         *, *::before, *::after { font-family: 'Inter', sans-serif; box-sizing: border-box; }
         .mono { font-family: 'JetBrains Mono', monospace !important; }
+
         .tn-scroll::-webkit-scrollbar { width: 4px; }
         .tn-scroll::-webkit-scrollbar-track { background: transparent; }
-        .tn-scroll::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 4px; }
-        .page-bg { background: linear-gradient(160deg, #f0f2fc 0%, #f4f6ff 40%, #faf4ff 100%); }
-        .pulse-dot { animation: pulse-signal 2s infinite; }
-        @keyframes pulse-signal { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.5)} 50%{box-shadow:0 0 0 6px rgba(16,185,129,0)} }
-        .nav-pill-active {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-          color: white !important;
-          box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+        .tn-scroll::-webkit-scrollbar-thumb { background: rgba(0,255,247,0.2); border-radius: 4px; }
+
+        .page-bg {
+          background: #050510;
+          background-image:
+            radial-gradient(ellipse 80% 50% at 10% 0%, rgba(0,255,247,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 90% 100%, rgba(255,0,200,0.05) 0%, transparent 60%),
+            repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,255,247,0.015) 40px, rgba(0,255,247,0.015) 41px),
+            repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,255,247,0.015) 40px, rgba(0,255,247,0.015) 41px);
         }
-        .futura-topbar {
-          background: rgba(255,255,255,0.96);
+
+        .neon-topbar {
+          background: rgba(5, 5, 18, 0.95);
           backdrop-filter: blur(24px);
-          border-bottom: 1px solid rgba(99,102,241,0.08);
-          box-shadow: 0 1px 24px rgba(99,102,241,0.06);
+          border-bottom: 1px solid rgba(0,255,247,0.12);
+          box-shadow: 0 0 40px rgba(0,255,247,0.05), 0 1px 0 rgba(0,255,247,0.08);
         }
+
+        .nav-pill-active {
+          background: rgba(0,255,247,0.12) !important;
+          color: #00fff7 !important;
+          border: 1px solid rgba(0,255,247,0.35) !important;
+          box-shadow: 0 0 16px rgba(0,255,247,0.2), inset 0 0 8px rgba(0,255,247,0.05);
+          text-shadow: 0 0 8px rgba(0,255,247,0.6);
+        }
+
+        .nav-pill-hover:hover {
+          background: rgba(255,255,255,0.05) !important;
+          color: rgba(255,255,255,0.9) !important;
+        }
+
+        .pulse-dot { animation: neon-pulse 2s infinite; }
+        @keyframes neon-pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.6); }
+          50%      { box-shadow: 0 0 0 5px rgba(0,255,136,0); }
+        }
+
+        /* Neon scrollbar for page */
+        .page-bg::-webkit-scrollbar { width: 4px; }
+        .page-bg::-webkit-scrollbar-thumb { background: rgba(0,255,247,0.2); border-radius: 4px; }
       `}</style>
 
       {/* ── TOP NAV BAR ── */}
-      <header className="futura-topbar h-[60px] flex items-center px-4 lg:px-6 z-30 flex-shrink-0 gap-3">
+      <header className="neon-topbar h-[60px] flex items-center px-4 lg:px-6 z-30 flex-shrink-0 gap-3">
         {/* Mobile menu */}
         <button
           onClick={() => setMobileOpen(true)}
-          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
+          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl transition-colors"
+          style={{ color: "rgba(0,255,247,0.7)", border: "1px solid rgba(0,255,247,0.15)" }}
         >
           <Menu className="w-5 h-5" />
         </button>
 
         {/* Logo */}
         <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 flex-shrink-0 mr-2">
-          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" />
+          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 6px rgba(0,255,247,0.6))" }} />
         </Link>
 
         {/* Status pill */}
         <div
           className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mono flex-shrink-0"
-          style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#059669" }}
+          style={{ background: "rgba(0,255,136,0.08)", border: "1px solid rgba(0,255,136,0.25)", color: "#00ff88", textShadow: "0 0 6px rgba(0,255,136,0.5)" }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" style={{ background: "#00ff88" }} />
           LIVE
         </div>
 
@@ -211,11 +238,8 @@ function LayoutInner({ children, currentPageName }) {
               <Link
                 key={item.page}
                 to={createPageUrl(item.page)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold transition-all duration-150 ${
-                  isActive
-                    ? "nav-pill-active"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold transition-all duration-150 nav-pill-hover ${isActive ? "nav-pill-active" : ""}`}
+                style={!isActive ? { color: "rgba(148,163,184,0.8)", border: "1px solid transparent" } : {}}
               >
                 <Icon className="w-3.5 h-3.5" />
                 {item.name}

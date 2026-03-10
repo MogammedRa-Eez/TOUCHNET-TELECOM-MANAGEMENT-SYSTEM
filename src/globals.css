@@ -6,9 +6,9 @@
 
 @layer base {
   body {
-    background-color: #0a0d1a;
+    background-color: #050510;
     font-family: 'Inter', sans-serif;
-    color: #0f172a;
+    color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -16,37 +16,62 @@
 
 @layer utilities {
   .mono { font-family: 'JetBrains Mono', monospace !important; }
-  .glass {
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.95);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+  /* Neon glow utilities */
+  .neon-cyan  { box-shadow: 0 0 8px #00fff7, 0 0 24px rgba(0,255,247,0.4); }
+  .neon-pink  { box-shadow: 0 0 8px #ff00c8, 0 0 24px rgba(255,0,200,0.4); }
+  .neon-green { box-shadow: 0 0 8px #00ff88, 0 0 24px rgba(0,255,136,0.4); }
+  .neon-blue  { box-shadow: 0 0 8px #4d7cff, 0 0 24px rgba(77,124,255,0.4); }
+  .neon-text-cyan  { color: #00fff7; text-shadow: 0 0 8px #00fff7, 0 0 20px rgba(0,255,247,0.5); }
+  .neon-text-pink  { color: #ff00c8; text-shadow: 0 0 8px #ff00c8, 0 0 20px rgba(255,0,200,0.5); }
+  .neon-text-green { color: #00ff88; text-shadow: 0 0 8px #00ff88, 0 0 20px rgba(0,255,136,0.5); }
+
+  .glass-neon {
+    background: rgba(10, 10, 30, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 255, 247, 0.15);
+    box-shadow: 0 0 0 1px rgba(0,255,247,0.05), 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
   }
-  .glass-dark {
-    background: rgba(15,12,41,0.85);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+
+  .card-neon {
+    background: rgba(8, 8, 24, 0.9);
+    border: 1px solid rgba(0, 255, 247, 0.12);
+    box-shadow: 0 0 20px rgba(0,255,247,0.04), 0 4px 24px rgba(0,0,0,0.5);
   }
-  .glow-indigo { box-shadow: 0 0 24px rgba(99,102,241,0.3); }
-  .glow-emerald { box-shadow: 0 0 24px rgba(16,185,129,0.3); }
+
+  .scanline {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,247,0.015) 2px,
+      rgba(0,255,247,0.015) 4px
+    );
+    pointer-events: none;
+  }
 }
 
 @layer components {
-  /* Legacy helpers */
-  .card {
-    @apply rounded-2xl;
-    background: rgba(255,255,255,0.88);
-    border: 1px solid rgba(255,255,255,0.95);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  .btn-neon {
+    @apply text-black font-bold rounded-xl;
+    background: linear-gradient(135deg, #00fff7, #4d7cff);
+    box-shadow: 0 0 16px rgba(0,255,247,0.5), 0 4px 16px rgba(77,124,255,0.3);
+    transition: all 0.2s;
   }
-  .btn-primary {
-    @apply text-white rounded-xl font-semibold;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    box-shadow: 0 4px 16px rgba(99,102,241,0.35);
+  .btn-neon:hover {
+    box-shadow: 0 0 28px rgba(0,255,247,0.7), 0 8px 24px rgba(77,124,255,0.5);
+    transform: translateY(-1px);
   }
-  .btn-primary:hover {
-    opacity: 0.9;
-    box-shadow: 0 8px 24px rgba(99,102,241,0.45);
+  .btn-neon-outline {
+    @apply font-semibold rounded-xl;
+    color: #00fff7;
+    border: 1px solid rgba(0,255,247,0.4);
+    background: rgba(0,255,247,0.05);
+    box-shadow: 0 0 12px rgba(0,255,247,0.1);
+    transition: all 0.2s;
+  }
+  .btn-neon-outline:hover {
+    background: rgba(0,255,247,0.1);
+    box-shadow: 0 0 20px rgba(0,255,247,0.3);
   }
 }
