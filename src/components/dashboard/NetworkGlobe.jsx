@@ -319,6 +319,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     const wifiDot = new THREE.Mesh(new THREE.SphereGeometry(0.034, 12, 12), wifiMat);
     wifiDot.position.set(0, -0.08, 0);
     wifiGroup.add(wifiDot);
+    wifiGroup.position.set(0, -0.18, 0);
     scene.add(wifiGroup);
     // ─────────────────────────────────────────────────────────────────
 
