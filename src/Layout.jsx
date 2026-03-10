@@ -12,15 +12,13 @@ import {
   Bot,
   Menu,
   X,
-  ChevronRight,
-  ChevronLeft,
-  Search,
   Shield,
   Package,
   Settings,
   Mail,
-  HeartHandshake } from
-"lucide-react";
+  HeartHandshake,
+  ChevronRight
+} from "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
 import NotificationBell from "@/components/notifications/NotificationBell";
@@ -69,10 +67,6 @@ const NAV_GROUPS = [
   },
 ];
 
-// Flatten for legacy usage
-const ALL_NAV = NAV_GROUPS.flatMap(g => g.items);
-
-
 const pageLabels = {
   Home: "Home",
   AIAssistant: "AI Assistant",
@@ -89,109 +83,128 @@ function SidebarNav({ currentPageName, mobileOpen, setMobileOpen, collapsed, set
   const { can, loading } = useRBAC();
 
   return (
-    <aside
-      className={`
-        fixed lg:static inset-y-0 left-0 z-50
-        ${collapsed ? "w-[60px]" : "w-60"}
-        ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-        flex flex-col transition-all duration-300 ease-in-out sidebar-glow
-      `}
-      style={{ background: "linear-gradient(180deg, #f8faff 0%, #f0f4ff 50%, #f5f0ff 100%)" }}>
+    <>
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 lg:hidden"
+          style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
 
-      {/* Logo */}
-      <div className="bg-transparent flex items-center justify-between px-3 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(99,102,241,0.15)" }}>
-        <div className="flex items-center overflow-hidden flex-1">
-          {collapsed ?
-          <img src={LOGO_URL} alt="TouchNet Logo" className="w-50 h-50 object-contain" /> :
-
-          <img src={LOGO_URL} alt="TouchNet Logo" className="h-8 w-auto object-contain" />
-          }
-        </div>
-        {/* Mobile close */}
-        <button onClick={() => setMobileOpen(false)} className="lg:hidden text-slate-400 hover:text-slate-700 p-1">
-          <X className="w-4 h-4" />
-        </button>
-        {/* Desktop collapse toggle */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex items-center justify-center w-6 h-6 rounded text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors flex-shrink-0">
-
-          {collapsed ? (
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            ) : (
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-            )}
-        </button>
-      </div>
-
-      {/* System status pill */}
-      {!collapsed &&
-      <div className="px-4 py-3">
-          <div className="flex items-center gap-2 rounded-md px-3 py-1.5" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" />
-            <span className="text-[10px] text-emerald-600 font-semibold mono">NETWORK LIVE</span>
-            <span className="ml-auto text-[10px] text-slate-400 mono">99.9%</span>
+      <aside
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          ${collapsed ? "w-[68px]" : "w-64"}
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          flex flex-col transition-all duration-300 ease-in-out
+        `}
+        style={{
+          background: "linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
+          borderRight: "1px solid rgba(255,255,255,0.06)",
+          boxShadow: "4px 0 32px rgba(0,0,0,0.4)"
+        }}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between px-4 h-[64px] flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center overflow-hidden flex-1">
+            {collapsed
+              ? <img src={LOGO_URL} alt="TouchNet" className="w-8 h-8 object-contain brightness-0 invert" />
+              : <img src={LOGO_URL} alt="TouchNet" className="h-7 w-auto object-contain brightness-0 invert" />
+            }
           </div>
+          <button onClick={() => setMobileOpen(false)} className="lg:hidden text-white/40 hover:text-white p-1">
+            <X className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-white/30 hover:text-white hover:bg-white/10 transition-all flex-shrink-0"
+          >
+            <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-300 ${collapsed ? "" : "rotate-180"}`} />
+          </button>
         </div>
-      }
-      {collapsed &&
-      <div className="py-2 flex justify-center">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" />
-        </div>
-      }
 
-      {/* Nav */}
-      <nav className="pt-2 pb-4 px-2 flex-1 overflow-y-auto tn-sidebar flex flex-col" style={{ background: "transparent" }}>
-        {NAV_GROUPS.map((group, gi) => {
-          const groupItems = loading ? group.items : group.items.filter(item => item.perm === null || can(item.perm));
-          if (groupItems.length === 0) return null;
-          return (
-            <div key={gi} className={gi > 0 ? "mt-2" : ""}>
-              {!collapsed && group.label && (
-                <p className="text-[9px] font-semibold text-slate-400 tracking-widest uppercase px-2 py-1.5 mono">{group.label}</p>
-              )}
-              {collapsed && gi > 0 && (
-                <div className="mx-2 my-1.5" style={{ borderTop: "1px solid rgba(99,102,241,0.12)" }} />
-              )}
-              <div className="flex flex-col space-y-0.5">
-                {groupItems.map((item) => {
-                  const isActive = currentPageName === item.page;
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.page}
-                      to={createPageUrl(item.page)}
-                      onClick={() => setMobileOpen(false)}
-                      title={collapsed ? item.name : undefined}
-                      className={`
-                        flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                        transition-all duration-150 group relative
-                        ${collapsed ? "justify-center" : ""}
-                        ${isActive ? "active-nav text-indigo-700" : "text-slate-500 hover:text-slate-800 nav-item-hover"}
-                      `}>
-                      <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-md transition-all ${isActive ? "bg-indigo-100" : "group-hover:bg-slate-100"}`}>
-                        <Icon className={`w-4 h-4 ${isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}`} />
-                      </div>
-                      {!collapsed && <span className="flex-1 text-[13px] tracking-wide">{item.name}</span>}
-                      {!collapsed && isActive && <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
-                    </Link>
-                  );
-                })}
-              </div>
+        {/* Status pill */}
+        {!collapsed && (
+          <div className="px-4 pt-4 pb-2">
+            <div className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+              <span className="text-[10px] text-emerald-400 font-bold tracking-widest uppercase mono">Network Live</span>
+              <span className="ml-auto text-[10px] text-emerald-600 mono font-semibold">99.9%</span>
             </div>
-          );
-        })}
+          </div>
+        )}
+        {collapsed && (
+          <div className="py-3 flex justify-center">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          </div>
+        )}
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto px-3 pb-4 tn-scroll" style={{ scrollbarWidth: "none" }}>
+          {NAV_GROUPS.map((group, gi) => {
+            const groupItems = loading ? group.items : group.items.filter(item => item.perm === null || can(item.perm));
+            if (groupItems.length === 0) return null;
+            return (
+              <div key={gi} className={gi > 0 ? "mt-4" : "mt-2"}>
+                {!collapsed && group.label && (
+                  <p className="text-[9px] font-bold text-white/20 tracking-[0.2em] uppercase px-2 py-1.5 mono">{group.label}</p>
+                )}
+                {collapsed && gi > 0 && (
+                  <div className="mx-1 my-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }} />
+                )}
+                <div className="flex flex-col gap-0.5">
+                  {groupItems.map((item) => {
+                    const isActive = currentPageName === item.page;
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.page}
+                        to={createPageUrl(item.page)}
+                        onClick={() => setMobileOpen(false)}
+                        title={collapsed ? item.name : undefined}
+                        className={`
+                          flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+                          transition-all duration-200 group relative
+                          ${collapsed ? "justify-center" : ""}
+                          ${isActive
+                            ? "text-white"
+                            : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                          }
+                        `}
+                        style={isActive ? {
+                          background: "linear-gradient(135deg, rgba(99,102,241,0.35), rgba(139,92,246,0.2))",
+                          border: "1px solid rgba(99,102,241,0.3)",
+                          boxShadow: "0 0 20px rgba(99,102,241,0.15)"
+                        } : {}}
+                      >
+                        <div className={`flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg transition-all ${isActive ? "bg-indigo-500/30" : "group-hover:bg-white/10"}`}>
+                          <Icon className={`w-3.5 h-3.5 ${isActive ? "text-indigo-300" : "text-white/40 group-hover:text-white/70"}`} />
+                        </div>
+                        {!collapsed && <span className="flex-1 text-[13px] font-medium tracking-wide">{item.name}</span>}
+                        {!collapsed && isActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </nav>
 
         {/* Footer */}
-        <div className="mt-auto pt-4" style={{ borderTop: "1px solid rgba(99,102,241,0.1)" }}>
-          {collapsed ?
-            <p className="text-[8px] text-slate-400 mono text-center">TN</p> :
-            <p className="text-[10px] text-slate-400 mono text-center">© TOUCHNET v2.4.1</p>
+        <div className="px-4 py-3 flex-shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          {collapsed
+            ? <p className="text-[8px] text-white/15 mono text-center">TN</p>
+            : <p className="text-[9px] text-white/15 mono text-center tracking-widest">© TOUCHNET v2.4.1</p>
           }
         </div>
-      </nav>
-    </aside>);
-
+      </aside>
+    </>
+  );
 }
 
 function LayoutInner({ children, currentPageName }) {
@@ -200,71 +213,65 @@ function LayoutInner({ children, currentPageName }) {
   const [currentUser, setCurrentUser] = useState(null);
   const pageLabel = pageLabels[currentPageName] || currentPageName;
 
-  React.useEffect(() => {
+  useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f2f8" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#0a0d1a" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #f0f2f8; }
-        .tn-sidebar { scrollbar-width: none; }
-        .tn-sidebar::-webkit-scrollbar { display: none; }
-        .nav-item-hover:hover { background: rgba(99,102,241,0.06); }
-        .sidebar-glow { box-shadow: 4px 0 24px rgba(99,102,241,0.1), 1px 0 0 rgba(99,102,241,0.08); }
-        .active-nav { background: linear-gradient(90deg, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.03) 100%); border-left: 2px solid #6366f1; }
-        .topbar-border { border-bottom: 1px solid rgba(30,45,107,0.1); }
-        .main-content { background: #f0f2f8; }
-        .card-dark { background: #ffffff; border: 1px solid rgba(30,45,107,0.1); }
-        .card-dark:hover { border-color: rgba(30,45,107,0.3); box-shadow: 0 4px 20px rgba(30,45,107,0.12); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace !important; }
+        .tn-scroll { scrollbar-width: none; }
+        .tn-scroll::-webkit-scrollbar { display: none; }
+        .main-area { background: #f0f2f8; }
+        .topbar-glass {
+          background: rgba(255,255,255,0.97);
+          border-bottom: 1px solid rgba(0,0,0,0.06);
+          backdrop-filter: blur(20px);
+        }
         .pulse-dot { animation: pulse-signal 2s infinite; }
-        @keyframes pulse-signal { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); } 50% { box-shadow: 0 0 0 7px rgba(16,185,129,0); } }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .grid-bg { background: #f0f2f8; }
-        .signal-bar { animation: signal-flash 3s ease-in-out infinite; }
-        @keyframes signal-flash { 0%,100%{opacity:0.7} 50%{opacity:1} }
+        @keyframes pulse-signal { 0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); } 50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
       `}</style>
-
-      {mobileOpen &&
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
-      }
 
       <SidebarNav
         currentPageName={currentPageName}
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
         collapsed={collapsed}
-        setCollapsed={setCollapsed} />
+        setCollapsed={setCollapsed}
+      />
 
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden main-content">
-        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-border" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f0f2f8 100%)" }}>
-          <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 text-slate-500 hover:text-white rounded-md transition-colors">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden main-area">
+        {/* Topbar */}
+        <header className="h-[64px] flex items-center px-4 lg:px-6 flex-shrink-0 z-30 gap-4 topbar-glass">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="lg:hidden p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100 transition-colors"
+          >
             <Menu className="w-5 h-5" />
           </button>
 
-          <div className="flex-1">
-            <h2 className="text-[15px] font-bold text-slate-800 leading-tight tracking-wide">{pageLabel}</h2>
-            <p className="text-[10px] text-slate-400 hidden sm:block mono">{currentUser?.full_name || currentUser?.email || "touchnet.local"}</p>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-[15px] font-bold text-slate-900 leading-tight tracking-tight truncate">{pageLabel}</h2>
+            <p className="text-[10px] text-slate-400 hidden sm:block mono truncate">
+              {currentUser?.full_name || currentUser?.email || "touchnet.local"}
+            </p>
           </div>
 
           <GlobalSearch />
-
           <DemoUserSwitcher />
-
           <NotificationBell />
-
           <UserMenu />
         </header>
 
-        <main className="flex-1 overflow-y-auto grid-bg">
+        <main className="flex-1 overflow-y-auto">
           {children}
         </main>
       </div>
-    </div>);
-
+    </div>
+  );
 }
 
 export default function Layout({ children, currentPageName }) {
