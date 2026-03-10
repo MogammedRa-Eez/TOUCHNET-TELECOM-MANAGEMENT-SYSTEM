@@ -96,25 +96,22 @@ export default function CustomerPortal() {
 
   if (loadingUser || loadingCustomer) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="w-6 h-6 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(160deg,#f0f2fc,#faf4ff)" }}>
+        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!customer) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 gap-4 p-6">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6" style={{ background: "linear-gradient(160deg,#f0f2fc,#faf4ff)" }}>
         <img src={LOGO_URL} alt="Logo" className="h-12 object-contain mb-2" />
-        <div className="bg-white rounded-2xl border border-slate-200 p-8 max-w-md w-full text-center shadow-sm">
-          <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-xl" style={{ border: "1px solid rgba(99,102,241,0.15)" }}>
+          <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
           <h2 className="text-lg font-bold text-slate-800 mb-1">Account Not Found</h2>
-          <p className="text-sm text-slate-500 mb-6">
-            No customer account is linked to <strong>{user?.email}</strong>. Please contact support.
-          </p>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 mx-auto px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors">
+          <p className="text-sm text-slate-500 mb-6">No customer account linked to <strong>{user?.email}</strong>. Contact support.</p>
+          <button onClick={handleLogout} className="flex items-center gap-2 mx-auto px-4 py-2 rounded-xl text-white text-sm font-semibold"
+            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
             <LogOut className="w-4 h-4" /> Logout
           </button>
         </div>
@@ -122,74 +119,88 @@ export default function CustomerPortal() {
     );
   }
 
-  const sc = statusColor[customer.status] || statusColor.pending;
+  const nodeCfg = NODE_STATUS_CFG[node?.status || "online"] || NODE_STATUS_CFG.online;
+  const statusMap = { active: { color: "#10b981", bg: "rgba(16,185,129,0.1)" }, suspended: { color: "#ef4444", bg: "rgba(239,68,68,0.1)" }, pending: { color: "#f59e0b", bg: "rgba(245,158,11,0.1)" }, terminated: { color: "#94a3b8", bg: "rgba(148,163,184,0.1)" } };
+  const sc = statusMap[customer.status] || statusMap.pending;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{ background: "linear-gradient(160deg,#f0f2fc 0%,#f4f6ff 50%,#faf4ff 100%)", fontFamily: "'Inter',sans-serif" }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap'); .mono{font-family:'JetBrains Mono',monospace!important}`}</style>
+
       {/* Top bar */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-        <img src={LOGO_URL} alt="Logo" className="h-9 object-contain" />
-        <div className="flex items-center gap-4">
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-semibold text-slate-700">{customer.full_name}</p>
-            <p className="text-xs text-slate-400">{user?.email}</p>
+      <header className="sticky top-0 z-20 px-5 py-3 flex items-center justify-between" style={{ background: "rgba(255,255,255,0.92)", borderBottom: "1px solid rgba(99,102,241,0.1)", backdropFilter: "blur(20px)" }}>
+        <div className="flex items-center gap-3">
+          <img src={LOGO_URL} alt="Logo" className="h-8 object-contain" />
+          <div className="hidden sm:block h-5 w-px bg-slate-200" />
+          <div className="hidden sm:block">
+            <p className="text-[13px] font-bold text-slate-800 leading-tight">{customer.full_name}</p>
+            <p className="text-[10px] text-slate-400 mono">{customer.account_number ? `#${customer.account_number}` : customer.email}</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-slate-500 hover:bg-slate-100 hover:text-red-600 transition-colors border border-slate-200">
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mono" style={{ background: nodeCfg.bg, border: `1px solid ${nodeCfg.border}`, color: nodeCfg.color }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: nodeCfg.color }} />
+            {nodeCfg.label}
+          </div>
+          <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-semibold text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors border border-slate-200">
             <LogOut className="w-3.5 h-3.5" /> Logout
           </button>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto p-6 space-y-6">
-        {/* Account overview card */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
+      <main className="max-w-4xl mx-auto p-5 space-y-5">
+
+        {/* Hero account card */}
+        <div className="rounded-3xl p-6 overflow-hidden relative" style={{ background: "linear-gradient(135deg,#312e81,#4c1d95,#1e1b4b)", boxShadow: "0 8px 40px rgba(99,102,241,0.25)" }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px)", backgroundSize: "32px 32px" }} />
+          <div className="relative flex items-start justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold text-white flex-shrink-0"
-                style={{ background: "linear-gradient(135deg, #dc2626, #1e2a4a)" }}>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white flex-shrink-0" style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)", backdropFilter: "blur(8px)" }}>
                 {customer.full_name.slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">{customer.full_name}</h1>
-                <p className="text-sm text-slate-400">{customer.email}</p>
-                {customer.account_number && (
-                  <p className="text-xs text-slate-400 font-mono mt-0.5">Acct# {customer.account_number}</p>
-                )}
+                <h1 className="text-xl font-black text-white tracking-tight">{customer.full_name}</h1>
+                <p className="text-[12px] text-white/50 mono mt-0.5">{customer.email}</p>
+                {customer.account_number && <p className="text-[10px] text-white/30 mono mt-0.5">Account #{customer.account_number}</p>}
               </div>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold border capitalize ${sc.bg} ${sc.text} ${sc.border}`}>
+            <span className="px-3 py-1 rounded-full text-[11px] font-bold capitalize" style={{ background: `${sc.bg}`, color: sc.color, border: `1px solid ${sc.color}33` }}>
               {customer.status}
             </span>
           </div>
-
-          <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <InfoItem label="Service Plan" value={customer.service_plan?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())} icon={<Wifi className="w-4 h-4 text-blue-500" />} />
-            <InfoItem label="Connection" value={customer.connection_type || "—"} />
-            <InfoItem label="Monthly Rate" value={`R${customer.monthly_rate?.toFixed(2) || "0.00"}`} />
-            <InfoItem label="Balance" value={`R${(customer.balance || 0).toFixed(2)}`} valueClass={(customer.balance || 0) < 0 ? "text-red-600 font-bold" : "text-emerald-600 font-bold"} />
+          <div className="relative mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { label: "Service Plan", value: customer.service_plan?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "—" },
+              { label: "Connection", value: customer.connection_type?.replace(/_/g, " ") || "—" },
+              { label: "Monthly Rate", value: `R${customer.monthly_rate?.toFixed(2) || "0.00"}` },
+              { label: "Balance", value: `R${(customer.balance || 0).toFixed(2)}`, valueStyle: { color: (customer.balance || 0) < 0 ? "#fca5a5" : "#6ee7b7" } },
+            ].map(item => (
+              <div key={item.label} className="rounded-2xl px-4 py-3" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
+                <p className="text-[9px] text-white/40 mono uppercase tracking-widest mb-1">{item.label}</p>
+                <p className="text-[14px] font-bold text-white mono" style={item.valueStyle}>{item.value}</p>
+              </div>
+            ))}
           </div>
-
-          {customer.address && (
-            <p className="mt-4 text-sm text-slate-500">📍 {customer.address}</p>
-          )}
+          {customer.address && <p className="relative mt-3 text-[11px] text-white/40">📍 {customer.address}</p>}
         </div>
+
+        {/* Network Uptime panel */}
+        <NetworkUptimePanel node={node} customer={customer} />
 
         {/* Activity Dashboard */}
         <ActivityDashboard customer={customer} invoices={invoices} tickets={tickets} />
 
         {/* Tabs */}
         <Tabs defaultValue="invoices">
-          <TabsList className="bg-white border border-slate-200 rounded-xl p-1">
-            <TabsTrigger value="invoices" className="gap-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-white rounded-lg">
-              <Receipt className="w-4 h-4" /> Invoices
+          <TabsList className="rounded-2xl p-1 gap-1" style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.12)" }}>
+            <TabsTrigger value="invoices" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold" style={{ "--active-bg": "linear-gradient(135deg,#6366f1,#8b5cf6)" } as any}>
+              <Receipt className="w-3.5 h-3.5" /> Invoices
             </TabsTrigger>
-            <TabsTrigger value="tickets" className="gap-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-white rounded-lg">
-              <TicketCheck className="w-4 h-4" /> Support Tickets
+            <TabsTrigger value="tickets" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
+              <TicketCheck className="w-3.5 h-3.5" /> Support
             </TabsTrigger>
-            <TabsTrigger value="profile" className="gap-1.5 data-[state=active]:bg-slate-800 data-[state=active]:text-white rounded-lg">
-              <User className="w-4 h-4" /> Profile & History
+            <TabsTrigger value="profile" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
+              <User className="w-3.5 h-3.5" /> Profile
             </TabsTrigger>
           </TabsList>
 
