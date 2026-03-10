@@ -65,9 +65,9 @@ function MoreDropdown({ currentPageName, can, loading }) {
         <div
           className="absolute top-full mt-2 right-0 w-52 rounded-xl overflow-hidden z-50"
           style={{
-            background: "rgba(10,14,30,0.98)",
-            border: "1px solid rgba(56,114,224,0.25)",
-            boxShadow: "0 0 0 1px rgba(56,114,224,0.06), 0 20px 48px rgba(0,0,0,0.7)",
+            background: "rgba(10,14,26,0.98)",
+            border: "1px solid rgba(124,58,237,0.22)",
+            boxShadow: "0 0 0 1px rgba(124,58,237,0.05), 0 20px 48px rgba(0,0,0,0.7)",
             backdropFilter: "blur(24px)"
           }}
         >
@@ -82,15 +82,15 @@ function MoreDropdown({ currentPageName, can, loading }) {
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150"
                   style={isActive
-                    ? { background: "rgba(56,114,224,0.12)", color: "#5b90f5", border: "1px solid rgba(56,114,224,0.3)" }
+                    ? { background: "rgba(124,58,237,0.12)", color: "#a78bfa", border: "1px solid rgba(124,58,237,0.3)" }
                     : { color: "rgba(148,163,184,0.75)", border: "1px solid transparent" }
                   }
                 >
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(56,114,224,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(56,114,224,0.3)" : "rgba(255,255,255,0.06)"}` }}>
-                    <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#5b90f5" : "rgba(148,163,184,0.55)" }} />
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(124,58,237,0.14)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(124,58,237,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                    <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#a78bfa" : "rgba(148,163,184,0.55)" }} />
                   </div>
                   {item.name}
-                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#3872e0", boxShadow: "0 0 6px rgba(56,114,224,0.6)" }} />}
+                  {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#7c3aed", boxShadow: "0 0 6px rgba(124,58,237,0.6)" }} />}
                 </Link>
               );
             })}
@@ -127,21 +127,21 @@ function MobileDrawer({ currentPageName, open, onClose, can, loading }) {
                 onClick={onClose}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150"
                 style={isActive
-                  ? { background: "rgba(56,114,224,0.12)", color: "#5b90f5", border: "1px solid rgba(56,114,224,0.28)" }
+                  ? { background: "rgba(124,58,237,0.12)", color: "#a78bfa", border: "1px solid rgba(124,58,237,0.28)" }
                   : { color: "rgba(148,163,184,0.7)", border: "1px solid transparent" }
                 }
               >
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(56,114,224,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(56,114,224,0.28)" : "rgba(255,255,255,0.05)"}` }}>
-                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#5b90f5" : "rgba(148,163,184,0.5)" }} />
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(124,58,237,0.14)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(124,58,237,0.28)" : "rgba(255,255,255,0.05)"}` }}>
+                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#a78bfa" : "rgba(148,163,184,0.5)" }} />
                 </div>
                 {item.name}
-                {isActive && <div className="ml-auto w-1 h-5 rounded-full" style={{ background: "linear-gradient(180deg,#3872e0,#5b90f5)", boxShadow: "0 0 8px rgba(56,114,224,0.5)" }} />}
+                {isActive && <div className="ml-auto w-1 h-5 rounded-full" style={{ background: "linear-gradient(180deg,#7c3aed,#a855f7)", boxShadow: "0 0 8px rgba(124,58,237,0.5)" }} />}
               </Link>
             );
           })}
         </nav>
-        <div className="p-4" style={{ borderTop: "1px solid rgba(56,114,224,0.1)" }}>
-          <p className="text-[9px] mono tracking-widest text-center" style={{ color: "rgba(56,114,224,0.35)" }}>TOUCHNET · QUANTARA UI</p>
+        <div className="p-4" style={{ borderTop: "1px solid rgba(124,58,237,0.1)" }}>
+          <p className="text-[9px] mono tracking-widest text-center" style={{ color: "rgba(124,58,237,0.35)" }}>TOUCHNET · OPTIMATIA</p>
         </div>
       </div>
     </>
@@ -155,61 +155,62 @@ function LayoutInner({ children, currentPageName }) {
   const topItems = loading ? NAV_TOP : NAV_TOP.filter(i => i.perm === null || can(i.perm));
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#080c18" }}>
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#0a0e1a" }}>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; }
         .mono { font-family: 'JetBrains Mono', monospace !important; }
 
-        /* Quantara scrollbar */
-        .q-scroll::-webkit-scrollbar { width: 4px; }
-        .q-scroll::-webkit-scrollbar-track { background: transparent; }
-        .q-scroll::-webkit-scrollbar-thumb { background: rgba(56,114,224,0.3); border-radius: 4px; }
+        /* Optimatia scrollbar */
+        .op-scroll::-webkit-scrollbar { width: 4px; }
+        .op-scroll::-webkit-scrollbar-track { background: transparent; }
+        .op-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 4px; }
+        .op-scroll::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.5); }
 
         /* Page background — deep navy with subtle dot grid */
         .page-bg {
-          background-color: #080c18;
+          background-color: #0a0e1a;
           background-image:
-            radial-gradient(ellipse 70% 45% at 15% 0%,   rgba(56,114,224,0.08) 0%, transparent 55%),
-            radial-gradient(ellipse 55% 40% at 85% 100%, rgba(240,165,0,0.05)  0%, transparent 55%),
-            radial-gradient(circle, rgba(56,114,224,0.12) 1px, transparent 1px);
-          background-size: auto, auto, 28px 28px;
+            radial-gradient(ellipse 70% 45% at 15% 0%,   rgba(124,58,237,0.07) 0%, transparent 55%),
+            radial-gradient(ellipse 55% 40% at 85% 100%, rgba(20,184,166,0.05)  0%, transparent 55%),
+            radial-gradient(circle, rgba(124,58,237,0.1) 1px, transparent 1px);
+          background-size: auto, auto, 32px 32px;
         }
 
-        /* Quantara top bar */
-        .q-topbar {
-          background: rgba(8, 12, 24, 0.97);
+        /* Optimatia top bar */
+        .op-topbar {
+          background: rgba(10,14,26,0.97);
           backdrop-filter: blur(24px);
-          border-bottom: 1px solid rgba(56,114,224,0.18);
-          box-shadow: 0 1px 0 rgba(56,114,224,0.08), 0 4px 24px rgba(0,0,0,0.4);
+          border-bottom: 1px solid rgba(124,58,237,0.15);
+          box-shadow: 0 1px 0 rgba(124,58,237,0.07), 0 4px 24px rgba(0,0,0,0.5);
         }
 
         /* Nav active pill */
         .nav-pill-active {
-          background: rgba(56,114,224,0.14) !important;
-          color: #5b90f5 !important;
-          border: 1px solid rgba(56,114,224,0.4) !important;
-          box-shadow: 0 0 12px rgba(56,114,224,0.15), inset 0 1px 0 rgba(255,255,255,0.04);
+          background: rgba(124,58,237,0.14) !important;
+          color: #a78bfa !important;
+          border: 1px solid rgba(124,58,237,0.35) !important;
+          box-shadow: 0 0 12px rgba(124,58,237,0.12), inset 0 1px 0 rgba(255,255,255,0.04);
         }
         .nav-pill-hover:hover {
-          background: rgba(56,114,224,0.07) !important;
-          color: #cbd5e1 !important;
+          background: rgba(124,58,237,0.07) !important;
+          color: #e2e8f0 !important;
         }
 
-        /* Live indicator pulse */
-        .pulse-dot { animation: q-pulse 2.5s infinite; }
-        @keyframes q-pulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.5); }
-          50%      { box-shadow: 0 0 0 5px rgba(34,211,238,0);  }
+        /* Live pulse */
+        .pulse-dot { animation: op-pulse 2.5s infinite; }
+        @keyframes op-pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(20,184,166,0.6); }
+          50%      { box-shadow: 0 0 0 5px rgba(20,184,166,0); }
         }
       `}</style>
 
       {/* ── TOP NAV BAR ── */}
-      <header className="q-topbar h-[60px] flex items-center px-4 lg:px-6 z-30 flex-shrink-0 gap-3">
+      <header className="op-topbar h-[60px] flex items-center px-4 lg:px-6 z-30 flex-shrink-0 gap-3">
         {/* Mobile menu */}
         <button
           onClick={() => setMobileOpen(true)}
           className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
-          style={{ color: "rgba(91,144,245,0.8)", border: "1px solid rgba(56,114,224,0.2)", background: "rgba(56,114,224,0.06)" }}
+          style={{ color: "rgba(167,139,250,0.8)", border: "1px solid rgba(124,58,237,0.2)", background: "rgba(124,58,237,0.07)" }}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -219,15 +220,15 @@ function LayoutInner({ children, currentPageName }) {
           <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
         </Link>
 
-        {/* Quantara wordmark accent line */}
-        <div className="hidden xl:block w-px h-5 mx-1" style={{ background: "linear-gradient(180deg, transparent, rgba(56,114,224,0.4), transparent)" }} />
+        {/* Accent divider */}
+        <div className="hidden xl:block w-px h-5 mx-1" style={{ background: "linear-gradient(180deg, transparent, rgba(124,58,237,0.4), transparent)" }} />
 
         {/* Status pill */}
         <div
           className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold mono flex-shrink-0"
-          style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.2)", color: "#22d3ee" }}
+          style={{ background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.22)", color: "#2dd4bf" }}
         >
-          <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: "#22d3ee" }} />
+          <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: "#14b8a6" }} />
           SYS·LIVE
         </div>
 
@@ -241,7 +242,7 @@ function LayoutInner({ children, currentPageName }) {
                 key={item.page}
                 to={createPageUrl(item.page)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all duration-150 nav-pill-hover ${isActive ? "nav-pill-active" : ""}`}
-                style={!isActive ? { color: "rgba(148,163,184,0.7)", border: "1px solid transparent" } : {}}
+                style={!isActive ? { color: "rgba(148,163,184,0.65)", border: "1px solid transparent" } : {}}
               >
                 <Icon className="w-3.5 h-3.5" />
                 {item.name}
@@ -270,7 +271,7 @@ function LayoutInner({ children, currentPageName }) {
       />
 
       {/* ── PAGE CONTENT ── */}
-      <main className="flex-1 overflow-y-auto q-scroll page-bg">
+      <main className="flex-1 overflow-y-auto op-scroll page-bg">
         {children}
       </main>
     </div>
