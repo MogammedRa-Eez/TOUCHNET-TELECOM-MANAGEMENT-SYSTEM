@@ -492,7 +492,7 @@ export default function NetworkGlobe({ nodes = [] }) {
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}88` }} />
-              <span className="text-[10px] text-slate-300" dangerouslySetInnerHTML={{ __html: label }} />
+              <span className="text-[10px] text-slate-600" dangerouslySetInnerHTML={{ __html: label }} />
             </div>
           ))}
         </div>
