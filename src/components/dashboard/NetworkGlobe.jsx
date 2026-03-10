@@ -483,7 +483,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       {/* Heatmap Legend */}
       {showHeatmap && (
         <div className="absolute bottom-3 left-3 z-20 px-3 py-2 rounded-lg flex flex-col gap-1.5" style={{ background: "rgba(255,255,255,0.85)", border: "1px solid rgba(99,102,241,0.2)", backdropFilter: "blur(6px)", boxShadow: "0 2px 12px rgba(99,102,241,0.1)" }}>
-          <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">Latency / Signal</p>
+          <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-0.5">Latency / Signal</p>
           {[
             { color: "#34d399", label: "Excellent  ≤30ms / ≥85%" },
             { color: "#fbbf24", label: "Fair  ≤80ms / ≥65%" },
