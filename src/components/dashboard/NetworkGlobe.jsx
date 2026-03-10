@@ -398,9 +398,16 @@ export default function NetworkGlobe({ nodes = [] }) {
       }
       dotGroup.children.forEach((child, i) => {
         if (child.geometry?.type === "RingGeometry") {
-          child.material.opacity = 0.2 + 0.3 * Math.abs(Math.sin(t * 2 + i));
-          const s = 1 + 0.3 * Math.abs(Math.sin(t * 1.5 + i));
-          child.scale.set(s, s, s);
+          if (child.userData.isAlert) {
+            // Fast red pulse for alert rings
+            child.material.opacity = 0.4 + 0.6 * Math.abs(Math.sin(t * 5 + i));
+            const s = 1 + 0.5 * Math.abs(Math.sin(t * 4 + i));
+            child.scale.set(s, s, s);
+          } else {
+            child.material.opacity = 0.2 + 0.3 * Math.abs(Math.sin(t * 2 + i));
+            const s = 1 + 0.3 * Math.abs(Math.sin(t * 1.5 + i));
+            child.scale.set(s, s, s);
+          }
         }
       });
       ring.rotation.z  += 0.002;
