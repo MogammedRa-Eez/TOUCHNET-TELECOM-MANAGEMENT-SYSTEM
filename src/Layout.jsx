@@ -108,11 +108,11 @@ function MobileDrawer({ currentPageName, open, onClose, can, loading }) {
       {open && <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={onClose} />}
       <div
         className={`fixed top-0 left-0 h-full w-72 z-50 flex flex-col transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`}
-        style={{ background: "rgba(255,255,255,0.98)", borderRight: "1px solid rgba(99,102,241,0.1)", boxShadow: "8px 0 40px rgba(99,102,241,0.12)" }}
+        style={{ background: "rgba(5,5,18,0.98)", borderRight: "1px solid rgba(0,255,247,0.15)", boxShadow: "8px 0 60px rgba(0,255,247,0.08), 0 0 40px rgba(0,0,0,0.8)" }}
       >
-        <div className="flex items-center justify-between px-5 h-16 border-b border-slate-100">
-          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" />
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors">
+        <div className="flex items-center justify-between px-5 h-16" style={{ borderBottom: "1px solid rgba(0,255,247,0.1)" }}>
+          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 6px rgba(0,255,247,0.6))" }} />
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl transition-colors" style={{ color: "rgba(0,255,247,0.6)", border: "1px solid rgba(0,255,247,0.15)" }}>
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -125,21 +125,23 @@ function MobileDrawer({ currentPageName, open, onClose, can, loading }) {
                 key={item.page}
                 to={createPageUrl(item.page)}
                 onClick={onClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 ${
-                  isActive ? "bg-indigo-50 text-indigo-700 font-semibold" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                }`}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150"
+                style={isActive
+                  ? { background: "rgba(0,255,247,0.08)", color: "#00fff7", border: "1px solid rgba(0,255,247,0.2)", textShadow: "0 0 6px rgba(0,255,247,0.4)" }
+                  : { color: "rgba(148,163,184,0.7)" }
+                }
               >
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${isActive ? "bg-indigo-100" : "bg-slate-100"}`}>
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-indigo-600" : "text-slate-500"}`} />
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: isActive ? "rgba(0,255,247,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(0,255,247,0.2)" : "rgba(255,255,255,0.05)"}` }}>
+                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#00fff7" : "rgba(148,163,184,0.5)" }} />
                 </div>
                 {item.name}
-                {isActive && <div className="ml-auto w-1 h-4 rounded-full bg-indigo-500" />}
+                {isActive && <div className="ml-auto w-1 h-4 rounded-full" style={{ background: "#00fff7", boxShadow: "0 0 8px #00fff7" }} />}
               </Link>
             );
           })}
         </nav>
-        <div className="p-4 border-t border-slate-100">
-          <p className="text-[9px] text-slate-300 mono tracking-widest text-center">TOUCHNET PLATFORM v2.4.1</p>
+        <div className="p-4" style={{ borderTop: "1px solid rgba(0,255,247,0.08)" }}>
+          <p className="text-[9px] mono tracking-widest text-center" style={{ color: "rgba(0,255,247,0.3)" }}>TOUCHNET PLATFORM v2.4.1</p>
         </div>
       </div>
     </>
