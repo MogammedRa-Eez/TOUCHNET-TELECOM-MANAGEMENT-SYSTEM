@@ -45,6 +45,13 @@ const priorityColor = {
   critical: "bg-red-100 text-red-600",
 };
 
+const NODE_STATUS_CFG = {
+  online:      { label: "Online",      color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", Icon: Wifi },
+  degraded:    { label: "Degraded",    color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.2)", Icon: AlertTriangle },
+  offline:     { label: "Offline",     color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.2)", Icon: WifiOff },
+  maintenance: { label: "Maintenance", color: "#8b5cf6", bg: "rgba(139,92,246,0.08)", border: "rgba(139,92,246,0.2)", Icon: Clock },
+};
+
 export default function CustomerPortal() {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
