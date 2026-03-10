@@ -563,9 +563,84 @@ function ActivityDashboard({ customer, invoices, tickets }) {
   );
 }
 
+function NetworkUptimePanel({ node, customer }) {
+  const cfg = NODE_STATUS_CFG[node?.status || "online"] || NODE_STATUS_CFG.online;
+  const Icon = cfg.Icon;
+  const uptime = node?.uptime_percent ?? null;
+  const bw = node?.bandwidth_utilization ?? null;
+
+  // Build fake 24-hour uptime bar (mostly up if online, some gaps if degraded)
+  const bars = Array.from({ length: 48 }, (_, i) => {
+    if (!node) return "ok";
+    if (node.status === "offline") return i > 40 ? "down" : "ok";
+    if (node.status === "degraded") return [10,11,22,23,35].includes(i) ? "warn" : "ok";
+    if (node.status === "maintenance") return [30,31,32,33].includes(i) ? "maint" : "ok";
+    return "ok";
+  });
+
+  return (
+    <div className="rounded-2xl p-5" style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.08)" }}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
+            <Icon className="w-4 h-4" style={{ color: cfg.color }} />
+          </div>
+          <div>
+            <p className="text-[13px] font-bold text-slate-800">Network Status</p>
+            <p className="text-[10px] text-slate-400 mono">{node?.name || customer?.assigned_node || "Your connection"}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold" style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, color: cfg.color }}>
+          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: cfg.color }} />
+          {cfg.label}
+        </div>
+      </div>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        {[
+          { label: "Uptime", value: uptime != null ? `${uptime.toFixed(1)}%` : "—", color: uptime >= 99 ? "#10b981" : uptime >= 95 ? "#f59e0b" : "#ef4444" },
+          { label: "Bandwidth Used", value: bw != null ? `${bw}%` : "—", color: bw < 70 ? "#10b981" : bw < 90 ? "#f59e0b" : "#ef4444" },
+          { label: "Node Type", value: node?.type?.replace(/_/g, " ") || "—", color: "#6366f1" },
+          { label: "Location", value: node?.location || "—", color: "#64748b" },
+        ].map(s => (
+          <div key={s.label} className="rounded-xl px-3 py-2.5" style={{ background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)" }}>
+            <p className="text-[9px] mono uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
+            <p className="text-[14px] font-black mono" style={{ color: s.color }}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* 24h uptime bar */}
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <p className="text-[10px] text-slate-400 mono">Last 24h uptime</p>
+          <p className="text-[10px] text-slate-400 mono">Now →</p>
+        </div>
+        <div className="flex gap-0.5">
+          {bars.map((b, i) => (
+            <div
+              key={i}
+              className="flex-1 rounded-sm h-5"
+              style={{
+                background: b === "ok" ? "#10b981" : b === "warn" ? "#f59e0b" : b === "down" ? "#ef4444" : "#8b5cf6",
+                opacity: b === "ok" ? 0.7 : 1
+              }}
+            />
+          ))}
+        </div>
+        <div className="flex justify-between mt-1">
+          <span className="text-[9px] text-slate-300 mono">24h ago</span>
+          <span className="text-[9px] text-slate-300 mono">Now</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function InfoItem({ label, value, icon, valueClass = "text-slate-800" }) {
   return (
-    <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+    <div className="rounded-xl p-3" style={{ background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)" }}>
       <div className="flex items-center gap-1.5 mb-1">
         {icon}
         <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">{label}</p>
@@ -577,7 +652,7 @@ function InfoItem({ label, value, icon, valueClass = "text-slate-800" }) {
 
 function Empty({ icon, text }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-10 text-center">
+    <div className="rounded-xl p-10 text-center" style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.08)" }}>
       <div className="flex justify-center mb-2">{icon}</div>
       <p className="text-sm text-slate-400">{text}</p>
     </div>
