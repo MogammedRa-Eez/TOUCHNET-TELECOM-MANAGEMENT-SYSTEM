@@ -300,8 +300,8 @@ export default function NetworkGlobe({ nodes = [] }) {
     // ── 3D WIFI ICON (center of globe) ──────────────────────────────
     const wifiGroup = new THREE.Group();
     const wifiMat = new THREE.MeshPhongMaterial({
-      color: 0x818cf8, emissive: 0x6366f1, emissiveIntensity: 0.7,
-      transparent: true, opacity: 0.85, shininess: 120
+      color: 0xc7d2fe, emissive: 0xa5b4fc, emissiveIntensity: 1.8,
+      transparent: true, opacity: 1, shininess: 200
     });
     function makeWifiArc(radius, tubeR) {
       const pts = [];
@@ -313,11 +313,11 @@ export default function NetworkGlobe({ nodes = [] }) {
         wifiMat
       );
     }
-    wifiGroup.add(makeWifiArc(0.38, 0.015));
-    wifiGroup.add(makeWifiArc(0.26, 0.015));
-    wifiGroup.add(makeWifiArc(0.14, 0.015));
-    const wifiDot = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 10), wifiMat);
-    wifiDot.position.set(0, -0.06, 0);
+    wifiGroup.add(makeWifiArc(0.52, 0.024));
+    wifiGroup.add(makeWifiArc(0.36, 0.024));
+    wifiGroup.add(makeWifiArc(0.20, 0.024));
+    const wifiDot = new THREE.Mesh(new THREE.SphereGeometry(0.034, 12, 12), wifiMat);
+    wifiDot.position.set(0, -0.08, 0);
     wifiGroup.add(wifiDot);
     scene.add(wifiGroup);
     // ─────────────────────────────────────────────────────────────────
