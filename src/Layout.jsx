@@ -155,7 +155,7 @@ function LayoutInner({ children, currentPageName }) {
   const topItems = loading ? NAV_TOP : NAV_TOP.filter(i => i.perm === null || can(i.perm));
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#0a0e1a" }}>
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#0e1628" }}>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; }
         .mono { font-family: 'JetBrains Mono', monospace !important; }
@@ -168,17 +168,33 @@ function LayoutInner({ children, currentPageName }) {
 
         /* Page background — deep navy with subtle dot grid */
         .page-bg {
-          background-color: #0a0e1a;
+          background-color: #0e1628;
           background-image:
-            radial-gradient(ellipse 70% 45% at 15% 0%,   rgba(124,58,237,0.07) 0%, transparent 55%),
-            radial-gradient(ellipse 55% 40% at 85% 100%, rgba(20,184,166,0.05)  0%, transparent 55%),
-            radial-gradient(circle, rgba(124,58,237,0.1) 1px, transparent 1px);
-          background-size: auto, auto, 32px 32px;
+            /* Galaxy nebula clouds */
+            radial-gradient(ellipse 80% 50% at 10% 10%,  rgba(124,58,237,0.18) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 90% 80%,  rgba(20,184,166,0.12) 0%, transparent 55%),
+            radial-gradient(ellipse 50% 35% at 70% 20%,  rgba(59,130,246,0.10) 0%, transparent 50%),
+            radial-gradient(ellipse 40% 30% at 20% 85%,  rgba(168,85,247,0.10) 0%, transparent 50%),
+            /* Bright star field — small dots */
+            radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1px),
+            radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px),
+            /* Faint dot grid */
+            radial-gradient(circle, rgba(124,58,237,0.12) 1px, transparent 1px);
+          background-size:
+            auto, auto, auto, auto,
+            97px 97px,
+            61px 61px,
+            36px 36px;
+          background-position:
+            0 0, 0 0, 0 0, 0 0,
+            13px 17px,
+            43px 7px,
+            0 0;
         }
 
         /* Optimatia top bar */
         .op-topbar {
-          background: rgba(10,14,26,0.97);
+          background: rgba(14,22,40,0.97);
           backdrop-filter: blur(24px);
           border-bottom: 1px solid rgba(124,58,237,0.15);
           box-shadow: 0 1px 0 rgba(124,58,237,0.07), 0 4px 24px rgba(0,0,0,0.5);

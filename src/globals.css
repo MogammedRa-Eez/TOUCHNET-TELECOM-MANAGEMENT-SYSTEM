@@ -31,7 +31,7 @@
 
 @layer base {
   body {
-    background-color: var(--op-bg);
+    background-color: #0e1628;
     font-family: 'Inter', sans-serif;
     color: var(--op-text);
     -webkit-font-smoothing: antialiased;

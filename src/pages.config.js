@@ -52,6 +52,7 @@ import CustomerPortal from './pages/CustomerPortal';
 import CustomerProjectPortal from './pages/CustomerProjectPortal';
 import CustomerSelfService from './pages/CustomerSelfService';
 import Customers from './pages/Customers';
+import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import FibreProjects from './pages/FibreProjects';
 import HRDashboard from './pages/HRDashboard';
@@ -62,7 +63,6 @@ import OutlookMail from './pages/OutlookMail';
 import RolesManagement from './pages/RolesManagement';
 import Tickets from './pages/Tickets';
 import UserSettings from './pages/UserSettings';
-import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +72,7 @@ export const PAGES = {
     "CustomerProjectPortal": CustomerProjectPortal,
     "CustomerSelfService": CustomerSelfService,
     "Customers": Customers,
+    "Dashboard": Dashboard,
     "Employees": Employees,
     "FibreProjects": FibreProjects,
     "HRDashboard": HRDashboard,
@@ -82,7 +83,6 @@ export const PAGES = {
     "RolesManagement": RolesManagement,
     "Tickets": Tickets,
     "UserSettings": UserSettings,
-    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {
