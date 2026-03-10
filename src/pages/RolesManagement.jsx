@@ -179,8 +179,8 @@ export default function RolesManagement() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>Roles & Permissions</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>
+          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Roles & Permissions</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
             Define access control for each role
           </p>
         </div>

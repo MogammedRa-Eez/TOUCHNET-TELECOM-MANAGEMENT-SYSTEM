@@ -216,8 +216,8 @@ export default function HRDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>HR Dashboard</h1>
-          <p className="text-xs mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>{active.length} active employees across {Object.keys(DEPT_CONFIG).length} departments</p>
+          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>HR Dashboard</h1>
+          <p className="text-xs mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>{active.length} active employees across {Object.keys(DEPT_CONFIG).length} departments</p>
         </div>
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
           <Plus className="w-4 h-4 mr-2" /> Add Employee

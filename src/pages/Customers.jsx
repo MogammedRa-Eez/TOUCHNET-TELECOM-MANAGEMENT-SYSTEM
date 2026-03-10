@@ -73,8 +73,8 @@ export default function Customers() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>Customer Management</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>Manage subscriber accounts and service plans</p>
+          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Customer Management</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Manage subscriber accounts and service plans</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm border-indigo-600/40 text-indigo-400 hover:bg-indigo-900/20">
@@ -87,7 +87,7 @@ export default function Customers() {
       </div>
 
       {/* Filters */}
-      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search customers..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
@@ -105,11 +105,11 @@ export default function Customers() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)" }}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow style={{ background: "#070b1f", borderBottom: "1px solid rgba(99,102,241,0.12)" }}>
+              <TableRow style={{ background: "#f8f9ff", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Customer</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Account #</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Plan</TableHead>

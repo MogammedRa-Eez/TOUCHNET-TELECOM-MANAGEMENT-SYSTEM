@@ -73,8 +73,8 @@ export default function UserSettings() {
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: "#e2e8f0" }}>User Settings</h1>
-        <p className="text-sm mt-1" style={{ color: "rgba(148,163,184,0.5)" }}>Manage your notification preferences and alert configurations.</p>
+        <h1 className="text-2xl font-bold" style={{ color: "#1e293b" }}>User Settings</h1>
+        <p className="text-sm mt-1" style={{ color: "rgba(100,116,139,0.55)" }}>Manage your notification preferences and alert configurations.</p>
       </div>
 
       {/* Profile Card */}

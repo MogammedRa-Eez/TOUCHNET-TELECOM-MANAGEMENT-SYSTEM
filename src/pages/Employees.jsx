@@ -156,8 +156,8 @@ export default function Employees() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>Employee Directory</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>Manage staff across all departments</p>
+          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Employee Directory</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Manage staff across all departments</p>
         </div>
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
           <Plus className="w-4 h-4 mr-2" /> Add Employee

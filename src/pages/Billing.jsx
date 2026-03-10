@@ -77,8 +77,8 @@ export default function Billing() {
     <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: "#e2e8f0" }}>Billing & Invoices</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(148,163,184,0.5)" }}>Manage invoices and track payments</p>
+          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Billing & Invoices</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Manage invoices and track payments</p>
         </div>
         <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)", boxShadow: "0 4px 16px rgba(124,58,237,0.3)" }}>
           <Plus className="w-4 h-4 mr-2" /> Create Invoice
@@ -93,7 +93,7 @@ export default function Billing() {
         <KPICard title="Pending" value={`R${totalPending.toLocaleString()}`} icon={DollarSign} color="amber" />
       </div>
 
-      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#111827", border: "1px solid rgba(124,58,237,0.14)" }}>
+      <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)" }}>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <Input placeholder="Search invoices..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
@@ -111,11 +111,11 @@ export default function Billing() {
         </Select>
       </div>
 
-      <div className="rounded-xl overflow-hidden" style={{ background: "#111827", border: "1px solid rgba(124,58,237,0.14)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)" }}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow style={{ background: "#0d1627", borderBottom: "1px solid rgba(124,58,237,0.1)" }}>
+              <TableRow style={{ background: "#f8f9ff", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Invoice #</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Customer</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Amount</TableHead>
