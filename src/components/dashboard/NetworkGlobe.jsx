@@ -324,9 +324,9 @@ export default function NetworkGlobe({ nodes = [] }) {
     // ─────────────────────────────────────────────────────────────────
 
     // Lighting
-    scene.add(new THREE.AmbientLight(0x334155, 2));
-    const dl1 = new THREE.DirectionalLight(0x6366f1, 3); dl1.position.set(2, 2, 2); scene.add(dl1);
-    const dl2 = new THREE.DirectionalLight(0x8b5cf6, 1.5); dl2.position.set(-2, -1, -1); scene.add(dl2);
+    scene.add(new THREE.AmbientLight(0xc7d2fe, 3));
+    const dl1 = new THREE.DirectionalLight(0x6366f1, 4); dl1.position.set(2, 2, 2); scene.add(dl1);
+    const dl2 = new THREE.DirectionalLight(0xa5b4fc, 2); dl2.position.set(-2, -1, -1); scene.add(dl2);
 
     // Raycaster / drag
     const raycaster = new THREE.Raycaster();
