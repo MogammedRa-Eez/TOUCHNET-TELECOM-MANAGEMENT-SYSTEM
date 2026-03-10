@@ -595,6 +595,31 @@ export default function NetworkGlobe({ nodes = [] }) {
         </div>
       )}
 
+      {/* Alert Feed */}
+      <div className="absolute top-3 left-3 z-20 flex flex-col gap-1.5 pointer-events-none" style={{ maxWidth: 220 }}>
+        {alerts.map((alert) => (
+          <div
+            key={alert.id}
+            className="flex items-start gap-2 px-2.5 py-2 rounded-lg text-[10px] font-semibold animate-bounce"
+            style={{
+              background: alert.type === "offline" ? "rgba(239,68,68,0.92)" : "rgba(251,191,36,0.92)",
+              border: `1px solid ${alert.type === "offline" ? "rgba(220,38,38,0.8)" : "rgba(245,158,11,0.8)"}`,
+              color: alert.type === "offline" ? "#fff" : "#1c1917",
+              boxShadow: `0 2px 12px ${alert.type === "offline" ? "rgba(239,68,68,0.5)" : "rgba(251,191,36,0.4)"}`,
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            <span className="mt-0.5 w-1.5 h-1.5 rounded-full flex-shrink-0 bg-white opacity-90 animate-pulse" />
+            <span>
+              <span className="font-bold">{alert.label}</span>
+              {alert.type === "offline"
+                ? " went offline"
+                : ` latency critical: ${alert.latency}ms`}
+            </span>
+          </div>
+        ))}
+      </div>
+
       {/* Tooltip */}
       {tooltip && (
         <div className="absolute pointer-events-none z-20 px-3 py-2 rounded-lg text-xs font-medium shadow-lg"
