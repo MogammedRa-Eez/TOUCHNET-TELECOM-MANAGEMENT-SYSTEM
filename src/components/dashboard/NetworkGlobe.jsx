@@ -522,16 +522,7 @@ export default function NetworkGlobe({ nodes = [] }) {
         </div>
       )}
 
-      {/* Wifi Icon */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <svg viewBox="0 0 24 24" className="w-16 h-16" fill="none" stroke="rgba(99,102,241,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-          style={{ filter: "drop-shadow(0 0 12px rgba(99,102,241,0.5))" }}>
-          <path d="M5 12.55a11 11 0 0 1 14.08 0" />
-          <path d="M1.42 9a16 16 0 0 1 21.16 0" />
-          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-          <circle cx="12" cy="20" r="1" fill="rgba(99,102,241,0.6)" stroke="none" />
-        </svg>
-      </div>
+
     </div>
   );
 }
