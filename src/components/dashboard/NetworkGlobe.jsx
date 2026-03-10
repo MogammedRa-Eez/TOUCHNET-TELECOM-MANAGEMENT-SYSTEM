@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { base44 } from "@/api/base44Client";
 
 const NODE_PTS = [
   { lat: -26.2, lon: 28.0,  status: "online",      label: "Johannesburg",  latency: 12,  signal: 95 },
@@ -166,21 +165,12 @@ function latLonToVec3(lat, lon, r = 1.02) {
   );
 }
 
-const LATENCY_THRESHOLD = 200; // ms — alert if exceeded
-
 export default function NetworkGlobe({ nodes = [] }) {
   const mountRef   = useRef(null);
   const sceneRef   = useRef(null);
   const [tooltip,     setTooltip]     = useState(null);
-  const [pinnedNode,  setPinnedNode]  = useState(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
-  const heatmapRef = useRef(null);
-  const [alerts, setAlerts] = useState([]);
-  const [liveNodes, setLiveNodes] = useState(NODE_PTS.map(n => ({ ...n })));
-  const alertRingsRef = useRef([]);
-  const dotGroupRef = useRef(null);
-  const dotMeshesRef = useRef([]);
-  const [cmdState, setCmdState] = useState({}); // { [nodeLabel]: { loading, result, error } }
+  const heatmapRef = useRef(null); // THREE.Group ref so we can toggle
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -267,7 +257,6 @@ export default function NetworkGlobe({ nodes = [] }) {
     const statusColor = { online: 0x34d399, offline: 0xef4444, degraded: 0xfbbf24, maintenance: 0x818cf8 };
     const dotMeshes   = [];
     const dotGroup    = new THREE.Group();
-    const alertRings  = [];
     NODE_PTS.forEach((pt) => {
       const pos    = latLonToVec3(pt.lat, pt.lon);
       const dot    = new THREE.Mesh(
@@ -286,23 +275,8 @@ export default function NetworkGlobe({ nodes = [] }) {
       pulse.position.copy(pos);
       pulse.lookAt(new THREE.Vector3(0, 0, 0));
       dotGroup.add(pulse);
-
-      // Alert ring — hidden by default, shown when node is critical
-      const isAlert = pt.status === "offline" || pt.latency >= LATENCY_THRESHOLD;
-      const alertRing = new THREE.Mesh(
-        new THREE.RingGeometry(0.055, 0.085, 32),
-        new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: isAlert ? 0.7 : 0, side: THREE.DoubleSide })
-      );
-      alertRing.position.copy(pos);
-      alertRing.lookAt(new THREE.Vector3(0, 0, 0));
-      alertRing.userData.isAlert = isAlert;
-      dotGroup.add(alertRing);
-      alertRings.push(alertRing);
     });
     scene.add(dotGroup);
-    dotGroupRef.current   = dotGroup;
-    dotMeshesRef.current  = dotMeshes;
-    alertRingsRef.current = alertRings;
 
     // Arcs
     function arcBetween(p1, p2, color = 0x6366f1) {
@@ -401,16 +375,9 @@ export default function NetworkGlobe({ nodes = [] }) {
       }
       dotGroup.children.forEach((child, i) => {
         if (child.geometry?.type === "RingGeometry") {
-          if (child.userData.isAlert) {
-            // Fast red pulse for alert rings
-            child.material.opacity = 0.4 + 0.6 * Math.abs(Math.sin(t * 5 + i));
-            const s = 1 + 0.5 * Math.abs(Math.sin(t * 4 + i));
-            child.scale.set(s, s, s);
-          } else {
-            child.material.opacity = 0.2 + 0.3 * Math.abs(Math.sin(t * 2 + i));
-            const s = 1 + 0.3 * Math.abs(Math.sin(t * 1.5 + i));
-            child.scale.set(s, s, s);
-          }
+          child.material.opacity = 0.2 + 0.3 * Math.abs(Math.sin(t * 2 + i));
+          const s = 1 + 0.3 * Math.abs(Math.sin(t * 1.5 + i));
+          child.scale.set(s, s, s);
         }
       });
       ring.rotation.z  += 0.002;
@@ -439,81 +406,6 @@ export default function NetworkGlobe({ nodes = [] }) {
   useEffect(() => {
     if (heatmapRef.current) heatmapRef.current.visible = showHeatmap;
   }, [showHeatmap]);
-
-  // ── Real-time node simulation + alert detection ──────────────────
-  useEffect(() => {
-    const INTERVAL = 4000; // simulate every 4s
-    const timer = setInterval(() => {
-      setLiveNodes(prev => {
-        const updated = prev.map(node => {
-          // Randomly fluctuate latency ±15%, occasional spike/drop
-          const spike  = Math.random() < 0.05; // 5% chance of big spike
-          const recover= Math.random() < 0.08; // 8% chance of recovery
-          let newLatency = node.latency;
-          if (recover && node.latency > 100) {
-            newLatency = Math.max(10, node.latency * 0.6 + Math.random() * 10);
-          } else if (spike) {
-            newLatency = Math.min(1200, node.latency * (1.5 + Math.random()));
-          } else {
-            const delta = (Math.random() - 0.5) * 0.3 * node.latency;
-            newLatency = Math.max(5, node.latency + delta);
-          }
-          newLatency = Math.round(newLatency);
-
-          // Offline nodes occasionally come back
-          let newStatus = node.status;
-          if (node.status === "offline" && Math.random() < 0.1) newStatus = "degraded";
-          else if (node.status === "online" && newLatency > 400 && Math.random() < 0.15) newStatus = "degraded";
-          else if (node.status === "degraded" && newLatency < 80 && Math.random() < 0.2) newStatus = "online";
-
-          return { ...node, latency: newLatency, status: newStatus };
-        });
-
-        // Sync dot userData for live tooltip
-        updated.forEach((node, i) => {
-          if (dotMeshesRef.current[i]) {
-            dotMeshesRef.current[i].userData.latency = node.latency;
-            dotMeshesRef.current[i].userData.status  = node.status;
-          }
-        });
-
-        // Detect newly critical nodes
-        const newAlerts = [];
-        updated.forEach((node, i) => {
-          const prev_node = prev[i];
-          const nowCritical   = node.status === "offline" || node.latency >= LATENCY_THRESHOLD;
-          const wasCritical   = prev_node.status === "offline" || prev_node.latency >= LATENCY_THRESHOLD;
-          if (nowCritical && !wasCritical) {
-            newAlerts.push({
-              id: Date.now() + i,
-              label: node.label,
-              type: node.status === "offline" ? "offline" : "latency",
-              latency: node.latency,
-              status: node.status,
-            });
-          }
-          // Update Three.js alert rings
-          if (alertRingsRef.current[i]) {
-            alertRingsRef.current[i].userData.isAlert = nowCritical;
-            if (!nowCritical) alertRingsRef.current[i].material.opacity = 0;
-          }
-        });
-
-        if (newAlerts.length > 0) {
-          setAlerts(a => [...newAlerts, ...a].slice(0, 6));
-        }
-        return updated;
-      });
-    }, INTERVAL);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Auto-dismiss alerts after 8s
-  useEffect(() => {
-    if (alerts.length === 0) return;
-    const t = setTimeout(() => setAlerts(a => a.slice(0, -1)), 8000);
-    return () => clearTimeout(t);
-  }, [alerts]);
 
   const statusLabel  = { online: "Online", offline: "Offline", degraded: "Degraded", maintenance: "Maintenance" };
   const statusColors = { online: "#34d399", offline: "#ef4444", degraded: "#fbbf24", maintenance: "#818cf8" };
@@ -605,31 +497,6 @@ export default function NetworkGlobe({ nodes = [] }) {
           ))}
         </div>
       )}
-
-      {/* Alert Feed */}
-      <div className="absolute top-3 left-3 z-20 flex flex-col gap-1.5 pointer-events-none" style={{ maxWidth: 220 }}>
-        {alerts.map((alert) => (
-          <div
-            key={alert.id}
-            className="flex items-start gap-2 px-2.5 py-2 rounded-lg text-[10px] font-semibold animate-bounce"
-            style={{
-              background: alert.type === "offline" ? "rgba(239,68,68,0.92)" : "rgba(251,191,36,0.92)",
-              border: `1px solid ${alert.type === "offline" ? "rgba(220,38,38,0.8)" : "rgba(245,158,11,0.8)"}`,
-              color: alert.type === "offline" ? "#fff" : "#1c1917",
-              boxShadow: `0 2px 12px ${alert.type === "offline" ? "rgba(239,68,68,0.5)" : "rgba(251,191,36,0.4)"}`,
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            <span className="mt-0.5 w-1.5 h-1.5 rounded-full flex-shrink-0 bg-white opacity-90 animate-pulse" />
-            <span>
-              <span className="font-bold">{alert.label}</span>
-              {alert.type === "offline"
-                ? " went offline"
-                : ` latency critical: ${alert.latency}ms`}
-            </span>
-          </div>
-        ))}
-      </div>
 
       {/* Tooltip */}
       {tooltip && (
