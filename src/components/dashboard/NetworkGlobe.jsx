@@ -457,10 +457,10 @@ export default function NetworkGlobe({ nodes = [] }) {
 
   return (
     <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ minHeight: 320 }}>
-      {/* Galaxy background */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 50%, #0d1b3e 0%, #060d1f 55%, #020508 100%)" }}>
-        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full" />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(99,102,241,0.08) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 80% 70%, rgba(139,92,246,0.07) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 55% 50%, rgba(192,21,42,0.05) 0%, transparent 70%)" }} />
+      {/* System-themed background */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 50%, #e0e7ff 0%, #eef2ff 55%, #f0f2f8 100%)" }}>
+        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-20" />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(99,102,241,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 80% 70%, rgba(139,92,246,0.1) 0%, transparent 70%)" }} />
       </div>
 
       <div ref={mountRef} className="absolute inset-0 cursor-grab active:cursor-grabbing" />
