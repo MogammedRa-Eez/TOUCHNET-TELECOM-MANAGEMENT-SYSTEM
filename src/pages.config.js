@@ -53,7 +53,6 @@ import CustomerPortal from './pages/CustomerPortal';
 import CustomerProjectPortal from './pages/CustomerProjectPortal';
 import CustomerSelfService from './pages/CustomerSelfService';
 import Customers from './pages/Customers';
-import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import FibreProjects from './pages/FibreProjects';
 import HRDashboard from './pages/HRDashboard';
@@ -74,7 +73,6 @@ export const PAGES = {
     "CustomerProjectPortal": CustomerProjectPortal,
     "CustomerSelfService": CustomerSelfService,
     "Customers": Customers,
-    "Dashboard": Dashboard,
     "Employees": Employees,
     "FibreProjects": FibreProjects,
     "HRDashboard": HRDashboard,
@@ -88,7 +86,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "Dashboard",
+    mainPage: "AIAssistant",
     Pages: PAGES,
     Layout: __Layout,
 };
