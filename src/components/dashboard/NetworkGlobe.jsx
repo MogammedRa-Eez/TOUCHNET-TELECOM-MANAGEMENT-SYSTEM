@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { base44 } from "@/api/base44Client";
 
 const NODE_PTS = [
   { lat: -26.2, lon: 28.0,  status: "online",      label: "Johannesburg",  latency: 12,  signal: 95 },
