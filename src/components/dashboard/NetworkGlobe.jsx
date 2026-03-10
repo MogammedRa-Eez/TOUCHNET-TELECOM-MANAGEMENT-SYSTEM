@@ -501,7 +501,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       {/* Tooltip */}
       {tooltip && (
         <div className="absolute pointer-events-none z-20 px-3 py-2 rounded-lg text-xs font-medium shadow-lg"
-          style={{ left: tooltip.x + 14, top: tooltip.y - 10, background: "rgba(10,22,40,0.92)", border: `1px solid ${statusColors[tooltip.status] || "#6366f1"}`, color: "#f1f5f9", backdropFilter: "blur(4px)", minWidth: 160 }}>
+          style={{ left: tooltip.x + 14, top: tooltip.y - 10, background: "rgba(255,255,255,0.95)", border: `1px solid ${statusColors[tooltip.status] || "#6366f1"}`, color: "#1e293b", backdropFilter: "blur(4px)", minWidth: 160, boxShadow: "0 4px 20px rgba(99,102,241,0.15)" }}>
           <div className="font-semibold text-white mb-1">{tooltip.label}</div>
           <div className="flex items-center gap-1.5 mb-1">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColors[tooltip.status] }} />
