@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  User, Receipt, TicketCheck, Wifi, LogOut, AlertCircle,
+  User, Receipt, TicketCheck, Wifi, WifiOff, AlertTriangle, LogOut, AlertCircle,
   CheckCircle, Clock, XCircle, ArrowUpCircle, TrendingUp,
   Activity, CreditCard, HeadphonesIcon, Download, Filter,
-  ArrowUpDown, ChevronDown, ChevronUp, Calendar, DollarSign
+  ArrowUpDown, ChevronDown, ChevronUp, Calendar, DollarSign, Zap, Signal
 } from "lucide-react";
 import { format } from "date-fns";
 import CustomerProfileDetail from "@/components/portal/CustomerProfileDetail";
