@@ -219,6 +219,48 @@ Deno.serve(async (req) => {
     return Response.json({ success: true, ...results });
   }
 
+  if (action === "push_paid") {
+    // Push only PAID invoices to Sage
+    const token = await getAccessToken();
+    const results = { invoices_pushed: 0, invoices_skipped: 0, errors: [], pushed_invoices: [] };
+
+    const ledgerData = await sageGet("/ledger_accounts?visible_in=SALES", token).catch(() => ({ $items: [] }));
+    const ledgerAccountId = ledgerData?.$items?.[0]?.id;
+
+    const localInvoices = await base44.asServiceRole.entities.Invoice.list();
+    const paidInvoices = localInvoices.filter(i => i.status === "paid");
+    const localCustomers = await base44.asServiceRole.entities.Customer.list();
+
+    for (const invoice of paidInvoices) {
+      if (invoice.sage_invoice_id) { results.invoices_skipped++; continue; }
+      if (!ledgerAccountId) { results.errors.push("No ledger account found"); break; }
+      const customer = localCustomers.find(c => c.id === invoice.customer_id);
+
+      // Ensure contact exists in Sage
+      let sageContactId = customer?.sage_contact_id;
+      if (!sageContactId && customer) {
+        const contactPayload = customerToSageContact(customer);
+        const createdContact = await sagePost("/contacts", token, contactPayload).catch(e => { results.errors.push(`Contact for ${customer.full_name}: ${e.message}`); return null; });
+        if (createdContact?.id) {
+          sageContactId = createdContact.id;
+          await base44.asServiceRole.entities.Customer.update(customer.id, { sage_contact_id: createdContact.id });
+        }
+      }
+
+      if (!sageContactId) { results.errors.push(`No Sage contact for invoice ${invoice.invoice_number}`); continue; }
+
+      const payload = invoiceToSageInvoice(invoice, sageContactId, ledgerAccountId);
+      const created = await sagePost("/sales_invoices", token, payload).catch(e => { results.errors.push(`Invoice ${invoice.invoice_number}: ${e.message}`); return null; });
+      if (created?.id) {
+        await base44.asServiceRole.entities.Invoice.update(invoice.id, { sage_invoice_id: created.id });
+        results.invoices_pushed++;
+        results.pushed_invoices.push({ number: invoice.invoice_number, customer: invoice.customer_name, amount: invoice.total || invoice.amount, sage_id: created.id });
+      }
+    }
+
+    return Response.json({ success: true, total_paid: paidInvoices.length, ...results });
+  }
+
   if (action === "push") {
     // Push local DB -> Sage
     const token = await getAccessToken();
