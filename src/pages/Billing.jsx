@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Pencil, Trash2, Receipt, DollarSign, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Receipt, DollarSign, AlertCircle, CheckCircle2, FileText } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import InvoiceForm from "../components/billing/InvoiceForm";
@@ -14,6 +14,7 @@ import BatchInvoiceGenerator from "../components/billing/BatchInvoiceGenerator";
 import KPICard from "../components/dashboard/KPICard";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
+import InvoicePDFModal from "@/components/billing/InvoicePDFModal";
 
 const statusColors = {
   draft: { bg: "rgba(100,116,139,0.1)", color: "#64748b", border: "rgba(100,116,139,0.3)" },
@@ -27,6 +28,7 @@ export default function Billing() {
   const { can, loading: rbacLoading } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [pdfInvoice, setPdfInvoice] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
@@ -150,6 +152,9 @@ export default function Billing() {
                     <TableCell className="text-[12px] text-slate-400 capitalize">{inv.payment_method?.replace(/_/g, " ") || "—"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPdfInvoice(inv)} title="Generate PDF / Email">
+                          <FileText className="w-3.5 h-3.5" style={{ color: "#6366f1" }} />
+                        </Button>
                         <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(inv); setShowForm(true); }}>
                           <Pencil className="w-3.5 h-3.5 text-slate-500" />
                         </Button>
@@ -165,6 +170,14 @@ export default function Billing() {
           </Table>
         </div>
       </div>
+
+      {pdfInvoice && (
+        <InvoicePDFModal
+          invoice={pdfInvoice}
+          customer={customers.find(c => c.id === pdfInvoice.customer_id)}
+          onClose={() => setPdfInvoice(null)}
+        />
+      )}
 
       {showForm && (
         <InvoiceForm
