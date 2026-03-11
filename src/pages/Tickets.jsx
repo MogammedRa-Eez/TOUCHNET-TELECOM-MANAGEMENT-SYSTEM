@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock, CheckCircle2 } from "lucide-react";
+import SLAWorkflowPanel from "@/components/tickets/SLAWorkflowPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import TicketForm from "../components/tickets/TicketForm";
