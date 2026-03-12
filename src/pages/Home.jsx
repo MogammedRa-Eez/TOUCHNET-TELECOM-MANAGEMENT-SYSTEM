@@ -119,7 +119,7 @@ export default function Home() {
         <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full text-xs font-semibold text-indigo-300"
           style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}>
           <Activity className="w-3.5 h-3.5" />
-          Fibre ISP Management Platform v2.4
+          TOUCHNET TELECOMMUNICATION MANAGEMENT SYSTEM
         </div>
         <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight max-w-4xl">
           One Platform to Run Your
