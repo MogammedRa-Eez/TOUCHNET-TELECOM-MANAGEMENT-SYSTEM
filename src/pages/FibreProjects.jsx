@@ -100,9 +100,11 @@ export default function FibreProjects() {
           <Button variant="outline" onClick={() => setShowReport(true)} className="gap-2">
             <TrendingUp className="w-4 h-4" /> Reports
           </Button>
-          <Button onClick={() => setShowForm(true)} className="gap-2" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "#fff" }}>
-            <Plus className="w-4 h-4" /> New Project
-          </Button>
+          {isAdmin && (
+            <Button onClick={() => setShowForm(true)} className="gap-2" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "#fff" }}>
+              <Plus className="w-4 h-4" /> New Project
+            </Button>
+          )}
         </div>
       </div>
 
