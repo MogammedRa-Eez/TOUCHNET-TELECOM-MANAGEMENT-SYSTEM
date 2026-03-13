@@ -62,31 +62,6 @@ export default function Billing() {
 
   if (!rbacLoading && !can("billing")) return <AccessDenied />;
 
-  const { data: invoices = [], isLoading } = useQuery({
-    queryKey: ["invoices"],
-    queryFn: () => base44.entities.Invoice.list("-created_date"),
-  });
-
-  const { data: customers = [] } = useQuery({
-    queryKey: ["customers"],
-    queryFn: () => base44.entities.Customer.list(),
-  });
-
-  const createMut = useMutation({
-    mutationFn: (data) => base44.entities.Invoice.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["invoices"] }); setShowForm(false); },
-  });
-
-  const updateMut = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Invoice.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["invoices"] }); setShowForm(false); setEditing(null); },
-  });
-
-  const deleteMut = useMutation({
-    mutationFn: (id) => base44.entities.Invoice.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["invoices"] }),
-  });
-
   const handleSubmit = (data) => {
     if (editing) updateMut.mutate({ id: editing.id, data });
     else createMut.mutate(data);
