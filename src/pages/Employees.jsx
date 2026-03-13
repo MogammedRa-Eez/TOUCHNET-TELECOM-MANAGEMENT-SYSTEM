@@ -137,7 +137,10 @@ export default function Employees() {
     else createMut.mutate(data);
   };
 
-  const filtered = employees.filter(e => {
+  // Non-admins only see their own department
+  const visibleEmployees = isAdmin ? employees : employees.filter(e => e.department === department);
+
+  const filtered = visibleEmployees.filter(e => {
     const matchSearch = !search || e.full_name?.toLowerCase().includes(search.toLowerCase()) || e.email?.toLowerCase().includes(search.toLowerCase());
     const matchDept = deptFilter === "all" || e.department === deptFilter;
     return matchSearch && matchDept;
