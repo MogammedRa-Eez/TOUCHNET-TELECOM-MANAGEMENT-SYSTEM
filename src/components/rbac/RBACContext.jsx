@@ -89,8 +89,11 @@ export function RBACProvider({ children }) {
     return role.permissions?.[permission] === true;
   };
 
+  // isAdmin: true only for the actual app admin or demo admin override
+  const isAdmin = user?.role === "admin" || getDemoRoleOverride()?._isAdmin === true;
+
   return (
-    <RBACContext.Provider value={{ role, user, can, loading, department }}>
+    <RBACContext.Provider value={{ role, user, can, loading, department, isAdmin }}>
       {children}
     </RBACContext.Provider>
   );
