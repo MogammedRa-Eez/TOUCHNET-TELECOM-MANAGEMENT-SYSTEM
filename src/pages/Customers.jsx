@@ -77,14 +77,16 @@ export default function Customers() {
           <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Customer Management</h1>
           <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Manage subscriber accounts and service plans</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm border-indigo-600/40 text-indigo-400 hover:bg-indigo-900/20">
-            <Upload className="w-4 h-4 mr-2" /> Import
-          </Button>
-          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
-            <Plus className="w-4 h-4 mr-2" /> Add Customer
-          </Button>
-        </div>
+        {isAdmin && (
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm border-indigo-600/40 text-indigo-400 hover:bg-indigo-900/20">
+              <Upload className="w-4 h-4 mr-2" /> Import
+            </Button>
+            <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
+              <Plus className="w-4 h-4 mr-2" /> Add Customer
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Filters */}
