@@ -91,7 +91,7 @@ export default function Billing() {
         )}
       </div>
 
-      <BatchInvoiceGenerator onInvoicesCreated={() => queryClient.invalidateQueries({ queryKey: ["invoices"] })} />
+      {isAdmin && <BatchInvoiceGenerator onInvoicesCreated={() => queryClient.invalidateQueries({ queryKey: ["invoices"] })} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KPICard title="Total Collected" value={`R${totalPaid.toLocaleString()}`} icon={CheckCircle2} color="emerald" />
