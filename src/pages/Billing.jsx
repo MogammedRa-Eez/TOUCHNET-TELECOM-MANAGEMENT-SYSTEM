@@ -62,7 +62,7 @@ export default function Billing() {
 
   if (!rbacLoading && !can("billing")) return <AccessDenied />;
 
-  const handleSubmit = (data) => {
+  const handleSubmit2 = (data) => {
     if (editing) updateMut.mutate({ id: editing.id, data });
     else createMut.mutate(data);
   };
