@@ -60,6 +60,11 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route path="/AIAssistant" element={
+        <LayoutWrapper currentPageName="AIAssistant">
+          <AIAssistant />
+        </LayoutWrapper>
+      } />
       <Route path="/DepartmentDashboard" element={
         <LayoutWrapper currentPageName="DepartmentDashboard">
           <DepartmentDashboard />
