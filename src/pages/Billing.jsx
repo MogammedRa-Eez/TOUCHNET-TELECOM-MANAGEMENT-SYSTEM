@@ -25,7 +25,7 @@ const statusColors = {
 };
 
 export default function Billing() {
-  const { can, loading: rbacLoading } = useRBAC();
+  const { can, loading: rbacLoading, isAdmin } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [pdfInvoice, setPdfInvoice] = useState(null);
