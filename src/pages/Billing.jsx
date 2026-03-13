@@ -84,9 +84,11 @@ export default function Billing() {
           <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Billing & Invoices</h1>
           <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Manage invoices and track payments</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)", boxShadow: "0 4px 16px rgba(124,58,237,0.3)" }}>
-          <Plus className="w-4 h-4 mr-2" /> Create Invoice
-        </Button>
+        {isAdmin && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)", boxShadow: "0 4px 16px rgba(124,58,237,0.3)" }}>
+            <Plus className="w-4 h-4 mr-2" /> Create Invoice
+          </Button>
+        )}
       </div>
 
       <BatchInvoiceGenerator onInvoicesCreated={() => queryClient.invalidateQueries({ queryKey: ["invoices"] })} />
