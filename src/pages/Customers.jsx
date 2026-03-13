@@ -159,6 +159,7 @@ export default function Customers() {
                       </span>
                     </TableCell>
                     <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>R{c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
+                    {isAdmin && (
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" title="Invite to portal" onClick={async () => { await base44.users.inviteUser(c.email, "user"); toast.success(`Invite sent to ${c.email}`); }}>
@@ -172,6 +173,7 @@ export default function Customers() {
                         </Button>
                       </div>
                     </TableCell>
+                    )}
                   </TableRow>
                 )})
               )}
