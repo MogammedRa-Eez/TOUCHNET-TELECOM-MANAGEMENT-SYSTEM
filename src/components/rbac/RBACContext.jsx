@@ -50,6 +50,7 @@ export function RBACProvider({ children }) {
           } else {
             setRole(demoOverride);
           }
+          if (demoOverride._department) setDepartment(demoOverride._department);
           setLoading(false);
           return;
         }

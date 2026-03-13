@@ -1,7 +1,52 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Users, ChevronRight, X, Eye } from "lucide-react";
+import { Users, ChevronRight, X, Eye, Building2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+
+const DEPT_PERSONAS = [
+  {
+    name: "Sales Staff",
+    _department: "sales",
+    color: "#6366f1",
+    icon: "💼",
+    permissions: { dashboard: true, customers: true, billing: true, tickets: true, projects: true, ai_assistant: true },
+  },
+  {
+    name: "Projects Engineer",
+    _department: "projects",
+    color: "#0891b2",
+    icon: "🔧",
+    permissions: { dashboard: true, projects: true, tickets: true, network: true, ai_assistant: true },
+  },
+  {
+    name: "Finance Staff",
+    _department: "finance",
+    color: "#10b981",
+    icon: "💰",
+    permissions: { dashboard: true, billing: true, customers: true, view_financials: true, ai_assistant: true },
+  },
+  {
+    name: "Cyber Security",
+    _department: "cyber_security",
+    color: "#f59e0b",
+    icon: "🛡️",
+    permissions: { dashboard: true, network: true, tickets: true, ai_assistant: true },
+  },
+  {
+    name: "Technical Staff",
+    _department: "technical",
+    color: "#8b5cf6",
+    icon: "⚙️",
+    permissions: { dashboard: true, network: true, tickets: true, customers: true, ai_assistant: true },
+  },
+  {
+    name: "HR Staff",
+    _department: "hr",
+    color: "#ec4899",
+    icon: "👥",
+    permissions: { dashboard: true, employees: true, view_salaries: true, ai_assistant: true },
+  },
+];
 
 const DEMO_STORAGE_KEY = "tn_demo_role_override";
 
@@ -102,6 +147,34 @@ export default function DemoUserSwitcher() {
                 {active?.id === role.id && <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />}
               </button>
             ))}
+          </div>
+
+          {/* Department Personas */}
+          <div className="px-4 py-2 flex items-center gap-1.5" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+            <Building2 className="w-3.5 h-3.5 text-slate-400" />
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">By Department</p>
+          </div>
+          <div className="p-2 pt-0 space-y-1">
+            {DEPT_PERSONAS.map(persona => {
+              const isActive = active?._department === persona._department && !active?._isAdmin;
+              return (
+                <button key={persona._department}
+                  onClick={() => switchTo(persona)}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all ${isActive ? "font-bold" : "text-slate-600 hover:bg-slate-50"}`}
+                  style={isActive ? { background: `${persona.color}12`, border: `1px solid ${persona.color}40`, color: persona.color } : {}}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">{persona.icon}</span>
+                    <div className="text-left">
+                      <p className="text-xs font-semibold leading-tight">{persona.name}</p>
+                      <p className="text-[10px] text-slate-400 leading-tight">
+                        {Object.keys(persona.permissions).filter(k => persona.permissions[k]).join(", ")}
+                      </p>
+                    </div>
+                  </div>
+                  {isActive && <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" style={{ color: persona.color }} />}
+                </button>
+              );
+            })}
           </div>
 
           {active && (
