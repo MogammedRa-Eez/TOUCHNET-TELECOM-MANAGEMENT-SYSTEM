@@ -73,7 +73,10 @@ export default function Tickets() {
     else createMut.mutate(data);
   };
 
-  const filtered = tickets.filter(t => {
+  // Non-admins only see tickets for their own department
+  const visibleTickets = isAdmin ? tickets : tickets.filter(t => !department || t.department === department);
+
+  const filtered = visibleTickets.filter(t => {
     const matchSearch = !search || t.subject?.toLowerCase().includes(search.toLowerCase()) || t.ticket_number?.toLowerCase().includes(search.toLowerCase()) || t.customer_name?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || t.status === statusFilter;
     const matchPriority = priorityFilter === "all" || t.priority === priorityFilter;
