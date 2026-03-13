@@ -26,7 +26,7 @@ const STATUS_FILTERS = [
 ];
 
 export default function FibreProjects() {
-  const { can, loading: rbacLoading } = useRBAC();
+  const { can, loading: rbacLoading, isAdmin } = useRBAC();
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
