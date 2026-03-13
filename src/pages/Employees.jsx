@@ -148,7 +148,7 @@ export default function Employees() {
 
   // Group by department for summary
   const deptCounts = {};
-  employees.forEach(e => { deptCounts[e.department] = (deptCounts[e.department] || 0) + 1; });
+  visibleEmployees.forEach(e => { deptCounts[e.department] = (deptCounts[e.department] || 0) + 1; });
 
   const statusStyle = {
     active: { bg: "rgba(16,185,129,0.1)", color: "#10b981" },
