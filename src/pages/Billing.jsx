@@ -154,6 +154,7 @@ export default function Billing() {
                     </TableCell>
                     <TableCell className="text-[12px] text-slate-400">{inv.due_date ? format(new Date(inv.due_date), "MMM d, yyyy") : "—"}</TableCell>
                     <TableCell className="text-[12px] text-slate-400 capitalize">{inv.payment_method?.replace(/_/g, " ") || "—"}</TableCell>
+                    {isAdmin && (
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPdfInvoice(inv)} title="Generate PDF / Email">
@@ -167,6 +168,7 @@ export default function Billing() {
                         </Button>
                       </div>
                     </TableCell>
+                    )}
                   </TableRow>
                 )})
               )}
