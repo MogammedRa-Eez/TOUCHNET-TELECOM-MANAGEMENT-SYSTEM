@@ -9,6 +9,7 @@ import PageNotFound from './lib/PageNotFound';
 import DepartmentDashboard from './pages/DepartmentDashboard';
 import AIAssistant from './pages/AIAssistant';
 import Home from './pages/Home';
+import SystemDemo from './pages/SystemDemo';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -65,6 +66,11 @@ const AuthenticatedApp = () => {
       <Route path="/AIAssistant" element={
         <LayoutWrapper currentPageName="AIAssistant">
           <AIAssistant />
+        </LayoutWrapper>
+      } />
+      <Route path="/SystemDemo" element={
+        <LayoutWrapper currentPageName="SystemDemo">
+          <SystemDemo />
         </LayoutWrapper>
       } />
       <Route path="/DepartmentDashboard" element={
