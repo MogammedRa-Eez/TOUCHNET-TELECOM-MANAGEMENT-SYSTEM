@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 import SalesDashboard from "@/components/dept/SalesDashboard";

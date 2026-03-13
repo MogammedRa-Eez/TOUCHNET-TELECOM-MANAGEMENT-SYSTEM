@@ -61,11 +61,15 @@ export function RBACProvider({ children }) {
           return;
         }
 
-        const roles = await base44.entities.Role.list();
+        const [roles, employees] = await Promise.all([
+          base44.entities.Role.list(),
+          base44.entities.Employee.filter({ email: me?.email }),
+        ]);
         const matched = roles.find(r =>
           Array.isArray(r.assigned_user_emails) &&
           r.assigned_user_emails.includes(me?.email)
         );
+        if (employees?.[0]?.department) setDepartment(employees[0].department);
 
         setRole(matched || { name: "No Role", permissions: {}, is_system: true });
       } catch {
@@ -84,7 +88,7 @@ export function RBACProvider({ children }) {
   };
 
   return (
-    <RBACContext.Provider value={{ role, user, can, loading }}>
+    <RBACContext.Provider value={{ role, user, can, loading, department }}>
       {children}
     </RBACContext.Provider>
   );
