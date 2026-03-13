@@ -163,9 +163,11 @@ export default function Employees() {
           <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Employee Directory</h1>
           <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Manage staff across all departments</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
-          <Plus className="w-4 h-4 mr-2" /> Add Employee
-        </Button>
+        {isAdmin && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
+            <Plus className="w-4 h-4 mr-2" /> Add Employee
+          </Button>
+        )}
       </div>
 
       {/* Department summary */}
