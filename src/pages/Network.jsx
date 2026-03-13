@@ -135,11 +135,10 @@ export default function Network() {
   const [monitoringNode, setMonitoringNode] = useState(null);
   const queryClient = useQueryClient();
 
-  if (!rbacLoading && !can("network")) return <AccessDenied />;
-
   const { data: nodes = [], isLoading } = useQuery({
     queryKey: ["network-nodes"],
     queryFn: () => base44.entities.NetworkNode.list(),
+    enabled: !rbacLoading && can("network"),
   });
 
   const createMut = useMutation({
@@ -156,6 +155,8 @@ export default function Network() {
     mutationFn: (id) => base44.entities.NetworkNode.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["network-nodes"] }),
   });
+
+  if (!rbacLoading && !can("network")) return <AccessDenied />;
 
   const handleSubmit = (data) => {
     if (editing) updateMut.mutate({ id: editing.id, data });

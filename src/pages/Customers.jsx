@@ -32,11 +32,10 @@ export default function Customers() {
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
 
-  if (!rbacLoading && !can("customers")) return <AccessDenied />;
-
   const { data: customers = [], isLoading } = useQuery({
     queryKey: ["customers"],
     queryFn: () => base44.entities.Customer.list("-created_date"),
+    enabled: !rbacLoading && can("customers"),
   });
 
   const createMut = useMutation({
@@ -53,6 +52,8 @@ export default function Customers() {
     mutationFn: (id) => base44.entities.Customer.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["customers"] }),
   });
+
+  if (!rbacLoading && !can("customers")) return <AccessDenied />;
 
   const handleSubmit = (data) => {
     if (editing) {

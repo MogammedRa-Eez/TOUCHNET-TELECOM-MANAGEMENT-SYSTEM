@@ -39,16 +39,16 @@ export default function Tickets() {
   const [priorityFilter, setPriorityFilter] = useState("all");
   const queryClient = useQueryClient();
 
-  if (!rbacLoading && !can("tickets")) return <AccessDenied />;
-
   const { data: tickets = [], isLoading } = useQuery({
     queryKey: ["tickets"],
     queryFn: () => base44.entities.Ticket.list("-created_date"),
+    enabled: !rbacLoading && can("tickets"),
   });
 
   const { data: customers = [] } = useQuery({
     queryKey: ["customers"],
     queryFn: () => base44.entities.Customer.list(),
+    enabled: !rbacLoading && can("tickets"),
   });
 
   const createMut = useMutation({
@@ -65,6 +65,8 @@ export default function Tickets() {
     mutationFn: (id) => base44.entities.Ticket.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tickets"] }),
   });
+
+  if (!rbacLoading && !can("tickets")) return <AccessDenied />;
 
   const handleSubmit = (data) => {
     if (editing) updateMut.mutate({ id: editing.id, data });
