@@ -9,6 +9,7 @@ const DEPT_PERSONAS = [
     _department: "sales",
     color: "#6366f1",
     icon: "💼",
+    _desc: "Customers, Billing (view), Projects, Tickets (sales dept only)",
     permissions: { dashboard: true, customers: true, billing: true, tickets: true, projects: true, ai_assistant: true },
   },
   {
@@ -16,6 +17,7 @@ const DEPT_PERSONAS = [
     _department: "projects",
     color: "#0891b2",
     icon: "🔧",
+    _desc: "Projects, Tickets (projects dept only), Network (view)",
     permissions: { dashboard: true, projects: true, tickets: true, network: true, ai_assistant: true },
   },
   {
@@ -23,6 +25,7 @@ const DEPT_PERSONAS = [
     _department: "finance",
     color: "#10b981",
     icon: "💰",
+    _desc: "Billing, Customers (view), Financial reports",
     permissions: { dashboard: true, billing: true, customers: true, view_financials: true, ai_assistant: true },
   },
   {
@@ -30,6 +33,7 @@ const DEPT_PERSONAS = [
     _department: "cyber_security",
     color: "#f59e0b",
     icon: "🛡️",
+    _desc: "Network, Tickets (cyber dept only)",
     permissions: { dashboard: true, network: true, tickets: true, ai_assistant: true },
   },
   {
@@ -37,6 +41,7 @@ const DEPT_PERSONAS = [
     _department: "technical",
     color: "#8b5cf6",
     icon: "⚙️",
+    _desc: "Network, Tickets (technical dept only), Customers (view)",
     permissions: { dashboard: true, network: true, tickets: true, customers: true, ai_assistant: true },
   },
   {
@@ -44,6 +49,7 @@ const DEPT_PERSONAS = [
     _department: "hr",
     color: "#ec4899",
     icon: "👥",
+    _desc: "Employees (own dept only), Salaries (view)",
     permissions: { dashboard: true, employees: true, view_salaries: true, ai_assistant: true },
   },
 ];
