@@ -27,6 +27,7 @@ const NAV_MORE = [
   { name: "Fibre Projects", page: "FibreProjects",   icon: Network,         perm: "projects" },
   { name: "Employees",      page: "Employees",       icon: UserCog,         perm: "employees" },
   { name: "HR Dashboard",   page: "HRDashboard",     icon: HeartHandshake,  perm: "employees" },
+  { name: "My Department",  page: "DepartmentDashboard", icon: LayoutDashboard, perm: null },
   { name: "Outlook",        page: "OutlookMail",     icon: Mail,            perm: "outlook" },
   { name: "AI Assistant",   page: "AIAssistant",     icon: Bot,             perm: "ai_assistant" },
   { name: "Roles",          page: "RolesManagement", icon: Shield,          perm: "roles_management" },
