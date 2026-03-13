@@ -33,6 +33,7 @@ function buildAllTrue() {
 export function RBACProvider({ children }) {
   const [role, setRole] = useState(null);
   const [user, setUser] = useState(null);
+  const [department, setDepartment] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
