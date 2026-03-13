@@ -31,7 +31,7 @@ const priorityColors = {
 };
 
 export default function Tickets() {
-  const { can, loading: rbacLoading } = useRBAC();
+  const { can, loading: rbacLoading, department, isAdmin } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
