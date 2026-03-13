@@ -166,10 +166,10 @@ export default function Tickets() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                [...Array(5)].map((_, i) => <TableRow key={i} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }}><TableCell colSpan={8}><Skeleton className="h-8 w-full bg-slate-800" /></TableCell></TableRow>)
+                [...Array(5)].map((_, i) => <TableRow key={i} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }}><TableCell colSpan={isAdmin ? 8 : 7}><Skeleton className="h-8 w-full bg-slate-800" /></TableCell></TableRow>)
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-12 text-slate-500">
+                  <TableCell colSpan={isAdmin ? 8 : 7} className="text-center py-12 text-slate-500">
                     <TicketCheck className="w-8 h-8 mx-auto mb-2 text-slate-700" />
                     No tickets found
                   </TableCell>
