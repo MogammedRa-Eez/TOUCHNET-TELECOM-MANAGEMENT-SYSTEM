@@ -193,6 +193,7 @@ export default function Tickets() {
                     </TableCell>
                     <TableCell className="text-[12px] text-slate-400 capitalize">{t.department?.replace(/_/g, " ") || "—"}</TableCell>
                     <TableCell className="text-[12px] text-slate-400">{t.assigned_to || "Unassigned"}</TableCell>
+                    {isAdmin && (
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(t); setShowForm(true); }}>
@@ -203,6 +204,7 @@ export default function Tickets() {
                         </Button>
                       </div>
                     </TableCell>
+                    )}
                   </TableRow>
                 )})
               )}
