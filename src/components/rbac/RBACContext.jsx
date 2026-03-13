@@ -5,7 +5,8 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { base44 } from "@/api/base44Client";
 import { getDemoRoleOverride } from "@/components/layout/DemoUserSwitcher";
 
-const RBACContext = createContext(null);
+const DEFAULT_RBAC = { role: null, user: null, can: () => false, loading: true, department: null };
+const RBACContext = createContext(DEFAULT_RBAC);
 
 export const ALL_PERMISSIONS = [
   { key: "dashboard",        label: "Dashboard",         group: "Pages" },
