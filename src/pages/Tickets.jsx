@@ -102,10 +102,10 @@ export default function Tickets() {
       {/* Quick stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Open", count: tickets.filter(t => t.status === "open").length, color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.2)", icon: Clock },
-          { label: "In Progress", count: tickets.filter(t => t.status === "in_progress").length, color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)", icon: TicketCheck },
-          { label: "Escalated", count: tickets.filter(t => t.status === "escalated").length, color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.2)", icon: AlertTriangle },
-          { label: "Resolved", count: tickets.filter(t => t.status === "resolved").length, color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", icon: CheckCircle2 },
+          { label: "Open", count: visibleTickets.filter(t => t.status === "open").length, color: "#f59e0b", bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.2)", icon: Clock },
+          { label: "In Progress", count: visibleTickets.filter(t => t.status === "in_progress").length, color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)", icon: TicketCheck },
+          { label: "Escalated", count: visibleTickets.filter(t => t.status === "escalated").length, color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.2)", icon: AlertTriangle },
+          { label: "Resolved", count: visibleTickets.filter(t => t.status === "resolved").length, color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", icon: CheckCircle2 },
         ].map(s => (
           <div key={s.label} className="rounded-xl p-4 flex items-center gap-3" style={{ background: "#0a0f2e", border: `1px solid ${s.border}` }}>
             <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: s.bg }}>
