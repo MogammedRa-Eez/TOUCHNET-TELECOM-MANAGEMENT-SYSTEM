@@ -119,7 +119,7 @@ export default function Customers() {
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Connection</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Status</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Rate</TableHead>
-                <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold text-right">Actions</TableHead>
+                {isAdmin && <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
