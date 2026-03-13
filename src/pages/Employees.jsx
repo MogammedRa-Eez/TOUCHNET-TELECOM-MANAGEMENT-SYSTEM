@@ -252,14 +252,16 @@ export default function Employees() {
                 <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: ss.bg, color: ss.color, fontFamily: "'JetBrains Mono', monospace" }}>
                   {emp.status?.replace(/_/g, " ")}
                 </span>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(emp); setShowForm(true); }}>
-                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this employee?")) deleteMut.mutate(emp.id); }}>
-                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                  </Button>
-                </div>
+                {isAdmin && (
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(emp); setShowForm(true); }}>
+                      <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this employee?")) deleteMut.mutate(emp.id); }}>
+                      <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           )})}
