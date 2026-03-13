@@ -172,8 +172,8 @@ export default function DemoUserSwitcher() {
                     <span className="text-base">{persona.icon}</span>
                     <div className="text-left">
                       <p className="text-xs font-semibold leading-tight">{persona.name}</p>
-                      <p className="text-[10px] text-slate-400 leading-tight">
-                        {Object.keys(persona.permissions).filter(k => persona.permissions[k]).join(", ")}
+                      <p className="text-[10px] text-slate-400 leading-tight max-w-[140px] truncate">
+                        {persona._desc}
                       </p>
                     </div>
                   </div>
