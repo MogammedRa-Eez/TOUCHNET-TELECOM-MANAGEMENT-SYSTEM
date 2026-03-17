@@ -107,11 +107,25 @@ TouchNet Sales Team
           <h1 className="text-xl font-bold text-slate-800">Quotes & Proposals</h1>
           <p className="text-xs text-slate-400 mt-0.5 font-mono">Create and send professional quotes to clients</p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowBuilder(true); }} className="gap-2 text-white" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
-          <Plus className="w-4 h-4" /> New Quote
-        </Button>
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+            <button onClick={() => setView("list")} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === "list" ? "bg-slate-800 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}>
+              <List className="w-3.5 h-3.5" /> List
+            </button>
+            <button onClick={() => setView("dashboard")} className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === "dashboard" ? "bg-slate-800 text-white" : "bg-white text-slate-500 hover:bg-slate-50"}`}>
+              <BarChart2 className="w-3.5 h-3.5" /> Dashboard
+            </button>
+          </div>
+          <Button onClick={() => { setEditing(null); setShowBuilder(true); }} className="gap-2 text-white" style={{ background: "linear-gradient(135deg,#e11d48,#9f1239)" }}>
+            <Plus className="w-4 h-4" /> New Quote
+          </Button>
+        </div>
       </div>
 
+      {/* Dashboard View */}
+      {view === "dashboard" && <QuotesDashboard quotes={quotes} />}
+
+      {view === "list" && <>
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
