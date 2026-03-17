@@ -5,7 +5,7 @@ import { createPageUrl } from "./utils";
 import {
   LayoutDashboard, Users, Receipt, TicketCheck, Network, UserCog,
   Bot, Shield, Package, Settings, Mail, HeartHandshake, Menu, X,
-  ChevronDown, Home, Play
+  ChevronDown, Home, Play, FileText
 } from "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
