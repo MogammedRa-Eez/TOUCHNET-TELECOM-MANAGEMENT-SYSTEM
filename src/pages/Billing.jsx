@@ -154,21 +154,23 @@ export default function Billing() {
                     </TableCell>
                     <TableCell className="text-[12px] text-slate-400">{inv.due_date ? format(new Date(inv.due_date), "MMM d, yyyy") : "—"}</TableCell>
                     <TableCell className="text-[12px] text-slate-400 capitalize">{inv.payment_method?.replace(/_/g, " ") || "—"}</TableCell>
-                    {isAdmin && (
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPdfInvoice(inv)} title="Generate PDF / Email">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPdfInvoice(inv)} title="Email / Generate PDF">
                           <FileText className="w-3.5 h-3.5" style={{ color: "#6366f1" }} />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(inv); setShowForm(true); }}>
-                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this invoice?")) deleteMut.mutate(inv.id); }}>
-                          <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                        </Button>
+                        {isAdmin && (
+                          <>
+                            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(inv); setShowForm(true); }}>
+                              <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this invoice?")) deleteMut.mutate(inv.id); }}>
+                              <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </TableCell>
-                    )}
                   </TableRow>
                 )})
               )}
