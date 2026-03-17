@@ -7,6 +7,7 @@ import { Plus, Search, Eye, Pencil, Trash2, FileText, CheckCircle, Clock, XCircl
 import { format } from "date-fns";
 import QuoteBuilder from "@/components/sales/QuoteBuilder";
 import QuotePreview from "@/components/sales/QuotePreview";
+import QuotesDashboard from "@/components/sales/QuotesDashboard";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
