@@ -22,6 +22,7 @@ const STATUS_CONFIG = {
 
 export default function Quotes() {
   const { can, loading: rbacLoading } = useRBAC();
+  const [view, setView] = useState("list"); // "list" | "dashboard"
   const [showBuilder, setShowBuilder] = useState(false);
   const [editing, setEditing] = useState(null);
   const [previewing, setPreviewing] = useState(null);
