@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Eye, Pencil, Trash2, FileText, CheckCircle, Clock, XCircle, Mail } from "lucide-react";
+import { Plus, Search, Eye, Pencil, Trash2, FileText, BarChart2, List, Mail } from "lucide-react";
 import { format } from "date-fns";
 import QuoteBuilder from "@/components/sales/QuoteBuilder";
 import QuotePreview from "@/components/sales/QuotePreview";
