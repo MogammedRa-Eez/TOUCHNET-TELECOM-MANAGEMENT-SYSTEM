@@ -217,7 +217,7 @@ TouchNet Sales Team
         </table>
       </div>
 
-      </>}
+      </div>}
 
       {showBuilder && (
         <QuoteBuilder
