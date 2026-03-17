@@ -125,7 +125,7 @@ TouchNet Sales Team
       {/* Dashboard View */}
       {view === "dashboard" && <QuotesDashboard quotes={quotes} />}
 
-      {view === "list" && <>
+      {view === "list" && <div className="space-y-6">
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
