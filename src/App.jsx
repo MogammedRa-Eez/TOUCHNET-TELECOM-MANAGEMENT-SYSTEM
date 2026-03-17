@@ -74,6 +74,11 @@ const AuthenticatedApp = () => {
           <SystemDemo />
         </LayoutWrapper>
       } />
+      <Route path="/Quotes" element={
+        <LayoutWrapper currentPageName="Quotes">
+          <Quotes />
+        </LayoutWrapper>
+      } />
       <Route path="/DepartmentDashboard" element={
         <LayoutWrapper currentPageName="DepartmentDashboard">
           <DepartmentDashboard />
