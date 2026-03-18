@@ -11,7 +11,27 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields: to, subject, body' }, { status: 400 });
     }
 
-    await base44.integrations.Core.SendEmail({ to, subject, body, from_name: "TouchNet Sales" });
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    if (!RESEND_API_KEY) return Response.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "TouchNet Sales <onboarding@resend.dev>",
+        to: [to],
+        subject,
+        text: body,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      return Response.json({ error: err.message || "Failed to send email" }, { status: res.status });
+    }
 
     return Response.json({ success: true });
   } catch (error) {
