@@ -12,6 +12,7 @@ import ProjectFormModal from "@/components/projects/ProjectFormModal";
 import ProjectDetailModal from "@/components/projects/ProjectDetailModal";
 import ProjectForecastReport from "@/components/projects/ProjectForecastReport";
 import GuidedDemo from "@/components/projects/GuidedDemo";
+import ProjectKanbanBoard from "@/components/projects/ProjectKanbanBoard";
 
 const STATUS_FILTERS = [
   { value: "all", label: "All Projects" },
