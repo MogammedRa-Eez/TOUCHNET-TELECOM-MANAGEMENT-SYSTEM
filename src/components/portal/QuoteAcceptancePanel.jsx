@@ -24,7 +24,7 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded }) {
   const queryClient = useQueryClient();
 
   // Mark as viewed when opened (if still "sent")
-  React.useEffect(() => {
+  useEffect(() => {
     if (quote.status === "sent") {
       base44.entities.Quote.update(quote.id, { status: "viewed", viewed_at: new Date().toISOString() })
         .then(() => queryClient.invalidateQueries({ queryKey: ["portal-quotes"] }));
