@@ -121,6 +121,7 @@ export default function ProjectDetailModal({ project, onClose, onRefresh }) {
           {tab === "Documents" && <ProjectDocumentPanel project={project} />}
           {tab === "Approvals" && <ApprovalPanel project={project} />}
           {tab === "Details" && <ProjectDetailsTab project={project} onSave={updateProject.mutate} saving={updateProject.isPending} />}
+          {tab === "Activity" && <ProjectActivityFeed project={project} />}
         </div>
       </div>
     </div>
