@@ -108,7 +108,7 @@ export default function QuotePreview({ quote, onClose, onEdit, onSendEmail }) {
         </div>
 
         {/* Quote Document */}
-        <div className="w-full max-w-3xl bg-white shadow-2xl" style={{ fontFamily: "'Times New Roman', serif" }}>
+        <div ref={docRef} className="w-full max-w-3xl bg-white shadow-2xl" style={{ fontFamily: "'Times New Roman', serif" }}>
           {/* Logo Header */}
           <div className="px-10 pt-8 pb-6 border-b border-slate-200">
             <div className="border border-slate-200 inline-block p-6 mb-2">
