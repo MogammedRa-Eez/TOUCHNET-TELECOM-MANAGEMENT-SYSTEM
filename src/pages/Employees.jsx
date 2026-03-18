@@ -221,8 +221,8 @@ export default function Employees() {
                     {emp.full_name?.charAt(0)?.toUpperCase() || "?"}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-200 text-[13px]">{emp.full_name}</h3>
-                    <p className="text-[11px] text-slate-500">{emp.role || "No title"}</p>
+                   <h3 className="font-semibold text-slate-800 text-[13px]">{emp.full_name}</h3>
+                   <p className="text-[11px] text-slate-500">{emp.role || "No title"}</p>
                   </div>
                 </div>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md" style={{ background: dc.bg, color: dc.color, border: `1px solid ${dc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>
