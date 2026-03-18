@@ -149,11 +149,11 @@ export default function Tickets() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+      <div className="rounded-xl overflow-hidden bg-white" style={{ border: "1px solid rgba(99,102,241,0.1)" }}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow style={{ background: "#070b1f", borderBottom: "1px solid rgba(99,102,241,0.12)" }}>
+              <TableRow style={{ background: "#f8f9ff", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Ticket #</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Subject</TableHead>
                 <TableHead className="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Customer</TableHead>
