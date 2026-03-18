@@ -94,6 +94,12 @@ export default function CustomerPortal() {
     enabled: !!customer?.id,
   });
 
+  const { data: quotes = [] } = useQuery({
+    queryKey: ["portal-quotes", user?.email],
+    queryFn: () => base44.entities.Quote.filter({ customer_email: user?.email }, "-created_date"),
+    enabled: !!user?.email,
+  });
+
   const handleLogout = () => base44.auth.logout("/");
 
   if (loadingUser || loadingCustomer) {
