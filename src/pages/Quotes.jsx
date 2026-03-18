@@ -33,6 +33,9 @@ export default function Quotes() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [downloadingId, setDownloadingId] = useState(null);
+  const hiddenDocRef = useRef(null);
+  const [pdfQuote, setPdfQuote] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: quotes = [], isLoading } = useQuery({
