@@ -35,6 +35,7 @@ export default function FibreProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showReport, setShowReport] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
+  const [viewMode, setViewMode] = useState("grid"); // "grid" | "kanban"
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["fibre-projects"],
