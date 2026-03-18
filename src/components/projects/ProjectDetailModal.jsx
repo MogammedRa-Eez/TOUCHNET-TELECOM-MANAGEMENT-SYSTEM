@@ -17,8 +17,31 @@ export default function ProjectDetailModal({ project, onClose, onRefresh }) {
   const [tab, setTab] = useState("Tasks");
   const qc = useQueryClient();
 
+  const logActivity = async (title, opts = {}) => {
+    const user = await base44.auth.me().catch(() => null);
+    await base44.entities.ProjectActivity.create({
+      project_id: project.id,
+      quote_number: project.quote_number,
+      actor: user?.email || "System",
+      title,
+      ...opts,
+    });
+    qc.invalidateQueries({ queryKey: ["project-activity", project.id] });
+  };
+
   const updateProject = useMutation({
-    mutationFn: (data) => base44.entities.FibreProject.update(project.id, data),
+    mutationFn: async (data) => {
+      await base44.entities.FibreProject.update(project.id, data);
+      if (data.status && data.status !== project.status) {
+        await logActivity(`Status changed to "${data.status.replace(/_/g," ")}"`, {
+          event_type: "status_change",
+          old_value: project.status,
+          new_value: data.status,
+        });
+      } else {
+        await logActivity("Project details updated", { event_type: "field_update" });
+      }
+    },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["fibre-projects"] }); onRefresh(); },
   });
 
