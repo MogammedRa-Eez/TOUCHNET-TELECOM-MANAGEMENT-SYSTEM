@@ -107,13 +107,13 @@ export default function Tickets() {
           { label: "Escalated", count: visibleTickets.filter(t => t.status === "escalated").length, color: "#ef4444", bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.2)", icon: AlertTriangle },
           { label: "Resolved", count: visibleTickets.filter(t => t.status === "resolved").length, color: "#10b981", bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.2)", icon: CheckCircle2 },
         ].map(s => (
-          <div key={s.label} className="rounded-xl p-4 flex items-center gap-3" style={{ background: "#0a0f2e", border: `1px solid ${s.border}` }}>
+          <div key={s.label} className="rounded-xl p-4 flex items-center gap-3 bg-white" style={{ border: `1px solid ${s.border}` }}>
             <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: s.bg }}>
               <s.icon style={{ width: 18, height: 18, color: s.color }} />
             </div>
             <div>
-              <p className="text-[20px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{s.count}</p>
-              <p className="text-[11px] font-medium" style={{ color: s.color }}>{s.label}</p>
+              <p className="text-[20px] font-bold font-mono" style={{ color: s.color }}>{s.count}</p>
+              <p className="text-[11px] font-medium text-slate-500">{s.label}</p>
             </div>
           </div>
         ))}
