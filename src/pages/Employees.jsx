@@ -186,10 +186,10 @@ export default function Employees() {
         })}
       </div>
 
-      <div className="rounded-xl p-4 flex gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+      <div className="rounded-xl p-4 flex gap-3 bg-white" style={{ border: "1px solid rgba(99,102,241,0.1)" }}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-          <Input placeholder="Search employees..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Input placeholder="Search employees..." className="pl-10" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
 
