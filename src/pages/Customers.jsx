@@ -79,7 +79,7 @@ export default function Customers() {
         </div>
         {isAdmin && (
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm border-indigo-600/40 text-indigo-400 hover:bg-indigo-900/20">
+            <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm gap-2">
               <Upload className="w-4 h-4 mr-2" /> Import
             </Button>
             <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
