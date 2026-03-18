@@ -9,8 +9,9 @@ import ProjectTaskPanel from "./ProjectTaskPanel";
 import ProjectMilestonePanel from "./ProjectMilestonePanel";
 import ProjectDocumentPanel from "./ProjectDocumentPanel";
 import ApprovalPanel from "./ApprovalPanel";
+import ProjectActivityFeed from "./ProjectActivityFeed";
 
-const TABS = ["Tasks", "Milestones", "Documents", "Approvals", "Details"];
+const TABS = ["Tasks", "Milestones", "Documents", "Approvals", "Details", "Activity"];
 
 export default function ProjectDetailModal({ project, onClose, onRefresh }) {
   const [tab, setTab] = useState("Tasks");
