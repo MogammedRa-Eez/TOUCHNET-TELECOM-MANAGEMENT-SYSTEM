@@ -276,6 +276,9 @@ export default function Quotes() {
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPreviewing(q)} title="Preview">
                         <Eye className="w-3.5 h-3.5 text-indigo-500" />
                       </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleDownloadPDF(q)} title="Download PDF" disabled={downloadingId === q.id}>
+                        {downloadingId === q.id ? <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-400" /> : <Download className="w-3.5 h-3.5 text-cyan-500" />}
+                      </Button>
                       {q.customer_email && (
                         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleSendEmail(q)} title="Email client">
                           <Mail className="w-3.5 h-3.5 text-emerald-500" />
