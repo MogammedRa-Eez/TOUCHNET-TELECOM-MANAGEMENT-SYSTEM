@@ -191,15 +191,15 @@ export default function Tickets() {
                     <TableCell>
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{t.status?.replace(/_/g, " ")}</span>
                     </TableCell>
-                    <TableCell className="text-[12px] text-slate-400 capitalize">{t.department?.replace(/_/g, " ") || "—"}</TableCell>
-                    <TableCell className="text-[12px] text-slate-400">{t.assigned_to || "Unassigned"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-500 capitalize">{t.department?.replace(/_/g, " ") || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-500">{t.assigned_to || "Unassigned"}</TableCell>
                     {isAdmin && (
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(t); setShowForm(true); }}>
-                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditing(t); setShowForm(true); }}>
+                          <Pencil className="w-3.5 h-3.5 text-slate-400" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this ticket?")) deleteMut.mutate(t.id); }}>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm("Delete this ticket?")) deleteMut.mutate(t.id); }}>
                           <Trash2 className="w-3.5 h-3.5 text-red-500" />
                         </Button>
                       </div>
