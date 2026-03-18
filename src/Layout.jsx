@@ -32,6 +32,7 @@ const NAV_MORE = [
   { name: "Outlook",        page: "OutlookMail",     icon: Mail,            perm: "outlook" },
   { name: "AI Assistant",   page: "AIAssistant",     icon: Bot,             perm: "ai_assistant" },
   { name: "Roles",          page: "RolesManagement", icon: Shield,          perm: "roles_management" },
+  { name: "Notifications",  page: "NotificationSettings", icon: Bell,        perm: "roles_management" },
   { name: "Settings",       page: "UserSettings",    icon: Settings,        perm: null },
   { name: "System Demo",   page: "SystemDemo",      icon: Play,            perm: null },
 ];
