@@ -7,7 +7,7 @@ import {
   User, Receipt, TicketCheck, Wifi, WifiOff, AlertTriangle, LogOut, AlertCircle,
   CheckCircle, Clock, XCircle, ArrowUpCircle, TrendingUp,
   Activity, CreditCard, HeadphonesIcon, Download, Filter,
-  ArrowUpDown, ChevronDown, ChevronUp, Calendar, DollarSign, Zap, Signal
+  ArrowUpDown, ChevronDown, ChevronUp, Calendar, DollarSign, Zap, Signal, FileText
 } from "lucide-react";
 import { format } from "date-fns";
 import CustomerProfileDetail from "@/components/portal/CustomerProfileDetail";
