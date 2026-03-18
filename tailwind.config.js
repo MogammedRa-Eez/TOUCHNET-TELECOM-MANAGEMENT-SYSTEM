@@ -5,7 +5,8 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["'Plus Jakarta Sans'", '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+  			sans: ["'Outfit'", '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+  			grotesk: ["'Space Grotesk'", 'sans-serif'],
   			mono: ["'JetBrains Mono'", 'monospace'],
   		},
   		borderRadius: {
