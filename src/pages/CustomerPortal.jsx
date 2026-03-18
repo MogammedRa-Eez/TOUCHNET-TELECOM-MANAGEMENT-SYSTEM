@@ -58,6 +58,7 @@ export default function CustomerPortal() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showTicketForm, setShowTicketForm] = useState(false);
+  const [viewingQuote, setViewingQuote] = useState(null);
 
   useEffect(() => {
     base44.auth.me()
