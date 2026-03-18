@@ -61,6 +61,30 @@ export default function Quotes() {
 
   if (!rbacLoading && !can("customers")) return <AccessDenied />;
 
+  const handleDownloadPDF = async (quote) => {
+    setDownloadingId(quote.id);
+    setPdfQuote(quote);
+    // Wait for render
+    await new Promise(r => setTimeout(r, 300));
+    if (hiddenDocRef.current) {
+      const canvas = await html2canvas(hiddenDocRef.current, { scale: 2, useCORS: true, logging: false });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgHeight = (canvas.height * pageWidth) / canvas.width;
+      let yPos = 0, remaining = imgHeight;
+      while (remaining > 0) {
+        pdf.addImage(imgData, "PNG", 0, -yPos, pageWidth, imgHeight);
+        remaining -= pageHeight;
+        if (remaining > 0) { pdf.addPage(); yPos += pageHeight; }
+      }
+      pdf.save(`${quote.quote_number || "quote"}_${quote.customer_name || "client"}.pdf`);
+    }
+    setPdfQuote(null);
+    setDownloadingId(null);
+  };
+
   const handleSave = async (data) => {
     await saveMut.mutateAsync(data);
   };
