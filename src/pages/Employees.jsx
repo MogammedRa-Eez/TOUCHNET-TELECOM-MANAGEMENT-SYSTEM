@@ -231,18 +231,18 @@ export default function Employees() {
               </div>
 
               <div className="space-y-1.5 text-[12px]">
-                <div className="flex items-center gap-2 text-slate-500">
-                  <Mail className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate text-slate-400">{emp.email}</span>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3 h-3 flex-shrink-0 text-slate-400" />
+                  <span className="truncate text-slate-500">{emp.email}</span>
                 </div>
                 {emp.phone && (
-                  <div className="flex items-center gap-2 text-slate-500">
-                    <Phone className="w-3 h-3 flex-shrink-0" />
-                    <span className="text-slate-400">{emp.phone}</span>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-3 h-3 flex-shrink-0 text-slate-400" />
+                    <span className="text-slate-500">{emp.phone}</span>
                   </div>
                 )}
                 {emp.salary > 0 && can("view_salaries") && (
-                  <div className="text-[11px] text-slate-600" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  <div className="text-[11px] text-slate-500 font-mono">
                     R{emp.salary?.toLocaleString()} / yr
                   </div>
                 )}
