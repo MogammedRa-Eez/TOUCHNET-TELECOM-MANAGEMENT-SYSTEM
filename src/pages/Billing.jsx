@@ -145,10 +145,10 @@ export default function Billing() {
                 filtered.map(inv => {
                   const sc = statusColors[inv.status] || statusColors.draft;
                   return (
-                  <TableRow key={inv.id} style={{ borderBottom: "1px solid rgba(124,58,237,0.07)" }} className="transition-colors" onMouseEnter={e => e.currentTarget.style.background="rgba(124,58,237,0.05)"} onMouseLeave={e => e.currentTarget.style.background="transparent"}>
-                    <TableCell className="text-[11px] mono" style={{ color: "#a78bfa" }}>{inv.invoice_number || "—"}</TableCell>
-                    <TableCell className="font-medium text-[13px] text-slate-200">{inv.customer_name}</TableCell>
-                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>R{inv.total?.toFixed(2) || inv.amount?.toFixed(2)}</TableCell>
+                  <TableRow key={inv.id} className="transition-colors hover:bg-slate-50">
+                    <TableCell className="text-[11px] font-mono text-indigo-600">{inv.invoice_number || "—"}</TableCell>
+                    <TableCell className="font-medium text-[13px] text-slate-800">{inv.customer_name}</TableCell>
+                    <TableCell className="font-semibold text-[13px] text-slate-800 font-mono">R{inv.total?.toFixed(2) || inv.amount?.toFixed(2)}</TableCell>
                     <TableCell>
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{inv.status}</span>
                     </TableCell>
