@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields: to, subject, body' }, { status: 400 });
     }
 
-    await base44.asServiceRole.integrations.Core.SendEmail({ to, subject, body, from_name: "TouchNet Sales" });
+    await base44.integrations.Core.SendEmail({ to, subject, body, from_name: "TouchNet Sales" });
 
     return Response.json({ success: true });
   } catch (error) {
