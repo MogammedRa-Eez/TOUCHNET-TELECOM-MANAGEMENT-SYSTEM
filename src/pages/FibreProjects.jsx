@@ -138,9 +138,15 @@ export default function FibreProjects() {
         </div>
       </div>
 
-      {/* Project Grid */}
+      {/* Project Grid / Kanban */}
       {isLoading ? (
         <div className="text-center py-20 text-slate-400">Loading projects...</div>
+      ) : viewMode === "kanban" ? (
+        <ProjectKanbanBoard
+          projects={projects}
+          onStatusChange={handleKanbanStatusChange}
+          onProjectClick={setSelectedProject}
+        />
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 text-slate-400">
           <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
