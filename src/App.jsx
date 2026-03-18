@@ -80,6 +80,11 @@ const AuthenticatedApp = () => {
           <Quotes />
         </LayoutWrapper>
       } />
+      <Route path="/NotificationSettings" element={
+        <LayoutWrapper currentPageName="NotificationSettings">
+          <NotificationSettings />
+        </LayoutWrapper>
+      } />
       <Route path="/DepartmentDashboard" element={
         <LayoutWrapper currentPageName="DepartmentDashboard">
           <DepartmentDashboard />
