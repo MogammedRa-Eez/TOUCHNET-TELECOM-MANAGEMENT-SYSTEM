@@ -61,34 +61,82 @@ export default function Quotes() {
   const handleSendEmail = async (quote) => {
     if (!quote.customer_email) return;
     setSendingEmail(true);
-    const body = `
-Dear ${quote.customer_name},
 
-Please find your quote attached: ${quote.title}
-Quote Reference: ${quote.quote_number}
-${quote.valid_until ? `Valid Until: ${format(new Date(quote.valid_until), "d MMM yyyy")}` : ""}
+    const contractMonths = quote.contract_months || 24;
+    const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f7;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f7;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#0f172a,#1e293b);padding:32px 40px;text-align:center;">
+            <div style="display:inline-block;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:8px;padding:4px 14px;margin-bottom:16px;">
+              <span style="color:#22d3ee;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;">Quote Proposal</span>
+            </div>
+            <h1 style="color:#ffffff;font-size:24px;font-weight:700;margin:0 0 4px;">${quote.title}</h1>
+            <p style="color:rgba(255,255,255,0.5);font-size:13px;margin:0;">Ref: ${quote.quote_number || '—'}</p>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:36px 40px;">
+            <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px;">Dear <strong>${quote.customer_name}</strong>,</p>
+            <p style="color:#6b7280;font-size:14px;line-height:1.7;margin:0 0 28px;">${quote.cover_message || 'Please find your quote attached below. We look forward to doing business with you.'}</p>
 
-Total: R${(quote.total || 0).toFixed(2)}
+            <!-- Quote details box -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:28px;">
+              <tr>
+                <td style="padding:20px 24px;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:6px 0;color:#6b7280;font-size:13px;">Quote Number</td>
+                      <td style="padding:6px 0;color:#0f172a;font-size:13px;font-weight:600;text-align:right;">${quote.quote_number || '—'}</td>
+                    </tr>
+                    ${quote.valid_until ? `<tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Valid Until</td><td style="padding:6px 0;color:#0f172a;font-size:13px;font-weight:600;text-align:right;">${format(new Date(quote.valid_until), "d MMMM yyyy")}</td></tr>` : ''}
+                    <tr>
+                      <td style="padding:6px 0;color:#6b7280;font-size:13px;">Contract Term</td>
+                      <td style="padding:6px 0;color:#0f172a;font-size:13px;font-weight:600;text-align:right;">${contractMonths} months</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px 0 6px;color:#0f172a;font-size:15px;font-weight:700;border-top:1px solid #e2e8f0;">Total (excl. VAT)</td>
+                      <td style="padding:12px 0 6px;font-size:18px;font-weight:800;color:#0891b2;text-align:right;border-top:1px solid #e2e8f0;">R${(quote.subtotal || quote.total || 0).toFixed(2)}/mo</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
 
-${quote.cover_message ? quote.cover_message + "\n\n" : ""}
-Please contact us if you have any questions.
+            <p style="color:#6b7280;font-size:13px;line-height:1.6;margin:0 0 28px;">Please review the full quote and let us know if you have any questions or require any adjustments.</p>
 
-Kind regards,
-TouchNet Sales Team
-    `.trim();
+            <p style="color:#374151;font-size:14px;margin:0;">Warm regards,<br><strong>${quote.salesperson_name || 'TouchNet Sales Team'}</strong><br><span style="color:#6b7280;font-size:12px;">TouchNet Telecommunications</span></p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 40px;text-align:center;">
+            <p style="color:#9ca3af;font-size:11px;margin:0;">151 Katherine Street, Sandton · 010 060 0400 · www.touchnet.co.za</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`.trim();
 
-    await base44.functions.invoke('sendQuoteEmail', {
+    await base44.functions.invoke('sendQuoteEmailGmail', {
       to: quote.customer_email,
       subject: `Quote: ${quote.title} [${quote.quote_number}]`,
-      body,
+      body: htmlBody,
+      quote_id: quote.id,
     });
-    // Mark as sent if still draft
-    if (quote.status === "draft") {
-      await base44.entities.Quote.update(quote.id, { status: "sent", sent_at: new Date().toISOString() });
-      queryClient.invalidateQueries({ queryKey: ["quotes"] });
-    }
+
+    queryClient.invalidateQueries({ queryKey: ["quotes"] });
     setSendingEmail(false);
-    alert("Quote emailed to " + quote.customer_email);
+    alert("Quote emailed via Gmail to " + quote.customer_email);
   };
 
   const filtered = quotes.filter(q => {
