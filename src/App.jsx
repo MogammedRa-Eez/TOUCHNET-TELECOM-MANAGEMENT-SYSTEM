@@ -7,6 +7,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import DepartmentDashboard from './pages/DepartmentDashboard';
+import NotificationSettings from './pages/NotificationSettings';
 import Quotes from './pages/Quotes';
 import AIAssistant from './pages/AIAssistant';
 import Home from './pages/Home';
