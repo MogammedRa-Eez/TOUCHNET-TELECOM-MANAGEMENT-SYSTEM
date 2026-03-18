@@ -215,6 +215,11 @@ export default function CustomerPortal() {
             </TabsTrigger>
           </TabsList>
 
+          {/* Quotes */}
+          <TabsContent value="quotes" className="mt-4">
+            <QuoteHistorySection quotes={quotes} onView={setViewingQuote} />
+          </TabsContent>
+
           {/* Invoices */}
           <TabsContent value="invoices" className="mt-4">
             <InvoiceSection invoices={invoices} customer={customer} />
