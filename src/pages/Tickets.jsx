@@ -179,12 +179,12 @@ export default function Tickets() {
                   const sc = statusColors[t.status] || statusColors.open;
                   const pc = priorityColors[t.priority] || priorityColors.medium;
                   return (
-                  <TableRow key={t.id} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }} className="hover:bg-cyan-500/5 transition-colors">
-                    <TableCell className="text-[11px] text-cyan-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{t.ticket_number || "—"}</TableCell>
+                  <TableRow key={t.id} className="hover:bg-slate-50 transition-colors">
+                    <TableCell className="text-[11px] font-mono text-indigo-600">{t.ticket_number || "—"}</TableCell>
                     <TableCell>
-                      <p className="font-medium text-[13px] text-slate-200 max-w-[200px] truncate">{t.subject}</p>
+                      <p className="font-medium text-[13px] text-slate-800 max-w-[200px] truncate">{t.subject}</p>
                     </TableCell>
-                    <TableCell className="text-[12px] text-slate-400">{t.customer_name || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-500">{t.customer_name || "—"}</TableCell>
                     <TableCell>
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: pc.bg, color: pc.color, fontFamily: "'JetBrains Mono', monospace" }}>{t.priority}</span>
                     </TableCell>
