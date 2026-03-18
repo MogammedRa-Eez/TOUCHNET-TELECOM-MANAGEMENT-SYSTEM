@@ -105,6 +105,25 @@ export default function FibreProjects() {
           </Select>
         </div>
         <div className="flex gap-2">
+          {/* View toggle */}
+          <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+            <button
+              className="px-2.5 py-1.5 transition-colors"
+              style={{ background: viewMode === "grid" ? "#6366f1" : "#fff", color: viewMode === "grid" ? "#fff" : "#64748b" }}
+              onClick={() => setViewMode("grid")}
+              title="Grid view"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              className="px-2.5 py-1.5 transition-colors"
+              style={{ background: viewMode === "kanban" ? "#6366f1" : "#fff", color: viewMode === "kanban" ? "#fff" : "#64748b" }}
+              onClick={() => setViewMode("kanban")}
+              title="Kanban view"
+            >
+              <Kanban className="w-4 h-4" />
+            </button>
+          </div>
           <Button variant="outline" onClick={() => setShowDemo(true)} className="gap-2">
             <Play className="w-4 h-4" /> Demo
           </Button>
