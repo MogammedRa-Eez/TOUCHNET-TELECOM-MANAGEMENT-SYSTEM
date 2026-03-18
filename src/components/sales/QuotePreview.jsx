@@ -53,7 +53,30 @@ const STATUS_CONFIG = {
 
 export default function QuotePreview({ quote, onClose, onEdit, onSendEmail }) {
   if (!quote) return null;
+  const docRef = useRef(null);
+  const [downloading, setDownloading] = useState(false);
   const status = STATUS_CONFIG[quote.status] || STATUS_CONFIG.draft;
+
+  const handleDownloadPDF = async () => {
+    if (!docRef.current) return;
+    setDownloading(true);
+    const canvas = await html2canvas(docRef.current, { scale: 2, useCORS: true, logging: false });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let yPos = 0;
+    let remaining = imgHeight;
+    while (remaining > 0) {
+      pdf.addImage(imgData, "PNG", 0, -yPos, imgWidth, imgHeight);
+      remaining -= pageHeight;
+      if (remaining > 0) { pdf.addPage(); yPos += pageHeight; }
+    }
+    pdf.save(`${quote.quote_number || "quote"}_${quote.customer_name || "client"}.pdf`);
+    setDownloading(false);
+  };
   const includedItems = (quote.line_items || []).filter(i => !i.optional || i.included);
   const optionalItems = (quote.line_items || []).filter(i => i.optional && !i.included);
   const contractMonths = quote.contract_months || 24;
