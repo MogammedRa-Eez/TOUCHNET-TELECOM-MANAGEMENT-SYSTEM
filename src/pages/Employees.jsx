@@ -196,10 +196,10 @@ export default function Employees() {
       {/* Employee cards */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl bg-slate-800" />)}
+          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+        <div className="rounded-xl py-16 text-center text-slate-500 bg-white" style={{ border: "1px solid rgba(99,102,241,0.1)" }}>
           <UserCog className="w-10 h-10 mx-auto mb-3 text-slate-700" />
           <p className="text-[13px]">No employees found</p>
         </div>
