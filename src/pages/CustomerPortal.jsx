@@ -276,6 +276,85 @@ export default function CustomerPortal() {
       {showTicketForm && customer && (
         <SubmitTicketForm customer={customer} onClose={() => setShowTicketForm(false)} />
       )}
+
+      {viewingQuote && (
+        <QuoteAcceptancePanel
+          quote={viewingQuote}
+          onClose={() => setViewingQuote(null)}
+          onResponded={() => setViewingQuote(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+const QUOTE_STATUS_CONFIG = {
+  draft:    { color: "#94a3b8", bg: "rgba(148,163,184,0.12)", label: "Draft" },
+  sent:     { color: "#3b82f6", bg: "rgba(59,130,246,0.12)",  label: "Awaiting Response" },
+  viewed:   { color: "#8b5cf6", bg: "rgba(139,92,246,0.12)",  label: "Viewed" },
+  accepted: { color: "#10b981", bg: "rgba(16,185,129,0.12)",  label: "Accepted" },
+  declined: { color: "#ef4444", bg: "rgba(239,68,68,0.12)",   label: "Declined" },
+  expired:  { color: "#f59e0b", bg: "rgba(245,158,11,0.12)",  label: "Expired" },
+};
+
+function QuoteHistorySection({ quotes, onView }) {
+  if (quotes.length === 0) {
+    return (
+      <div className="rounded-xl p-10 text-center" style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.08)" }}>
+        <FileText className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+        <p className="text-sm text-slate-400">No quotes have been sent to your account yet.</p>
+      </div>
+    );
+  }
+
+  const pending = quotes.filter(q => q.status === "sent" || q.status === "viewed");
+
+  return (
+    <div className="space-y-3">
+      {pending.length > 0 && (
+        <div className="rounded-xl px-4 py-3 flex items-center gap-3" style={{ background: "rgba(59,130,246,0.07)", border: "1px solid rgba(59,130,246,0.2)" }}>
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse flex-shrink-0" />
+          <p className="text-sm font-semibold text-blue-700">
+            You have {pending.length} quote{pending.length > 1 ? "s" : ""} awaiting your response.
+          </p>
+        </div>
+      )}
+      {quotes.map(q => {
+        const sc = QUOTE_STATUS_CONFIG[q.status] || QUOTE_STATUS_CONFIG.draft;
+        const needsAction = q.status === "sent" || q.status === "viewed";
+        return (
+          <div key={q.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-start gap-3 flex-1 min-w-0">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: sc.bg }}>
+                <FileText className="w-4 h-4" style={{ color: sc.color }} />
+              </div>
+              <div className="min-w-0">
+                <p className="font-semibold text-slate-800 text-sm truncate">{q.title}</p>
+                <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                  <span className="text-xs text-indigo-600 font-mono">{q.quote_number}</span>
+                  {q.valid_until && <span className="text-xs text-slate-400">Valid until: {format(new Date(q.valid_until), "d MMM yyyy")}</span>}
+                  {q.total && <span className="text-xs font-semibold text-slate-700">R{q.total.toFixed(2)}</span>}
+                </div>
+                {q.customer_feedback && (
+                  <p className="text-xs text-slate-500 mt-1 italic">Your feedback: "{q.customer_feedback}"</p>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ color: sc.color, background: sc.bg }}>
+                {sc.label}
+              </span>
+              <button
+                onClick={() => onView(q)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90"
+                style={{ background: needsAction ? "linear-gradient(135deg,#6366f1,#8b5cf6)" : "#334155" }}
+              >
+                {needsAction ? "Review & Respond" : "View Quote"}
+              </button>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
