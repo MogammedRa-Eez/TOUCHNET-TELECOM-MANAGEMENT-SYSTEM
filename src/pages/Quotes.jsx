@@ -77,7 +77,7 @@ Kind regards,
 TouchNet Sales Team
     `.trim();
 
-    await base44.integrations.Core.SendEmail({
+    await base44.functions.invoke('sendQuoteEmail', {
       to: quote.customer_email,
       subject: `Quote: ${quote.title} [${quote.quote_number}]`,
       body,
