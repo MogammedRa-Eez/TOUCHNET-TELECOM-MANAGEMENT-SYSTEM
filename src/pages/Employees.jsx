@@ -209,9 +209,9 @@ export default function Employees() {
             const dc = deptColors[emp.department] || deptColors.technical;
             const ss = statusStyle[emp.status] || statusStyle.active;
             return (
-            <div key={emp.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.12)" }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = dc.border}
-              onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
+            <div key={emp.id} className="rounded-xl p-5 transition-all duration-200 group bg-white" style={{ border: "1px solid rgba(99,102,241,0.1)" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = dc.border; e.currentTarget.style.boxShadow = `0 4px 20px ${dc.color}15`; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.1)"; e.currentTarget.style.boxShadow = "none"; }}
             >
               {/* Top accent */}
               <div className="h-[2px] -mt-5 -mx-5 mb-4 rounded-tl-xl rounded-tr-xl" style={{ background: `linear-gradient(90deg, ${dc.color}, transparent)` }} />
