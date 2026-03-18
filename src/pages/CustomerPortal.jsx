@@ -204,6 +204,9 @@ export default function CustomerPortal() {
             <TabsTrigger value="invoices" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold" style={{}}>
               <Receipt className="w-3.5 h-3.5" /> Invoices
             </TabsTrigger>
+            <TabsTrigger value="quotes" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
+              <FileText className="w-3.5 h-3.5" /> Quotes {quotes.filter(q => q.status === "sent" || q.status === "viewed").length > 0 && <span className="ml-0.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] flex items-center justify-center">{quotes.filter(q => q.status === "sent" || q.status === "viewed").length}</span>}
+            </TabsTrigger>
             <TabsTrigger value="tickets" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
               <TicketCheck className="w-3.5 h-3.5" /> Support
             </TabsTrigger>
