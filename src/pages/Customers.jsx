@@ -138,21 +138,21 @@ export default function Customers() {
                 filtered.map(c => {
                   const sc = statusColors[c.status] || statusColors.pending;
                   return (
-                  <TableRow key={c.id} style={{ borderBottom: "1px solid rgba(6,182,212,0.06)" }} className="hover:bg-cyan-500/5 transition-colors">
+                  <TableRow key={c.id} className="hover:bg-slate-50 transition-colors">
                     <TableCell>
                       <div>
-                        <p className="font-medium text-slate-200 text-[13px]">{c.full_name}</p>
-                        <p className="text-[11px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{c.email}</p>
+                        <p className="font-medium text-slate-800 text-[13px]">{c.full_name}</p>
+                        <p className="text-[11px] text-slate-500 font-mono">{c.email}</p>
                       </div>
                     </TableCell>
-                    <TableCell className="text-[11px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{c.account_number || "—"}</TableCell>
+                    <TableCell className="text-[11px] text-slate-500 font-mono">{c.account_number || "—"}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1.5">
-                        <Wifi className="w-3.5 h-3.5 text-cyan-500" />
-                        <span className="text-[12px] text-slate-300">{c.service_plan?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
+                        <Wifi className="w-3.5 h-3.5 text-indigo-400" />
+                        <span className="text-[12px] text-slate-700">{c.service_plan?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-[12px] text-slate-400 capitalize">{c.connection_type || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-500 capitalize">{c.connection_type || "—"}</TableCell>
                     <TableCell>
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>
                         {c.status}
