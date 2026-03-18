@@ -47,6 +47,15 @@ export default function FibreProjects() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["fibre-projects"] }); setShowForm(false); },
   });
 
+  const statusMutation = useMutation({
+    mutationFn: ({ id, status }) => base44.entities.FibreProject.update(id, { status }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["fibre-projects"] }),
+  });
+
+  const handleKanbanStatusChange = (projectId, newStatus) => {
+    statusMutation.mutate({ id: projectId, status: newStatus });
+  };
+
   if (!rbacLoading && !can("projects")) return <AccessDenied />;
 
   const filtered = projects.filter((p) => {
