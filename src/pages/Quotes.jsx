@@ -311,6 +311,13 @@ export default function Quotes() {
         />
       )}
 
+      {/* Hidden render target for PDF generation */}
+      {pdfQuote && (
+        <div style={{ position: "fixed", left: "-9999px", top: 0, width: 900, zIndex: -1 }}>
+          <QuoteDocument quote={pdfQuote} docRef={hiddenDocRef} />
+        </div>
+      )}
+
       {previewing && (
         <QuotePreview
           quote={previewing}
