@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Eye, Pencil, Trash2, FileText, BarChart2, List, Mail, Download, Loader2 } from "lucide-react";
-import { useRef, useState as useRefState } from "react";
+import { useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import QuoteDocument from "@/components/sales/QuoteDocument";
