@@ -93,6 +93,9 @@ export default function QuotePreview({ quote, onClose, onEdit, onSendEmail }) {
                 <FileText className="w-4 h-4" /> Edit
               </Button>
             )}
+            <Button size="sm" variant="outline" className="gap-1 bg-white" onClick={handleDownloadPDF} disabled={downloading}>
+              <Download className="w-4 h-4" /> {downloading ? "Generating…" : "Download PDF"}
+            </Button>
             {onSendEmail && quote.customer_email && (
               <Button size="sm" className="gap-1 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => onSendEmail(quote)}>
                 <Mail className="w-4 h-4" /> Email to Client
