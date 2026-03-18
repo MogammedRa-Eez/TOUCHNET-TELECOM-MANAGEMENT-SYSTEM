@@ -161,10 +161,10 @@ export default function Billing() {
                         </Button>
                         {isAdmin && (
                           <>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(inv); setShowForm(true); }}>
-                              <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditing(inv); setShowForm(true); }}>
+                              <Pencil className="w-3.5 h-3.5 text-slate-400" />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this invoice?")) deleteMut.mutate(inv.id); }}>
+                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm("Delete this invoice?")) deleteMut.mutate(inv.id); }}>
                               <Trash2 className="w-3.5 h-3.5 text-red-500" />
                             </Button>
                           </>
