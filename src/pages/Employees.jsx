@@ -177,10 +177,10 @@ export default function Employees() {
           const isActive = deptFilter === dept;
           return (
             <div key={dept} className="rounded-xl p-3 text-center cursor-pointer transition-all"
-              style={{ background: isActive ? dc.bg : "#0a0f2e", border: `1px solid ${isActive ? dc.border : "rgba(99,102,241,0.12)"}` }}
-              onClick={() => setDeptFilter(deptFilter === dept ? "all" : dept)}>
-              <p className="text-[18px] font-bold text-white" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{deptCounts[dept] || 0}</p>
-              <p className="text-[10px] capitalize" style={{ color: isActive ? dc.color : "#475569" }}>{dept.replace(/_/g, " ")}</p>
+             style={{ background: isActive ? dc.bg : "#ffffff", border: `1px solid ${isActive ? dc.border : "rgba(99,102,241,0.1)"}` }}
+             onClick={() => setDeptFilter(deptFilter === dept ? "all" : dept)}>
+             <p className="text-[18px] font-bold font-mono" style={{ color: isActive ? dc.color : "#1e293b" }}>{deptCounts[dept] || 0}</p>
+             <p className="text-[10px] capitalize" style={{ color: isActive ? dc.color : "#64748b" }}>{dept.replace(/_/g, " ")}</p>
             </div>
           );
         })}
