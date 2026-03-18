@@ -254,10 +254,10 @@ export default function Employees() {
                 </span>
                 {isAdmin && (
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(emp); setShowForm(true); }}>
-                      <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditing(emp); setShowForm(true); }}>
+                      <Pencil className="w-3.5 h-3.5 text-slate-400" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this employee?")) deleteMut.mutate(emp.id); }}>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm("Delete this employee?")) deleteMut.mutate(emp.id); }}>
                       <Trash2 className="w-3.5 h-3.5 text-red-500" />
                     </Button>
                   </div>
