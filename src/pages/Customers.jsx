@@ -158,17 +158,17 @@ export default function Customers() {
                         {c.status}
                       </span>
                     </TableCell>
-                    <TableCell className="font-semibold text-[13px] text-slate-200" style={{ fontFamily: "'JetBrains Mono', monospace" }}>R{c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
+                    <TableCell className="font-semibold text-[13px] text-slate-800 font-mono">R{c.monthly_rate?.toFixed(2) || "0.00"}</TableCell>
                     {isAdmin && (
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" title="Invite to portal" onClick={async () => { await base44.users.inviteUser(c.email, "user"); toast.success(`Invite sent to ${c.email}`); }}>
-                          <Send className="w-3.5 h-3.5 text-cyan-500" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7" title="Invite to portal" onClick={async () => { await base44.users.inviteUser(c.email, "user"); toast.success(`Invite sent to ${c.email}`); }}>
+                          <Send className="w-3.5 h-3.5 text-indigo-400" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(c); setShowForm(true); }}>
-                          <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setEditing(c); setShowForm(true); }}>
+                          <Pencil className="w-3.5 h-3.5 text-slate-400" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this customer?")) deleteMut.mutate(c.id); }}>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { if (confirm("Delete this customer?")) deleteMut.mutate(c.id); }}>
                           <Trash2 className="w-3.5 h-3.5 text-red-500" />
                         </Button>
                       </div>
