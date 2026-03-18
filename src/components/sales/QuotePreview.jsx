@@ -1,7 +1,9 @@
-import React from "react";
-import { X, ExternalLink, FileText, Mail } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { X, ExternalLink, FileText, Mail, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
