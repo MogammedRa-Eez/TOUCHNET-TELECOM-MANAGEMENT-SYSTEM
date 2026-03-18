@@ -152,8 +152,8 @@ export default function Billing() {
                     <TableCell>
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{inv.status}</span>
                     </TableCell>
-                    <TableCell className="text-[12px] text-slate-400">{inv.due_date ? format(new Date(inv.due_date), "MMM d, yyyy") : "—"}</TableCell>
-                    <TableCell className="text-[12px] text-slate-400 capitalize">{inv.payment_method?.replace(/_/g, " ") || "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-500">{inv.due_date ? format(new Date(inv.due_date), "MMM d, yyyy") : "—"}</TableCell>
+                    <TableCell className="text-[12px] text-slate-500 capitalize">{inv.payment_method?.replace(/_/g, " ") || "—"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPdfInvoice(inv)} title="Email / Generate PDF">
