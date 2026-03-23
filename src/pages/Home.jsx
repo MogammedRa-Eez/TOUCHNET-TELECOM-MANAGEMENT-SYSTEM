@@ -151,6 +151,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── CINEMATIC SHOWCASE ── */}
+      <section className="relative z-10 px-6 md:px-12 pb-20">
+        <CinematicShowcase />
+      </section>
+
       {/* ── STATS BAND ── */}
       <section className="relative z-10 px-6 md:px-12 pb-16">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
