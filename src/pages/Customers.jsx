@@ -28,6 +28,7 @@ export default function Customers() {
   const { can, loading: rbacLoading, isAdmin } = useRBAC();
   const [showForm, setShowForm] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
