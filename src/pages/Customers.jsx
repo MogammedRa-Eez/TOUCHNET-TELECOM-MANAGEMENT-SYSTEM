@@ -84,6 +84,9 @@ export default function Customers() {
             <Button variant="outline" onClick={() => setShowImport(true)} className="text-sm gap-2">
               <Upload className="w-4 h-4 mr-2" /> Import
             </Button>
+            <Button variant="outline" onClick={() => setShowOnboarding(true)} className="text-sm gap-2 border-cyan-200 text-cyan-700 hover:bg-cyan-50">
+              <Plus className="w-4 h-4 mr-2" /> Onboard Client
+            </Button>
             <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
               <Plus className="w-4 h-4 mr-2" /> Add Customer
             </Button>
