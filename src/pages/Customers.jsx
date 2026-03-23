@@ -187,6 +187,7 @@ export default function Customers() {
         </div>
       </div>
 
+      {showOnboarding && <OnboardingWizard onClose={() => setShowOnboarding(false)} onComplete={() => queryClient.invalidateQueries({ queryKey: ["customers"] })} />}
       {showImport && <CustomerImport onClose={() => setShowImport(false)} />}
 
       {showForm && (
