@@ -5,6 +5,7 @@ import {
   Wifi, Shield, Zap, LogIn, Loader2, Network, Globe, TicketCheck,
   Users, BarChart3, Activity, ChevronRight, CheckCircle2, Phone, Mail, MapPin
 } from "lucide-react";
+import CinematicShowcase from "@/components/home/CinematicShowcase";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
