@@ -142,6 +142,10 @@ export default function CustomerPortalMain() {
           <TabsContent value="tickets" className="mt-4">
             <PortalTicketsTab customer={customer} user={user} />
           </TabsContent>
+
+          <TabsContent value="documents" className="mt-4">
+            <PortalDocumentsTab customer={customer} user={user} />
+          </TabsContent>
         </Tabs>
       </main>
     </div>
