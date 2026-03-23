@@ -91,6 +91,7 @@ const AuthenticatedApp = () => {
           <DepartmentDashboard />
         </LayoutWrapper>
       } />
+      <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
