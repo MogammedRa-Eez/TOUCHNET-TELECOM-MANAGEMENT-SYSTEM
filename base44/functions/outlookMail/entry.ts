@@ -6,6 +6,10 @@ async function getAccessToken() {
     const tenantId = Deno.env.get("MICROSOFT_TENANT_ID");
     const refreshToken = Deno.env.get("MICROSOFT_REFRESH_TOKEN");
 
+    if (!clientId || !clientSecret || !tenantId || !refreshToken) {
+        throw new Error("Outlook is not configured. Please set MICROSOFT_CLIENT_ID, MICROSOFT_CLIENT_SECRET, MICROSOFT_TENANT_ID, and MICROSOFT_REFRESH_TOKEN in the app secrets.");
+    }
+
     const res = await fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -19,7 +23,7 @@ async function getAccessToken() {
     });
 
     const data = await res.json();
-    if (!data.access_token) throw new Error(data.error_description || "Failed to get access token");
+    if (!data.access_token) throw new Error(data.error_description || "Failed to get Microsoft access token. The refresh token may be expired — please re-authenticate.");
     return data.access_token;
 }
 
