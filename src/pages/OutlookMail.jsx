@@ -115,6 +115,17 @@ export default function OutlookMail() {
                             <div className="flex items-center justify-center h-48">
                                 <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
                             </div>
+                        ) : error ? (
+                            <div className="flex flex-col items-center justify-center h-64 px-8 text-center">
+                                <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
+                                    <Mail className="w-6 h-6 text-red-400" />
+                                </div>
+                                <p className="text-sm font-semibold text-slate-700 mb-1">Outlook Connection Error</p>
+                                <p className="text-xs text-slate-500 max-w-sm leading-relaxed">{error}</p>
+                                <Button variant="outline" size="sm" onClick={loadEmails} className="mt-4">
+                                    <RefreshCw className="w-3.5 h-3.5 mr-1" /> Retry
+                                </Button>
+                            </div>
                         ) : emails.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-48 text-slate-400">
                                 <Mail className="w-8 h-8 mb-2" />
