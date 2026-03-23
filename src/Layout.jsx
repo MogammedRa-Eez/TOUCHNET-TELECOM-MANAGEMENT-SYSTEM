@@ -49,9 +49,10 @@ const NAV_GROUPS = [
   {
     label: "Tools",
     items: [
-      { name: "Outlook",      page: "OutlookMail",  icon: Mail,    perm: "outlook" },
-      { name: "AI Assistant", page: "AIAssistant",  icon: Bot,     perm: "ai_assistant" },
-      { name: "System Demo",  page: "SystemDemo",   icon: Play,    perm: null },
+      { name: "Outlook",        page: "OutlookMail",      icon: Mail,          perm: "outlook" },
+      { name: "AI Assistant",   page: "AIAssistant",      icon: Bot,           perm: "ai_assistant" },
+      { name: "Customer Portal",page: "CustomerPortalMain",icon: HeartHandshake,perm: null },
+      { name: "System Demo",    page: "SystemDemo",       icon: Play,          perm: null },
     ]
   },
   {
