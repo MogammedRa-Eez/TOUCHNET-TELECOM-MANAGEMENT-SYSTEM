@@ -30,8 +30,16 @@ export default function OutlookMail() {
     const loadEmails = async () => {
         setLoading(true);
         setError(null);
-        const res = await invoke("listEmails", { folder: "inbox", top: 30 });
-        setEmails(res.data.emails || []);
+        try {
+            const res = await invoke("listEmails", { folder: "inbox", top: 30 });
+            if (res.data?.error) {
+                setError(res.data.error);
+            } else {
+                setEmails(res.data.emails || []);
+            }
+        } catch (err) {
+            setError("Could not connect to Outlook. The Microsoft refresh token may be missing or expired. Please contact your administrator to reconfigure the Outlook integration.");
+        }
         setLoading(false);
     };
 
