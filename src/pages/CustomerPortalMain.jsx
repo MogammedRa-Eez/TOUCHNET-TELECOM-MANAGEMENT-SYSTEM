@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wifi, Receipt, TicketCheck, LogOut, AlertCircle, Loader2, User } from "lucide-react";
+import { Wifi, Receipt, TicketCheck, LogOut, AlertCircle, Loader2, FolderOpen } from "lucide-react";
 import PortalProjectsTab from "@/components/portal/PortalProjectsTab";
 import PortalInvoicesTab from "@/components/portal/PortalInvoicesTab";
 import PortalTicketsTab from "@/components/portal/PortalTicketsTab";
+import PortalDocumentsTab from "@/components/portal/PortalDocumentsTab";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
