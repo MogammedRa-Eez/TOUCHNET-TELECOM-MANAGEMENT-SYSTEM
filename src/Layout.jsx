@@ -346,7 +346,7 @@ function LayoutInner({ children, currentPageName }) {
 
           {/* Breadcrumb with HUD style */}
           <div className="hidden sm:flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest mono" style={{ color: "#06b6d4", opacity: 0.6 }}>TN://</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest mono" style={{ color: "#06b6d4", opacity: 0.6 }}>TOUCHNET TMS</span>
             {currentItem && (
               <div className="flex items-center gap-1.5">
                 {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: "#06b6d4" }} />}
