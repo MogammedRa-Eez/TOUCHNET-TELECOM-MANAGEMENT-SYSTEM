@@ -126,6 +126,9 @@ export default function CustomerPortalMain() {
             <TabsTrigger value="tickets" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
               <TicketCheck className="w-3.5 h-3.5" /> Support
             </TabsTrigger>
+            <TabsTrigger value="documents" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
+              <FolderOpen className="w-3.5 h-3.5" /> Documents
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="projects" className="mt-4">
