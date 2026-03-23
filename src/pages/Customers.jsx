@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import CustomerForm from "../components/customers/CustomerForm";
 import CustomerImport from "../components/customers/CustomerImport";
+import OnboardingWizard from "../components/customers/OnboardingWizard";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
