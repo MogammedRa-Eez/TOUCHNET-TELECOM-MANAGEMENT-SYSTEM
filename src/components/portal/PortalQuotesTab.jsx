@@ -122,7 +122,7 @@ export default function PortalQuotesTab({ customer }) {
 
             {/* Action */}
             <button
-              onClick={() => setSelected(quote.id)}
+              onClick={() => setSelected(quote)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 flex-shrink-0"
               style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}
             >
