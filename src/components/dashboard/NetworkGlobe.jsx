@@ -333,7 +333,7 @@ export default function NetworkGlobe({ nodes = [] }) {
         const op = s.base + 0.45 * Math.abs(Math.sin(now * s.speed + s.phase));
         ctx.beginPath();
         ctx.arc(s.x / 100 * w, s.y / 100 * h, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${op.toFixed(2)})`;
+        ctx.fillStyle = `rgba(200,220,255,${op.toFixed(2)})`;
         ctx.fill();
       });
       // bright glowing stars
