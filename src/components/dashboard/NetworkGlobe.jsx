@@ -358,10 +358,16 @@ export default function NetworkGlobe({ nodes = [] }) {
 
   return (
     <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ minHeight: 320 }}>
-      {/* System-themed background */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 50%, #e0e7ff 0%, #eef2ff 55%, #f0f2f8 100%)" }}>
-        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-20" />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 20% 30%, rgba(99,102,241,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 80% 70%, rgba(139,92,246,0.1) 0%, transparent 70%)" }} />
+      {/* Futuristic deep-space background */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 40%, #0a1628 0%, #050d1a 50%, #020810 100%)" }}>
+        {/* Star field */}
+        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-90" />
+        {/* Nebula glows */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 15% 25%, rgba(6,182,212,0.07) 0%, transparent 65%), radial-gradient(ellipse 50% 40% at 85% 75%, rgba(99,102,241,0.09) 0%, transparent 65%), radial-gradient(ellipse 40% 35% at 70% 20%, rgba(139,92,246,0.06) 0%, transparent 60%)" }} />
+        {/* Subtle grid lines */}
+        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(rgba(6,182,212,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.04) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+        {/* Horizon glow at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-24" style={{ background: "linear-gradient(to top, rgba(6,182,212,0.06) 0%, transparent 100%)" }} />
       </div>
 
       <div ref={mountRef} className="absolute inset-0 cursor-grab active:cursor-grabbing" />
