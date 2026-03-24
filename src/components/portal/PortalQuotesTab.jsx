@@ -20,6 +20,15 @@ const STATUS_ICON = {
   expired:  Clock,
 };
 
+// Inline wrapper: fetches the full quote object and renders the acceptance panel
+function QuoteDetailView({ quote, onBack }) {
+  return (
+    <div className="rounded-2xl overflow-hidden bg-white shadow-lg border border-slate-200">
+      <QuoteAcceptancePanel quote={quote} onClose={onBack} />
+    </div>
+  );
+}
+
 export default function PortalQuotesTab({ customer }) {
   const [selected, setSelected] = useState(null);
 
