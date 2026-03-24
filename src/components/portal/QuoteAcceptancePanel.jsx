@@ -15,7 +15,7 @@ const BANKING = {
   branchCode: "00 43 05",
 };
 
-export default function QuoteAcceptancePanel({ quote, onClose, onResponded }) {
+export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embedded = false }) {
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [downloading, setDownloading] = useState(false);
