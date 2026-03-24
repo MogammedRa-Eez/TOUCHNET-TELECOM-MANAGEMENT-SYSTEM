@@ -51,6 +51,19 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
     setSubmitting(false);
   };
 
+  const handlePrint = () => {
+    if (!docRef.current) return;
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html><head><title>Quote ${quote.quote_number || ""}</title>
+      <style>body{margin:0;font-family:'Times New Roman',serif;}@media print{body{margin:0;}}</style>
+      </head><body>${docRef.current.outerHTML}</body></html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.onload = () => { printWindow.print(); };
+  };
+
   const handleDownloadPDF = async () => {
     if (!docRef.current) return;
     setDownloading(true);
