@@ -362,6 +362,13 @@ ${COMPANY.name} Billing Team
               Download PDF
             </button>
             <button
+              onClick={handlePrint}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-bold transition-all"
+              style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.25)", color: "#0891b2" }}>
+              <Printer className="w-4 h-4" />
+              Print
+            </button>
+            <button
               onClick={handleEmail}
               disabled={emailLoading || !customerEmail || emailSent}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-bold transition-all disabled:opacity-50"
