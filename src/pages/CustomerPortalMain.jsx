@@ -150,6 +150,10 @@ export default function CustomerPortalMain() {
           <TabsContent value="documents" className="mt-4">
             <PortalDocumentsTab customer={customer} user={user} />
           </TabsContent>
+
+          <TabsContent value="quotes" className="mt-4">
+            <PortalQuotesTab customer={customer} />
+          </TabsContent>
         </Tabs>
       </main>
     </div>
