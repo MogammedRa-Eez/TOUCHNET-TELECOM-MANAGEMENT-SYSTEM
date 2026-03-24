@@ -130,6 +130,9 @@ export default function CustomerPortalMain() {
             <TabsTrigger value="documents" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
               <FolderOpen className="w-3.5 h-3.5" /> Documents
             </TabsTrigger>
+            <TabsTrigger value="quotes" className="gap-1.5 rounded-xl data-[state=active]:text-white text-[12px] font-semibold">
+              <FileText className="w-3.5 h-3.5" /> Quotes
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="projects" className="mt-4">
