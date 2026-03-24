@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { FileText, CheckCircle, XCircle, Clock, Eye, Download, Loader2 } from "lucide-react";
+import { FileText, CheckCircle, XCircle, Clock, Eye, Loader2, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import QuoteAcceptancePanel from "@/components/portal/QuoteAcceptancePanel";
 
