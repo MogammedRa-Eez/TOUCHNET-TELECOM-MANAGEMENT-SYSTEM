@@ -24,7 +24,7 @@ const STATUS_ICON = {
 function QuoteDetailView({ quote, onBack }) {
   return (
     <div className="rounded-2xl overflow-hidden bg-white shadow-lg border border-slate-200">
-      <QuoteAcceptancePanel quote={quote} onClose={onBack} />
+      <QuoteAcceptancePanel quote={quote} onClose={onBack} embedded={true} />
     </div>
   );
 }
