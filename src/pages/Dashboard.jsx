@@ -94,7 +94,7 @@ export default function Dashboard() {
             background: "linear-gradient(135deg, #1e1b4b 0%, #2e1065 60%, #0c1a3e 100%)",
             border: "1px solid rgba(99,102,241,0.2)",
             boxShadow: "0 8px 40px rgba(99,102,241,0.15), 0 2px 8px rgba(0,0,0,0.15)",
-            minHeight: 420
+            minHeight: 600
           }}
         >
           <div
