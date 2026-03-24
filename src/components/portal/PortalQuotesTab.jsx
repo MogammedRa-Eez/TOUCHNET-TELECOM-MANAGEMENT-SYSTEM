@@ -43,9 +43,9 @@ export default function PortalQuotesTab({ customer }) {
           onClick={() => setSelected(null)}
           className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
         >
-          ← Back to Quotes
+          <ArrowLeft className="w-4 h-4" /> Back to Quotes
         </button>
-        <QuoteAcceptancePanel quoteId={selected} />
+        <QuoteDetailView quote={selected} onBack={() => setSelected(null)} />
       </div>
     );
   }
