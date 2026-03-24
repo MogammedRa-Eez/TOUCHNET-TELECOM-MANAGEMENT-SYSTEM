@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { X, Download, Mail, Loader2, CheckCircle, FileText } from "lucide-react";
+import { X, Download, Mail, Loader2, CheckCircle, FileText, Printer } from "lucide-react";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
 

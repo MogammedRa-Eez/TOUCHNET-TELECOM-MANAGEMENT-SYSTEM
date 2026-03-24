@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X, CheckCircle2, XCircle, FileText, ExternalLink, Download, ChevronDown, ChevronUp } from "lucide-react";
+import { X, CheckCircle2, XCircle, FileText, ExternalLink, Download, ChevronDown, ChevronUp, Printer } from "lucide-react";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
