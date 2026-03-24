@@ -236,6 +236,13 @@ export default function InvoicePDFModal({ invoice, customer, onClose }) {
   const [emailSent, setEmailSent] = useState(false);
   const [emailError, setEmailError] = useState(null);
 
+  function handlePrint() {
+    const doc = generatePDF(invoice, customer);
+    const blobUrl = doc.output("bloburl");
+    const win = window.open(blobUrl);
+    win?.addEventListener("load", () => win.print());
+  }
+
   const customerEmail = customer?.email || "";
 
   function handleDownload() {
