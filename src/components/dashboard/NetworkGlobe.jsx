@@ -66,30 +66,50 @@ export default function NetworkGlobe({ nodes = [] }) {
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
 
-    // Globe
+    // Load Earth textures
+    const loader = new THREE.TextureLoader();
+    const earthDay   = loader.load(EARTH_DAY_TEXTURE);
+    const earthBump  = loader.load(EARTH_BUMP_TEXTURE);
+    const earthSpec  = loader.load(EARTH_SPEC_TEXTURE);
+
+    // Globe with real Earth texture
     const globeGeo = new THREE.SphereGeometry(1, 64, 64);
-    const globeMat = new THREE.MeshPhongMaterial({ color: 0x3730a3, emissive: 0x1e1b4b, shininess: 80, transparent: true, opacity: 0.75 });
-    const globe    = new THREE.Mesh(globeGeo, globeMat);
+    const globeMat = new THREE.MeshPhongMaterial({
+      map: earthDay,
+      bumpMap: earthBump,
+      bumpScale: 0.05,
+      specularMap: earthSpec,
+      specular: new THREE.Color(0x4466aa),
+      shininess: 25,
+    });
+    const globe = new THREE.Mesh(globeGeo, globeMat);
     scene.add(globe);
 
-    // Continent overlay
-    const continentGeo = new THREE.SphereGeometry(1.003, 64, 64);
-    const continentMat = new THREE.MeshBasicMaterial({ map: createContinentTexture(), transparent: true, opacity: 1, depthWrite: false });
-    const continentMesh = new THREE.Mesh(continentGeo, continentMat);
+    // Thin atmosphere glow (blue halo around the Earth)
+    scene.add(new THREE.Mesh(
+      new THREE.SphereGeometry(1.02, 32, 32),
+      new THREE.MeshBasicMaterial({ color: 0x4488ff, transparent: true, opacity: 0.08, side: THREE.BackSide })
+    ));
+
+    // Outer atmosphere
+    scene.add(new THREE.Mesh(
+      new THREE.SphereGeometry(1.10, 32, 32),
+      new THREE.MeshBasicMaterial({ color: 0x2266cc, transparent: true, opacity: 0.04, side: THREE.BackSide })
+    ));
+
+    // Cloud / overlay mesh (reuse continentMesh variable name for rotating group sync)
+    const continentMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(1.004, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false })
+    );
     scene.add(continentMesh);
 
-    // Wireframe
+    // Thin wireframe grid on top
     const wireMesh = new THREE.Mesh(
-      new THREE.SphereGeometry(1.005, 24, 24),
-      new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.08 })
+      new THREE.SphereGeometry(1.006, 36, 18),
+      new THREE.MeshBasicMaterial({ color: 0x88aaff, wireframe: true, transparent: true, opacity: 0.04 })
     );
     scene.add(wireMesh);
-
-    // Atmosphere
-    scene.add(new THREE.Mesh(
-      new THREE.SphereGeometry(1.12, 32, 32),
-      new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0.06, side: THREE.BackSide })
-    ));
 
     // Rings
     const ring  = new THREE.Mesh(new THREE.TorusGeometry(1.18, 0.012, 8, 80), new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.35 }));
