@@ -22,11 +22,7 @@ const STATUS_ICON = {
 
 // Inline wrapper: fetches the full quote object and renders the acceptance panel
 function QuoteDetailView({ quote, onBack }) {
-  return (
-    <div className="rounded-2xl overflow-hidden bg-white shadow-lg border border-slate-200">
-      <QuoteAcceptancePanel quote={quote} onClose={onBack} embedded={true} />
-    </div>
-  );
+  return <QuoteAcceptancePanel quote={quote} onClose={onBack} embedded={true} />;
 }
 
 export default function PortalQuotesTab({ customer }) {
