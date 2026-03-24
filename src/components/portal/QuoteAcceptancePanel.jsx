@@ -77,8 +77,8 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
   const isExpired = quote.status === "expired" || (quote.valid_until && new Date(quote.valid_until) < new Date());
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto" style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
-      <div className="min-h-screen flex flex-col items-center py-8 px-4">
+    <div className={embedded ? "" : "fixed inset-0 z-50 flex flex-col overflow-y-auto"} style={embedded ? {} : { background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+      <div className={embedded ? "flex flex-col items-center py-4" : "min-h-screen flex flex-col items-center py-8 px-4"}>
         {/* Toolbar */}
         <div className="w-full max-w-3xl flex items-center justify-between mb-4">
           <button
