@@ -123,7 +123,7 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
-          <div className="w-full h-full" style={{ minHeight: 420 }}>
+          <div className="w-full h-full" style={{ minHeight: 600 }}>
             <NetworkGlobe nodes={nodes} />
           </div>
         </div>
