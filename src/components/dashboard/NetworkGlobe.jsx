@@ -220,10 +220,14 @@ export default function NetworkGlobe({ nodes = [] }) {
     scene.add(wifiGroup);
     // ─────────────────────────────────────────────────────────────────
 
-    // Lighting
-    scene.add(new THREE.AmbientLight(0xc7d2fe, 3));
-    const dl1 = new THREE.DirectionalLight(0x6366f1, 4); dl1.position.set(2, 2, 2); scene.add(dl1);
-    const dl2 = new THREE.DirectionalLight(0xa5b4fc, 2); dl2.position.set(-2, -1, -1); scene.add(dl2);
+    // Realistic lighting — sun from one side, soft fill from the other
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const sunLight = new THREE.DirectionalLight(0xfff5e0, 3.5);
+    sunLight.position.set(3, 1.5, 2);
+    scene.add(sunLight);
+    const fillLight = new THREE.DirectionalLight(0x8899cc, 0.5);
+    fillLight.position.set(-2, -1, -1);
+    scene.add(fillLight);
 
     // Raycaster / drag
     const raycaster = new THREE.Raycaster();
