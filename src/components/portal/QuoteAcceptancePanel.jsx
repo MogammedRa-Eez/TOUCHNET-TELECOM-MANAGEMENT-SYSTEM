@@ -94,13 +94,21 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
       <div className={embedded ? "flex flex-col items-center py-4" : "min-h-screen flex flex-col items-center py-8 px-4"}>
         {/* Toolbar */}
         <div className="w-full max-w-3xl flex items-center justify-between mb-4">
-          <button
-            onClick={handleDownloadPDF}
-            disabled={downloading}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 border border-slate-200 disabled:opacity-60"
-          >
-            <Download className="w-4 h-4" /> {downloading ? "Generating…" : "Download PDF"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDownloadPDF}
+              disabled={downloading}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 border border-slate-200 disabled:opacity-60"
+            >
+              <Download className="w-4 h-4" /> {downloading ? "Generating…" : "Download PDF"}
+            </button>
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 border border-slate-200"
+            >
+              <Printer className="w-4 h-4" /> Print
+            </button>
+          </div>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white">
             <X className="w-4 h-4" />
           </button>
