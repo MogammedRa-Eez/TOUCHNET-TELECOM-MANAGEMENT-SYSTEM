@@ -357,7 +357,7 @@ export default function NetworkGlobe({ nodes = [] }) {
   }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ minHeight: 320 }}>
+    <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ minHeight: 520 }}>
       {/* Futuristic deep-space background */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 30% 40%, #0a1628 0%, #050d1a 50%, #020810 100%)" }}>
         {/* Star field */}
