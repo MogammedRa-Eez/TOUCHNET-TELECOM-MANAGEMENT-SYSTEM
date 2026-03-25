@@ -1,35 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
 
 // ── Weather city definitions ─────────────────────────────────────────────────
 const WEATHER_CITIES = [
-  { lat: -26.2,  lon:  28.0,  label: "Johannesburg" },
-  { lat: -33.9,  lon:  18.4,  label: "Cape Town"    },
-  { lat:  51.5,  lon:  -0.1,  label: "London"       },
-  { lat:  40.7,  lon: -74.0,  label: "New York"     },
-  { lat:  35.7,  lon: 139.7,  label: "Tokyo"        },
-  { lat: -23.5,  lon: -46.6,  label: "São Paulo"    },
-  { lat:   1.3,  lon: 103.8,  label: "Singapore"    },
-  { lat:  48.9,  lon:   2.3,  label: "Paris"        },
-  { lat: -33.9,  lon: 151.2,  label: "Sydney"       },
-  { lat:  55.8,  lon:  37.6,  label: "Moscow"       },
-  { lat:  25.2,  lon:  55.3,  label: "Dubai"        },
-  { lat:  19.1,  lon:  72.9,  label: "Mumbai"       },
+  { lat: -26.2, lon:  28.0, label: "Johannesburg" },
+  { lat: -33.9, lon:  18.4, label: "Cape Town"    },
+  { lat:  51.5, lon:  -0.1, label: "London"       },
+  { lat:  40.7, lon: -74.0, label: "New York"     },
+  { lat:  35.7, lon: 139.7, label: "Tokyo"        },
+  { lat: -23.5, lon: -46.6, label: "São Paulo"    },
+  { lat:   1.3, lon: 103.8, label: "Singapore"    },
+  { lat:  48.9, lon:   2.3, label: "Paris"        },
+  { lat: -33.9, lon: 151.2, label: "Sydney"       },
+  { lat:  55.8, lon:  37.6, label: "Moscow"       },
+  { lat:  25.2, lon:  55.3, label: "Dubai"        },
+  { lat:  19.1, lon:  72.9, label: "Mumbai"       },
 ];
 
-// WMO weather code → emoji + label
+// WMO weather code → emoji + label + effect type
 function weatherInfo(code) {
-  if (code === 0)                    return { icon: "☀️",  label: "Clear" };
-  if (code <= 2)                     return { icon: "⛅",  label: "Partly Cloudy" };
-  if (code === 3)                    return { icon: "☁️",  label: "Overcast" };
-  if (code <= 49)                    return { icon: "🌫️",  label: "Fog" };
-  if (code <= 57)                    return { icon: "🌦️",  label: "Drizzle" };
-  if (code <= 67)                    return { icon: "🌧️",  label: "Rain" };
-  if (code <= 77)                    return { icon: "❄️",  label: "Snow" };
-  if (code <= 82)                    return { icon: "🌧️",  label: "Showers" };
-  if (code <= 86)                    return { icon: "🌨️",  label: "Snow Showers" };
-  if (code <= 99)                    return { icon: "⛈️",  label: "Thunderstorm" };
-  return { icon: "🌡️", label: "Unknown" };
+  if (code === 0)       return { icon: "☀️",  label: "Clear",         effect: "clear"       };
+  if (code <= 2)        return { icon: "⛅",  label: "Partly Cloudy", effect: "partly_cloud" };
+  if (code === 3)       return { icon: "☁️",  label: "Overcast",      effect: "cloud"        };
+  if (code <= 49)       return { icon: "🌫️",  label: "Fog",           effect: "fog"          };
+  if (code <= 57)       return { icon: "🌦️",  label: "Drizzle",       effect: "rain"         };
+  if (code <= 67)       return { icon: "🌧️",  label: "Rain",          effect: "rain"         };
+  if (code <= 77)       return { icon: "❄️",  label: "Snow",          effect: "snow"         };
+  if (code <= 82)       return { icon: "🌧️",  label: "Showers",       effect: "rain"         };
+  if (code <= 86)       return { icon: "🌨️",  label: "Snow Showers",  effect: "snow"         };
+  if (code <= 99)       return { icon: "⛈️",  label: "Thunderstorm",  effect: "thunder"      };
+  return                       { icon: "🌡️",  label: "Unknown",       effect: "none"         };
 }
 
 // ── Network node definitions ─────────────────────────────────────────────────
@@ -72,56 +72,251 @@ function latLonToVec3(lat, lon, r = 1.02) {
   );
 }
 
-// ── Fetch live weather for all cities ────────────────────────────────────────
+// ── Build a canvas-based texture for circular cloud/fog blob ─────────────────
+function makeRadialTexture(color, alpha = 0.6) {
+  const size = 128;
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const ctx = c.getContext("2d");
+  const g = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  g.addColorStop(0, `rgba(${color},${alpha})`);
+  g.addColorStop(0.5, `rgba(${color},${(alpha * 0.4).toFixed(2)})`);
+  g.addColorStop(1, `rgba(${color},0)`);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(c);
+}
+
+// ── Build weather effect group for a single city ──────────────────────────────
+function buildWeatherEffect(lat, lon, effect) {
+  const group = new THREE.Group();
+  const center = latLonToVec3(lat, lon, 1.015);
+
+  // Helper: face-outward orientation
+  const faceOut = (mesh, pos) => {
+    mesh.position.copy(pos);
+    mesh.lookAt(new THREE.Vector3(0, 0, 0));
+    mesh.rotateX(Math.PI);
+  };
+
+  if (effect === "clear") {
+    // Subtle warm golden glow disc
+    const tex  = makeRadialTexture("255,220,80", 0.25);
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.22, 0.22),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    );
+    faceOut(mesh, latLonToVec3(lat, lon, 1.016));
+    group.add(mesh);
+  }
+
+  if (effect === "partly_cloud") {
+    // Small semi-transparent white puff
+    const tex  = makeRadialTexture("230,240,255", 0.45);
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.18, 0.18),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    );
+    faceOut(mesh, latLonToVec3(lat, lon, 1.017));
+    group.add(mesh);
+  }
+
+  if (effect === "cloud" || effect === "fog") {
+    const opacity = effect === "fog" ? 0.55 : 0.65;
+    const size    = effect === "fog" ? 0.28 : 0.22;
+    const color   = effect === "fog" ? "200,200,200" : "220,230,255";
+    const tex  = makeRadialTexture(color, opacity);
+    // Multiple overlapping cloud puffs for a fluffy look
+    for (let k = 0; k < 3; k++) {
+      const offLat = lat + (k - 1) * 0.8;
+      const offLon = lon + (k - 1) * 0.8;
+      const puffPos = latLonToVec3(offLat, offLon, 1.018);
+      const mesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(size, size * 0.7),
+        new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+      );
+      faceOut(mesh, puffPos);
+      group.add(mesh);
+    }
+  }
+
+  if (effect === "rain") {
+    // Cloud base
+    const cloudTex = makeRadialTexture("120,150,200", 0.55);
+    const cloudMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.24, 0.16),
+      new THREE.MeshBasicMaterial({ map: cloudTex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    );
+    faceOut(cloudMesh, latLonToVec3(lat, lon, 1.019));
+    group.add(cloudMesh);
+
+    // Rain streaks — short blue lines radiating slightly inward from surface
+    const outward = center.clone().normalize();
+    const up = new THREE.Vector3(0, 1, 0);
+    const right = new THREE.Vector3().crossVectors(outward, up).normalize();
+    const up2   = new THREE.Vector3().crossVectors(right, outward).normalize();
+
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2;
+      const r     = 0.04 + Math.random() * 0.06;
+      const offset = right.clone().multiplyScalar(Math.cos(angle) * r)
+                           .add(up2.clone().multiplyScalar(Math.sin(angle) * r));
+      const startPt = center.clone().add(offset).normalize().multiplyScalar(1.022);
+      const endPt   = startPt.clone().normalize().multiplyScalar(1.008);
+
+      const geo = new THREE.BufferGeometry().setFromPoints([startPt, endPt]);
+      const line = new THREE.Line(geo,
+        new THREE.LineBasicMaterial({ color: 0x7ab8f5, transparent: true, opacity: 0.7 })
+      );
+      line.userData.rainLine = true;
+      line.userData.phase    = Math.random() * Math.PI * 2;
+      group.add(line);
+    }
+  }
+
+  if (effect === "snow") {
+    // Cloud
+    const cloudTex = makeRadialTexture("200,220,240", 0.5);
+    const cloudMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.22, 0.15),
+      new THREE.MeshBasicMaterial({ map: cloudTex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    );
+    faceOut(cloudMesh, latLonToVec3(lat, lon, 1.019));
+    group.add(cloudMesh);
+
+    // Snowflake sprites (tiny white dots)
+    const outward = center.clone().normalize();
+    const up      = new THREE.Vector3(0, 1, 0);
+    const right   = new THREE.Vector3().crossVectors(outward, up).normalize();
+    const up2     = new THREE.Vector3().crossVectors(right, outward).normalize();
+
+    for (let i = 0; i < 10; i++) {
+      const angle  = (i / 10) * Math.PI * 2;
+      const r      = 0.03 + Math.random() * 0.07;
+      const offset = right.clone().multiplyScalar(Math.cos(angle) * r)
+                          .add(up2.clone().multiplyScalar(Math.sin(angle) * r));
+      const pos = center.clone().add(offset).normalize().multiplyScalar(1.015 + Math.random() * 0.006);
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.003, 4, 4),
+        new THREE.MeshBasicMaterial({ color: 0xddeeff, transparent: true, opacity: 0.85 })
+      );
+      dot.position.copy(pos);
+      dot.userData.snowDot  = true;
+      dot.userData.phase    = Math.random() * Math.PI * 2;
+      group.add(dot);
+    }
+  }
+
+  if (effect === "thunder") {
+    // Dark storm cloud
+    const cloudTex = makeRadialTexture("60,60,80", 0.7);
+    const cloudMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.26, 0.18),
+      new THREE.MeshBasicMaterial({ map: cloudTex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    );
+    faceOut(cloudMesh, latLonToVec3(lat, lon, 1.019));
+    group.add(cloudMesh);
+
+    // Lightning flash disc
+    const flashTex  = makeRadialTexture("255,255,160", 0.8);
+    const flashMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.14, 0.14),
+      new THREE.MeshBasicMaterial({ map: flashTex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    );
+    faceOut(flashMesh, latLonToVec3(lat, lon, 1.020));
+    flashMesh.userData.lightning = true;
+    flashMesh.userData.phase     = Math.random() * Math.PI * 2;
+    group.add(flashMesh);
+  }
+
+  group.userData.effect = effect;
+  return group;
+}
+
+// ── Fetch live weather ────────────────────────────────────────────────────────
 async function fetchWeatherAll() {
-  const lats  = WEATHER_CITIES.map(c => c.lat).join(",");
-  const lons  = WEATHER_CITIES.map(c => c.lon).join(",");
-  const url   = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current_weather=true&hourly=relative_humidity_2m,apparent_temperature,wind_speed_10m&forecast_days=1`;
-  const res   = await fetch(url);
-  const json  = await res.json();
-  // API returns array when multiple locations
-  const arr   = Array.isArray(json) ? json : [json];
+  const lats = WEATHER_CITIES.map(c => c.lat).join(",");
+  const lons = WEATHER_CITIES.map(c => c.lon).join(",");
+  const url  = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current_weather=true&hourly=relative_humidity_2m,apparent_temperature,wind_speed_10m&forecast_days=1`;
+  const res  = await fetch(url);
+  const json = await res.json();
+  const arr  = Array.isArray(json) ? json : [json];
   return WEATHER_CITIES.map((city, i) => {
-    const d = arr[i] || {};
+    const d  = arr[i] || {};
     const cw = d.current_weather || {};
-    const humidity = d.hourly?.relative_humidity_2m?.[0] ?? null;
-    const feelsLike = d.hourly?.apparent_temperature?.[0] ?? null;
-    const wind = d.hourly?.wind_speed_10m?.[0] ?? cw.windspeed ?? null;
     return {
       ...city,
-      temp: cw.temperature ?? null,
-      windspeed: wind,
-      code: cw.weathercode ?? null,
-      humidity,
-      feelsLike,
-      is_day: cw.is_day ?? 1,
+      temp:      cw.temperature  ?? null,
+      windspeed: d.hourly?.wind_speed_10m?.[0] ?? cw.windspeed ?? null,
+      code:      cw.weathercode  ?? null,
+      humidity:  d.hourly?.relative_humidity_2m?.[0]  ?? null,
+      feelsLike: d.hourly?.apparent_temperature?.[0]  ?? null,
+      is_day:    cw.is_day ?? 1,
     };
   });
 }
 
 export default function NetworkGlobe({ nodes = [] }) {
-  const mountRef     = useRef(null);
-  const sceneRef     = useRef(null);
-  const heatmapRef   = useRef(null);
+  const mountRef       = useRef(null);
+  const sceneRef       = useRef(null);
+  const heatmapRef     = useRef(null);
+  const weatherGroupRef = useRef(null);   // THREE.Group with all weather effects
+  const allRotatingRef = useRef([]);       // kept in sync so animate() always sees latest
   const starsCanvasRef = useRef(null);
 
-  const [tooltip,     setTooltip]     = useState(null);
-  const [showHeatmap, setShowHeatmap] = useState(false);
-  const [showWeather, setShowWeather] = useState(false);
-  const [weatherData, setWeatherData] = useState([]);
+  const [tooltip,        setTooltip]        = useState(null);
+  const [showHeatmap,    setShowHeatmap]    = useState(false);
+  const [showWeather,    setShowWeather]    = useState(false);
+  const [weatherData,    setWeatherData]    = useState([]);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError,   setWeatherError]   = useState(null);
 
-  // ── Load weather when panel toggled on ───────────────────────────────────
-  useEffect(() => {
-    if (!showWeather) return;
-    if (weatherData.length > 0) return; // already loaded
+  // ── Load / refresh weather ───────────────────────────────────────────────
+  const loadWeather = useCallback(() => {
     setWeatherLoading(true);
     setWeatherError(null);
     fetchWeatherAll()
       .then(data => { setWeatherData(data); setWeatherLoading(false); })
       .catch(() => { setWeatherError("Failed to load weather data."); setWeatherLoading(false); });
+  }, []);
+
+  useEffect(() => {
+    if (!showWeather) return;
+    if (weatherData.length > 0) return;
+    loadWeather();
   }, [showWeather]);
+
+  // ── Rebuild weather effects on the globe when data arrives ───────────────
+  useEffect(() => {
+    const scene = sceneRef.current?.scene;
+    if (!scene) return;
+
+    // Remove old weather group
+    if (weatherGroupRef.current) {
+      scene.remove(weatherGroupRef.current);
+      // Remove from rotating array
+      allRotatingRef.current = allRotatingRef.current.filter(o => o !== weatherGroupRef.current);
+      weatherGroupRef.current = null;
+    }
+
+    if (!showWeather || weatherData.length === 0) return;
+
+    const wg = new THREE.Group();
+    weatherData.forEach(city => {
+      if (city.code === null) return;
+      const info  = weatherInfo(city.code);
+      const effect = buildWeatherEffect(city.lat, city.lon, info.effect);
+      wg.add(effect);
+    });
+
+    // Match the current globe rotation so it snaps in sync
+    const globeRotY = allRotatingRef.current[0]?.rotation?.y ?? 0;
+    wg.rotation.y = globeRotY;
+
+    scene.add(wg);
+    weatherGroupRef.current = wg;
+    allRotatingRef.current.push(wg);
+  }, [weatherData, showWeather]);
 
   // ── Three.js scene ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -137,6 +332,9 @@ export default function NetworkGlobe({ nodes = [] }) {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
+
+    // Store scene ref so weather effect builder can access it
+    sceneRef.current = { renderer, scene };
 
     const loader    = new THREE.TextureLoader();
     const earthDay  = loader.load(EARTH_DAY_TEXTURE);
@@ -173,7 +371,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       const mesh   = new THREE.Mesh(new THREE.CircleGeometry(blobR, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.38, side: THREE.DoubleSide, depthWrite: false }));
       mesh.position.copy(center); mesh.lookAt(new THREE.Vector3(0,0,0)); mesh.rotateX(Math.PI);
       heatmapGroup.add(mesh);
-      const glow  = new THREE.Mesh(new THREE.RingGeometry(blobR, blobR + 0.04, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false }));
+      const glow = new THREE.Mesh(new THREE.RingGeometry(blobR, blobR + 0.04, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false }));
       glow.position.copy(center); glow.lookAt(new THREE.Vector3(0,0,0)); glow.rotateX(Math.PI);
       heatmapGroup.add(glow);
     });
@@ -200,9 +398,9 @@ export default function NetworkGlobe({ nodes = [] }) {
     // Arcs
     function arcBetween(p1, p2, color = 0x6366f1) {
       const pts = [];
-      for (let t = 0; t <= 1; t += 0.04) {
-        const v = new THREE.Vector3().lerpVectors(p1, p2, t);
-        v.normalize().multiplyScalar(1.02 + 0.22 * Math.sin(Math.PI * t));
+      for (let t2 = 0; t2 <= 1; t2 += 0.04) {
+        const v = new THREE.Vector3().lerpVectors(p1, p2, t2);
+        v.normalize().multiplyScalar(1.02 + 0.22 * Math.sin(Math.PI * t2));
         pts.push(v);
       }
       return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 20, 0.004, 4, false), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.4 }));
@@ -239,6 +437,9 @@ export default function NetworkGlobe({ nodes = [] }) {
     fillLight.position.set(-2, -1, -1);
     scene.add(fillLight);
 
+    const baseRotating = [globe, continentMesh, dotGroup, arcGroup, wireMesh, heatmapGroup, wifiGroup];
+    allRotatingRef.current = baseRotating;
+
     // Interaction
     const raycaster = new THREE.Raycaster();
     const mouseVec  = new THREE.Vector2();
@@ -253,7 +454,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       const worldDots = dotMeshes.map(d => { const c = d.clone(); c.position.copy(d.position).applyMatrix4(dotGroup.matrixWorld); return c; });
       const hits = raycaster.intersectObjects(worldDots);
       if (hits.length > 0) {
-        const idx = worldDots.indexOf(hits[0].object);
+        const idx  = worldDots.indexOf(hits[0].object);
         const data = dotMeshes[idx]?.userData;
         if (data) setTooltip({ x: e.clientX - rect.left, y: e.clientY - rect.top, ...data });
       } else { setTooltip(null); }
@@ -269,16 +470,18 @@ export default function NetworkGlobe({ nodes = [] }) {
     window.addEventListener("mousemove", onMouseMove);
 
     let frameId, t = 0;
-    const allRotating = [globe, continentMesh, dotGroup, arcGroup, wireMesh, heatmapGroup, wifiGroup];
     const animate = () => {
       frameId = requestAnimationFrame(animate);
       t += 0.016;
+      const rotating = allRotatingRef.current;
       if (!isDragging) {
         rotVel.y *= 0.98; rotVel.x *= 0.95;
-        allRotating.forEach(o => { o.rotation.y += 0.0008; });
+        rotating.forEach(o => { o.rotation.y += 0.0008; });
       } else {
-        allRotating.forEach(o => { o.rotation.y += rotVel.y; o.rotation.x += rotVel.x; });
+        rotating.forEach(o => { o.rotation.y += rotVel.y; o.rotation.x += rotVel.x; });
       }
+
+      // Pulse network dots
       dotGroup.children.forEach((child, i) => {
         if (child.geometry?.type === "RingGeometry") {
           child.material.opacity = 0.2 + 0.3 * Math.abs(Math.sin(t * 2 + i));
@@ -286,6 +489,28 @@ export default function NetworkGlobe({ nodes = [] }) {
           child.scale.set(s, s, s);
         }
       });
+
+      // Animate weather particles
+      const wg = weatherGroupRef.current;
+      if (wg) {
+        wg.traverse(child => {
+          // Rain lines: flicker opacity
+          if (child.userData.rainLine) {
+            child.material.opacity = 0.3 + 0.7 * Math.abs(Math.sin(t * 4 + child.userData.phase));
+          }
+          // Snow dots: gentle float up/down in opacity
+          if (child.userData.snowDot) {
+            child.material.opacity = 0.4 + 0.5 * Math.abs(Math.sin(t * 1.5 + child.userData.phase));
+          }
+          // Lightning flash: random burst
+          if (child.userData.lightning) {
+            const flash = Math.sin(t * 3 + child.userData.phase);
+            child.material.opacity = flash > 0.85 ? 0.9 : 0.05;
+            if (flash > 0.85) child.userData.phase += 0.8; // stagger next flash
+          }
+        });
+      }
+
       ring.rotation.z  += 0.002;
       ring2.rotation.z -= 0.001;
       renderer.render(scene, camera);
@@ -294,7 +519,7 @@ export default function NetworkGlobe({ nodes = [] }) {
 
     const onResize = () => { if (!mount) return; const w = mount.clientWidth, h = mount.clientHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); };
     window.addEventListener("resize", onResize);
-    sceneRef.current = { renderer, frameId };
+
     return () => {
       cancelAnimationFrame(frameId);
       mount.removeEventListener("mousedown",  onMouseDown);
@@ -349,7 +574,7 @@ export default function NetworkGlobe({ nodes = [] }) {
 
       <div ref={mountRef} className="absolute inset-0 cursor-grab active:cursor-grabbing" />
 
-      {/* ── Top-right control buttons ─────────────────────────────────── */}
+      {/* ── Controls ─────────────────────────────────────────────────── */}
       <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
         <button
           onClick={() => setShowHeatmap(v => !v)}
@@ -361,7 +586,7 @@ export default function NetworkGlobe({ nodes = [] }) {
         <button
           onClick={() => setShowWeather(v => !v)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
-          style={{ background: showWeather ? "rgba(6,182,212,0.15)" : "rgba(255,255,255,0.75)", border: `1px solid ${showWeather ? "rgba(6,182,212,0.5)" : "rgba(6,182,212,0.3)"}`, color: showWeather ? "#0891b2" : "#0891b2", backdropFilter: "blur(6px)", boxShadow: "0 2px 8px rgba(6,182,212,0.1)" }}>
+          style={{ background: showWeather ? "rgba(6,182,212,0.15)" : "rgba(255,255,255,0.75)", border: `1px solid ${showWeather ? "rgba(6,182,212,0.5)" : "rgba(6,182,212,0.3)"}`, color: "#0891b2", backdropFilter: "blur(6px)", boxShadow: "0 2px 8px rgba(6,182,212,0.1)" }}>
           <span className="text-sm">🌍</span>
           {showWeather ? "Weather ON" : "Weather"}
         </button>
@@ -382,53 +607,38 @@ export default function NetworkGlobe({ nodes = [] }) {
 
       {/* ── Live Weather Panel ───────────────────────────────────────── */}
       {showWeather && (
-        <div
-          className="absolute bottom-0 left-0 right-0 z-20 overflow-hidden"
-          style={{ background: "rgba(5,13,26,0.88)", borderTop: "1px solid rgba(6,182,212,0.25)", backdropFilter: "blur(12px)" }}
-        >
-          {/* Header */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 overflow-hidden"
+          style={{ background: "rgba(5,13,26,0.88)", borderTop: "1px solid rgba(6,182,212,0.25)", backdropFilter: "blur(12px)" }}>
           <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: "rgba(6,182,212,0.15)" }}>
             <div className="flex items-center gap-2">
               <span className="text-sm">🌍</span>
               <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#06b6d4" }}>Live Global Weather</span>
               {weatherLoading && <span className="text-[10px] animate-pulse" style={{ color: "#94a3b8" }}>Loading…</span>}
               {!weatherLoading && weatherData.length > 0 && (
-                <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }}>LIVE</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }}>LIVE · Visual effects on globe</span>
               )}
             </div>
-            <div className="flex items-center gap-2">
-              {!weatherLoading && (
-                <button onClick={() => { setWeatherData([]); setWeatherLoading(true); fetchWeatherAll().then(d => { setWeatherData(d); setWeatherLoading(false); }).catch(() => { setWeatherError("Failed."); setWeatherLoading(false); }); }}
-                  className="text-[10px] px-2 py-0.5 rounded" style={{ color: "#06b6d4", border: "1px solid rgba(6,182,212,0.25)", background: "rgba(6,182,212,0.06)" }}>
-                  ↻ Refresh
-                </button>
-              )}
-            </div>
+            {!weatherLoading && (
+              <button onClick={() => { setWeatherData([]); loadWeather(); }}
+                className="text-[10px] px-2 py-0.5 rounded" style={{ color: "#06b6d4", border: "1px solid rgba(6,182,212,0.25)", background: "rgba(6,182,212,0.06)" }}>
+                ↻ Refresh
+              </button>
+            )}
           </div>
-
-          {weatherError && (
-            <p className="text-[11px] text-red-400 px-4 py-2">{weatherError}</p>
-          )}
-
-          {/* City tiles */}
+          {weatherError && <p className="text-[11px] text-red-400 px-4 py-2">{weatherError}</p>}
           <div className="flex gap-3 overflow-x-auto px-4 py-3" style={{ scrollbarWidth: "none" }}>
             {weatherLoading
               ? Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="flex-shrink-0 w-28 h-24 rounded-xl animate-pulse" style={{ background: "rgba(255,255,255,0.05)" }} />
                 ))
               : weatherData.map((city, i) => {
-                  const info = city.code !== null ? weatherInfo(city.code) : { icon: "—", label: "—" };
-                  const temp = city.temp !== null ? `${Math.round(city.temp)}°C` : "—";
-                  const feels = city.feelsLike !== null ? `${Math.round(city.feelsLike)}°C` : null;
+                  const info  = city.code !== null ? weatherInfo(city.code) : { icon: "—", label: "—" };
+                  const temp  = city.temp !== null ? `${Math.round(city.temp)}°C` : "—";
                   const wind  = city.windspeed !== null ? `${Math.round(city.windspeed)} km/h` : null;
-                  const hum   = city.humidity  !== null ? `${Math.round(city.humidity)}%` : null;
-
+                  const hum   = city.humidity  !== null ? `${Math.round(city.humidity)}%`  : null;
                   return (
-                    <div
-                      key={i}
-                      className="flex-shrink-0 rounded-xl px-3 py-2.5 flex flex-col gap-1 min-w-[110px]"
-                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(6,182,212,0.15)", boxShadow: "0 2px 12px rgba(0,0,0,0.3)" }}
-                    >
+                    <div key={i} className="flex-shrink-0 rounded-xl px-3 py-2.5 flex flex-col gap-1 min-w-[110px]"
+                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(6,182,212,0.15)", boxShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold truncate max-w-[70px]" style={{ color: "#e2e8f0" }}>{city.label}</span>
                         <span className="text-lg leading-none">{info.icon}</span>
@@ -436,9 +646,8 @@ export default function NetworkGlobe({ nodes = [] }) {
                       <div className="text-[20px] font-black leading-none" style={{ color: "#06b6d4", fontFamily: "'JetBrains Mono',monospace" }}>{temp}</div>
                       <div className="text-[9px]" style={{ color: "#64748b" }}>{info.label}</div>
                       <div className="flex flex-col gap-0.5 mt-0.5">
-                        {feels && <div className="text-[9px]" style={{ color: "#475569" }}>Feels {feels}</div>}
-                        {wind  && <div className="text-[9px]" style={{ color: "#475569" }}>💨 {wind}</div>}
-                        {hum   && <div className="text-[9px]" style={{ color: "#475569" }}>💧 {hum}</div>}
+                        {wind && <div className="text-[9px]" style={{ color: "#475569" }}>💨 {wind}</div>}
+                        {hum  && <div className="text-[9px]" style={{ color: "#475569" }}>💧 {hum}</div>}
                       </div>
                     </div>
                   );
@@ -457,7 +666,6 @@ export default function NetworkGlobe({ nodes = [] }) {
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColors[tooltip.status] }} />
             <span style={{ color: statusColors[tooltip.status] }}>{statusLabel[tooltip.status] || tooltip.status}</span>
           </div>
-          {/* Inline weather for matching city */}
           {showWeather && (() => {
             const city = weatherData.find(c => c.label === tooltip.label);
             if (!city || city.temp === null) return null;
