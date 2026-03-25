@@ -541,7 +541,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       const rotating = allRotatingRef.current;
       if (!isDragging) {
         rotVel.y *= 0.97; rotVel.x *= 0.94;
-        rotVel.y += 0.0006; // base auto-rotate
+        rotVel.y += 0.00018; // base auto-rotate
         rotating.forEach(o => { o.rotation.y += rotVel.y; o.rotation.x = Math.max(-0.5, Math.min(0.5, o.rotation.x + rotVel.x)); });
       } else {
         rotating.forEach(o => { o.rotation.y += rotVel.y; o.rotation.x = Math.max(-0.5, Math.min(0.5, o.rotation.x + rotVel.x)); });
