@@ -571,19 +571,16 @@ export default function NetworkGlobe({ nodes = [] }) {
         }
       });
 
-      // Data packets along arcs
+      // Data packets along arcs — arc points are in local space, packetGroup rotates with globe
       packetsRef.current.forEach(p => {
         p.progress = (p.progress + p.speed) % 1;
-        const idx = Math.floor(p.progress * (p.arcPts.length - 1));
-        const frac = p.progress * (p.arcPts.length - 1) - idx;
-        if (p.arcPts[idx] && p.arcPts[idx + 1]) {
-          const pos = new THREE.Vector3().lerpVectors(p.arcPts[idx], p.arcPts[idx + 1], frac);
-          p.mesh.position.copy(pos.applyMatrix4(arcGroup.matrixWorld).applyMatrix4(arcGroup.matrixWorld.clone().invert()));
-          // Since arcGroup is rotating, we need world position
-          const worldPos = pos.clone().applyMatrix4(arcGroup.matrixWorld);
-          p.mesh.position.copy(packetGroup.worldToLocal ? worldPos : worldPos);
+        const arcIdx = Math.floor(p.progress * (p.arcPts.length - 1));
+        const frac   = p.progress * (p.arcPts.length - 1) - arcIdx;
+        const ptA    = p.arcPts[arcIdx];
+        const ptB    = p.arcPts[arcIdx + 1] || p.arcPts[arcIdx];
+        if (ptA && ptB) {
+          p.mesh.position.lerpVectors(ptA, ptB, frac);
         }
-        // Pulse opacity
         p.mesh.material.opacity = 0.6 + 0.4 * Math.abs(Math.sin(t * 4 + p.progress * 10));
       });
 
