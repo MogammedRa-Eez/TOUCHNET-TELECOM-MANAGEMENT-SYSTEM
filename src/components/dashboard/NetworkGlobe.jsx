@@ -267,6 +267,7 @@ export default function NetworkGlobe({ nodes = [] }) {
   const [tooltip,        setTooltip]        = useState(null);
   const [showHeatmap,    setShowHeatmap]    = useState(false);
   const [showWeather,    setShowWeather]    = useState(false);
+  const [weatherPanelOpen, setWeatherPanelOpen] = useState(true);
   const [weatherData,    setWeatherData]    = useState([]);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError,   setWeatherError]   = useState(null);
@@ -607,53 +608,72 @@ export default function NetworkGlobe({ nodes = [] }) {
 
       {/* ── Live Weather Panel ───────────────────────────────────────── */}
       {showWeather && (
-        <div className="absolute bottom-0 left-0 right-0 z-20 overflow-hidden"
-          style={{ background: "rgba(5,13,26,0.88)", borderTop: "1px solid rgba(6,182,212,0.25)", backdropFilter: "blur(12px)" }}>
-          <div className="flex items-center justify-between px-4 py-2 border-b" style={{ borderColor: "rgba(6,182,212,0.15)" }}>
+        <div className="absolute bottom-0 left-0 right-0 z-20"
+          style={{ background: "rgba(5,13,26,0.92)", borderTop: "1px solid rgba(6,182,212,0.25)", backdropFilter: "blur(12px)" }}>
+          {/* Header — always visible, acts as toggle */}
+          <div
+            className="flex items-center justify-between px-4 py-2 cursor-pointer select-none"
+            style={{ borderBottom: weatherPanelOpen ? "1px solid rgba(6,182,212,0.15)" : "none" }}
+            onClick={() => setWeatherPanelOpen(v => !v)}
+          >
             <div className="flex items-center gap-2">
               <span className="text-sm">🌍</span>
               <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#06b6d4" }}>Live Global Weather</span>
               {weatherLoading && <span className="text-[10px] animate-pulse" style={{ color: "#94a3b8" }}>Loading…</span>}
               {!weatherLoading && weatherData.length > 0 && (
-                <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }}>LIVE · Visual effects on globe</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }}>LIVE</span>
               )}
             </div>
-            {!weatherLoading && (
-              <button onClick={() => { setWeatherData([]); loadWeather(); }}
-                className="text-[10px] px-2 py-0.5 rounded" style={{ color: "#06b6d4", border: "1px solid rgba(6,182,212,0.25)", background: "rgba(6,182,212,0.06)" }}>
-                ↻ Refresh
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {!weatherLoading && weatherPanelOpen && (
+                <button
+                  onClick={e => { e.stopPropagation(); setWeatherData([]); loadWeather(); }}
+                  className="text-[10px] px-2 py-0.5 rounded"
+                  style={{ color: "#06b6d4", border: "1px solid rgba(6,182,212,0.25)", background: "rgba(6,182,212,0.06)" }}>
+                  ↻ Refresh
+                </button>
+              )}
+              <span className="text-[14px]" style={{ color: "#06b6d4" }}>{weatherPanelOpen ? "▼" : "▲"}</span>
+            </div>
           </div>
-          {weatherError && <p className="text-[11px] text-red-400 px-4 py-2">{weatherError}</p>}
-          <div className="flex gap-3 overflow-x-auto px-4 py-3" style={{ scrollbarWidth: "none" }}>
-            {weatherLoading
-              ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="flex-shrink-0 w-28 h-24 rounded-xl animate-pulse" style={{ background: "rgba(255,255,255,0.05)" }} />
-                ))
-              : weatherData.map((city, i) => {
-                  const info  = city.code !== null ? weatherInfo(city.code) : { icon: "—", label: "—" };
-                  const temp  = city.temp !== null ? `${Math.round(city.temp)}°C` : "—";
-                  const wind  = city.windspeed !== null ? `${Math.round(city.windspeed)} km/h` : null;
-                  const hum   = city.humidity  !== null ? `${Math.round(city.humidity)}%`  : null;
-                  return (
-                    <div key={i} className="flex-shrink-0 rounded-xl px-3 py-2.5 flex flex-col gap-1 min-w-[110px]"
-                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(6,182,212,0.15)", boxShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold truncate max-w-[70px]" style={{ color: "#e2e8f0" }}>{city.label}</span>
-                        <span className="text-lg leading-none">{info.icon}</span>
-                      </div>
-                      <div className="text-[20px] font-black leading-none" style={{ color: "#06b6d4", fontFamily: "'JetBrains Mono',monospace" }}>{temp}</div>
-                      <div className="text-[9px]" style={{ color: "#64748b" }}>{info.label}</div>
-                      <div className="flex flex-col gap-0.5 mt-0.5">
-                        {wind && <div className="text-[9px]" style={{ color: "#475569" }}>💨 {wind}</div>}
-                        {hum  && <div className="text-[9px]" style={{ color: "#475569" }}>💧 {hum}</div>}
-                      </div>
-                    </div>
-                  );
-                })
-            }
-          </div>
+
+          {/* Collapsible body */}
+          {weatherPanelOpen && (
+            <>
+              {weatherError && <p className="text-[11px] text-red-400 px-4 py-2">{weatherError}</p>}
+              <div
+                className="flex gap-3 px-4 py-3 overflow-x-auto"
+                style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(6,182,212,0.3) transparent" }}
+              >
+                {weatherLoading
+                  ? Array.from({ length: 8 }).map((_, i) => (
+                      <div key={i} className="flex-shrink-0 w-28 h-24 rounded-xl animate-pulse" style={{ background: "rgba(255,255,255,0.05)" }} />
+                    ))
+                  : weatherData.map((city, i) => {
+                      const info = city.code !== null ? weatherInfo(city.code) : { icon: "—", label: "—" };
+                      const temp = city.temp !== null ? `${Math.round(city.temp)}°C` : "—";
+                      const wind = city.windspeed !== null ? `${Math.round(city.windspeed)} km/h` : null;
+                      const hum  = city.humidity  !== null ? `${Math.round(city.humidity)}%`  : null;
+                      return (
+                        <div key={i} className="flex-shrink-0 rounded-xl px-3 py-2.5 flex flex-col gap-1 min-w-[110px]"
+                          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(6,182,212,0.15)", boxShadow: "0 2px 12px rgba(0,0,0,0.3)" }}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold truncate max-w-[70px]" style={{ color: "#e2e8f0" }}>{city.label}</span>
+                            <span className="text-lg leading-none">{info.icon}</span>
+                          </div>
+                          <div className="text-[20px] font-black leading-none" style={{ color: "#06b6d4", fontFamily: "'JetBrains Mono',monospace" }}>{temp}</div>
+                          <div className="text-[9px]" style={{ color: "#64748b" }}>{info.label}</div>
+                          <div className="flex flex-col gap-0.5 mt-0.5">
+                            {wind && <div className="text-[9px]" style={{ color: "#475569" }}>💨 {wind}</div>}
+                            {hum  && <div className="text-[9px]" style={{ color: "#475569" }}>💧 {hum}</div>}
+                          </div>
+                        </div>
+                      );
+                    })
+                }
+              </div>
+            </>
+          )}
         </div>
       )}
 
