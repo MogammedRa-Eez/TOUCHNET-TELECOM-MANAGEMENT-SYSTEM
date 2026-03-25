@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import {
   Users, Receipt, TicketCheck, Wifi, DollarSign, Globe, Activity,
   Zap, ArrowUpRight, RefreshCw, ChevronDown, ChevronUp, AlertTriangle,
-  CheckCircle, XCircle, Clock, TrendingUp, TrendingDown, Eye, X
+  XCircle, Clock, TrendingUp, Eye, X
 } from "lucide-react";
 import KPICard from "../components/dashboard/KPICard";
 import RevenueChart from "../components/dashboard/RevenueChart";
@@ -166,6 +166,12 @@ export default function Dashboard() {
   const [activeKPI, setActiveKPI] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [refreshing, setRefreshing] = useState(false);
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 5000);
+    return () => clearInterval(id);
+  }, []);
 
   const { data: customers = [], isLoading: lC, refetch: rC } = useQuery({ queryKey: ["customers"],     queryFn: () => base44.entities.Customer.list("-created_date", 100) });
   const { data: invoices  = [], isLoading: lI, refetch: rI } = useQuery({ queryKey: ["invoices"],      queryFn: () => base44.entities.Invoice.list("-created_date", 100) });
@@ -189,8 +195,9 @@ export default function Dashboard() {
     setRefreshing(false);
   };
 
-  const timeSince = Math.floor((new Date() - lastRefresh) / 1000);
-  const timeLabel = timeSince < 60 ? `${timeSince}s ago` : `${Math.floor(timeSince/60)}m ago`;
+  // tick causes re-evaluation so the label stays current
+  const timeSince = Math.floor((Date.now() - lastRefresh.getTime()) / 1000);
+  const timeLabel = timeSince < 60 ? `${timeSince}s ago` : `${Math.floor(timeSince / 60)}m ago`;
 
   if (isLoading) {
     return (
