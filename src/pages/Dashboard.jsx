@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import {
   Users, Receipt, TicketCheck, Wifi, DollarSign, Globe, Activity,
   Zap, ArrowUpRight, RefreshCw, ChevronDown, ChevronUp, AlertTriangle,
-  XCircle, Clock, TrendingUp, Eye, X
+  XCircle, Clock, TrendingUp, Eye, X, CheckCircle2, BarChart3,
+  Shield, Cpu, Network
 } from "lucide-react";
 import KPICard from "../components/dashboard/KPICard";
 import RevenueChart from "../components/dashboard/RevenueChart";
@@ -18,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
-// ── Mini alert ticker ─────────────────────────────────────────────────────────
+// ── Alert ticker ──────────────────────────────────────────────────────────────
 function AlertTicker({ tickets, nodes }) {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -27,9 +28,9 @@ function AlertTicker({ tickets, nodes }) {
     ...tickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status))
       .map(t => ({ type: "critical", text: `Critical ticket: ${t.subject}`, icon: AlertTriangle, color: "#ef4444", page: "/Tickets" })),
     ...nodes.filter(n => n.status === "offline")
-      .map(n => ({ type: "offline",  text: `Node offline: ${n.name}`,        icon: XCircle,       color: "#ef4444", page: "/Network" })),
+      .map(n => ({ type: "offline",  text: `Node offline: ${n.name}`, icon: XCircle, color: "#ef4444", page: "/Network" })),
     ...nodes.filter(n => n.status === "degraded")
-      .map(n => ({ type: "degraded", text: `Node degraded: ${n.name}`,       icon: AlertTriangle, color: "#f59e0b", page: "/Network" })),
+      .map(n => ({ type: "degraded", text: `Node degraded: ${n.name}`, icon: AlertTriangle, color: "#f59e0b", page: "/Network" })),
   ];
 
   useEffect(() => {
@@ -40,22 +41,32 @@ function AlertTicker({ tickets, nodes }) {
 
   if (!visible || alerts.length === 0) return null;
   const alert = alerts[idx];
-  const Icon  = alert.icon;
+  const Icon = alert.icon;
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 rounded-xl justify-between"
-      style={{ background: `${alert.color}10`, border: `1px solid ${alert.color}30` }}>
-      <div className="flex items-center gap-2 min-w-0">
-        <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: alert.color }} />
-        <span className="text-[11px] font-semibold truncate" style={{ color: alert.color }}>{alert.text}</span>
+    <div className="relative overflow-hidden flex items-center gap-3 px-4 py-2.5 rounded-2xl justify-between"
+      style={{ background: `linear-gradient(90deg, ${alert.color}0c, ${alert.color}06)`, border: `1px solid ${alert.color}25`, boxShadow: `0 2px 12px ${alert.color}10` }}>
+      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${alert.color}, transparent)` }} />
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{ background: `${alert.color}15`, border: `1px solid ${alert.color}30` }}>
+          <Icon className="w-3.5 h-3.5" style={{ color: alert.color }} />
+        </div>
+        <span className="text-[12px] font-semibold truncate" style={{ color: alert.color }}>{alert.text}</span>
         {alerts.length > 1 && (
-          <span className="text-[9px] mono flex-shrink-0" style={{ color: `${alert.color}80` }}>{idx + 1}/{alerts.length}</span>
+          <span className="text-[9px] mono flex-shrink-0 px-1.5 py-0.5 rounded"
+            style={{ background: `${alert.color}12`, color: `${alert.color}` }}>{idx + 1}/{alerts.length}</span>
         )}
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
-        <Link to={alert.page} className="text-[10px] font-bold px-2 py-0.5 rounded" style={{ background: `${alert.color}18`, color: alert.color }}>View →</Link>
-        <button onClick={() => setVisible(false)} className="opacity-50 hover:opacity-100">
-          <X className="w-3 h-3" style={{ color: alert.color }} />
+        <Link to={alert.page}
+          className="text-[10px] font-bold px-2.5 py-1 rounded-lg transition-all hover:scale-105"
+          style={{ background: `${alert.color}15`, color: alert.color, border: `1px solid ${alert.color}25` }}>
+          View →
+        </Link>
+        <button onClick={() => setVisible(false)}
+          className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-black/5 transition-colors">
+          <X className="w-3 h-3" style={{ color: alert.color + "80" }} />
         </button>
       </div>
     </div>
@@ -68,20 +79,20 @@ function KPIDrawer({ kpiKey, customers, invoices, tickets, nodes, onClose }) {
     customers: {
       title: "Customer Breakdown",
       rows: [
-        { label: "Active",    value: customers.filter(c=>c.status==="active").length,    color: "#10b981" },
-        { label: "Suspended", value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b" },
-        { label: "Pending",   value: customers.filter(c=>c.status==="pending").length,   color: "#6366f1" },
-        { label: "Terminated",value: customers.filter(c=>c.status==="terminated").length,color: "#ef4444" },
+        { label: "Active",     value: customers.filter(c=>c.status==="active").length,     color: "#10b981" },
+        { label: "Suspended",  value: customers.filter(c=>c.status==="suspended").length,  color: "#f59e0b" },
+        { label: "Pending",    value: customers.filter(c=>c.status==="pending").length,    color: "#6366f1" },
+        { label: "Terminated", value: customers.filter(c=>c.status==="terminated").length, color: "#ef4444" },
       ],
       link: "/Customers", linkLabel: "Manage Customers",
     },
     revenue: {
       title: "Revenue Breakdown",
       rows: [
-        { label: "Paid",      value: `R${invoices.filter(i=>i.status==="paid").reduce((a,i)=>a+(i.total||i.amount||0),0).toLocaleString()}`,     color: "#10b981" },
-        { label: "Overdue",   value: `R${invoices.filter(i=>i.status==="overdue").reduce((a,i)=>a+(i.total||i.amount||0),0).toLocaleString()}`,   color: "#ef4444" },
-        { label: "Pending",   value: `R${invoices.filter(i=>i.status==="sent").reduce((a,i)=>a+(i.total||i.amount||0),0).toLocaleString()}`,     color: "#f59e0b" },
-        { label: "Total Invoices", value: invoices.length, color: "#6366f1" },
+        { label: "Paid",    value: `R${invoices.filter(i=>i.status==="paid").reduce((a,i)=>a+(i.total||i.amount||0),0).toLocaleString()}`,   color: "#10b981" },
+        { label: "Overdue", value: `R${invoices.filter(i=>i.status==="overdue").reduce((a,i)=>a+(i.total||i.amount||0),0).toLocaleString()}`, color: "#ef4444" },
+        { label: "Pending", value: `R${invoices.filter(i=>i.status==="sent").reduce((a,i)=>a+(i.total||i.amount||0),0).toLocaleString()}`,   color: "#f59e0b" },
+        { label: "Invoices",value: invoices.length, color: "#6366f1" },
       ],
       link: "/Billing", linkLabel: "Open Billing",
     },
@@ -110,25 +121,28 @@ function KPIDrawer({ kpiKey, customers, invoices, tickets, nodes, onClose }) {
   if (!item) return null;
 
   return (
-    <div className="absolute inset-x-0 top-full mt-2 z-50 rounded-2xl shadow-2xl overflow-hidden"
-      style={{ background: "white", border: "1px solid rgba(99,102,241,0.15)", boxShadow: "0 16px 48px rgba(99,102,241,0.15)" }}>
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(99,102,241,0.1)" }}>
+    <div className="absolute inset-x-0 top-full mt-2 z-50 rounded-2xl overflow-hidden"
+      style={{ background: "white", border: "1px solid rgba(99,102,241,0.15)", boxShadow: "0 20px 60px rgba(99,102,241,0.18)" }}>
+      <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#6366f1,#8b5cf6,transparent)" }} />
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
         <p className="text-[13px] font-bold text-slate-800">{item.title}</p>
         <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-slate-100">
           <X className="w-3.5 h-3.5 text-slate-400" />
         </button>
       </div>
-      <div className="p-4 grid grid-cols-2 gap-3">
+      <div className="p-4 grid grid-cols-2 gap-2.5">
         {item.rows.map(row => (
-          <div key={row.label} className="rounded-xl p-3" style={{ background: `${row.color}09`, border: `1px solid ${row.color}20` }}>
-            <p className="text-[20px] font-black mono" style={{ color: row.color }}>{row.value}</p>
-            <p className="text-[10px] mt-0.5 text-slate-400">{row.label}</p>
+          <div key={row.label} className="rounded-xl p-3 relative overflow-hidden"
+            style={{ background: `${row.color}08`, border: `1px solid ${row.color}18` }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${row.color}, transparent)` }} />
+            <p className="text-[22px] font-black mono" style={{ color: row.color }}>{row.value}</p>
+            <p className="text-[10px] mt-0.5" style={{ color: "rgba(100,116,139,0.6)" }}>{row.label}</p>
           </div>
         ))}
       </div>
       <div className="px-4 pb-4">
-        <Link to={item.link} className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:opacity-90"
-          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
+        <Link to={item.link} className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:opacity-90 hover:scale-[1.01]"
+          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}>
           <Eye className="w-3.5 h-3.5" /> {item.linkLabel} <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
@@ -136,26 +150,71 @@ function KPIDrawer({ kpiKey, customers, invoices, tickets, nodes, onClose }) {
   );
 }
 
-// ── Collapsible section wrapper ───────────────────────────────────────────────
-function Section({ title, icon: Icon, children, defaultOpen = true, badge }) {
+// ── Section wrapper ───────────────────────────────────────────────────────────
+function Section({ title, icon: Icon, children, defaultOpen = true, badge, color = "#6366f1" }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div>
-      <button
-        className="w-full flex items-center justify-between mb-3 group"
-        onClick={() => setOpen(v => !v)}
-      >
-        <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4" style={{ color: "#6366f1" }} />
-          <span className="text-[13px] font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{title}</span>
+      <button className="w-full flex items-center justify-between mb-3 group" onClick={() => setOpen(v => !v)}>
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+            style={{ background: `${color}10`, border: `1px solid ${color}20` }}>
+            <Icon className="w-3.5 h-3.5" style={{ color }} />
+          </div>
+          <span className="text-[14px] font-black text-slate-700 group-hover:text-slate-900 transition-colors tracking-tight">{title}</span>
           {badge != null && (
             <span className="px-2 py-0.5 rounded-full text-[9px] font-bold"
-              style={{ background: "rgba(99,102,241,0.1)", color: "#6366f1" }}>{badge}</span>
+              style={{ background: `${color}12`, color, border: `1px solid ${color}20` }}>{badge}</span>
           )}
         </div>
-        {open ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        <div className="flex items-center gap-1 opacity-40 group-hover:opacity-70 transition-opacity">
+          <span className="text-[10px] font-bold" style={{ color: "#94a3b8" }}>{open ? "Collapse" : "Expand"}</span>
+          {open ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+        </div>
       </button>
       {open && children}
+    </div>
+  );
+}
+
+// ── System health mini-strip ──────────────────────────────────────────────────
+function SystemHealthStrip({ customers, invoices, tickets, nodes }) {
+  const overdueCount  = invoices.filter(i => i.status === "overdue").length;
+  const criticalCount = tickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length;
+  const offlineCount  = nodes.filter(n => n.status === "offline").length;
+  const suspended     = customers.filter(c => c.status === "suspended").length;
+
+  const items = [
+    { label: "Overdue Invoices",   value: overdueCount,  color: overdueCount  > 0 ? "#ef4444" : "#10b981", good: overdueCount  === 0, link: "/Billing" },
+    { label: "Critical Tickets",   value: criticalCount, color: criticalCount > 0 ? "#ef4444" : "#10b981", good: criticalCount === 0, link: "/Tickets" },
+    { label: "Offline Nodes",      value: offlineCount,  color: offlineCount  > 0 ? "#ef4444" : "#10b981", good: offlineCount  === 0, link: "/Network" },
+    { label: "Suspended Accounts", value: suspended,     color: suspended     > 0 ? "#f59e0b" : "#10b981", good: suspended     === 0, link: "/Customers" },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {items.map(item => (
+        <Link key={item.label} to={item.link}
+          className="relative overflow-hidden rounded-xl px-4 py-3 flex items-center gap-3 transition-all hover:scale-[1.02]"
+          style={{
+            background: item.good ? "rgba(16,185,129,0.05)" : `${item.color}08`,
+            border: `1px solid ${item.good ? "rgba(16,185,129,0.15)" : item.color + "20"}`,
+          }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{ background: `linear-gradient(90deg, ${item.color}, transparent)` }} />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: `${item.color}12`, border: `1px solid ${item.color}20` }}>
+            {item.good
+              ? <CheckCircle2 className="w-4 h-4" style={{ color: item.color }} />
+              : <AlertTriangle className="w-4 h-4" style={{ color: item.color }} />}
+          </div>
+          <div className="min-w-0">
+            <p className="text-[18px] font-black mono leading-none" style={{ color: item.color }}>{item.value}</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 truncate">{item.label}</p>
+          </div>
+          <ArrowUpRight className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-30" style={{ color: item.color }} />
+        </Link>
+      ))}
     </div>
   );
 }
@@ -195,7 +254,6 @@ export default function Dashboard() {
     setRefreshing(false);
   };
 
-  // tick causes re-evaluation so the label stays current
   const timeSince = Math.floor((Date.now() - lastRefresh.getTime()) / 1000);
   const timeLabel = timeSince < 60 ? `${timeSince}s ago` : `${Math.floor(timeSince / 60)}m ago`;
 
@@ -212,10 +270,6 @@ export default function Dashboard() {
             <Skeleton className="h-44 rounded-2xl" />
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <Skeleton className="h-80 rounded-2xl lg:col-span-2" />
-          <Skeleton className="h-80 rounded-2xl" />
-        </div>
       </div>
     );
   }
@@ -226,32 +280,39 @@ export default function Dashboard() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#1e293b" }}>Operations Overview</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f172a" }}>Operations Overview</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.5)" }}>
             {new Date().toLocaleDateString("en-ZA", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-lg text-[11px] font-bold"
-            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#059669" }}>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="mono">All Systems Operational</span>
-          </div>
-          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px]"
-            style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", color: "#94a3b8" }}>
+          {/* System health indicator */}
+          {nodes.filter(n => n.status === "offline").length === 0 && tickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length === 0 ? (
+            <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold"
+              style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.18)", color: "#059669" }}>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="mono">All Systems Operational</span>
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold"
+              style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", color: "#dc2626" }}>
+              <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+              <span className="mono">Issues Detected</span>
+            </div>
+          )}
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px]"
+            style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.12)", color: "#94a3b8" }}>
             <Clock className="w-3 h-3" />
             <span className="mono">Updated {timeLabel}</span>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-60"
+          <button onClick={handleRefresh} disabled={refreshing}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-60"
             style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "white", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}>
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Refreshing…" : "Refresh"}
           </button>
-          <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold"
-            style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.2)", color: "#6366f1" }}>
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold"
+            style={{ background: "rgba(6,182,212,0.07)", border: "1px solid rgba(6,182,212,0.18)", color: "#06b6d4" }}>
             <Zap className="w-3.5 h-3.5" />
             <span className="mono">LIVE</span>
           </div>
@@ -261,19 +322,22 @@ export default function Dashboard() {
       {/* ── Alert Ticker ── */}
       <AlertTicker tickets={tickets} nodes={nodes} />
 
-      {/* ── KPI Row (clickable for detail) ── */}
+      {/* ── System Health Strip ── */}
+      <SystemHealthStrip customers={customers} invoices={invoices} tickets={tickets} nodes={nodes} />
+
+      {/* ── KPI Row ── */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {[
           { key: "customers", card: <KPICard title="Active Customers" value={activeCustomers.toLocaleString()} subtitle={`${customers.length} total accounts`} icon={Users} color="blue" trend="up" trendValue="+12%" /> },
           { key: "revenue",   card: <KPICard title="Monthly Revenue"  value={`R${(totalRevenue/1000).toFixed(1)}k`} subtitle="From paid invoices" icon={DollarSign} color="emerald" trend="up" trendValue="+8.5%" /> },
-          { key: "tickets",   card: <KPICard title="Open Tickets"     value={openTickets} subtitle={`${tickets.length} total`} icon={TicketCheck} color="amber" trend={openTickets>10?"up":"down"} trendValue={openTickets>10?"High":"Normal"} /> },
+          { key: "tickets",   card: <KPICard title="Open Tickets"     value={openTickets} subtitle={`${tickets.length} total`} icon={TicketCheck} color="amber" trend={openTickets > 10 ? "up" : "down"} trendValue={openTickets > 10 ? "High" : "Normal"} /> },
           { key: "nodes",     card: <KPICard title="Network Nodes"    value={`${onlineNodes}/${nodes.length}`} subtitle="Currently online" icon={Wifi} color="violet" /> },
         ].map(({ key, card }) => (
           <div key={key} className="relative" onClick={e => { e.stopPropagation(); setActiveKPI(activeKPI === key ? null : key); }}>
-            <div className={`cursor-pointer transition-all duration-150 rounded-2xl ${activeKPI === key ? "ring-2 ring-indigo-400 scale-[1.02]" : "hover:scale-[1.01]"}`}>
+            <div className={`cursor-pointer transition-all duration-150 rounded-2xl ${activeKPI === key ? "ring-2 ring-indigo-400/60 scale-[1.02]" : "hover:scale-[1.01]"}`}>
               {card}
               <div className="absolute bottom-2 right-3 flex items-center gap-1 text-[9px] font-bold"
-                style={{ color: "rgba(99,102,241,0.5)" }}>
+                style={{ color: "rgba(99,102,241,0.4)" }}>
                 <Eye className="w-2.5 h-2.5" /> Details
               </div>
             </div>
@@ -285,7 +349,7 @@ export default function Dashboard() {
       </div>
 
       {/* ── Globe + Sidebar ── */}
-      <Section title="Network Coverage" icon={Globe} badge={`${onlineNodes}/${nodes.length} online`}>
+      <Section title="Network Coverage" icon={Globe} badge={`${onlineNodes}/${nodes.length} online`} color="#6366f1">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
           <div className="lg:col-span-3 rounded-3xl overflow-hidden relative"
             style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #2e1065 60%, #0c1a3e 100%)", border: "1px solid rgba(99,102,241,0.2)", boxShadow: "0 8px 40px rgba(99,102,241,0.15)", minHeight: 600 }}>
@@ -326,17 +390,18 @@ export default function Dashboard() {
                 <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#1e293b" }}>
                   <Activity className="w-3.5 h-3.5" style={{ color: "#6366f1" }} /> Quick Stats
                 </p>
-                <span className="text-[10px] mono" style={{ color: "rgba(100,116,139,0.5)" }}>Live</span>
+                <span className="text-[10px] px-2 py-0.5 rounded mono font-bold"
+                  style={{ background: "rgba(6,182,212,0.08)", color: "#06b6d4", border: "1px solid rgba(6,182,212,0.18)" }}>Live</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Avg Uptime",      value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.07)", link: "/Network" },
-                  { label: "Paid Invoices",   value: invoices.filter(i=>i.status==="paid").length, color: "#3b82f6", bg: "rgba(59,130,246,0.07)", link: "/Billing" },
-                  { label: "Critical Tickets",value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.07)", link: "/Tickets" },
-                  { label: "Suspended",       value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.07)", link: "/Customers" },
+                  { label: "Avg Uptime",       value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.07)", link: "/Network" },
+                  { label: "Paid Invoices",    value: invoices.filter(i=>i.status==="paid").length, color: "#3b82f6", bg: "rgba(59,130,246,0.07)", link: "/Billing" },
+                  { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.07)", link: "/Tickets" },
+                  { label: "Suspended",        value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.07)", link: "/Customers" },
                 ].map(stat => (
                   <Link to={stat.link} key={stat.label}
-                    className="rounded-xl p-3 transition-all hover:scale-105 hover:shadow-md"
+                    className="rounded-xl p-3 transition-all hover:scale-105"
                     style={{ background: stat.bg, border: `1px solid ${stat.color}20` }}>
                     <p className="text-[20px] font-black mono" style={{ color: stat.color }}>{stat.value}</p>
                     <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "#94a3b8" }}>{stat.label}</p>
@@ -350,7 +415,7 @@ export default function Dashboard() {
       </Section>
 
       {/* ── Revenue + Tickets ── */}
-      <Section title="Financial & Tickets" icon={TrendingUp} badge={`${invoices.filter(i=>i.status==="overdue").length} overdue`}>
+      <Section title="Financial & Tickets" icon={BarChart3} badge={`${invoices.filter(i=>i.status==="overdue").length} overdue`} color="#10b981">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <div className="lg:col-span-2">
             <RevenueChart invoices={invoices} />
@@ -360,7 +425,7 @@ export default function Dashboard() {
       </Section>
 
       {/* ── Activity ── */}
-      <Section title="Recent Activity" icon={Activity}>
+      <Section title="Recent Activity" icon={Activity} color="#06b6d4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <RecentActivity customers={customers} tickets={tickets} invoices={invoices} />
           <UserActivityPanel customers={customers} tickets={tickets} invoices={invoices} />
