@@ -120,16 +120,16 @@ export default function PortalNotificationBell({ customerEmail }) {
         onClick={() => { setOpen(!open); if (!open) loadNotifications(); }}
         className="relative w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110 active:scale-95"
         style={{
-          background: open ? "rgba(6,182,212,0.15)" : "rgba(255,255,255,0.06)",
-          border: `1px solid ${open ? "rgba(6,182,212,0.4)" : "rgba(255,255,255,0.12)"}`,
-          boxShadow: open ? "0 0 16px rgba(6,182,212,0.25)" : "none",
+          background: open ? "rgba(99,102,241,0.12)" : "rgba(241,245,249,0.9)",
+          border: `1px solid ${open ? "rgba(99,102,241,0.35)" : "rgba(226,232,240,0.9)"}`,
+          boxShadow: open ? "0 0 16px rgba(99,102,241,0.2)" : "none",
         }}>
-        <Bell className="w-4 h-4" style={{ color: open ? "#06b6d4" : "rgba(255,255,255,0.6)" }} />
+        <Bell className="w-4 h-4" style={{ color: open ? "#6366f1" : "#64748b" }} />
 
         {/* Unread badge */}
         {unreadCount > 0 && (
           <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-transparent"
-            style={{ background: "linear-gradient(135deg,#ef4444,#dc2626)", boxShadow: "0 2px 8px rgba(239,68,68,0.5)", borderColor: "rgba(5,10,20,0.9)" }}>
+            style={{ background: "linear-gradient(135deg,#ef4444,#dc2626)", boxShadow: "0 2px 8px rgba(239,68,68,0.5)", borderColor: "rgba(255,255,255,0.9)" }}>
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -137,7 +137,7 @@ export default function PortalNotificationBell({ customerEmail }) {
         {/* Pulse ring on new notification */}
         {justReceived && (
           <span className="absolute inset-0 rounded-xl animate-ping opacity-60"
-            style={{ background: "rgba(6,182,212,0.2)", border: "1px solid rgba(6,182,212,0.5)" }} />
+            style={{ background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.4)" }} />
         )}
       </button>
 
@@ -145,48 +145,48 @@ export default function PortalNotificationBell({ customerEmail }) {
         <div className="absolute right-0 top-11 z-50 overflow-hidden"
           style={{
             width: 400,
-            background: "linear-gradient(175deg,#0d1829,#0a1220)",
+            background: "rgba(255,255,255,0.98)",
             borderRadius: 20,
-            border: "1px solid rgba(6,182,212,0.2)",
-            boxShadow: "0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(6,182,212,0.08)",
+            border: "1px solid rgba(99,102,241,0.15)",
+            boxShadow: "0 24px 64px rgba(99,102,241,0.12), 0 8px 32px rgba(0,0,0,0.08)",
           }}>
 
           {/* Top accent */}
-          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#06b6d4,#6366f1,#8b5cf6,transparent)" }} />
+          <div className="h-[2px] rounded-t-[20px]" style={{ background: "linear-gradient(90deg,#6366f1,#06b6d4,#8b5cf6,transparent)" }} />
 
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3"
-            style={{ borderBottom: "1px solid rgba(6,182,212,0.1)", background: "rgba(6,182,212,0.04)" }}>
+            style={{ borderBottom: "1px solid rgba(99,102,241,0.08)", background: "rgba(248,250,252,0.8)" }}>
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-                style={{ background: "rgba(6,182,212,0.12)", border: "1px solid rgba(6,182,212,0.25)" }}>
-                <Bell className="w-3.5 h-3.5" style={{ color: "#06b6d4" }} />
+                style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                <Bell className="w-3.5 h-3.5" style={{ color: "#6366f1" }} />
               </div>
-              <span className="text-[14px] font-black text-white tracking-tight">My Notifications</span>
+              <span className="text-[14px] font-black tracking-tight" style={{ color: "#1e293b" }}>Notifications</span>
               {unreadCount > 0 && (
                 <span className="px-2 py-0.5 text-[10px] font-black rounded-full"
-                  style={{ background: "rgba(239,68,68,0.15)", color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}>
+                  style={{ background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)" }}>
                   {unreadCount} new
                 </span>
               )}
             </div>
             <div className="flex items-center gap-1.5">
               <button onClick={loadNotifications}
-                className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
-                <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} style={{ color: "rgba(255,255,255,0.4)" }} />
+                className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors">
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} style={{ color: "#94a3b8" }} />
               </button>
               {unreadCount > 0 && (
                 <button onClick={markAllRead}
                   className="flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all hover:scale-105"
-                  style={{ background: "rgba(6,182,212,0.1)", color: "#06b6d4", border: "1px solid rgba(6,182,212,0.2)" }}>
+                  style={{ background: "rgba(99,102,241,0.08)", color: "#6366f1", border: "1px solid rgba(99,102,241,0.18)" }}>
                   <CheckCheck className="w-3 h-3" /> Read all
                 </button>
               )}
               {notifications.length > 0 && (
                 <button onClick={clearAll}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-red-900/30 transition-colors"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-red-50 transition-colors"
                   title="Clear all">
-                  <Trash2 className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.3)" }} />
+                  <Trash2 className="w-3.5 h-3.5" style={{ color: "#ef4444" }} />
                 </button>
               )}
             </div>
@@ -194,21 +194,21 @@ export default function PortalNotificationBell({ customerEmail }) {
 
           {/* Tabs */}
           <div className="flex gap-1 px-3 py-2 overflow-x-auto"
-            style={{ borderBottom: "1px solid rgba(6,182,212,0.07)", background: "rgba(0,0,0,0.15)" }}>
+            style={{ borderBottom: "1px solid rgba(99,102,241,0.06)", background: "rgba(248,250,252,0.5)" }}>
             {tabs.map(tab => (
               <button key={tab.key} onClick={() => setActiveTab(tab.key)}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all flex-shrink-0"
                 style={{
-                  background: activeTab === tab.key ? "rgba(6,182,212,0.15)" : "transparent",
-                  color: activeTab === tab.key ? "#06b6d4" : "rgba(255,255,255,0.35)",
-                  border: activeTab === tab.key ? "1px solid rgba(6,182,212,0.3)" : "1px solid transparent",
+                  background: activeTab === tab.key ? "rgba(99,102,241,0.1)" : "transparent",
+                  color: activeTab === tab.key ? "#6366f1" : "#94a3b8",
+                  border: activeTab === tab.key ? "1px solid rgba(99,102,241,0.25)" : "1px solid transparent",
                 }}>
                 {tab.label}
                 {tab.count > 0 && (
                   <span className="text-[9px] px-1 py-0.5 rounded font-black"
                     style={{
-                      background: activeTab === tab.key ? "rgba(6,182,212,0.2)" : "rgba(255,255,255,0.08)",
-                      color: activeTab === tab.key ? "#06b6d4" : "rgba(255,255,255,0.3)",
+                      background: activeTab === tab.key ? "rgba(99,102,241,0.15)" : "rgba(241,245,249,1)",
+                      color: activeTab === tab.key ? "#6366f1" : "#94a3b8",
                     }}>
                     {tab.count}
                   </span>
@@ -222,18 +222,18 @@ export default function PortalNotificationBell({ customerEmail }) {
             {loading ? (
               <div className="flex items-center justify-center py-10">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(6,182,212,0.2)", borderTopColor: "#06b6d4" }} />
-                  <p className="text-[11px] mono" style={{ color: "rgba(6,182,212,0.5)" }}>Loading…</p>
+                  <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(99,102,241,0.15)", borderTopColor: "#6366f1" }} />
+                  <p className="text-[11px] mono" style={{ color: "#94a3b8" }}>Loading…</p>
                 </div>
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-14">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
-                  style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.15)" }}>
-                  <BellOff className="w-5 h-5" style={{ color: "rgba(6,182,212,0.4)" }} />
+                  style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.12)" }}>
+                  <BellOff className="w-5 h-5" style={{ color: "#a5b4fc" }} />
                 </div>
-                <p className="text-[13px] font-semibold" style={{ color: "rgba(255,255,255,0.4)" }}>No notifications</p>
-                <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>You're all caught up!</p>
+                <p className="text-[13px] font-semibold" style={{ color: "#334155" }}>No notifications</p>
+                <p className="text-[11px] mt-0.5" style={{ color: "#94a3b8" }}>You're all caught up!</p>
               </div>
             ) : (
               filtered.map(n => {
@@ -247,11 +247,11 @@ export default function PortalNotificationBell({ customerEmail }) {
                     onClick={() => markRead(n)}
                     className="flex gap-3 px-4 py-3 cursor-pointer transition-all group relative"
                     style={{
-                      borderBottom: "1px solid rgba(255,255,255,0.04)",
-                      background: !n.is_read ? `${tc.color}08` : "transparent",
+                      borderBottom: "1px solid rgba(226,232,240,0.6)",
+                      background: !n.is_read ? `${tc.color}05` : "transparent",
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.background = `${tc.color}10`; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = !n.is_read ? `${tc.color}08` : "transparent"; }}
+                    onMouseEnter={e => { e.currentTarget.style.background = `${tc.color}08`; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = !n.is_read ? `${tc.color}05` : "transparent"; }}
                   >
                     {/* Unread left bar */}
                     {!n.is_read && (
@@ -268,14 +268,14 @@ export default function PortalNotificationBell({ customerEmail }) {
                     {/* Content */}
                     <div className="flex-1 min-w-0 pr-6">
                       <div className="flex items-start justify-between gap-2 mb-0.5">
-                        <p className={`text-[13px] leading-snug ${!n.is_read ? "font-bold text-white" : "font-medium text-white/70"}`}>
+                        <p className="text-[13px] leading-snug font-bold" style={{ color: n.is_read ? "#64748b" : "#1e293b" }}>
                           {n.title}
                         </p>
-                        <span className="text-[10px] whitespace-nowrap flex-shrink-0 mono" style={{ color: "rgba(255,255,255,0.25)" }}>
+                        <span className="text-[10px] whitespace-nowrap flex-shrink-0 mono" style={{ color: "#94a3b8" }}>
                           {timeAgo(n.created_date)}
                         </span>
                       </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: "rgba(255,255,255,0.45)" }}>{n.message}</p>
+                      <p className="text-[11px] leading-relaxed line-clamp-2" style={{ color: n.is_read ? "#94a3b8" : "#475569" }}>{n.message}</p>
                       <div className="flex items-center gap-2 mt-1.5">
                         <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md"
                           style={{ background: `${cc.color}12`, border: `1px solid ${cc.color}20` }}>
@@ -292,8 +292,9 @@ export default function PortalNotificationBell({ customerEmail }) {
                     {/* Delete */}
                     <button
                       onClick={(e) => deleteNotification(e, n.id)}
-                      className="absolute top-2.5 right-2.5 w-5 h-5 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-900/40">
-                      <X className="w-3 h-3" style={{ color: "rgba(255,255,255,0.4)" }} />
+                      className="absolute top-2.5 right-2.5 w-5 h-5 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50"
+                      style={{ border: "1px solid rgba(239,68,68,0.15)" }}>
+                      <X className="w-3 h-3" style={{ color: "#ef4444" }} />
                     </button>
                   </div>
                 );
@@ -303,13 +304,13 @@ export default function PortalNotificationBell({ customerEmail }) {
 
           {/* Footer */}
           <div className="px-4 py-2.5 flex items-center justify-between"
-            style={{ borderTop: "1px solid rgba(6,182,212,0.08)", background: "rgba(0,0,0,0.2)" }}>
-            <p className="text-[10px] mono" style={{ color: "rgba(255,255,255,0.2)" }}>
+            style={{ borderTop: "1px solid rgba(99,102,241,0.07)", background: "rgba(248,250,252,0.8)" }}>
+            <p className="text-[10px] mono font-semibold" style={{ color: "#94a3b8" }}>
               {notifications.length} total · {unreadCount} unread
             </p>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] mono font-bold" style={{ color: "#34d399" }}>Live</span>
+              <span className="text-[10px] mono font-bold" style={{ color: "#10b981" }}>Live</span>
             </div>
           </div>
         </div>
