@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
   Wifi, Receipt, TicketCheck, LogOut, AlertCircle, Loader2,
   FolderOpen, FileText, Activity, DollarSign, Zap,
-  CheckCircle2, Clock, Menu, X, ChevronRight, User,
-  Home, Bell, Settings
+  CheckCircle2, Clock, Menu, X, ChevronRight, Users,
+  Home
 } from "lucide-react";
 import PortalNotificationBell from "@/components/portal/PortalNotificationBell";
 import PortalProjectsTab from "@/components/portal/PortalProjectsTab";
