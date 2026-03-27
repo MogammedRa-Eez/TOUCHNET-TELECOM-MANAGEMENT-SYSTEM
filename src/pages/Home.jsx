@@ -236,7 +236,7 @@ export default function Home() {
           <LogIn className="w-4 h-4" />
           Sign In to TouchNet
         </button>
-        <p className="mt-4 text-xs text-slate-600">Staff and customers use the same sign-in — you'll be directed to your portal automatically.</p>
+        <p className="mt-4 text-xs text-slate-400">Staff and customers use the same sign-in — you'll be directed to your portal automatically.</p>
       </section>
 
       {/* ── FOOTER ── */}
@@ -244,12 +244,12 @@ export default function Home() {
         style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.6 }} />
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-600">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
             <span className="flex items-center gap-1.5"><Mail className="w-3 h-3" /> support@touchnet.co.za</span>
             <span className="flex items-center gap-1.5"><Phone className="w-3 h-3" /> +27 (0) 12 345 6789</span>
             <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3" /> South Africa</span>
           </div>
-          <p className="text-[10px] text-slate-700" style={{ fontFamily: "monospace" }}>© TOUCHNET v2.4.1 · All rights reserved</p>
+          <p className="text-[10px] text-slate-500" style={{ fontFamily: "monospace" }}>© TOUCHNET v2.4.1 · All rights reserved</p>
         </div>
       </footer>
     </div>

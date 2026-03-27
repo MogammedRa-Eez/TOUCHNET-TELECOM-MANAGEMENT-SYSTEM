@@ -48,8 +48,8 @@ function StatCard({ icon: Icon, label, value, color, sub }) {
       </div>
       <div>
         <p className="text-[11px] font-black mono" style={{ color }}>{value}</p>
-        <p className="text-[9px] uppercase tracking-wider leading-tight" style={{ color: "rgba(255,255,255,0.35)" }}>{label}</p>
-        {sub && <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.2)" }}>{sub}</p>}
+        <p className="text-[9px] uppercase tracking-wider leading-tight" style={{ color: "rgba(255,255,255,0.6)" }}>{label}</p>
+        {sub && <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.45)" }}>{sub}</p>}
       </div>
     </div>
   );
@@ -138,7 +138,7 @@ export default function CustomerPortalMain() {
   const overdueInv = invoices.filter(i => i.status === "overdue").length;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" style={{ background: "linear-gradient(160deg,#060d1b 0%,#080f20 100%)" }}>
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-30 px-5 py-3 flex items-center justify-between"
@@ -181,7 +181,7 @@ export default function CustomerPortalMain() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto p-4 sm:p-6 space-y-5 pb-12">
+      <main className="max-w-5xl mx-auto p-4 sm:p-6 space-y-5 pb-16">
 
         {/* ── Hero Banner ── */}
         <div className="rounded-3xl overflow-hidden relative"
@@ -252,7 +252,7 @@ export default function CustomerPortalMain() {
                   <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
                 </div>
                 {customer.account_number && (
-                  <p className="text-[10px] mono" style={{ color: "rgba(255,255,255,0.2)" }}>{customer.account_number}</p>
+                  <p className="text-[10px] mono" style={{ color: "rgba(255,255,255,0.45)" }}>{customer.account_number}</p>
                 )}
               </div>
             </div>
@@ -287,9 +287,9 @@ export default function CustomerPortalMain() {
               <button key={tab.key} onClick={() => setActiveTab(tab.key)}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold flex-shrink-0 transition-all duration-200"
                 style={{
-                  background: isActive ? "rgba(99,102,241,0.18)" : "rgba(255,255,255,0.04)",
-                  border: isActive ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.07)",
-                  color: isActive ? "#a78bfa" : "rgba(255,255,255,0.35)",
+                  background: isActive ? "rgba(99,102,241,0.18)" : "rgba(255,255,255,0.06)",
+                  border: isActive ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(255,255,255,0.1)",
+                  color: isActive ? "#a78bfa" : "rgba(255,255,255,0.65)",
                   boxShadow: isActive ? "0 0 20px rgba(99,102,241,0.2)" : "none",
                 }}>
                 <Icon className="w-3.5 h-3.5" />
