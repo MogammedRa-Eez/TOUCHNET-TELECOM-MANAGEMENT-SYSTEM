@@ -325,8 +325,41 @@ function SectionBlock({ section, onUpdate, onRemove, onImageUpload, uploading })
   );
 }
 
+const FLAT_RATE_PRESETS = [
+  { group: "Monthly Data Plans", items: [
+    { label: "Basic 50Mbps",  price: 40  },
+    { label: "Fast 200Mbps", price: 60  },
+    { label: "Giga 1Gbps",   price: 80  },
+    { label: "Ultra 2Gbps",  price: 110 },
+    { label: "Static IP",    price: 15  },
+  ]},
+  { group: "ISP Hardware", items: [
+    { label: "WiFi 6 Router",   price: 120 },
+    { label: "Mesh Node",       price: 100 },
+    { label: "Cable Modem",     price: 130 },
+    { label: "Network Switch",  price: 110 },
+    { label: "Fiber ONT",       price: 140 },
+    { label: "Smart Hub",       price: 110 },
+    { label: "Power Unit",      price: 150 },
+  ]},
+  { group: "Service Fees", items: [
+    { label: "Setup Fee",  price: 60 },
+    { label: "Truck Roll", price: 75 },
+    { label: "Tech Visit", price: 45 },
+  ]},
+];
+
 function LineItemRow({ item, onUpdate, onRemove, contractMonths }) {
   const lineTotal = (item.quantity || 1) * (item.unit_price || 0);
+
+  const handlePreset = (e) => {
+    const val = e.target.value;
+    if (!val) return;
+    const [label, price] = val.split("||");
+    onUpdate(item.id, { description: label, unit_price: +price });
+    e.target.value = "";
+  };
+
   return (
     <div className={`rounded-lg border p-3 space-y-2 ${item.optional ? "border-amber-200 bg-amber-50/50" : "border-slate-200 bg-white"}`}>
       <div className="flex items-center gap-2">
@@ -337,7 +370,24 @@ function LineItemRow({ item, onUpdate, onRemove, contractMonths }) {
             Include
           </label>
         )}
-        <button onClick={() => onRemove(item.id)} className="ml-auto text-slate-300 hover:text-red-400"><X className="w-3.5 h-3.5" /></button>
+        {/* Flat-rate preset picker */}
+        <select
+          onChange={handlePreset}
+          defaultValue=""
+          className="ml-auto text-[11px] h-6 rounded border border-slate-200 bg-slate-50 text-slate-600 px-1 cursor-pointer hover:border-rose-300 focus:outline-none"
+        >
+          <option value="" disabled>⚡ ISP Rate Card</option>
+          {FLAT_RATE_PRESETS.map(group => (
+            <optgroup key={group.group} label={group.group}>
+              {group.items.map(preset => (
+                <option key={preset.label} value={`${preset.label}||${preset.price}`}>
+                  {preset.label} — R{preset.price}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+        <button onClick={() => onRemove(item.id)} className="text-slate-300 hover:text-red-400"><X className="w-3.5 h-3.5" /></button>
       </div>
       <Input placeholder="Item description *" value={item.description} onChange={e => onUpdate(item.id, { description: e.target.value })} className="h-7 text-xs" />
       <Input placeholder="Detail / notes (e.g. *Equipment remains owned by TouchNet)" value={item.detail} onChange={e => onUpdate(item.id, { detail: e.target.value })} className="h-7 text-xs" />
