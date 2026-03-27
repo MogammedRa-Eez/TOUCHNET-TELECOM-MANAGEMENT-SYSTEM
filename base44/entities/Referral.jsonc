@@ -1,0 +1,106 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "referrer_customer_id": {
+      "type": "string",
+      "description": "Customer ID of the person who made the referral"
+    },
+    "referrer_name": {
+      "type": "string",
+      "description": "Name of the referring customer"
+    },
+    "referrer_email": {
+      "type": "string",
+      "description": "Email of the referring customer"
+    },
+    "referred_name": {
+      "type": "string",
+      "description": "Name of the referred lead/contact"
+    },
+    "referred_email": {
+      "type": "string",
+      "description": "Email of the referred lead"
+    },
+    "referred_phone": {
+      "type": "string",
+      "description": "Phone number of the referred lead"
+    },
+    "referred_address": {
+      "type": "string",
+      "description": "Address of the referred lead"
+    },
+    "service_interest": {
+      "type": "string",
+      "enum": [
+        "basic_10mbps",
+        "standard_50mbps",
+        "premium_100mbps",
+        "enterprise_500mbps",
+        "dedicated_1gbps"
+      ],
+      "description": "Service plan the lead is interested in"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "contacted",
+        "quoted",
+        "converted",
+        "lost"
+      ],
+      "default": "submitted",
+      "description": "Current status of the referral lead"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the referral"
+    },
+    "reward_amount": {
+      "type": "number",
+      "description": "Reward/discount amount earned (in Rand)"
+    },
+    "reward_type": {
+      "type": "string",
+      "enum": [
+        "account_credit",
+        "monthly_discount",
+        "once_off_payment",
+        "gift_voucher"
+      ],
+      "default": "account_credit",
+      "description": "Type of reward earned"
+    },
+    "reward_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "paid",
+        "forfeited"
+      ],
+      "default": "pending",
+      "description": "Status of the reward payout"
+    },
+    "reward_paid_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date reward was paid out"
+    },
+    "converted_customer_id": {
+      "type": "string",
+      "description": "Customer ID if the lead was converted"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Internal admin notes"
+    }
+  },
+  "required": [
+    "referrer_customer_id",
+    "referrer_name",
+    "referred_name",
+    "referred_email"
+  ]
+}

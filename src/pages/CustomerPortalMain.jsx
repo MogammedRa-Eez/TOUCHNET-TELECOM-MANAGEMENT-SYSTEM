@@ -13,6 +13,7 @@ import PortalInvoicesTab from "@/components/portal/PortalInvoicesTab";
 import PortalTicketsTab from "@/components/portal/PortalTicketsTab";
 import PortalDocumentsTab from "@/components/portal/PortalDocumentsTab";
 import PortalQuotesTab from "@/components/portal/PortalQuotesTab";
+import PortalResellersTab from "@/components/portal/PortalResellersTab";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
@@ -38,6 +39,7 @@ const NAV_ITEMS = [
   { key: "tickets",    label: "Support",    icon: TicketCheck,desc: "Help & tickets" },
   { key: "documents",  label: "Documents",  icon: FolderOpen, desc: "Files & contracts" },
   { key: "quotes",     label: "Quotes",     icon: FileText,   desc: "Service proposals" },
+  { key: "resellers",  label: "Resellers",  icon: Users,      desc: "Referrals & rewards" },
 ];
 
 // ── Mini stat chip ─────────────────────────────────────────────────────────────
@@ -535,6 +537,7 @@ export default function CustomerPortalMain() {
             {activeTab === "tickets"   && <PortalTicketsTab   customer={customer} user={user} />}
             {activeTab === "documents" && <PortalDocumentsTab customer={customer} user={user} />}
             {activeTab === "quotes"    && <PortalQuotesTab    customer={customer} />}
+            {activeTab === "resellers" && <PortalResellersTab customer={customer} />}
           </div>
         </main>
       </div>
