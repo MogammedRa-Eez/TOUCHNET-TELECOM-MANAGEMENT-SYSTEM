@@ -50,13 +50,13 @@ export default function PortalProjectsTab({ customer }) {
   if (projects.length === 0) {
     return (
       <div className="rounded-2xl p-12 text-center"
-        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(6,182,212,0.12)" }}>
+        style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(6,182,212,0.15)" }}>
         <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
           style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.2)" }}>
           <Wifi className="w-6 h-6" style={{ color: "#06b6d4" }} />
         </div>
-        <p className="font-bold text-white/60 mb-1">No Active Projects</p>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>You don't have any fibre projects linked yet.</p>
+        <p className="font-bold text-slate-600 mb-1">No Active Projects</p>
+        <p className="text-sm text-slate-400">You don't have any fibre projects linked yet.</p>
       </div>
     );
   }
@@ -88,9 +88,9 @@ function ProjectCard({ project, onBook }) {
   return (
     <div className="rounded-2xl overflow-hidden"
       style={{
-        background: "rgba(255,255,255,0.04)",
-        border: `1px solid ${cfg.color}25`,
-        boxShadow: `0 0 32px ${cfg.glow}10`,
+        background: "rgba(255,255,255,0.95)",
+        border: `1px solid ${cfg.color}30`,
+        boxShadow: `0 4px 24px ${cfg.glow}15`,
       }}>
       {/* Color top strip */}
       <div className="h-[2px]" style={{ background: `linear-gradient(90deg, ${cfg.color}, transparent)` }} />
@@ -100,7 +100,7 @@ function ProjectCard({ project, onBook }) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-black text-white text-[15px]">{project.project_name}</h3>
+              <h3 className="font-black text-slate-900 text-[15px]">{project.project_name}</h3>
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full"
                 style={{ background: `${cfg.color}18`, color: cfg.color, border: `1px solid ${cfg.color}35` }}>
                 <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ background: cfg.color, boxShadow: `0 0 6px ${cfg.color}` }} />
@@ -113,8 +113,8 @@ function ProjectCard({ project, onBook }) {
             </div>
             {project.site_address && (
               <div className="flex items-center gap-1.5 mt-1">
-                <MapPin className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
-                <p className="text-[11px] truncate" style={{ color: "rgba(255,255,255,0.35)" }}>{project.site_address}</p>
+                <MapPin className="w-3 h-3" style={{ color: "#94a3b8" }} />
+                <p className="text-[11px] truncate" style={{ color: "#64748b" }}>{project.site_address}</p>
               </div>
             )}
           </div>
@@ -158,7 +158,7 @@ function ProjectCard({ project, onBook }) {
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
               style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.15)" }}>
               <Calendar className="w-3 h-3" style={{ color: "#818cf8" }} />
-              <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>Est. Live: <strong className="text-white/70">{project.forecasted_go_live_date}</strong></span>
+              <span className="text-[10px]" style={{ color: "#64748b" }}>Est. Live: <strong className="text-slate-700">{project.forecasted_go_live_date}</strong></span>
             </div>
           )}
           {project.actual_go_live_date && (
@@ -172,7 +172,7 @@ function ProjectCard({ project, onBook }) {
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
               style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.15)" }}>
               <Zap className="w-3 h-3" style={{ color: "#06b6d4" }} />
-              <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>{project.service_plan}</span>
+              <span className="text-[10px]" style={{ color: "#64748b" }}>{project.service_plan}</span>
             </div>
           )}
         </div>
@@ -180,8 +180,8 @@ function ProjectCard({ project, onBook }) {
 
       {/* Steps */}
       {expanded && (
-        <div className="px-5 pb-5" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-          <p className="text-[9px] font-black uppercase tracking-[0.18em] mt-4 mb-3" style={{ color: "rgba(255,255,255,0.2)" }}>Installation Steps</p>
+        <div className="px-5 pb-5" style={{ borderTop: "1px solid rgba(99,102,241,0.08)" }}>
+          <p className="text-[9px] font-black uppercase tracking-[0.18em] mt-4 mb-3" style={{ color: "#94a3b8" }}>Installation Steps</p>
           <div className="space-y-2">
             {TASK_LABELS.map((task, idx) => {
               const done   = idx < currentIdx;
@@ -191,8 +191,8 @@ function ProjectCard({ project, onBook }) {
                 <div key={idx}
                   className={`flex items-start gap-3 rounded-xl p-3 transition-all ${locked ? "opacity-30" : ""}`}
                   style={{
-                    background: done ? "rgba(16,185,129,0.07)" : active ? "rgba(99,102,241,0.1)" : "rgba(255,255,255,0.02)",
-                    border: `1px solid ${done ? "rgba(16,185,129,0.2)" : active ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.04)"}`,
+                    background: done ? "rgba(16,185,129,0.07)" : active ? "rgba(99,102,241,0.08)" : "rgba(248,250,252,0.8)",
+                    border: `1px solid ${done ? "rgba(16,185,129,0.2)" : active ? "rgba(99,102,241,0.25)" : "rgba(226,232,240,0.8)"}`,
                   }}>
                   <div className="flex-shrink-0 mt-0.5">
                     {done
@@ -209,11 +209,11 @@ function ProjectCard({ project, onBook }) {
                     <div className="flex items-center gap-1.5">
                       <span>{task.icon}</span>
                       <p className={`text-[12px] font-bold ${done ? "" : active ? "" : ""}`}
-                        style={{ color: done ? "#6ee7b7" : active ? "#a78bfa" : "rgba(255,255,255,0.4)" }}>
+                        style={{ color: done ? "#059669" : active ? "#4f46e5" : "#94a3b8" }}>
                         {task.title}
                       </p>
                     </div>
-                    <p className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.25)" }}>{task.desc}</p>
+                    <p className="text-[10px] mt-0.5" style={{ color: "#94a3b8" }}>{task.desc}</p>
                   </div>
                   {active && (
                     <span className="text-[9px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 mono"

@@ -78,13 +78,13 @@ export default function PortalInvoicesTab({ customer }) {
 
   if (invoices.length === 0) return (
     <div className="rounded-2xl p-12 text-center"
-      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(6,182,212,0.12)" }}>
+      style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(6,182,212,0.15)" }}>
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
         style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.2)" }}>
         <Receipt className="w-6 h-6" style={{ color: "#06b6d4" }} />
       </div>
-      <p className="font-bold text-white/60 mb-1">No Invoices Yet</p>
-      <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Your invoice history will appear here once billing begins.</p>
+      <p className="font-bold text-slate-600 mb-1">No Invoices Yet</p>
+      <p className="text-sm text-slate-400">Your invoice history will appear here once billing begins.</p>
     </div>
   );
 
@@ -103,7 +103,7 @@ export default function PortalInvoicesTab({ customer }) {
           <div key={s.label} className="rounded-xl px-4 py-3 text-center"
             style={{ background: `${s.color}0a`, border: `1px solid ${s.color}20` }}>
             <p className="text-[15px] font-black mono" style={{ color: s.color }}>{s.value}</p>
-            <p className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{s.label}</p>
+            <p className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: "#94a3b8" }}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -114,7 +114,7 @@ export default function PortalInvoicesTab({ customer }) {
         const isOpen = expanded === inv.id;
         return (
           <div key={inv.id} className="rounded-2xl overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${sc.color}20` }}>
+            style={{ background: "rgba(255,255,255,0.95)", border: `1px solid ${sc.color}25`, boxShadow: "0 2px 12px rgba(99,102,241,0.06)" }}>
             <button
               className="w-full p-4 flex items-center gap-4 text-left transition-colors"
               style={{ background: isOpen ? `${sc.color}05` : "transparent" }}
@@ -125,13 +125,13 @@ export default function PortalInvoicesTab({ customer }) {
                 <Receipt className="w-4 h-4" style={{ color: sc.color }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-white text-[13px]">{inv.invoice_number || "Invoice"}</p>
-                <p className="text-[11px] mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
+                <p className="font-bold text-slate-800 text-[13px]">{inv.invoice_number || "Invoice"}</p>
+                <p className="text-[11px] mt-0.5 truncate text-slate-400">
                   {inv.description || `Service period${inv.billing_period_start ? `: ${inv.billing_period_start}` : ""}`}
                 </p>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
-                <span className="font-black text-white mono text-[14px]">
+                <span className="font-black text-slate-800 mono text-[14px]">
                   R{(inv.total || inv.amount || 0).toFixed(2)}
                 </span>
                 <span className="text-[10px] font-bold px-2.5 py-1 rounded-full"
@@ -139,8 +139,8 @@ export default function PortalInvoicesTab({ customer }) {
                   {sc.label}
                 </span>
                 {isOpen
-                  ? <ChevronUp className="w-4 h-4" style={{ color: "rgba(255,255,255,0.3)" }} />
-                  : <ChevronDown className="w-4 h-4" style={{ color: "rgba(255,255,255,0.3)" }} />}
+                  ? <ChevronUp className="w-4 h-4 text-slate-400" />
+                  : <ChevronDown className="w-4 h-4 text-slate-400" />}
               </div>
             </button>
 
@@ -154,9 +154,9 @@ export default function PortalInvoicesTab({ customer }) {
                     { label: "Due Date", value: inv.due_date ? format(new Date(inv.due_date), "dd MMM yyyy") : "—" },
                   ].map(item => (
                     <div key={item.label} className="rounded-xl p-3"
-                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                      <p className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.3)" }}>{item.label}</p>
-                      <p className="text-[13px] font-black mono text-white mt-0.5">{item.value}</p>
+                      style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.8)" }}>
+                      <p className="text-[9px] uppercase tracking-wider text-slate-400">{item.label}</p>
+                      <p className="text-[13px] font-black mono text-slate-800 mt-0.5">{item.value}</p>
                     </div>
                   ))}
                 </div>
@@ -185,7 +185,7 @@ export default function PortalInvoicesTab({ customer }) {
                   <div className="flex items-center gap-2 rounded-xl px-4 py-2.5 mb-3"
                     style={{ background: "rgba(6,182,212,0.07)", border: "1px solid rgba(6,182,212,0.18)" }}>
                     <Clock className="w-4 h-4 flex-shrink-0" style={{ color: "#06b6d4" }} />
-                    <p className="text-[12px] font-medium" style={{ color: "#22d3ee" }}>
+                    <p className="text-[12px] font-medium" style={{ color: "#0891b2" }}>
                       Payment pending{inv.due_date ? ` — due ${inv.due_date}` : ""}.
                     </p>
                   </div>

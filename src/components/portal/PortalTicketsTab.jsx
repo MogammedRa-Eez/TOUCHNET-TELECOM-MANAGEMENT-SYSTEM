@@ -94,16 +94,16 @@ export default function PortalTicketsTab({ customer, user }) {
       {/* New Ticket Form */}
       {showForm && (
         <div className="rounded-2xl overflow-hidden"
-          style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.3)", boxShadow: "0 0 32px rgba(99,102,241,0.1)" }}>
+          style={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(99,102,241,0.2)", boxShadow: "0 4px 24px rgba(99,102,241,0.08)" }}>
           <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#6366f1,#8b5cf6)" }} />
           <div className="p-5">
-            <h3 className="font-black text-white text-[14px] mb-4">Submit a Support Request</h3>
+            <h3 className="font-black text-slate-800 text-[14px] mb-4">Submit a Support Request</h3>
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "rgba(255,255,255,0.35)" }}>Subject *</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Subject *</label>
                 <input
-                  className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-white placeholder:text-white/20 transition-all"
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
+                  className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-slate-800 placeholder:text-slate-300 transition-all"
+                  style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)" }}
                   placeholder="Brief description of your issue"
                   value={form.subject}
                   onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
@@ -111,10 +111,10 @@ export default function PortalTicketsTab({ customer, user }) {
                 />
               </div>
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "rgba(255,255,255,0.35)" }}>Description *</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Description *</label>
                 <textarea
-                  className="w-full rounded-xl px-3 py-2.5 text-[13px] resize-none outline-none text-white placeholder:text-white/20"
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
+                  className="w-full rounded-xl px-3 py-2.5 text-[13px] resize-none outline-none text-slate-800 placeholder:text-slate-300"
+                  style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)" }}
                   rows={4}
                   placeholder="Please describe the issue in detail…"
                   value={form.description}
@@ -124,20 +124,20 @@ export default function PortalTicketsTab({ customer, user }) {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "rgba(255,255,255,0.35)" }}>Category</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Category</label>
                   <select
-                    className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-white"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
+                    className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-slate-800"
+                    style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)" }}
                     value={form.category}
                     onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
                   >
                     {CATEGORIES.map(c => (
-                      <option key={c} value={c} style={{ background: "#1e293b" }}>{c.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</option>
+                      <option key={c} value={c}>{c.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "rgba(255,255,255,0.35)" }}>Priority</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Priority</label>
                   <div className="grid grid-cols-2 gap-1">
                     {PRIORITIES.map(p => {
                       const pc = PRIORITY_CFG[p];
@@ -177,13 +177,13 @@ export default function PortalTicketsTab({ customer, user }) {
         </div>
       ) : tickets.length === 0 ? (
         <div className="rounded-2xl p-12 text-center"
-          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(6,182,212,0.12)" }}>
+          style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(6,182,212,0.15)" }}>
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
             style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.2)" }}>
             <TicketCheck className="w-6 h-6" style={{ color: "#06b6d4" }} />
           </div>
-          <p className="font-bold text-white/60 mb-1">No Support Tickets</p>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>Submit a ticket above and we'll be in touch shortly.</p>
+          <p className="font-bold text-slate-600 mb-1">No Support Tickets</p>
+          <p className="text-sm text-slate-400">Submit a ticket above and we'll be in touch shortly.</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -194,7 +194,7 @@ export default function PortalTicketsTab({ customer, user }) {
             const isEx = expanded === t.id;
             return (
               <div key={t.id} className="rounded-2xl overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${sc.color}18` }}>
+                style={{ background: "rgba(255,255,255,0.95)", border: `1px solid ${sc.color}25`, boxShadow: "0 2px 12px rgba(99,102,241,0.06)" }}>
                 <button className="w-full p-4 flex items-start gap-3 text-left transition-all"
                   onClick={() => setExpanded(isEx ? null : t.id)}>
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
@@ -203,7 +203,7 @@ export default function PortalTicketsTab({ customer, user }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-bold text-white text-[13px]">{t.subject}</p>
+                      <p className="font-bold text-slate-800 text-[13px]">{t.subject}</p>
                       <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase mono"
                         style={{ background: pc.bg, color: pc.color, border: `1px solid ${pc.border}` }}>
                         {t.priority}
@@ -213,12 +213,12 @@ export default function PortalTicketsTab({ customer, user }) {
                       <span className="text-[10px] font-semibold" style={{ color: sc.color }}>{sc.label}</span>
                       {t.category && (
                         <span className="text-[10px] px-2 py-0.5 rounded capitalize"
-                          style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)" }}>
+                          style={{ background: "rgba(241,245,249,0.9)", color: "#64748b" }}>
                           {t.category.replace(/_/g," ")}
                         </span>
                       )}
                       {t.ticket_number && (
-                        <span className="text-[10px] mono" style={{ color: "rgba(99,102,241,0.6)" }}>{t.ticket_number}</span>
+                        <span className="text-[10px] mono" style={{ color: "#6366f1" }}>{t.ticket_number}</span>
                       )}
                     </div>
                   </div>
@@ -228,16 +228,16 @@ export default function PortalTicketsTab({ customer, user }) {
                 </button>
 
                 {isEx && (
-                  <div className="px-4 pb-4 pt-1 space-y-2" style={{ borderTop: `1px solid ${sc.color}12` }}>
-                    <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>{t.description}</p>
+                  <div className="px-4 pb-4 pt-1 space-y-2" style={{ borderTop: `1px solid ${sc.color}15` }}>
+                    <p className="text-[12px] leading-relaxed text-slate-600">{t.description}</p>
                     {t.resolution_notes && (
                       <div className="rounded-xl px-4 py-3" style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.15)" }}>
                         <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: "#10b981" }}>Resolution</p>
-                        <p className="text-[12px]" style={{ color: "#6ee7b7" }}>{t.resolution_notes}</p>
+                        <p className="text-[12px]" style={{ color: "#059669" }}>{t.resolution_notes}</p>
                       </div>
                     )}
                     {t.assigned_to && (
-                      <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.25)" }}>Assigned to: <span className="text-white/50">{t.assigned_to}</span></p>
+                      <p className="text-[11px] text-slate-400">Assigned to: <span className="text-slate-600 font-semibold">{t.assigned_to}</span></p>
                     )}
                   </div>
                 )}
