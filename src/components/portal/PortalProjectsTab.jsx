@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { Wifi, CheckCircle2, Clock, AlertCircle, Lock, Calendar, Hash, ChevronDown, ChevronUp, Zap, MapPin } from "lucide-react";
+import { Wifi, CheckCircle2, Clock, Lock, Calendar, Hash, ChevronDown, ChevronUp, Zap, MapPin, Plus } from "lucide-react";
 import { Loader2 } from "lucide-react";
+import BookingModal from "./BookingModal";
+import ProjectBookings from "./ProjectBookings";
 
 const STATUS_CONFIG = {
   lead:        { label: "Lead",        color: "#94a3b8", glow: "rgba(148,163,184,0.3)" },
@@ -26,6 +28,8 @@ const TASK_LABELS = [
 ];
 
 export default function PortalProjectsTab({ customer }) {
+  const [bookingProject, setBookingProject] = useState(null);
+
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["portal-projects", customer.id],
     queryFn: () => base44.entities.FibreProject.filter({ customer_id: customer.id }),
@@ -58,13 +62,24 @@ export default function PortalProjectsTab({ customer }) {
   }
 
   return (
-    <div className="space-y-4">
-      {projects.map(project => <ProjectCard key={project.id} project={project} />)}
-    </div>
+    <>
+      <div className="space-y-4">
+        {projects.map(project => (
+          <ProjectCard key={project.id} project={project} onBook={() => setBookingProject(project)} />
+        ))}
+      </div>
+      {bookingProject && (
+        <BookingModal
+          project={bookingProject}
+          customer={customer}
+          onClose={() => setBookingProject(null)}
+        />
+      )}
+    </>
   );
 }
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, onBook }) {
   const [expanded, setExpanded] = useState(true);
   const cfg = STATUS_CONFIG[project.status] || STATUS_CONFIG.lead;
   const currentIdx  = project.current_task_index || 0;
@@ -124,6 +139,18 @@ function ProjectCard({ project }) {
               style={{ width: `${progressPct}%`, background: `linear-gradient(90deg, ${cfg.color}, ${cfg.color}88)`, boxShadow: `0 0 8px ${cfg.glow}` }} />
           </div>
         </div>
+
+        {/* Book a Visit button */}
+        {!["cancelled","live","billed"].includes(project.status) && (
+          <button onClick={onBook}
+            className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95"
+            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 16px rgba(99,102,241,0.3)" }}>
+            <Plus className="w-3.5 h-3.5" /> Book a Visit
+          </button>
+        )}
+
+        {/* Existing bookings */}
+        <ProjectBookings projectId={project.id} />
 
         {/* Key dates */}
         <div className="flex flex-wrap gap-3 mt-3">
