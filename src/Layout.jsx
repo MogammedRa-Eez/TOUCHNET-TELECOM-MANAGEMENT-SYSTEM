@@ -7,6 +7,7 @@ import {
   ChevronRight, Home, Play, FileText, Bell, X, Menu, Activity,
   Cpu
 } from "lucide-react";
+// Shield already imported above — used for Cynet Security nav item
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
 import NotificationBell from "@/components/notifications/NotificationBell";
@@ -34,8 +35,9 @@ const NAV_GROUPS = [
   {
     label: "Infrastructure",
     items: [
-      { name: "Network",   page: "Network",   icon: Activity, perm: "network" },
-      { name: "Inventory", page: "Inventory", icon: Package,  perm: "network" },
+      { name: "Network",   page: "Network",        icon: Activity, perm: "network" },
+      { name: "Inventory", page: "Inventory",       icon: Package,  perm: "network" },
+      { name: "Cynet Security", page: "CynetSecurity", icon: Shield, perm: "cyber_security" },
     ]
   },
   {

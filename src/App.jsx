@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import DepartmentDashboard from './pages/DepartmentDashboard';
 import CustomerPortalMain from './pages/CustomerPortalMain';
+import CynetSecurity from './pages/CynetSecurity';
 import NotificationSettings from './pages/NotificationSettings';
 import Quotes from './pages/Quotes';
 import AIAssistant from './pages/AIAssistant';
@@ -93,6 +94,11 @@ const AuthenticatedApp = () => {
         </LayoutWrapper>
       } />
       <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
+      <Route path="/CynetSecurity" element={
+        <LayoutWrapper currentPageName="CynetSecurity">
+          <CynetSecurity />
+        </LayoutWrapper>
+      } />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
