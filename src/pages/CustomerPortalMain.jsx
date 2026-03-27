@@ -6,6 +6,7 @@ import {
   FolderOpen, FileText, Activity, DollarSign, Shield, Zap,
   CheckCircle2, Clock, TrendingUp
 } from "lucide-react";
+import PortalNotificationBell from "@/components/portal/PortalNotificationBell";
 import PortalProjectsTab from "@/components/portal/PortalProjectsTab";
 import PortalInvoicesTab from "@/components/portal/PortalInvoicesTab";
 import PortalTicketsTab from "@/components/portal/PortalTicketsTab";
@@ -137,20 +138,12 @@ export default function CustomerPortalMain() {
   const overdueInv = invoices.filter(i => i.status === "overdue").length;
 
   return (
-    <div className="min-h-screen"
-      style={{ background: "linear-gradient(160deg,#060d1b 0%,#080f20 60%,#05091a 100%)" }}>
-
-      {/* ── Animated background grid ── */}
-      <div className="fixed inset-0 pointer-events-none z-0"
-        style={{
-          backgroundImage: "linear-gradient(rgba(6,182,212,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.025) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} />
+    <div className="min-h-screen">
 
       {/* ── Header ── */}
       <header className="sticky top-0 z-30 px-5 py-3 flex items-center justify-between"
         style={{
-          background: "rgba(5,10,20,0.88)",
+          background: "rgba(5,10,20,0.92)",
           borderBottom: "1px solid rgba(6,182,212,0.15)",
           backdropFilter: "blur(20px)",
           boxShadow: "0 1px 0 rgba(6,182,212,0.08)",
@@ -177,6 +170,8 @@ export default function CustomerPortalMain() {
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color, boxShadow: `0 0 6px ${sc.color}` }} />
             <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
           </div>
+          {/* Customer notification bell */}
+          <PortalNotificationBell customerEmail={customer.email} />
           <button
             onClick={() => base44.auth.logout("/")}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-semibold transition-all hover:opacity-80"
@@ -186,7 +181,7 @@ export default function CustomerPortalMain() {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-5xl mx-auto p-4 sm:p-6 space-y-5 pb-12">
+      <main className="max-w-5xl mx-auto p-4 sm:p-6 space-y-5 pb-12">
 
         {/* ── Hero Banner ── */}
         <div className="rounded-3xl overflow-hidden relative"
