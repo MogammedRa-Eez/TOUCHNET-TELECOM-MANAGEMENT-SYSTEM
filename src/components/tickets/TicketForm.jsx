@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { X, Zap, UserCheck } from "lucide-react";
+import { toTitleCase } from "@/utils/nameUtils";
 
 // Region keyword → assigned engineer
 const REGION_ASSIGNMENTS = {
@@ -177,7 +178,7 @@ export default function TicketForm({ ticket, customers, onSubmit, onCancel }) {
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs font-medium text-slate-600">Assigned To</Label>
-              <Input value={form.assigned_to} onChange={e => setForm({...form, assigned_to: e.target.value})} placeholder="Employee name" />
+              <Input value={form.assigned_to} onChange={e => setForm({...form, assigned_to: toTitleCase(e.target.value)})} placeholder="Employee name" />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs font-medium text-slate-600">Status</Label>

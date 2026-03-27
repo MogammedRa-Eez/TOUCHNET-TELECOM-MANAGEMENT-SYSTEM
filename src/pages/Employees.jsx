@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search, Pencil, Trash2, UserCog, X, Mail, Phone } from "lucide-react";
+import { toTitleCase } from "@/utils/nameUtils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useRBAC } from "@/components/rbac/RBACContext";
@@ -43,7 +44,7 @@ function EmployeeForm({ employee, onSubmit, onCancel }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-[11px] font-medium text-slate-400">Full Name *</Label>
-              <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} required className="bg-transparent border-slate-700 text-slate-200" />
+              <Input value={form.full_name} onChange={e => setForm({...form, full_name: toTitleCase(e.target.value)})} required className="bg-transparent border-slate-700 text-slate-200" />
             </div>
             <div className="space-y-1.5">
               <Label className="text-[11px] font-medium text-slate-400">Email *</Label>

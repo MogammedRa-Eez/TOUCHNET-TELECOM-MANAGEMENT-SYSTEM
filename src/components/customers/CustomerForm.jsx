@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { X } from "lucide-react";
+import { toTitleCase } from "@/utils/nameUtils";
 
 const plans = [
   { value: "basic_10mbps", label: "Basic — 10 Mbps", rate: 29.99 },
@@ -43,7 +44,7 @@ export default function CustomerForm({ customer, onSubmit, onCancel }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-xs font-medium text-slate-600">Full Name *</Label>
-              <Input value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} required />
+              <Input value={form.full_name} onChange={e => setForm({...form, full_name: toTitleCase(e.target.value)})} required />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs font-medium text-slate-600">Email *</Label>
