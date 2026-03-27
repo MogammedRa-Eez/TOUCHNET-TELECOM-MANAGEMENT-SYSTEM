@@ -12,6 +12,7 @@ import NotificationSettings from './pages/NotificationSettings';
 import Quotes from './pages/Quotes';
 import AIAssistant from './pages/AIAssistant';
 import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
 import SystemDemo from './pages/SystemDemo';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
