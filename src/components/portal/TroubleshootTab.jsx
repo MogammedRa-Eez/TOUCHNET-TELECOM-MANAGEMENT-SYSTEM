@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import {
   Wifi, Router, RefreshCw, CheckCircle2, XCircle, AlertTriangle,
   ChevronDown, ChevronUp, ChevronRight, Zap, Monitor, Phone,
-  RotateCcw, Power, Cable, Signal, HelpCircle, ArrowRight
+  RotateCcw, Power, Cable, Signal, HelpCircle, ArrowRight, Bot
 } from "lucide-react";
+import TroubleshootChatbot from "./TroubleshootChatbot";
 
 const GUIDES = [
   {
@@ -222,9 +223,32 @@ function GuideCard({ guide, onOpenTicket }) {
   );
 }
 
-export default function TroubleshootTab({ onOpenTicket }) {
+export default function TroubleshootTab({ onOpenTicket, customer }) {
   return (
     <div className="space-y-4">
+      {/* AI Chatbot */}
+      {customer && (
+        <div className="rounded-2xl p-5"
+          style={{
+            background: "linear-gradient(135deg,rgba(99,102,241,0.09),rgba(139,92,246,0.06))",
+            border: "1px solid rgba(99,102,241,0.2)",
+          }}>
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 16px rgba(99,102,241,0.35)" }}>
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-[14px] font-black" style={{ color: "#1e293b" }}>AI Diagnostic Assistant</p>
+              <p className="text-[12px] mt-0.5" style={{ color: "#64748b" }}>
+                Tell me your issue and I'll ask a few questions to diagnose it — and raise a priority ticket automatically if needed.
+              </p>
+            </div>
+          </div>
+          <TroubleshootChatbot customer={customer} onTicketCreated={onOpenTicket} />
+        </div>
+      )}
+
       {/* Header */}
       <div className="rounded-2xl p-5"
         style={{
