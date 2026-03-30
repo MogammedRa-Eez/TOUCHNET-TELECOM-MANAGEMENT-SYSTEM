@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { MapPin, X } from "lucide-react";
-import { Loader2 } from "lucide-react";
+import { MapPin, X, Loader2 } from "lucide-react";
 
-// Fix leaflet default icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
@@ -15,25 +13,25 @@ L.Icon.Default.mergeOptions({
 
 const FIBRE_PROVIDERS = [
   { id: "all",         label: "All Providers", color: null },
-  { id: "dfa",         label: "DFA",           color: "#6366f1", description: "Enterprise dark fibre",    speeds: "Up to 10 Gbps"  },
-  { id: "mfn",         label: "MFN",           color: "#10b981", description: "Metro fibre",              speeds: "Up to 1 Gbps"   },
-  { id: "openfibre",   label: "Open Fibre",    color: "#f59e0b", description: "Open access fibre",        speeds: "Up to 500 Mbps" },
-  { id: "vumatel",     label: "Vumatel",       color: "#ef4444", description: "Residential FTTH",         speeds: "Up to 200 Mbps" },
-  { id: "frogfoot",    label: "Frogfoot",      color: "#06b6d4", description: "National FTTH",            speeds: "Up to 100 Mbps" },
-  { id: "link_africa", label: "Link Africa",   color: "#f97316", description: "Fixed wireless & fibre",   speeds: "Up to 200 Mbps" },
+  { id: "dfa",         label: "DFA",           color: "#6366f1", speeds: "Up to 10 Gbps"  },
+  { id: "mfn",         label: "MFN",           color: "#10b981", speeds: "Up to 1 Gbps"   },
+  { id: "openfibre",   label: "Open Fibre",    color: "#f59e0b", speeds: "Up to 500 Mbps" },
+  { id: "vumatel",     label: "Vumatel",       color: "#ef4444", speeds: "Up to 200 Mbps" },
+  { id: "frogfoot",    label: "Frogfoot",      color: "#06b6d4", speeds: "Up to 100 Mbps" },
+  { id: "link_africa", label: "Link Africa",   color: "#f97316", speeds: "Up to 200 Mbps" },
 ];
 
 const COVERAGE_ZONES = [
-  { id: 1,  name: "Sandton CBD",         lat: -26.1076, lng: 28.0567, radius: 3500, providers: ["dfa","mfn","openfibre","vumatel"] },
-  { id: 2,  name: "Johannesburg CBD",    lat: -26.2041, lng: 28.0473, radius: 4000, providers: ["dfa","mfn","frogfoot"] },
-  { id: 3,  name: "Midrand",             lat: -25.9986, lng: 28.1284, radius: 4500, providers: ["dfa","vumatel","link_africa"] },
-  { id: 4,  name: "Rosebank",            lat: -26.1467, lng: 28.0436, radius: 2500, providers: ["dfa","mfn","openfibre"] },
-  { id: 5,  name: "Pretoria CBD",        lat: -25.7479, lng: 28.2293, radius: 5000, providers: ["dfa","mfn","frogfoot","vumatel"] },
-  { id: 6,  name: "Centurion",           lat: -25.8603, lng: 28.1894, radius: 4000, providers: ["dfa","vumatel","openfibre"] },
-  { id: 7,  name: "Fourways",            lat: -26.0203, lng: 28.0105, radius: 3000, providers: ["vumatel","frogfoot","openfibre"] },
-  { id: 8,  name: "Randburg",            lat: -26.0927, lng: 27.9903, radius: 3500, providers: ["vumatel","link_africa","frogfoot"] },
-  { id: 9,  name: "Kempton Park",        lat: -26.1003, lng: 28.2317, radius: 4000, providers: ["vumatel","link_africa","frogfoot"] },
-  { id: 10, name: "Hatfield",            lat: -25.7470, lng: 28.2350, radius: 2500, providers: ["mfn","vumatel","openfibre"] },
+  { id: 1,  name: "Sandton CBD",      lat: -26.1076, lng: 28.0567, radius: 3500, providers: ["dfa","mfn","openfibre","vumatel"] },
+  { id: 2,  name: "Joburg CBD",       lat: -26.2041, lng: 28.0473, radius: 4000, providers: ["dfa","mfn","frogfoot"] },
+  { id: 3,  name: "Midrand",          lat: -25.9986, lng: 28.1284, radius: 4500, providers: ["dfa","vumatel","link_africa"] },
+  { id: 4,  name: "Rosebank",         lat: -26.1467, lng: 28.0436, radius: 2500, providers: ["dfa","mfn","openfibre"] },
+  { id: 5,  name: "Pretoria CBD",     lat: -25.7479, lng: 28.2293, radius: 5000, providers: ["dfa","mfn","frogfoot","vumatel"] },
+  { id: 6,  name: "Centurion",        lat: -25.8603, lng: 28.1894, radius: 4000, providers: ["dfa","vumatel","openfibre"] },
+  { id: 7,  name: "Fourways",         lat: -26.0203, lng: 28.0105, radius: 3000, providers: ["vumatel","frogfoot","openfibre"] },
+  { id: 8,  name: "Randburg",         lat: -26.0927, lng: 27.9903, radius: 3500, providers: ["vumatel","link_africa","frogfoot"] },
+  { id: 9,  name: "Kempton Park",     lat: -26.1003, lng: 28.2317, radius: 4000, providers: ["vumatel","link_africa","frogfoot"] },
+  { id: 10, name: "Hatfield",         lat: -25.7470, lng: 28.2350, radius: 2500, providers: ["mfn","vumatel","openfibre"] },
 ];
 
 function getDistKm(lat1, lng1, lat2, lng2) {
@@ -51,11 +49,11 @@ function MapFlyTo({ position }) {
 }
 
 export default function CoverageChecker({ onClose }) {
-  const [query, setQuery]       = useState("");
+  const [query, setQuery]         = useState("");
   const [searching, setSearching] = useState(false);
-  const [pin, setPin]           = useState(null);
-  const [result, setResult]     = useState(null);
-  const [filter, setFilter]     = useState("all");
+  const [pin, setPin]             = useState(null);
+  const [result, setResult]       = useState(null);
+  const [filter, setFilter]       = useState("all");
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -72,7 +70,7 @@ export default function CoverageChecker({ onClose }) {
     const covered = COVERAGE_ZONES.filter(z => getDistKm(lat, lng, z.lat, z.lng) * 1000 <= z.radius);
     const allProviders = [...new Set(covered.flatMap(c => c.providers))];
     const nearest = COVERAGE_ZONES.reduce((a, z) => { const d = getDistKm(lat, lng, z.lat, z.lng); return d < a.d ? { z, d } : a; }, { z: null, d: Infinity });
-    setResult({ found: true, inCoverage: covered.length > 0, zones: covered, allProviders, nearestName: nearest.z?.name, nearestKm: nearest.d });
+    setResult({ found: true, inCoverage: covered.length > 0, allProviders, nearestName: nearest.z?.name, nearestKm: nearest.d });
     setSearching(false);
   };
 
