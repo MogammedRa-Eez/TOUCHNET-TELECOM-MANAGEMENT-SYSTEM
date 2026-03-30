@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Plus, Image, Link, FileText, Type, Minus, Eye, Save } from "lucide-react";
+import { X, Plus, Image, Link, FileText, Type, Minus, Eye, Save, MessageSquare } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import QuoteNotesPanel from "@/components/sales/QuoteNotesPanel";
+import { useQuery } from "@tanstack/react-query";
 
 const SECTION_TYPES = [
   { type: "text", icon: Type, label: "Text Block" },
@@ -61,6 +63,15 @@ function calcTotals(items, discountPct, taxPct) {
 }
 
 export default function QuoteBuilder({ quote, customers = [], onSave, onClose, onPreview }) {
+  const [showNotes, setShowNotes] = useState(false);
+
+  const { data: notesCount = [] } = useQuery({
+    queryKey: ["quote-notes", quote?.id],
+    queryFn: () => base44.entities.QuoteNote.filter({ quote_id: quote.id }),
+    enabled: !!quote?.id,
+  });
+  const unresolvedCount = notesCount.filter(n => !n.is_resolved).length;
+
   const [form, setForm] = useState(() => {
     const defaults = {
       quote_number: `QT-${Date.now().toString().slice(-6)}`,
@@ -116,6 +127,8 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
   };
 
   return (
+    <>
+    {showNotes && quote?.id && <QuoteNotesPanel quote={form} onClose={() => setShowNotes(false)} />}
     <div className="fixed inset-0 z-50 flex overflow-hidden" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
       <div className="flex flex-col w-full max-w-5xl mx-auto my-4 rounded-2xl overflow-hidden bg-white shadow-2xl">
         {/* Header */}
@@ -129,6 +142,16 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
             <Button size="sm" variant="ghost" className="text-white hover:bg-white/20 gap-1" onClick={() => onPreview({ ...form, ...totals })}>
               <Eye className="w-4 h-4" /> Preview
             </Button>
+            {quote?.id && (
+              <Button size="sm" variant="ghost" className="text-white hover:bg-white/20 gap-1 relative" onClick={() => setShowNotes(true)}>
+                <MessageSquare className="w-4 h-4" /> Notes
+                {unresolvedCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] font-black flex items-center justify-center text-white" style={{ background: "#ef4444" }}>
+                    {unresolvedCount}
+                  </span>
+                )}
+              </Button>
+            )}
             <Button size="sm" className="bg-white text-rose-600 hover:bg-rose-50 gap-1 font-bold" onClick={() => handleSave("draft")} disabled={saving}>
               <Save className="w-4 h-4" /> {saving ? "Saving…" : "Save Draft"}
             </Button>
@@ -270,6 +293,7 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
         </div>
       </div>
     </div>
+    </>
   );
 }
 

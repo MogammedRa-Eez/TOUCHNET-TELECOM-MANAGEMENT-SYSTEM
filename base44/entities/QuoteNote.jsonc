@@ -1,0 +1,51 @@
+{
+  "name": "QuoteNote",
+  "type": "object",
+  "properties": {
+    "quote_id": {
+      "type": "string",
+      "description": "Linked Quote ID"
+    },
+    "quote_number": {
+      "type": "string",
+      "description": "Quote number for display"
+    },
+    "quote_title": {
+      "type": "string",
+      "description": "Quote title for reference"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Email of the employee who added the note"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Name of the employee who added the note"
+    },
+    "note_type": {
+      "type": "string",
+      "enum": [
+        "note",
+        "adjustment",
+        "flag",
+        "approval"
+      ],
+      "default": "note",
+      "description": "Type of internal note"
+    },
+    "content": {
+      "type": "string",
+      "description": "Note content"
+    },
+    "is_resolved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this note/adjustment has been resolved"
+    }
+  },
+  "required": [
+    "quote_id",
+    "content",
+    "author_email"
+  ]
+}

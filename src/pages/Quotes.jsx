@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Eye, Pencil, Trash2, FileText, BarChart2, List, Mail, Download, Loader2 } from "lucide-react";
+import { Plus, Search, Eye, Pencil, Trash2, FileText, BarChart2, List, Mail, Download, Loader2, MessageSquare } from "lucide-react";
 import { useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import QuoteBuilder from "@/components/sales/QuoteBuilder";
 import QuotePreview from "@/components/sales/QuotePreview";
 import QuotesDashboard from "@/components/sales/QuotesDashboard";
+import QuoteNotesPanel from "@/components/sales/QuoteNotesPanel";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
@@ -32,6 +33,7 @@ export default function Quotes() {
   const [previewing, setPreviewing] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [notesQuote, setNotesQuote] = useState(null);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [downloadingId, setDownloadingId] = useState(null);
   const hiddenDocRef = useRef(null);
@@ -86,7 +88,27 @@ export default function Quotes() {
   };
 
   const handleSave = async (data) => {
+    const isNew = !data.id;
     await saveMut.mutateAsync(data);
+    // Notify all employees about a new quote being created
+    if (isNew) {
+      try {
+        const allUsers = await base44.entities.User.list();
+        const currentUser = await base44.auth.me();
+        const others = allUsers.filter(u => u.email !== currentUser?.email);
+        await Promise.all(others.map(u =>
+          base44.entities.Notification.create({
+            user_email: u.email,
+            title: `New quote created: ${data.title}`,
+            message: `${currentUser?.full_name || "An employee"} created a new quote "${data.title}" (${data.quote_number}) for ${data.customer_name || "a client"}. Open Quotes to add internal notes or adjustments.`,
+            type: "info",
+            category: "customer",
+            is_read: false,
+            link_page: "Quotes",
+          })
+        ));
+      } catch (_) { /* non-critical */ }
+    }
   };
 
   const handleSendEmail = async (quote) => {
@@ -273,6 +295,9 @@ export default function Quotes() {
                   <td className="px-4 py-3 text-xs text-slate-500">{q.valid_until ? format(new Date(q.valid_until), "d MMM yyyy") : "—"}</td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
+                      <Button variant="ghost" size="icon" className="h-7 w-7 relative" onClick={() => setNotesQuote(q)} title="Internal Notes">
+                        <MessageSquare className="w-3.5 h-3.5 text-purple-500" />
+                      </Button>
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPreviewing(q)} title="Preview">
                         <Eye className="w-3.5 h-3.5 text-indigo-500" />
                       </Button>
@@ -316,6 +341,10 @@ export default function Quotes() {
         <div style={{ position: "fixed", left: "-9999px", top: 0, width: 900, zIndex: -1 }}>
           <QuoteDocument quote={pdfQuote} docRef={hiddenDocRef} />
         </div>
+      )}
+
+      {notesQuote && (
+        <QuoteNotesPanel quote={notesQuote} onClose={() => setNotesQuote(null)} />
       )}
 
       {previewing && (
