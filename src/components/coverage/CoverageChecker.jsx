@@ -1,237 +1,481 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
-import { X, Search, MapPin, CheckCircle2, XCircle, Loader2, Wifi, AlertTriangle } from "lucide-react";
+import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { X, MapPin, Search, Loader2, CheckCircle2, XCircle, ChevronDown, Wifi } from "lucide-react";
 
-// Fix default marker icons for leaflet in vite
+// Fix leaflet default icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
+  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
 });
 
-// Coverage zones for South Africa (TouchNet service areas)
-// These represent approximate coverage polygons centred on major nodes
-const COVERAGE_ZONES = [
-  { name: "Sandton CBD",        lat: -26.1070, lng: 28.0567, radiusKm: 5,   speed: "Up to 1 Gbps",   type: "Fibre" },
-  { name: "Midrand",            lat: -25.9973, lng: 28.1287, radiusKm: 6,   speed: "Up to 500 Mbps", type: "Fibre" },
-  { name: "Fourways",           lat: -26.0183, lng: 28.0096, radiusKm: 5,   speed: "Up to 1 Gbps",   type: "Fibre" },
-  { name: "Randburg",           lat: -26.0934, lng: 27.9981, radiusKm: 4,   speed: "Up to 100 Mbps", type: "Fibre" },
-  { name: "Johannesburg CBD",   lat: -26.2041, lng: 28.0473, radiusKm: 4,   speed: "Up to 1 Gbps",   type: "Fibre" },
-  { name: "Rosebank",           lat: -26.1466, lng: 28.0437, radiusKm: 3,   speed: "Up to 1 Gbps",   type: "Fibre" },
-  { name: "Centurion",          lat: -25.8600, lng: 28.1890, radiusKm: 6,   speed: "Up to 500 Mbps", type: "Fibre" },
-  { name: "Pretoria East",      lat: -25.7597, lng: 28.2975, radiusKm: 5,   speed: "Up to 100 Mbps", type: "Fibre" },
-  { name: "Bryanston",          lat: -26.0700, lng: 28.0170, radiusKm: 4,   speed: "Up to 1 Gbps",   type: "Fibre" },
-  { name: "Edenvale",           lat: -26.1444, lng: 28.1584, radiusKm: 4,   speed: "Up to 500 Mbps", type: "Fibre" },
-  { name: "Rivonia",            lat: -26.0551, lng: 28.0623, radiusKm: 3.5, speed: "Up to 1 Gbps",   type: "Fibre" },
-  { name: "Woodmead",           lat: -26.0733, lng: 28.0878, radiusKm: 3,   speed: "Up to 1 Gbps",   type: "Fibre" },
+// ── Fibre provider definitions ───────────────────────────────────────────────
+const FIBRE_PROVIDERS = [
+  {
+    id: "all",
+    label: "All Providers",
+    color: null,
+  },
+  {
+    id: "dfa",
+    label: "DFA (Dark Fibre Africa)",
+    color: "#6366f1",
+    description: "Enterprise-grade dark fibre infrastructure",
+    speeds: "Up to 10 Gbps",
+  },
+  {
+    id: "mfn",
+    label: "MFN (Metro Fibre Networx)",
+    color: "#10b981",
+    description: "Metro fibre across major business districts",
+    speeds: "Up to 1 Gbps",
+  },
+  {
+    id: "openfibre",
+    label: "Open Fibre",
+    color: "#f59e0b",
+    description: "Open access fibre network",
+    speeds: "Up to 500 Mbps",
+  },
+  {
+    id: "vumatel",
+    label: "Vumatel",
+    color: "#ef4444",
+    description: "Residential & business FTTH",
+    speeds: "Up to 200 Mbps",
+  },
+  {
+    id: "octotel",
+    label: "Octotel",
+    color: "#8b5cf6",
+    description: "Cape Town focused open fibre",
+    speeds: "Up to 1 Gbps",
+  },
+  {
+    id: "frogfoot",
+    label: "Frogfoot",
+    color: "#06b6d4",
+    description: "National FTTH open access network",
+    speeds: "Up to 100 Mbps",
+  },
+  {
+    id: "link_africa",
+    label: "Link Africa",
+    color: "#f97316",
+    description: "Fixed wireless & fibre hybrid",
+    speeds: "Up to 200 Mbps",
+  },
 ];
 
-// Haversine distance in km
-function distanceKm(lat1, lng1, lat2, lng2) {
+// ── Coverage zones (Gauteng region) ─────────────────────────────────────────
+// Each zone has the fibre providers available there
+const COVERAGE_ZONES = [
+  { id: 1,  name: "Sandton CBD",         lat: -26.1076, lng: 28.0567, radius: 3500,  providers: ["dfa", "mfn", "openfibre", "vumatel"] },
+  { id: 2,  name: "Johannesburg CBD",    lat: -26.2041, lng: 28.0473, radius: 4000,  providers: ["dfa", "mfn", "frogfoot"] },
+  { id: 3,  name: "Midrand",             lat: -25.9986, lng: 28.1284, radius: 4500,  providers: ["dfa", "vumatel", "link_africa"] },
+  { id: 4,  name: "Rosebank",            lat: -26.1467, lng: 28.0436, radius: 2500,  providers: ["dfa", "mfn", "openfibre"] },
+  { id: 5,  name: "Pretoria CBD",        lat: -25.7479, lng: 28.2293, radius: 5000,  providers: ["dfa", "mfn", "frogfoot", "vumatel"] },
+  { id: 6,  name: "Centurion",           lat: -25.8603, lng: 28.1894, radius: 4000,  providers: ["dfa", "vumatel", "openfibre"] },
+  { id: 7,  name: "Fourways",            lat: -26.0203, lng: 28.0105, radius: 3000,  providers: ["vumatel", "frogfoot", "openfibre"] },
+  { id: 8,  name: "Randburg",            lat: -26.0927, lng: 27.9903, radius: 3500,  providers: ["vumatel", "link_africa", "frogfoot"] },
+  { id: 9,  name: "Germiston",           lat: -26.2251, lng: 28.1686, radius: 3000,  providers: ["dfa", "mfn", "openfibre"] },
+  { id: 10, name: "Bedfordview",         lat: -26.1762, lng: 28.1377, radius: 2500,  providers: ["dfa", "vumatel"] },
+  { id: 11, name: "Woodmead",            lat: -26.0695, lng: 28.0982, radius: 2000,  providers: ["dfa", "mfn", "openfibre"] },
+  { id: 12, name: "Bryanston",           lat: -26.0699, lng: 28.0192, radius: 2500,  providers: ["vumatel", "frogfoot"] },
+  { id: 13, name: "Sunninghill",         lat: -26.0392, lng: 28.0827, radius: 2000,  providers: ["dfa", "openfibre", "vumatel"] },
+  { id: 14, name: "Kempton Park",        lat: -26.1003, lng: 28.2317, radius: 4000,  providers: ["vumatel", "link_africa", "frogfoot"] },
+  { id: 15, name: "Hatfield (Pretoria)", lat: -25.7470, lng: 28.2350, radius: 2500,  providers: ["mfn", "vumatel", "openfibre"] },
+];
+
+// ── Haversine distance (km) ──────────────────────────────────────────────────
+function getDistanceKm(lat1, lng1, lat2, lng2) {
   const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+// ── Check coverage at coordinates ────────────────────────────────────────────
 function checkCoverage(lat, lng) {
-  let closest = null;
-  let closestDist = Infinity;
+  const covered = [];
+  let nearest = null;
+  let nearestDist = Infinity;
+
   for (const zone of COVERAGE_ZONES) {
-    const d = distanceKm(lat, lng, zone.lat, zone.lng);
-    if (d <= zone.radiusKm) return { covered: true, zone, distanceKm: d };
-    if (d < closestDist) { closestDist = d; closest = zone; }
+    const dist = getDistanceKm(lat, lng, zone.lat, zone.lng);
+    const distM = dist * 1000;
+    if (distM <= zone.radius) {
+      covered.push({ zone, distM });
+    }
+    if (distM < nearestDist) {
+      nearestDist = distM;
+      nearest = { zone, distKm: dist };
+    }
   }
-  return { covered: false, zone: closest, distanceKm: closestDist };
+
+  return { covered, nearest };
 }
 
-// Helper to fly map to a location
-function FlyTo({ center }) {
+// ── Map re-centerer ──────────────────────────────────────────────────────────
+function MapFlyTo({ position }) {
   const map = useMap();
-  useEffect(() => { if (center) map.flyTo(center, 13, { duration: 1.2 }); }, [center]);
+  useEffect(() => {
+    if (position) map.flyTo(position, 14, { duration: 1.2 });
+  }, [position]);
   return null;
 }
 
-export default function CoverageChecker({ onClose }) {
-  const [address, setAddress] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [result, setResult] = useState(null); // { lat, lng, displayName, covered, zone, distanceKm }
-  const [error, setError] = useState("");
-  const inputRef = useRef(null);
+// ── Provider badge ───────────────────────────────────────────────────────────
+function ProviderBadge({ providerId }) {
+  const p = FIBRE_PROVIDERS.find(x => x.id === providerId);
+  if (!p) return null;
+  return (
+    <span
+      className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+      style={{ background: `${p.color}18`, color: p.color, border: `1px solid ${p.color}35` }}
+    >
+      <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.color }} />
+      {p.label.split(" (")[0]}
+    </span>
+  );
+}
 
-  useEffect(() => { inputRef.current?.focus(); }, []);
+// ── Provider dropdown ────────────────────────────────────────────────────────
+function ProviderDropdown({ providers }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!address.trim()) return;
-    setSearching(true);
-    setError("");
-    setResult(null);
-
-    try {
-      const query = encodeURIComponent(address + ", South Africa");
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`);
-      const data = await res.json();
-      if (!data || data.length === 0) {
-        setError("Address not found. Please try a more specific address.");
-        setSearching(false);
-        return;
-      }
-      const { lat, lon, display_name } = data[0];
-      const coverage = checkCoverage(parseFloat(lat), parseFloat(lon));
-      setResult({ lat: parseFloat(lat), lng: parseFloat(lon), displayName: display_name, ...coverage });
-    } catch {
-      setError("Could not search for address. Please check your connection.");
-    } finally {
-      setSearching(false);
-    }
-  };
-
-  const mapCenter = result ? [result.lat, result.lng] : [-26.0, 28.1];
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}>
-      <div className="w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl flex flex-col" style={{ background: "#fff", maxHeight: "90vh" }}>
+    <div className="relative inline-block" ref={ref}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
+        style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.2)", color: "#6366f1" }}
+      >
+        <Wifi className="w-3 h-3" />
+        {providers.length} Provider{providers.length !== 1 ? "s" : ""} Available
+        <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute left-0 top-full mt-1 z-50 rounded-xl overflow-hidden shadow-xl"
+          style={{
+            background: "white",
+            border: "1px solid rgba(99,102,241,0.15)",
+            minWidth: 260,
+            boxShadow: "0 8px 32px rgba(99,102,241,0.15)",
+          }}
+        >
+          <div className="px-3 py-2" style={{ borderBottom: "1px solid rgba(226,232,240,0.8)", background: "rgba(248,250,252,0.9)" }}>
+            <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "#94a3b8" }}>Fibre Networks Available</p>
+          </div>
+          {providers.map(pid => {
+            const p = FIBRE_PROVIDERS.find(x => x.id === pid);
+            if (!p) return null;
+            return (
+              <div key={pid} className="flex items-start gap-2.5 px-3 py-2.5 hover:bg-slate-50 transition-colors"
+                style={{ borderBottom: "1px solid rgba(226,232,240,0.5)" }}>
+                <div className="w-3 h-3 rounded-full mt-0.5 flex-shrink-0" style={{ background: p.color }} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[12px] font-bold" style={{ color: "#1e293b" }}>{p.label}</p>
+                  <p className="text-[10px]" style={{ color: "#94a3b8" }}>{p.description}</p>
+                  <p className="text-[10px] font-semibold mt-0.5" style={{ color: p.color }}>{p.speeds}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main CoverageChecker ─────────────────────────────────────────────────────
+export default function CoverageChecker({ onClose }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searching, setSearching]     = useState(false);
+  const [pinPosition, setPinPosition] = useState(null);
+  const [coverageResult, setCoverageResult] = useState(null);
+  const [filterProvider, setFilterProvider] = useState("all");
+
+  const mapCenter = [-26.0, 28.05];
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setSearching(true);
+    setCoverageResult(null);
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery + ", South Africa")}&limit=1`;
+    const res  = await fetch(url, { headers: { "Accept-Language": "en" } });
+    const data = await res.json();
+
+    if (!data.length) {
+      setCoverageResult({ found: false, error: "Address not found. Try a more specific address." });
+      setSearching(false);
+      return;
+    }
+
+    const lat = parseFloat(data[0].lat);
+    const lng = parseFloat(data[0].lon);
+    setPinPosition([lat, lng]);
+
+    const { covered, nearest } = checkCoverage(lat, lng);
+
+    // Aggregate all unique providers across covered zones
+    const allProviders = [...new Set(covered.flatMap(c => c.zone.providers))];
+
+    setCoverageResult({
+      found: true,
+      inCoverage: covered.length > 0,
+      zones: covered.map(c => c.zone),
+      allProviders,
+      nearest: covered.length === 0 ? nearest : null,
+      displayName: data[0].display_name,
+    });
+
+    setSearching(false);
+  };
+
+  // Filtered zones for map display
+  const visibleZones = filterProvider === "all"
+    ? COVERAGE_ZONES
+    : COVERAGE_ZONES.filter(z => z.providers.includes(filterProvider));
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}>
+      <div className="relative flex flex-col w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl"
+        style={{ background: "white", maxHeight: "90vh" }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-          style={{ background: "linear-gradient(135deg,#0f172a,#1e3a5f)", borderBottom: "1px solid rgba(6,182,212,0.2)" }}>
+          style={{
+            background: "linear-gradient(135deg,#0891b2,#06b6d4)",
+            borderBottom: "1px solid rgba(6,182,212,0.3)",
+          }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "rgba(6,182,212,0.15)", border: "1px solid rgba(6,182,212,0.3)" }}>
-              <Wifi className="w-4 h-4" style={{ color: "#22d3ee" }} />
+              style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)" }}>
+              <MapPin className="w-4.5 h-4.5 text-white" />
             </div>
             <div>
-              <p className="text-[15px] font-black text-white">Fibre Coverage Checker</p>
-              <p className="text-[10px] mono" style={{ color: "rgba(148,163,184,0.7)" }}>Check if TouchNet fibre is available at your address</p>
+              <h2 className="text-[16px] font-black text-white">Fibre Coverage Checker</h2>
+              <p className="text-[11px] text-white/70">Check available fibre networks at any address</p>
             </div>
           </div>
           <button onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors">
-            <X className="w-4 h-4 text-slate-400" />
+            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 transition-colors">
+            <X className="w-4 h-4 text-white" />
           </button>
         </div>
 
-        {/* Search bar */}
-        <div className="px-6 py-4 flex-shrink-0" style={{ background: "#f8fafc", borderBottom: "1px solid rgba(226,232,240,0.8)" }}>
-          <form onSubmit={handleSearch} className="flex gap-3">
-            <div className="flex-1 relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        {/* Search + filter bar */}
+        <div className="flex flex-col sm:flex-row gap-3 px-5 py-4 flex-shrink-0"
+          style={{ borderBottom: "1px solid rgba(226,232,240,0.8)", background: "#f8fafc" }}>
+          {/* Address search */}
+          <div className="flex flex-1 gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
-                ref={inputRef}
                 type="text"
-                value={address}
-                onChange={e => setAddress(e.target.value)}
-                placeholder="Enter your street address, suburb or area…"
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl text-[13px] outline-none text-slate-800 placeholder:text-slate-300"
-                style={{ background: "#fff", border: "1px solid rgba(99,102,241,0.2)" }}
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleSearch()}
+                placeholder="Search an address e.g. Sandton City, Johannesburg…"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl text-[13px] outline-none"
+                style={{
+                  background: "white",
+                  border: "1px solid rgba(6,182,212,0.25)",
+                  color: "#1e293b",
+                }}
               />
             </div>
-            <button type="submit" disabled={searching || !address.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ background: "linear-gradient(135deg,#0891b2,#06b6d4)", boxShadow: "0 4px 12px rgba(6,182,212,0.3)" }}>
+            <button onClick={handleSearch} disabled={searching}
+              className="px-4 py-2.5 rounded-xl text-[13px] font-bold text-white flex items-center gap-2 transition-all hover:opacity-90 disabled:opacity-60"
+              style={{ background: "linear-gradient(135deg,#0891b2,#06b6d4)", boxShadow: "0 3px 10px rgba(6,182,212,0.3)" }}>
               {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              {searching ? "Searching…" : "Check"}
+              {searching ? "Searching…" : "Search"}
             </button>
-          </form>
+          </div>
 
-          {/* Result banner */}
-          {error && (
-            <div className="flex items-center gap-2 mt-3 px-4 py-2.5 rounded-xl"
-              style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.2)" }}>
-              <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
-              <p className="text-[12px] text-red-500 font-medium">{error}</p>
-            </div>
-          )}
-
-          {result && (
-            <div className={`flex items-start gap-3 mt-3 px-4 py-3 rounded-xl`}
+          {/* Provider filter */}
+          <div className="relative flex-shrink-0">
+            <select
+              value={filterProvider}
+              onChange={e => setFilterProvider(e.target.value)}
+              className="w-full sm:w-auto h-[42px] pl-3 pr-8 rounded-xl text-[12px] font-semibold outline-none appearance-none cursor-pointer"
               style={{
-                background: result.covered ? "rgba(16,185,129,0.08)" : "rgba(245,158,11,0.08)",
-                border: `1px solid ${result.covered ? "rgba(16,185,129,0.25)" : "rgba(245,158,11,0.25)"}`,
-              }}>
-              {result.covered
-                ? <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                : <XCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />}
-              <div>
-                {result.covered ? (
-                  <>
-                    <p className="text-[13px] font-black text-emerald-700">✓ Fibre Available in Your Area!</p>
-                    <p className="text-[12px] text-emerald-600 mt-0.5">
-                      You're in the <strong>{result.zone.name}</strong> coverage zone — <strong>{result.zone.speed}</strong> {result.zone.type} available.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-[13px] font-black text-amber-700">Coverage Not Yet Available</p>
-                    <p className="text-[12px] text-amber-600 mt-0.5">
-                      Nearest covered area is <strong>{result.zone?.name}</strong> (~{result.distanceKm.toFixed(1)} km away). We're expanding — contact us to register interest!
-                    </p>
-                  </>
-                )}
-                <p className="text-[10px] text-slate-400 mt-1 truncate">{result.displayName}</p>
+                background: "white",
+                border: "1px solid rgba(99,102,241,0.25)",
+                color: "#4f46e5",
+              }}
+            >
+              {FIBRE_PROVIDERS.map(p => (
+                <option key={p.id} value={p.id}>{p.label}</option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none" style={{ color: "#6366f1" }} />
+          </div>
+        </div>
+
+        {/* Coverage result banner */}
+        {coverageResult && (
+          <div className="flex-shrink-0 px-5 py-3"
+            style={{
+              background: coverageResult.inCoverage ? "rgba(16,185,129,0.06)" : coverageResult.found ? "rgba(239,68,68,0.06)" : "rgba(245,158,11,0.06)",
+              borderBottom: "1px solid rgba(226,232,240,0.6)",
+            }}>
+            {!coverageResult.found ? (
+              <div className="flex items-center gap-2">
+                <XCircle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                <p className="text-[12px] font-semibold text-amber-700">{coverageResult.error}</p>
               </div>
+            ) : coverageResult.inCoverage ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  <p className="text-[13px] font-bold text-emerald-700">
+                    Fibre Available! — {coverageResult.zones.length} zone{coverageResult.zones.length > 1 ? "s" : ""} cover this address.
+                  </p>
+                </div>
+                {/* Provider dropdown */}
+                <ProviderDropdown providers={coverageResult.allProviders} />
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                  <p className="text-[13px] font-bold text-red-600">No fibre coverage at this address yet.</p>
+                </div>
+                {coverageResult.nearest && (
+                  <p className="text-[11px] text-slate-500 ml-6">
+                    Nearest covered area: <strong className="text-slate-700">{coverageResult.nearest.zone.name}</strong> —{" "}
+                    {coverageResult.nearest.distKm.toFixed(1)} km away
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Legend */}
+        <div className="flex flex-wrap gap-2 px-5 py-2 flex-shrink-0"
+          style={{ borderBottom: "1px solid rgba(226,232,240,0.6)", background: "rgba(248,250,252,0.7)" }}>
+          {FIBRE_PROVIDERS.filter(p => p.id !== "all").map(p => (
+            <div key={p.id} className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: p.color }} />
+              <span className="text-[10px] font-semibold" style={{ color: "#64748b" }}>{p.label.split(" (")[0]}</span>
             </div>
-          )}
+          ))}
         </div>
 
         {/* Map */}
-        <div className="flex-1 min-h-[340px]">
-          <MapContainer center={mapCenter} zoom={10} style={{ width: "100%", height: "100%", minHeight: 340 }} zoomControl={true}>
+        <div className="flex-1 min-h-0" style={{ minHeight: 360 }}>
+          <MapContainer
+            center={mapCenter}
+            zoom={10}
+            style={{ height: "100%", width: "100%", minHeight: 360 }}
+            scrollWheelZoom={true}
+          >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            {/* Coverage zones */}
-            {COVERAGE_ZONES.map(zone => (
-              <Circle
-                key={zone.name}
-                center={[zone.lat, zone.lng]}
-                radius={zone.radiusKm * 1000}
-                pathOptions={{ color: "#06b6d4", fillColor: "#06b6d4", fillOpacity: 0.12, weight: 1.5, opacity: 0.5 }}
-              >
-                <Popup>
-                  <div className="text-[12px]">
-                    <p className="font-bold text-slate-800">{zone.name}</p>
-                    <p className="text-slate-500">{zone.type} · {zone.speed}</p>
-                  </div>
-                </Popup>
-              </Circle>
-            ))}
+            {pinPosition && <MapFlyTo position={pinPosition} />}
 
-            {/* Searched address marker */}
-            {result && (
-              <>
-                <FlyTo center={[result.lat, result.lng]} />
-                <Marker position={[result.lat, result.lng]}>
+            {/* Coverage zones */}
+            {visibleZones.map(zone => {
+              // Determine the "primary" color — first provider in zone that matches filter
+              const primaryProvider = filterProvider !== "all"
+                ? FIBRE_PROVIDERS.find(p => p.id === filterProvider)
+                : FIBRE_PROVIDERS.find(p => zone.providers.includes(p.id) && p.id !== "all");
+              const color = primaryProvider?.color || "#6366f1";
+
+              return (
+                <Circle
+                  key={zone.id}
+                  center={[zone.lat, zone.lng]}
+                  radius={zone.radius}
+                  pathOptions={{
+                    color,
+                    fillColor: color,
+                    fillOpacity: 0.12,
+                    weight: 1.5,
+                    opacity: 0.7,
+                  }}
+                >
                   <Popup>
-                    <div className="text-[12px]">
-                      <p className="font-bold" style={{ color: result.covered ? "#10b981" : "#f59e0b" }}>
-                        {result.covered ? "✓ Covered" : "⚠ Not Yet Available"}
+                    <div style={{ minWidth: 180 }}>
+                      <p style={{ fontWeight: 700, fontSize: 13, marginBottom: 6, color: "#1e293b" }}>{zone.name}</p>
+                      <p style={{ fontSize: 10, color: "#94a3b8", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700 }}>
+                        Available Networks
                       </p>
-                      <p className="text-slate-500 mt-0.5">{address}</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {zone.providers.map(pid => {
+                          const p = FIBRE_PROVIDERS.find(x => x.id === pid);
+                          if (!p) return null;
+                          return (
+                            <div key={pid} style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
+                              <span style={{ width: 8, height: 8, borderRadius: "50%", background: p.color, flexShrink: 0, marginTop: 3 }} />
+                              <div>
+                                <p style={{ fontSize: 11, fontWeight: 700, color: "#334155", margin: 0 }}>{p.label.split(" (")[0]}</p>
+                                <p style={{ fontSize: 10, color: p.color, margin: 0, fontWeight: 600 }}>{p.speeds}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </Popup>
-                </Marker>
-              </>
+                </Circle>
+              );
+            })}
+
+            {/* Search pin */}
+            {pinPosition && (
+              <Marker position={pinPosition}>
+                <Popup>
+                  <div style={{ maxWidth: 220 }}>
+                    <p style={{ fontWeight: 700, fontSize: 12, color: "#1e293b", marginBottom: 4 }}>Searched Location</p>
+                    {coverageResult?.inCoverage ? (
+                      <>
+                        <p style={{ fontSize: 11, color: "#059669", fontWeight: 700, marginBottom: 6 }}>✓ Fibre Available</p>
+                        <p style={{ fontSize: 10, color: "#64748b", marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Networks:</p>
+                        {coverageResult.allProviders.map(pid => {
+                          const p = FIBRE_PROVIDERS.find(x => x.id === pid);
+                          if (!p) return null;
+                          return (
+                            <div key={pid} style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                              <span style={{ width: 7, height: 7, borderRadius: "50%", background: p.color }} />
+                              <span style={{ fontSize: 11, fontWeight: 600, color: "#334155" }}>{p.label.split(" (")[0]}</span>
+                            </div>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      <p style={{ fontSize: 11, color: "#ef4444", fontWeight: 700 }}>✗ No coverage</p>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
             )}
           </MapContainer>
-        </div>
-
-        {/* Footer CTA */}
-        <div className="px-6 py-3 flex items-center justify-between flex-shrink-0"
-          style={{ background: "#f8fafc", borderTop: "1px solid rgba(226,232,240,0.8)" }}>
-          <p className="text-[11px] text-slate-400">Coverage zones are indicative. Contact us to confirm availability at your exact address.</p>
-          <a href="mailto:sales@touchnet.co.za"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:opacity-90"
-            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
-            Contact Sales
-          </a>
         </div>
       </div>
     </div>
