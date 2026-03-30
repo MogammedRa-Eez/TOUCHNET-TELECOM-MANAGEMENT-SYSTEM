@@ -398,13 +398,6 @@ export default function Billing() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["invoices"] }),
   });
 
-  if (!rbacLoading && !can("billing")) return <AccessDenied />;
-
-  const handleSubmit = (data) => {
-    if (editing) updateMut.mutate({ id: editing.id, data });
-    else createMut.mutate(data);
-  };
-
   const totalPaid    = invoices.filter(i => i.status === "paid").reduce((a, i) => a + (i.total || 0), 0);
   const totalOverdue = invoices.filter(i => i.status === "overdue").reduce((a, i) => a + (i.total || 0), 0);
   const totalPending = invoices.filter(i => ["draft","sent"].includes(i.status)).reduce((a, i) => a + (i.total || 0), 0);
@@ -418,6 +411,13 @@ export default function Billing() {
     const matchStatus = statusFilter === "all" || i.status === statusFilter;
     return matchSearch && matchStatus;
   }), [invoices, search, statusFilter]);
+
+  if (!rbacLoading && !can("billing")) return <AccessDenied />;
+
+  const handleSubmit = (data) => {
+    if (editing) updateMut.mutate({ id: editing.id, data });
+    else createMut.mutate(data);
+  };
 
   const filteredTotal = filtered.reduce((a, i) => a + (i.total ?? i.amount ?? 0), 0);
 
