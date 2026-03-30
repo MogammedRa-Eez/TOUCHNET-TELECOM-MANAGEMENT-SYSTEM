@@ -15,6 +15,8 @@ import PortalTicketsTab from "@/components/portal/PortalTicketsTab";
 import PortalDocumentsTab from "@/components/portal/PortalDocumentsTab";
 import PortalQuotesTab from "@/components/portal/PortalQuotesTab";
 import PortalResellersTab from "@/components/portal/PortalResellersTab";
+import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
+import { MapPin } from "lucide-react";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
@@ -306,6 +308,7 @@ export default function CustomerPortalMain() {
   const [authLoading, setAuthLoading] = useState(true);
   const [activeTab, setActiveTab]   = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showCoverage, setShowCoverage] = useState(false);
 
   useEffect(() => {
     base44.auth.me()
@@ -433,6 +436,11 @@ export default function CustomerPortalMain() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button onClick={() => setShowCoverage(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
+              style={{ background: "linear-gradient(135deg,#0891b2,#06b6d4)", color: "white", boxShadow: "0 3px 10px rgba(6,182,212,0.3)" }}>
+              <MapPin className="w-3.5 h-3.5" /> Check Coverage
+            </button>
             {/* Status pill */}
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl"
               style={{ background: sc.bg, border: `1px solid ${sc.border}` }}>
@@ -441,6 +449,7 @@ export default function CustomerPortalMain() {
             </div>
             <PortalNotificationBell customerEmail={customer.email} />
           </div>
+          {showCoverage && <CoverageChecker onClose={() => setShowCoverage(false)} />}
         </header>
 
         {/* ── Content ── */}

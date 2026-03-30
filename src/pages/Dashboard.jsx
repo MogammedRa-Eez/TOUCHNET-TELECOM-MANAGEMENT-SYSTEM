@@ -6,7 +6,7 @@ import {
   Users, Receipt, TicketCheck, Wifi, DollarSign, Globe, Activity,
   Zap, ArrowUpRight, RefreshCw, ChevronDown, ChevronUp, AlertTriangle,
   XCircle, Clock, TrendingUp, Eye, X, CheckCircle2, BarChart3,
-  Shield, Cpu, Network
+  Shield, Cpu, Network, MapPin
 } from "lucide-react";
 import KPICard from "../components/dashboard/KPICard";
 import RevenueChart from "../components/dashboard/RevenueChart";
@@ -15,6 +15,7 @@ import NetworkHealth from "../components/dashboard/NetworkHealth";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import UserActivityPanel from "../components/dashboard/UserActivityPanel";
 import NetworkGlobe from "../components/dashboard/NetworkGlobe";
+import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
@@ -226,6 +227,7 @@ export default function Dashboard() {
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [refreshing, setRefreshing] = useState(false);
   const [tick, setTick] = useState(0);
+  const [showCoverage, setShowCoverage] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => setTick(t => t + 1), 5000);
@@ -316,8 +318,15 @@ export default function Dashboard() {
             <Zap className="w-3.5 h-3.5" />
             <span className="mono">LIVE</span>
           </div>
+          <button onClick={() => setShowCoverage(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
+            style={{ background: "linear-gradient(135deg,#0891b2,#06b6d4)", color: "white", boxShadow: "0 4px 12px rgba(6,182,212,0.3)" }}>
+            <MapPin className="w-3.5 h-3.5" />
+            Coverage Map
+          </button>
         </div>
       </div>
+      {showCoverage && <CoverageChecker onClose={() => setShowCoverage(false)} />}
 
       {/* ── Alert Ticker ── */}
       <AlertTicker tickets={tickets} nodes={nodes} />
