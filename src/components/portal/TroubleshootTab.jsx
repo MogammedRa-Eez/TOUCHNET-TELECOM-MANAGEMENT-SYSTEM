@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import {
   Wifi, Router, RefreshCw, CheckCircle2, XCircle, AlertTriangle,
   ChevronDown, ChevronUp, ChevronRight, Zap, Monitor, Phone,
-  RotateCcw, Power, Cable, Signal, HelpCircle, ArrowRight, Bot
+  RotateCcw, Power, Cable, Signal, HelpCircle, ArrowRight, Bot,
+  Settings
 } from "lucide-react";
 import TroubleshootChatbot from "./TroubleshootChatbot";
+import WiFiSettingsPanel from "./WiFiSettingsPanel";
 
 const GUIDES = [
   {
@@ -224,6 +226,8 @@ function GuideCard({ guide, onOpenTicket }) {
 }
 
 export default function TroubleshootTab({ onOpenTicket, customer }) {
+  const [showWifi, setShowWifi] = useState(false);
+
   return (
     <div className="space-y-4">
       {/* AI Chatbot */}
@@ -246,6 +250,35 @@ export default function TroubleshootTab({ onOpenTicket, customer }) {
             </div>
           </div>
           <TroubleshootChatbot customer={customer} onTicketCreated={onOpenTicket} />
+        </div>
+      )}
+
+      {/* WiFi Settings */}
+      {customer && (
+        <div className="rounded-2xl overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(99,102,241,0.15)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#6366f1,#8b5cf6,transparent)" }} />
+          <button
+            onClick={() => setShowWifi(v => !v)}
+            className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50"
+          >
+            <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
+              <Settings className="w-5 h-5" style={{ color: "#6366f1" }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-black" style={{ color: "#1e293b" }}>WiFi Settings</p>
+              <p className="text-[11px] mt-0.5" style={{ color: "#94a3b8" }}>Manage SSID, password & guest network remotely</p>
+            </div>
+            {showWifi
+              ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: "#94a3b8" }} />
+              : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: "#94a3b8" }} />}
+          </button>
+          {showWifi && (
+            <div className="px-5 pb-5">
+              <WiFiSettingsPanel customer={customer} />
+            </div>
+          )}
         </div>
       )}
 
