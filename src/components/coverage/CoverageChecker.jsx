@@ -13,14 +13,14 @@ L.Icon.Default.mergeOptions({
 });
 
 const FIBRE_PROVIDERS = [
-  { id: "all",        label: "All Providers",           color: null },
-  { id: "dfa",        label: "DFA (Dark Fibre Africa)",  color: "#6366f1", description: "Enterprise-grade dark fibre infrastructure",   speeds: "Up to 10 Gbps" },
-  { id: "mfn",        label: "MFN (Metro Fibre Networx)",color: "#10b981", description: "Metro fibre across major business districts",  speeds: "Up to 1 Gbps"  },
-  { id: "openfibre",  label: "Open Fibre",               color: "#f59e0b", description: "Open access fibre network",                    speeds: "Up to 500 Mbps"},
-  { id: "vumatel",    label: "Vumatel",                  color: "#ef4444", description: "Residential & business FTTH",                  speeds: "Up to 200 Mbps"},
-  { id: "octotel",    label: "Octotel",                  color: "#8b5cf6", description: "Cape Town focused open fibre",                 speeds: "Up to 1 Gbps"  },
-  { id: "frogfoot",   label: "Frogfoot",                 color: "#06b6d4", description: "National FTTH open access network",            speeds: "Up to 100 Mbps"},
-  { id: "link_africa",label: "Link Africa",              color: "#f97316", description: "Fixed wireless & fibre hybrid",                speeds: "Up to 200 Mbps"},
+  { id: "all",        label: "All Providers",            color: null },
+  { id: "dfa",        label: "DFA (Dark Fibre Africa)",  color: "#6366f1", description: "Enterprise-grade dark fibre infrastructure",  speeds: "Up to 10 Gbps"  },
+  { id: "mfn",        label: "MFN (Metro Fibre Networx)", color: "#10b981", description: "Metro fibre across major business districts", speeds: "Up to 1 Gbps"   },
+  { id: "openfibre",  label: "Open Fibre",                color: "#f59e0b", description: "Open access fibre network",                   speeds: "Up to 500 Mbps" },
+  { id: "vumatel",    label: "Vumatel",                   color: "#ef4444", description: "Residential & business FTTH",                 speeds: "Up to 200 Mbps" },
+  { id: "octotel",    label: "Octotel",                   color: "#8b5cf6", description: "Cape Town focused open fibre",                speeds: "Up to 1 Gbps"   },
+  { id: "frogfoot",   label: "Frogfoot",                  color: "#06b6d4", description: "National FTTH open access network",           speeds: "Up to 100 Mbps" },
+  { id: "link_africa",label: "Link Africa",               color: "#f97316", description: "Fixed wireless & fibre hybrid",               speeds: "Up to 200 Mbps" },
 ];
 
 const COVERAGE_ZONES = [
@@ -68,7 +68,6 @@ function MapFlyTo({ position }) {
   return null;
 }
 
-// Provider dropdown — rendered in a portal-like fixed div so it's never clipped
 function ProviderDropdown({ providers }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
@@ -84,9 +83,7 @@ function ProviderDropdown({ providers }) {
 
   useEffect(() => {
     const handler = (e) => {
-      if (btnRef.current && !btnRef.current.closest("[data-provider-dropdown]")?.contains(e.target)) {
-        setOpen(false);
-      }
+      if (!e.target.closest("[data-provider-dropdown]")) setOpen(false);
     };
     if (open) document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -106,20 +103,18 @@ function ProviderDropdown({ providers }) {
       </button>
 
       {open && (
-        <div
-          style={{
-            position: "fixed",
-            top: dropPos.top,
-            left: dropPos.left,
-            zIndex: 999999,
-            background: "white",
-            border: "1px solid rgba(99,102,241,0.2)",
-            borderRadius: 12,
-            minWidth: 280,
-            boxShadow: "0 12px 40px rgba(0,0,0,0.18)",
-            overflow: "hidden",
-          }}
-        >
+        <div style={{
+          position: "fixed",
+          top: dropPos.top,
+          left: dropPos.left,
+          zIndex: 999999,
+          background: "white",
+          border: "1px solid rgba(99,102,241,0.2)",
+          borderRadius: 12,
+          minWidth: 280,
+          boxShadow: "0 12px 40px rgba(0,0,0,0.18)",
+          overflow: "hidden",
+        }}>
           <div style={{ padding: "8px 12px", borderBottom: "1px solid rgba(226,232,240,0.8)", background: "#f8fafc" }}>
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94a3b8", margin: 0 }}>
               Fibre Networks Available

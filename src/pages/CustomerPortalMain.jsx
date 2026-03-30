@@ -15,6 +15,7 @@ import PortalTicketsTab from "@/components/portal/PortalTicketsTab";
 import PortalDocumentsTab from "@/components/portal/PortalDocumentsTab";
 import PortalQuotesTab from "@/components/portal/PortalQuotesTab";
 import PortalResellersTab from "@/components/portal/PortalResellersTab";
+import TroubleshootTab from "@/components/portal/TroubleshootTab";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 import { MapPin } from "lucide-react";
 
@@ -42,7 +43,8 @@ const NAV_ITEMS = [
   { key: "tickets",    label: "Support",    icon: TicketCheck,desc: "Help & tickets" },
   { key: "documents",  label: "Documents",  icon: FolderOpen, desc: "Files & contracts" },
   { key: "quotes",     label: "Quotes",     icon: FileText,   desc: "Service proposals" },
-  { key: "resellers",  label: "Resellers",  icon: Users,      desc: "Referrals & rewards" },
+  { key: "resellers",    label: "Resellers",    icon: Users,      desc: "Referrals & rewards" },
+  { key: "troubleshoot", label: "Troubleshoot", icon: Zap,        desc: "Fix issues yourself" },
 ];
 
 // ── Mini stat chip ─────────────────────────────────────────────────────────────
@@ -547,7 +549,8 @@ export default function CustomerPortalMain() {
             {activeTab === "tickets"   && <PortalTicketsTab   customer={customer} user={user} />}
             {activeTab === "documents" && <PortalDocumentsTab customer={customer} user={user} />}
             {activeTab === "quotes"    && <PortalQuotesTab    customer={customer} />}
-            {activeTab === "resellers" && <PortalResellersTab customer={customer} />}
+            {activeTab === "resellers"    && <PortalResellersTab customer={customer} />}
+            {activeTab === "troubleshoot" && <TroubleshootTab onOpenTicket={() => setActiveTab("tickets")} />}
           </div>
         </main>
       </div>
