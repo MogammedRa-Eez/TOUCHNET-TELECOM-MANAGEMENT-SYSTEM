@@ -101,48 +101,23 @@ export default function CoverageChecker({ onClose }) {
     try {
       const latLng = await geocodeAddress(address);
       setCoords(latLng);
-      const res = await base44.integrations.Core.InvokeLLM({
+
+      const text = await base44.integrations.Core.InvokeLLM({
         add_context_from_internet: true,
-        prompt: `For the South African address "${address}" (coordinates: ${latLng[0].toFixed(4)}, ${latLng[1].toFixed(4)}), research which fibre network providers have infrastructure coverage in that specific area.
+        model: "gemini_3_flash",
+        prompt: `For the South African address "${address}" (lat: ${latLng[0].toFixed(4)}, lon: ${latLng[1].toFixed(4)}), which fibre network providers cover this area?
 
-Return JSON with:
-- covered: boolean
-- summary: 1-line summary
-- providers: array of { name, available: boolean, plans: [{ name, speed, price }] }
+Respond ONLY with a JSON object, no markdown, no extra text. Use this exact format:
+{"covered":true,"summary":"Brief coverage summary for this area","providers":[{"name":"Openserve","available":true,"plans":[{"name":"Home 50","speed":"50Mbps","price":"599"}]},{"name":"Vumatel","available":false,"plans":[]}]}
 
-Include: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be realistic about coverage based on location.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            covered:  { type: "boolean" },
-            summary:  { type: "string" },
-            providers: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  name:      { type: "string" },
-                  available: { type: "boolean" },
-                  plans: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        name:  { type: "string" },
-                        speed: { type: "string" },
-                        price: { type: "string" },
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+Include all of these providers: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be realistic about actual fibre coverage for this specific location in South Africa.`,
       });
-      setResult(res);
+
+      const jsonMatch = typeof text === "string" ? text.match(/\{[\s\S]*\}/) : null;
+      const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : JSON.stringify(text));
+      setResult(parsed);
     } catch (e) {
-      setError(e.message);
+      setError(e.message || "Failed to check coverage. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -159,7 +134,6 @@ Include: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be reali
 
         <div className="h-[3px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#06b6d4,#6366f1,#8b5cf6)" }} />
 
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
           style={{ borderBottom: "1px solid rgba(226,232,240,0.6)" }}>
           <div className="flex items-center gap-3">
@@ -178,7 +152,6 @@ Include: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be reali
           </button>
         </div>
 
-        {/* Search */}
         <div className="px-5 py-4 flex-shrink-0" style={{ borderBottom: "1px solid rgba(226,232,240,0.4)" }}>
           <div className="flex gap-2">
             <input
@@ -200,7 +173,6 @@ Include: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be reali
           {error && <p className="text-[11px] mt-2 text-red-500">{error}</p>}
         </div>
 
-        {/* Map */}
         <div className="flex-shrink-0" style={{ height: 260 }}>
           <MapContainer center={coords || [-29.0, 25.0]} zoom={coords ? 15 : 5}
             style={{ width: "100%", height: "100%" }} zoomControl={true}>
@@ -233,7 +205,6 @@ Include: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be reali
           </MapContainer>
         </div>
 
-        {/* Results */}
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {!result && !loading && (
             <div className="text-center py-6">
@@ -246,6 +217,7 @@ Include: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel, Link Africa. Be reali
             <div className="text-center py-8">
               <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" style={{ color: "#06b6d4" }} />
               <p className="text-[12px] font-semibold" style={{ color: "#64748b" }}>Checking fibre coverage…</p>
+              <p className="text-[10px] mt-1" style={{ color: "#94a3b8" }}>Geocoding address & looking up providers</p>
             </div>
           )}
 
