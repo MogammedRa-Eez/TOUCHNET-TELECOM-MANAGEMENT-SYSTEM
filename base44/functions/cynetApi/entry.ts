@@ -4,15 +4,31 @@ const BASE_URL = Deno.env.get("CYNET_BASE_URL") || "";
 const USERNAME = Deno.env.get("CYNET_USERNAME") || "";
 const PASSWORD = Deno.env.get("CYNET_PASSWORD") || "";
 
+// Try multiple auth endpoints to find the right one for MSSP v3
 async function getAuthToken() {
-  const res = await fetch(`${BASE_URL}/api/account/token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userName: USERNAME, password: PASSWORD }),
-  });
-  if (!res.ok) throw new Error(`Cynet auth failed: ${res.status} ${await res.text()}`);
-  const data = await res.json();
-  return data.access_token || data.token || data.Token;
+  const endpoints = [
+    { url: `${BASE_URL}/api/account/token`, body: { userName: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/v1/account/token`, body: { userName: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/v2/account/token`, body: { userName: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/auth/token`, body: { username: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/v1/auth/login`, body: { username: USERNAME, password: PASSWORD } },
+  ];
+
+  let lastError = "";
+  for (const ep of endpoints) {
+    const res = await fetch(ep.url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ep.body),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const token = data.access_token || data.token || data.Token || data.accessToken;
+      if (token) return { token, authUrl: ep.url };
+    }
+    lastError = `${ep.url} → ${res.status}`;
+  }
+  throw new Error(`All auth endpoints failed. Last: ${lastError}`);
 }
 
 async function cynetGet(path, token) {
@@ -41,30 +57,29 @@ Deno.serve(async (req) => {
 
     const { action, payload } = await req.json();
 
-    const token = await getAuthToken();
+    const { token, authUrl } = await getAuthToken();
 
     switch (action) {
+      case "getAlerts":
       case "get_alerts": {
-        // Fetch recent alerts/threats
-        const data = await cynetGet("/api/alerts?pageSize=100&pageIndex=0", token);
-        return Response.json({ success: true, data });
+        const data = await cynetGet("/api/alerts?pageSize=200&pageIndex=0", token);
+        return Response.json({ success: true, data, authUrl });
       }
 
       case "get_endpoints": {
-        // Fetch endpoint/device list
-        const data = await cynetGet("/api/hosts?pageSize=100&pageIndex=0", token);
-        return Response.json({ success: true, data });
+        const data = await cynetGet("/api/hosts?pageSize=200&pageIndex=0", token);
+        return Response.json({ success: true, data, authUrl });
       }
 
-      case "get_alert_details": {
-        const { alertId } = payload || {};
-        if (!alertId) return Response.json({ error: "alertId required" }, { status: 400 });
-        const data = await cynetGet(`/api/alerts/${alertId}`, token);
-        return Response.json({ success: true, data });
+      case "get_dashboard_stats": {
+        const [alerts, endpoints] = await Promise.all([
+          cynetGet("/api/alerts?pageSize=200&pageIndex=0", token),
+          cynetGet("/api/hosts?pageSize=200&pageIndex=0", token),
+        ]);
+        return Response.json({ success: true, alerts, endpoints, authUrl });
       }
 
       case "remediate_isolate": {
-        // Isolate a host
         const { hostId } = payload || {};
         if (!hostId) return Response.json({ error: "hostId required" }, { status: 400 });
         const data = await cynetPost(`/api/remediation/isolate`, { hostId }, token);
@@ -72,7 +87,6 @@ Deno.serve(async (req) => {
       }
 
       case "remediate_unisolate": {
-        // Unisolate a host
         const { hostId } = payload || {};
         if (!hostId) return Response.json({ error: "hostId required" }, { status: 400 });
         const data = await cynetPost(`/api/remediation/unisolate`, { hostId }, token);
@@ -86,13 +100,8 @@ Deno.serve(async (req) => {
         return Response.json({ success: true, data });
       }
 
-      case "get_dashboard_stats": {
-        // Fetch summary stats for dashboard cards
-        const [alerts, endpoints] = await Promise.all([
-          cynetGet("/api/alerts?pageSize=100&pageIndex=0", token),
-          cynetGet("/api/hosts?pageSize=100&pageIndex=0", token),
-        ]);
-        return Response.json({ success: true, alerts, endpoints });
+      case "test_auth": {
+        return Response.json({ success: true, message: `Auth succeeded via ${authUrl}`, authUrl });
       }
 
       default:
