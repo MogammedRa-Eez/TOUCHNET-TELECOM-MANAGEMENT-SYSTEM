@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 
 export default function CoverageChecker({ onClose }) {
   const [address, setAddress] = useState("");
-  const [result, setResult]   = useState(null);
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const checkCoverage = async () => {
@@ -13,12 +13,12 @@ export default function CoverageChecker({ onClose }) {
     setResult(null);
     try {
       const res = await base44.integrations.Core.InvokeLLM({
-        prompt: `Is the address "${address}" likely within a typical South African fibre/wireless ISP coverage area? Respond with a JSON object: { "covered": true/false, "message": "brief explanation", "alternatives": ["suggestion1"] }`,
+        prompt: `Is the address "${address}" likely within a typical South African fibre/wireless ISP coverage area? Respond with JSON: { "covered": true/false, "message": "brief explanation", "alternatives": [] }`,
         response_json_schema: {
           type: "object",
           properties: {
-            covered:      { type: "boolean" },
-            message:      { type: "string" },
+            covered: { type: "boolean" },
+            message: { type: "string" },
             alternatives: { type: "array", items: { type: "string" } },
           },
         },
@@ -38,7 +38,8 @@ export default function CoverageChecker({ onClose }) {
         style={{ background: "white", border: "1px solid rgba(6,182,212,0.2)", boxShadow: "0 24px 64px rgba(6,182,212,0.15)" }}>
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#06b6d4,#6366f1,transparent)" }} />
 
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(226,232,240,0.6)" }}>
+        <div className="flex items-center justify-between px-5 py-4"
+          style={{ borderBottom: "1px solid rgba(226,232,240,0.6)" }}>
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center"
               style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}>
@@ -56,12 +57,11 @@ export default function CoverageChecker({ onClose }) {
           <p className="text-[12px]" style={{ color: "#64748b" }}>
             Enter an address to check if fibre or wireless service is available in that area.
           </p>
-
           <div className="flex gap-2">
             <input
               className="flex-1 rounded-xl px-3 py-2.5 text-[13px] outline-none"
               style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)", color: "#1e293b" }}
-              placeholder="e.g. 123 Main St, Sandton, Johannesburg"
+              placeholder="e.g. 123 Main St, Sandton"
               value={address}
               onChange={e => setAddress(e.target.value)}
               onKeyDown={e => e.key === "Enter" && checkCoverage()}
