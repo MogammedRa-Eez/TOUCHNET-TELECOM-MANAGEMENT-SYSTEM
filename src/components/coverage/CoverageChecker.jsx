@@ -411,11 +411,6 @@ Include all of these providers: Openserve, Vumatel, MetroFibre, Frogfoot, Evotel
                       </div>
                     </div>
                   )}
-
-                  <div className="rounded-xl px-4 py-3 text-center"
-                    style={{ background: "rgba(6,182,212,0.05)", border: "1px dashed rgba(6,182,212,0.2)" }}>
-                    <p className="text-[11px]" style={{ color: "#94a3b8" }}>Search a different address to compare coverage areas</p>
-                  </div>
                 </>
               )}
             </div>

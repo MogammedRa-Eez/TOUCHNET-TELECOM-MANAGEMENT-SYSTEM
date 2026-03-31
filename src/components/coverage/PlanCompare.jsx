@@ -96,7 +96,6 @@ export default function PlanCompare({ plans, onClose }) {
         </div>
 
         <div className="overflow-y-auto flex-1">
-          {/* Plan headers */}
           <div className="grid grid-cols-2 gap-3 px-6 pt-5 pb-4">
             {[{ item: a, color: colorA }, { item: b, color: colorB }].map(({ item, color }, i) => (
               <div key={i} className="rounded-2xl p-4"

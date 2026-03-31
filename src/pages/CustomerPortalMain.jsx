@@ -451,7 +451,6 @@ export default function CustomerPortalMain() {
             </div>
             <PortalNotificationBell customerEmail={customer.email} />
           </div>
-          {showCoverage && <CoverageChecker onClose={() => setShowCoverage(false)} />}
         </header>
 
         {/* ── Content ── */}
@@ -554,6 +553,7 @@ export default function CustomerPortalMain() {
           </div>
         </main>
       </div>
+      {showCoverage && <CoverageChecker onClose={() => setShowCoverage(false)} />}
     </div>
   );
 }
