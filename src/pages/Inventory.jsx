@@ -223,8 +223,6 @@ export default function Inventory() {
     else { setSortKey(key); setSortDir("asc"); }
   };
 
-  if (!rbacLoading && !can("network")) return <AccessDenied />;
-
   const filtered = useMemo(() => {
     let list = nodes.filter(n => {
       const q = search.toLowerCase();
@@ -240,6 +238,8 @@ export default function Inventory() {
     });
     return list;
   }, [nodes, search, statusFilter, typeFilter, sortKey, sortDir]);
+
+  if (!rbacLoading && !can("network")) return <AccessDenied />;
 
   const allSelected = filtered.length > 0 && filtered.every(n => selected.has(n.id));
   const toggleAll = () => {
