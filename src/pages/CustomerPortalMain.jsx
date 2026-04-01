@@ -6,7 +6,7 @@ import {
   Wifi, Receipt, TicketCheck, LogOut, AlertCircle, Loader2,
   FolderOpen, FileText, Activity, DollarSign, Zap,
   CheckCircle2, Clock, Menu, X, ChevronRight, Users,
-  Home, BarChart3
+  Home, BarChart3, BookOpen
 } from "lucide-react";
 import PortalNotificationBell from "@/components/portal/PortalNotificationBell";
 import PortalProjectsTab from "@/components/portal/PortalProjectsTab";
@@ -19,6 +19,7 @@ import TroubleshootTab from "@/components/portal/TroubleshootTab";
 import PortalNetworkTab from "@/components/portal/PortalNetworkTab";
 import PortalServicePlanTab from "@/components/portal/PortalServicePlanTab";
 import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
+import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
 import { MapPin } from "lucide-react";
 import CoverageChecker from "@/components/coverage/CoverageChecker";
 
@@ -51,6 +52,7 @@ const NAV_ITEMS = [
   { key: "service_plan", label: "My Plan",      icon: Wifi,       desc: "Plan & contract details" },
   { key: "resellers",    label: "Resellers",    icon: Users,      desc: "Referrals & rewards" },
   { key: "troubleshoot", label: "Troubleshoot", icon: Zap,        desc: "Fix issues yourself" },
+  { key: "knowledge_base", label: "Knowledge Base", icon: BookOpen, desc: "Admin: KB articles" },
 ];
 
 // ── Mini stat chip ─────────────────────────────────────────────────────────────
@@ -559,6 +561,7 @@ export default function CustomerPortalMain() {
             {activeTab === "service_plan" && <PortalServicePlanTab customer={customer} />}
             {activeTab === "resellers"    && <PortalResellersTab   customer={customer} />}
             {activeTab === "troubleshoot" && <TroubleshootTab onOpenTicket={() => setActiveTab("tickets")} customer={customer} />}
+            {activeTab === "knowledge_base" && <KnowledgeBaseAdmin />}
           </div>
         </main>
       </div>

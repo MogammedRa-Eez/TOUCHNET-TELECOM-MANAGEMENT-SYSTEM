@@ -1,0 +1,42 @@
+{
+  "name": "KnowledgeBase",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Article title"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "connectivity",
+        "billing",
+        "installation",
+        "speed_issue",
+        "hardware",
+        "security",
+        "general"
+      ],
+      "default": "general"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full article content / solution steps"
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords for matching"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import {
   TicketCheck, Plus, AlertCircle, ArrowUpCircle, CheckCircle,
-  XCircle, Clock, Loader2, X, ChevronDown, ChevronUp, Send
+  XCircle, Clock, Loader2, X, ChevronDown, ChevronUp, Send,
+  Bot, Sparkles, Mail, BookOpen
 } from "lucide-react";
 
 const PRIORITY_CFG = {
@@ -14,22 +15,43 @@ const PRIORITY_CFG = {
 };
 
 const STATUS_CFG = {
-  open:             { label: "Open",             color: "#3b82f6", icon: AlertCircle },
-  in_progress:      { label: "In Progress",      color: "#f59e0b", icon: ArrowUpCircle },
-  waiting_customer: { label: "Waiting on You",   color: "#f97316", icon: Clock },
-  escalated:        { label: "Escalated",        color: "#ef4444", icon: AlertCircle },
-  resolved:         { label: "Resolved",         color: "#10b981", icon: CheckCircle },
-  closed:           { label: "Closed",           color: "#64748b", icon: XCircle },
+  open:             { label: "Open",           color: "#3b82f6", icon: AlertCircle },
+  in_progress:      { label: "In Progress",    color: "#f59e0b", icon: ArrowUpCircle },
+  waiting_customer: { label: "Waiting on You", color: "#f97316", icon: Clock },
+  escalated:        { label: "Escalated",      color: "#ef4444", icon: AlertCircle },
+  resolved:         { label: "Resolved",       color: "#10b981", icon: CheckCircle },
+  closed:           { label: "Closed",         color: "#64748b", icon: XCircle },
 };
 
 const CATEGORIES = ["connectivity", "billing", "installation", "speed_issue", "hardware", "security", "general"];
 const PRIORITIES  = ["low", "medium", "high", "critical"];
 
+function AISuggestionBox({ resolutionNotes }) {
+  if (!resolutionNotes || !resolutionNotes.startsWith("[AI Suggestion]")) return null;
+  const suggestion = resolutionNotes.replace("[AI Suggestion]\n", "");
+  return (
+    <div className="rounded-xl p-4 mt-2"
+      style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.05))", border: "1px solid rgba(99,102,241,0.2)" }}>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
+          <Bot className="w-3.5 h-3.5 text-white" />
+        </div>
+        <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: "#6366f1" }}>AI Suggested Solution</span>
+        <Sparkles className="w-3 h-3" style={{ color: "#8b5cf6" }} />
+      </div>
+      <p className="text-[12px] leading-relaxed whitespace-pre-line" style={{ color: "#475569" }}>{suggestion}</p>
+    </div>
+  );
+}
+
 export default function PortalTicketsTab({ customer, user }) {
-  const [showForm,   setShowForm]   = useState(false);
-  const [expanded,   setExpanded]   = useState(null);
-  const [form, setForm]             = useState({ subject: "", description: "", category: "general", priority: "medium" });
-  const queryClient                 = useQueryClient();
+  const [showForm,  setShowForm]  = useState(false);
+  const [expanded,  setExpanded]  = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState(null);
+  const [form, setForm] = useState({ subject: "", description: "", category: "general", priority: "medium" });
+  const queryClient = useQueryClient();
 
   const { data: tickets = [], isLoading } = useQuery({
     queryKey: ["portal-tickets-main", customer.id],
@@ -42,9 +64,39 @@ export default function PortalTicketsTab({ customer, user }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["portal-tickets-main", customer.id] });
       setShowForm(false);
+      setAiSuggestion(null);
       setForm({ subject: "", description: "", category: "general", priority: "medium" });
     },
   });
+
+  // Get AI suggestion while filling the form
+  const getAiSuggestion = async () => {
+    if (!form.subject.trim() && !form.description.trim()) return;
+    setAiLoading(true);
+    setAiSuggestion(null);
+    const kbArticles = await base44.entities.KnowledgeBase.filter({ is_active: true });
+    const kbSummary = kbArticles.map(a => `Title: ${a.title}\nCategory: ${a.category}\nContent: ${a.content}`).join("\n\n---\n\n");
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are a support AI for TouchNet (South African ISP).
+Customer issue: "${form.subject} — ${form.description}"
+Knowledge base:
+${kbSummary || "No articles yet."}
+Suggest a short, friendly solution or troubleshooting steps based on the KB. Be concise (3-5 steps max).`,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          suggestion: { type: "string" },
+          category: { type: "string" },
+          priority: { type: "string" }
+        }
+      }
+    });
+    setAiSuggestion(result.suggestion);
+    if (result.category && CATEGORIES.includes(result.category)) {
+      setForm(f => ({ ...f, category: result.category, priority: result.priority || f.priority }));
+    }
+    setAiLoading(false);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,6 +107,7 @@ export default function PortalTicketsTab({ customer, user }) {
       customer_name: customer.full_name,
       ticket_number: `TKT-${Date.now().toString().slice(-6)}`,
       status: "open",
+      resolution_notes: aiSuggestion ? `[AI Suggestion]\n${aiSuggestion}` : "",
     });
   };
 
@@ -65,8 +118,8 @@ export default function PortalTicketsTab({ customer, user }) {
     <div className="space-y-4">
 
       {/* Header row */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
           {openCount > 0 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
               style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)" }}>
@@ -81,9 +134,14 @@ export default function PortalTicketsTab({ customer, user }) {
               <span className="text-[11px] font-bold" style={{ color: "#34d399" }}>{resolvedCount} resolved</span>
             </div>
           )}
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
+            style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.15)" }}>
+            <Bot className="w-3 h-3" style={{ color: "#6366f1" }} />
+            <span className="text-[11px] font-bold" style={{ color: "#6366f1" }}>AI-Assisted</span>
+          </div>
         </div>
         <button
-          onClick={() => setShowForm(v => !v)}
+          onClick={() => { setShowForm(v => !v); setAiSuggestion(null); }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 16px rgba(99,102,241,0.3)" }}>
           {showForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
@@ -102,7 +160,7 @@ export default function PortalTicketsTab({ customer, user }) {
               <div>
                 <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Subject *</label>
                 <input
-                  className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-slate-800 placeholder:text-slate-300 transition-all"
+                  className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-slate-800 placeholder:text-slate-400 transition-all"
                   style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)" }}
                   placeholder="Brief description of your issue"
                   value={form.subject}
@@ -113,7 +171,7 @@ export default function PortalTicketsTab({ customer, user }) {
               <div>
                 <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Description *</label>
                 <textarea
-                  className="w-full rounded-xl px-3 py-2.5 text-[13px] resize-none outline-none text-slate-800 placeholder:text-slate-300"
+                  className="w-full rounded-xl px-3 py-2.5 text-[13px] resize-none outline-none text-slate-800 placeholder:text-slate-400"
                   style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)" }}
                   rows={4}
                   placeholder="Please describe the issue in detail…"
@@ -122,6 +180,31 @@ export default function PortalTicketsTab({ customer, user }) {
                   required
                 />
               </div>
+
+              {/* AI Suggest button */}
+              <button
+                type="button"
+                onClick={getAiSuggestion}
+                disabled={aiLoading || (!form.subject.trim() && !form.description.trim())}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-105 disabled:opacity-50"
+                style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08))", border: "1px solid rgba(99,102,241,0.25)", color: "#6366f1" }}>
+                {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                {aiLoading ? "Analysing your issue…" : "Get AI Solution Suggestion"}
+              </button>
+
+              {/* AI suggestion preview */}
+              {aiSuggestion && (
+                <div className="rounded-xl p-4"
+                  style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.05))", border: "1px solid rgba(99,102,241,0.2)" }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Bot className="w-4 h-4" style={{ color: "#6366f1" }} />
+                    <span className="text-[11px] font-black" style={{ color: "#6366f1" }}>AI Suggestion — Does this help?</span>
+                  </div>
+                  <p className="text-[12px] leading-relaxed whitespace-pre-line" style={{ color: "#475569" }}>{aiSuggestion}</p>
+                  <p className="text-[10px] mt-2" style={{ color: "#94a3b8" }}>The suggestion will be attached to your ticket for our support team.</p>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>Category</label>
@@ -129,8 +212,7 @@ export default function PortalTicketsTab({ customer, user }) {
                     className="w-full rounded-xl px-3 py-2.5 text-[13px] outline-none text-slate-800"
                     style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)" }}
                     value={form.category}
-                    onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                  >
+                    onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
                     {CATEGORIES.map(c => (
                       <option key={c} value={c}>{c.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</option>
                     ))}
@@ -146,9 +228,9 @@ export default function PortalTicketsTab({ customer, user }) {
                           onClick={() => setForm(f => ({ ...f, priority: p }))}
                           className="py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
                           style={{
-                            background: form.priority === p ? pc.bg : "rgba(255,255,255,0.04)",
-                            border: `1px solid ${form.priority === p ? pc.border : "rgba(255,255,255,0.08)"}`,
-                            color: form.priority === p ? pc.color : "rgba(255,255,255,0.3)",
+                            background: form.priority === p ? pc.bg : "rgba(248,250,252,0.9)",
+                            border: `1px solid ${form.priority === p ? pc.border : "rgba(226,232,240,0.9)"}`,
+                            color: form.priority === p ? pc.color : "#94a3b8",
                           }}>
                           {p}
                         </button>
@@ -157,6 +239,7 @@ export default function PortalTicketsTab({ customer, user }) {
                   </div>
                 </div>
               </div>
+
               <button
                 type="submit"
                 disabled={createMut.isPending}
@@ -169,6 +252,15 @@ export default function PortalTicketsTab({ customer, user }) {
           </div>
         </div>
       )}
+
+      {/* Gmail ingestion info banner */}
+      <div className="rounded-xl px-4 py-3 flex items-center gap-3"
+        style={{ background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.15)" }}>
+        <Mail className="w-4 h-4 flex-shrink-0" style={{ color: "#06b6d4" }} />
+        <p className="text-[11px]" style={{ color: "#475569" }}>
+          You can also email <strong style={{ color: "#0891b2" }}>support@touchnet.co.za</strong> — our AI will automatically create and analyse your ticket.
+        </p>
+      </div>
 
       {/* Ticket List */}
       {isLoading ? (
@@ -192,10 +284,12 @@ export default function PortalTicketsTab({ customer, user }) {
             const pc   = PRIORITY_CFG[t.priority] || PRIORITY_CFG.medium;
             const Icon = sc.icon;
             const isEx = expanded === t.id;
+            const isEmailTicket = t.ticket_number?.startsWith("EMAIL-");
+            const hasAiSuggestion = t.resolution_notes?.startsWith("[AI Suggestion]");
             return (
               <div key={t.id} className="rounded-2xl overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.95)", border: `1px solid ${sc.color}25`, boxShadow: "0 2px 12px rgba(99,102,241,0.06)" }}>
-                <button className="w-full p-4 flex items-start gap-3 text-left transition-all"
+                <button className="w-full p-4 flex items-start gap-3 text-left transition-all hover:bg-slate-50"
                   onClick={() => setExpanded(isEx ? null : t.id)}>
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
                     style={{ background: `${sc.color}12`, border: `1px solid ${sc.color}25` }}>
@@ -208,6 +302,18 @@ export default function PortalTicketsTab({ customer, user }) {
                         style={{ background: pc.bg, color: pc.color, border: `1px solid ${pc.border}` }}>
                         {t.priority}
                       </span>
+                      {isEmailTicket && (
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1"
+                          style={{ background: "rgba(6,182,212,0.1)", color: "#0891b2", border: "1px solid rgba(6,182,212,0.2)" }}>
+                          <Mail className="w-2.5 h-2.5" /> Email
+                        </span>
+                      )}
+                      {hasAiSuggestion && (
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1"
+                          style={{ background: "rgba(99,102,241,0.1)", color: "#6366f1", border: "1px solid rgba(99,102,241,0.2)" }}>
+                          <Bot className="w-2.5 h-2.5" /> AI
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
                       <span className="text-[10px] font-semibold" style={{ color: sc.color }}>{sc.label}</span>
@@ -223,14 +329,15 @@ export default function PortalTicketsTab({ customer, user }) {
                     </div>
                   </div>
                   {isEx
-                    ? <ChevronUp className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: "rgba(255,255,255,0.3)" }} />
-                    : <ChevronDown className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: "rgba(255,255,255,0.3)" }} />}
+                    ? <ChevronUp className="w-4 h-4 flex-shrink-0 mt-1 text-slate-400" />
+                    : <ChevronDown className="w-4 h-4 flex-shrink-0 mt-1 text-slate-400" />}
                 </button>
 
                 {isEx && (
                   <div className="px-4 pb-4 pt-1 space-y-2" style={{ borderTop: `1px solid ${sc.color}15` }}>
                     <p className="text-[12px] leading-relaxed text-slate-600">{t.description}</p>
-                    {t.resolution_notes && (
+                    <AISuggestionBox resolutionNotes={t.resolution_notes} />
+                    {t.resolution_notes && !t.resolution_notes.startsWith("[AI Suggestion]") && (
                       <div className="rounded-xl px-4 py-3" style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.15)" }}>
                         <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: "#10b981" }}>Resolution</p>
                         <p className="text-[12px]" style={{ color: "#059669" }}>{t.resolution_notes}</p>
