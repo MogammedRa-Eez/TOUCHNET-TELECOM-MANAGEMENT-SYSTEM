@@ -4,21 +4,24 @@ const BASE_URL = Deno.env.get("CYNET_BASE_URL") || "";
 const USERNAME = Deno.env.get("CYNET_USERNAME") || "";
 const PASSWORD = Deno.env.get("CYNET_PASSWORD") || "";
 
-// Try multiple auth endpoints to find the right one for MSSP v3
+// Cynet API uses user_name (underscore) per official docs
+// BASE_URL should be: https://YOUR_DOMAIN.api.cynet.com
 async function getAuthToken() {
   const endpoints = [
-    { url: `${BASE_URL}/api/account/token`, body: { userName: USERNAME, password: PASSWORD } },
-    { url: `${BASE_URL}/api/v1/account/token`, body: { userName: USERNAME, password: PASSWORD } },
-    { url: `${BASE_URL}/api/v2/account/token`, body: { userName: USERNAME, password: PASSWORD } },
-    { url: `${BASE_URL}/api/auth/token`, body: { username: USERNAME, password: PASSWORD } },
-    { url: `${BASE_URL}/api/v1/auth/login`, body: { username: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/account/token`,    body: { user_name: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/v1/account/token`, body: { user_name: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/v2/account/token`, body: { user_name: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/v3/account/token`, body: { user_name: USERNAME, password: PASSWORD } },
+    // Legacy fallbacks
+    { url: `${BASE_URL}/api/account/token`,    body: { userName: USERNAME, password: PASSWORD } },
+    { url: `${BASE_URL}/api/auth/token`,        body: { username: USERNAME, password: PASSWORD } },
   ];
 
   let lastError = "";
   for (const ep of endpoints) {
     const res = await fetch(ep.url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify(ep.body),
     });
     if (res.ok) {
@@ -26,7 +29,8 @@ async function getAuthToken() {
       const token = data.access_token || data.token || data.Token || data.accessToken;
       if (token) return { token, authUrl: ep.url };
     }
-    lastError = `${ep.url} → ${res.status}`;
+    const errText = await res.text().catch(() => "");
+    lastError = `${ep.url} → ${res.status} ${errText.slice(0, 100)}`;
   }
   throw new Error(`All auth endpoints failed. Last: ${lastError}`);
 }
