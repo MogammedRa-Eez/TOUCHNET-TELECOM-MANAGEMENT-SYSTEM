@@ -6,7 +6,7 @@ import {
   Wifi, Receipt, TicketCheck, LogOut, AlertCircle, Loader2,
   FolderOpen, FileText, Activity, DollarSign, Zap,
   CheckCircle2, Clock, Menu, X, ChevronRight, Users,
-  Home
+  Home, BarChart3
 } from "lucide-react";
 import PortalNotificationBell from "@/components/portal/PortalNotificationBell";
 import PortalProjectsTab from "@/components/portal/PortalProjectsTab";
@@ -18,6 +18,7 @@ import PortalResellersTab from "@/components/portal/PortalResellersTab";
 import TroubleshootTab from "@/components/portal/TroubleshootTab";
 import PortalNetworkTab from "@/components/portal/PortalNetworkTab";
 import PortalServicePlanTab from "@/components/portal/PortalServicePlanTab";
+import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
 import { MapPin } from "lucide-react";
 import CoverageChecker from "@/components/coverage/CoverageChecker";
 
@@ -46,6 +47,7 @@ const NAV_ITEMS = [
   { key: "documents",  label: "Documents",  icon: FolderOpen, desc: "Files & contracts" },
   { key: "quotes",     label: "Quotes",     icon: FileText,   desc: "Service proposals" },
   { key: "network",      label: "Network",      icon: Activity,   desc: "Performance metrics" },
+  { key: "data_usage",   label: "Data Usage",   icon: BarChart3,  desc: "Consumption & alerts" },
   { key: "service_plan", label: "My Plan",      icon: Wifi,       desc: "Plan & contract details" },
   { key: "resellers",    label: "Resellers",    icon: Users,      desc: "Referrals & rewards" },
   { key: "troubleshoot", label: "Troubleshoot", icon: Zap,        desc: "Fix issues yourself" },
@@ -553,6 +555,7 @@ export default function CustomerPortalMain() {
             {activeTab === "documents" && <PortalDocumentsTab customer={customer} user={user} />}
             {activeTab === "quotes"    && <PortalQuotesTab    customer={customer} />}
             {activeTab === "network"      && <PortalNetworkTab     customer={customer} />}
+            {activeTab === "data_usage"   && <DataUsageDashboard   customer={customer} />}
             {activeTab === "service_plan" && <PortalServicePlanTab customer={customer} />}
             {activeTab === "resellers"    && <PortalResellersTab   customer={customer} />}
             {activeTab === "troubleshoot" && <TroubleshootTab onOpenTicket={() => setActiveTab("tickets")} customer={customer} />}
