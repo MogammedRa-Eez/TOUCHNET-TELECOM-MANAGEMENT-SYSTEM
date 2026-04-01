@@ -35,7 +35,6 @@ Return a JSON response with: covered (boolean), message (string with friendly ex
       style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
       <div className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl"
         style={{ background: "#fff", border: "1px solid rgba(6,182,212,0.2)" }}>
-        {/* Header */}
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#06b6d4,#0891b2,transparent)" }} />
         <div className="flex items-center justify-between px-5 py-4"
           style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
@@ -55,7 +54,6 @@ Return a JSON response with: covered (boolean), message (string with friendly ex
           </button>
         </div>
 
-        {/* Body */}
         <div className="p-5">
           <form onSubmit={checkCoverage} className="space-y-3">
             <div>
