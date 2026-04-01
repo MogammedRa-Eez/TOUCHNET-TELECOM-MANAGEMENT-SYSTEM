@@ -197,8 +197,6 @@ export default function Inventory() {
   const [selected, setSelected] = useState(new Set());
   const [editing, setEditing] = useState(null);
 
-  if (!rbacLoading && !can("network")) return <AccessDenied />;
-
   const { data: nodes = [], isLoading } = useQuery({
     queryKey: ["network-nodes"],
     queryFn: () => base44.entities.NetworkNode.list(),
@@ -224,6 +222,8 @@ export default function Inventory() {
     if (sortKey === key) setSortDir(d => d === "asc" ? "desc" : "asc");
     else { setSortKey(key); setSortDir("asc"); }
   };
+
+  if (!rbacLoading && !can("network")) return <AccessDenied />;
 
   const filtered = useMemo(() => {
     let list = nodes.filter(n => {

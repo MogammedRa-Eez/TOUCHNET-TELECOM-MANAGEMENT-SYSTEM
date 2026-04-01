@@ -23,10 +23,11 @@ export async function generateQuotePDF(quote, docRef) {
 }
 
 export default function QuotePreview({ quote, onClose, onEdit, onSendEmail }) {
-  if (!quote) return null;
   const docRef = useRef(null);
   const [downloading, setDownloading] = useState(false);
   const [emailing, setEmailing] = useState(false);
+
+  if (!quote) return null;
 
   const handleDownloadPDF = async () => {
     if (!docRef.current) return;

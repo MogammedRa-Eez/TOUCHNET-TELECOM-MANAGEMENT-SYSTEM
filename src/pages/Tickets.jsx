@@ -238,13 +238,6 @@ export default function Tickets() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tickets"] }),
   });
 
-  if (!rbacLoading && !can("tickets")) return <AccessDenied />;
-
-  const handleSubmit = (data) => {
-    if (editing) updateMut.mutate({ id: editing.id, data });
-    else createMut.mutate(data);
-  };
-
   const visibleTickets = isAdmin ? tickets : tickets.filter(t => !department || t.department === department);
 
   const filtered = useMemo(() => visibleTickets.filter(t => {
@@ -256,6 +249,13 @@ export default function Tickets() {
     const matchPriority = priorityFilter === "all" || t.priority === priorityFilter;
     return matchSearch && matchStatus && matchPriority;
   }), [visibleTickets, search, statusFilter, priorityFilter]);
+
+  if (!rbacLoading && !can("tickets")) return <AccessDenied />;
+
+  const handleSubmit = (data) => {
+    if (editing) updateMut.mutate({ id: editing.id, data });
+    else createMut.mutate(data);
+  };
 
   const criticalCount = visibleTickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length;
 

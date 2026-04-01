@@ -62,7 +62,8 @@ export default function QuoteDocument({ quote, docRef }) {
   const status = STATUS_CONFIG[quote.status] || STATUS_CONFIG.draft;
 
   return (
-    <div ref={docRef} className="w-full bg-white" style={{ fontFamily: "'Times New Roman', serif" }}>
+    <div ref={docRef} className="w-full bg-white" style={{ fontFamily: "'Exo 2', 'Exo', sans-serif" }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&display=swap');`}</style>
       {/* Logo Header */}
       <div className="px-10 pt-8 pb-6 border-b border-slate-200">
         <div className="border border-slate-200 inline-block p-6 mb-2">

@@ -11,7 +11,6 @@ import { format } from "date-fns";
 
 export default function OutlookMail() {
     const { can, loading: rbacLoading } = useRBAC();
-    if (!rbacLoading && !can("outlook")) return <AccessDenied />;
 
     const [view, setView] = useState("inbox"); // inbox | compose | read
     const [emails, setEmails] = useState([]);
@@ -78,6 +77,8 @@ export default function OutlookMail() {
     };
 
     const unread = emails.filter(e => !e.isRead).length;
+
+    if (!rbacLoading && !can("outlook")) return <AccessDenied />;
 
     return (
         <div className="flex h-full" style={{ minHeight: "calc(100vh - 64px)" }}>

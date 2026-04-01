@@ -228,13 +228,6 @@ export default function Customers() {
     },
   });
 
-  if (!rbacLoading && !can("customers")) return <AccessDenied />;
-
-  const handleSubmit = (data) => {
-    if (editing) updateMut.mutate({ id: editing.id, data });
-    else createMut.mutate(data);
-  };
-
   const filtered = useMemo(() => customers.filter(c => {
     const q = search.toLowerCase();
     const matchSearch = !search
@@ -245,6 +238,13 @@ export default function Customers() {
     const matchStatus = statusFilter === "all" || c.status === statusFilter;
     return matchSearch && matchStatus;
   }), [customers, search, statusFilter]);
+
+  if (!rbacLoading && !can("customers")) return <AccessDenied />;
+
+  const handleSubmit = (data) => {
+    if (editing) updateMut.mutate({ id: editing.id, data });
+    else createMut.mutate(data);
+  };
 
   return (
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">

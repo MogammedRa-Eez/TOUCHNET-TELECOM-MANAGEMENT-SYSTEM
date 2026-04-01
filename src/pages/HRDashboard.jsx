@@ -126,8 +126,6 @@ export default function HRDashboard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
 
-  if (!rbacLoading && !can("employees")) return <AccessDenied />;
-
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],
     queryFn: () => base44.entities.Employee.list("-hire_date"),
@@ -145,6 +143,8 @@ export default function HRDashboard() {
     mutationFn: (id) => base44.entities.Employee.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["employees"] }),
   });
+
+  if (!rbacLoading && !can("employees")) return <AccessDenied />;
 
   const handleSubmit = (data) => {
     if (editing) updateMut.mutate({ id: editing.id, data });
