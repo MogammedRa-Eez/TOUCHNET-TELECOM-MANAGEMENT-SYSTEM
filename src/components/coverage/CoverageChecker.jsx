@@ -12,25 +12,21 @@ export default function CoverageChecker({ onClose }) {
     if (!address.trim()) return;
     setLoading(true);
     setResult(null);
-    try {
-      const res = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a coverage checker for TouchNet, a fibre ISP based in South Africa (Gauteng/Johannesburg area). 
+    const res = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are a coverage checker for TouchNet, a fibre ISP based in South Africa (Gauteng/Johannesburg area).
 Given this address: "${address}"
 Determine if this address is likely within a fibre coverage area in Gauteng, South Africa.
 Return a JSON response with: covered (boolean), message (string with friendly explanation), areas_nearby (array of nearby served areas if covered, or empty array).`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            covered: { type: "boolean" },
-            message: { type: "string" },
-            areas_nearby: { type: "array", items: { type: "string" } }
-          }
+      response_json_schema: {
+        type: "object",
+        properties: {
+          covered: { type: "boolean" },
+          message: { type: "string" },
+          areas_nearby: { type: "array", items: { type: "string" } }
         }
-      });
-      setResult(res);
-    } catch {
-      setResult({ covered: false, message: "Unable to check coverage at this time. Please contact us directly.", areas_nearby: [] });
-    }
+      }
+    });
+    setResult(res);
     setLoading(false);
   };
 
@@ -115,7 +111,6 @@ Return a JSON response with: covered (boolean), message (string with friendly ex
           )}
         </div>
 
-        {/* Footer */}
         <div className="px-5 pb-4 text-center">
           <p className="text-[11px]" style={{ color: "#94a3b8" }}>
             For more info, contact us at{" "}
