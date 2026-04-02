@@ -1,0 +1,185 @@
+{
+  "name": "Quote",
+  "type": "object",
+  "properties": {
+    "quote_number": {
+      "type": "string",
+      "description": "Unique quote reference number"
+    },
+    "title": {
+      "type": "string",
+      "description": "Quote/proposal title"
+    },
+    "salesperson_name": {
+      "type": "string",
+      "description": "Name of the salesperson creating the quote"
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "customer_company": {
+      "type": "string"
+    },
+    "reseller_name": {
+      "type": "string",
+      "description": "Internal: Reseller/partner involved in this quote (not shown to client)"
+    },
+    "reseller_id": {
+      "type": "string",
+      "description": "Internal: Referral record ID of the reseller"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent",
+        "viewed",
+        "accepted",
+        "declined",
+        "expired"
+      ],
+      "default": "draft"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "contract_months": {
+      "type": "number",
+      "default": 24,
+      "description": "Contract duration in months"
+    },
+    "cover_message": {
+      "type": "string",
+      "description": "Intro message shown at the top of the quote"
+    },
+    "sections": {
+      "type": "array",
+      "description": "Rich content sections (text blocks, images, links)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image",
+              "link",
+              "file",
+              "divider"
+            ]
+          },
+          "heading": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "line_items": {
+      "type": "array",
+      "description": "Quotation line items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit_price": {
+            "type": "number"
+          },
+          "optional": {
+            "type": "boolean",
+            "default": false
+          },
+          "included": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    "discount_percent": {
+      "type": "number",
+      "default": 0
+    },
+    "tax_percent": {
+      "type": "number",
+      "default": 15
+    },
+    "subtotal": {
+      "type": "number"
+    },
+    "discount_amount": {
+      "type": "number"
+    },
+    "tax_amount": {
+      "type": "number"
+    },
+    "total": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "terms": {
+      "type": "string"
+    },
+    "branding_color": {
+      "type": "string",
+      "default": "#e11d48"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "viewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "customer_feedback": {
+      "type": "string",
+      "description": "Customer's feedback or message when accepting/declining"
+    }
+  },
+  "required": [
+    "title",
+    "customer_name"
+  ]
+}

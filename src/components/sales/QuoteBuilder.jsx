@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Plus, Image, Link, FileText, Type, Minus, Eye, Save, MessageSquare } from "lucide-react";
+import { X, Plus, Image, Link, FileText, Type, Minus, Eye, Save, MessageSquare, UserCheck } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import QuoteNotesPanel from "@/components/sales/QuoteNotesPanel";
 import { useQuery } from "@tanstack/react-query";
@@ -72,6 +72,18 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
   });
   const unresolvedCount = notesCount.filter(n => !n.is_resolved).length;
 
+  // Load unique resellers from Referral records
+  const { data: referrals = [] } = useQuery({
+    queryKey: ["resellers-for-quote"],
+    queryFn: () => base44.entities.Referral.list(),
+  });
+  const resellers = useMemo(() => {
+    const seen = new Set();
+    return referrals
+      .filter(r => r.referrer_name && !seen.has(r.referrer_customer_id) && seen.add(r.referrer_customer_id))
+      .map(r => ({ id: r.referrer_customer_id, name: r.referrer_name, email: r.referrer_email }));
+  }, [referrals]);
+
   const [form, setForm] = useState(() => {
     const defaults = {
       quote_number: `QT-${Date.now().toString().slice(-6)}`,
@@ -79,6 +91,7 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
       salesperson_name: "",
       customer_name: "", customer_email: "", customer_phone: "",
       customer_company: "", customer_id: "",
+      reseller_name: "", reseller_id: "",
       status: "draft",
       valid_until: "",
       contract_months: 24,
@@ -185,6 +198,31 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
                 <div>
                   <label className="text-xs font-semibold text-slate-500 mb-1 block">Contract Duration (months)</label>
                   <Input type="number" min="1" value={form.contract_months} onChange={e => set("contract_months", +e.target.value)} placeholder="24" />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-1.5">
+                    <UserCheck className="w-3.5 h-3.5 text-amber-500" />
+                    Reseller / Partner
+                    <span className="text-[10px] font-normal text-slate-400 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full ml-1">Internal only — not visible to client</span>
+                  </label>
+                  <select
+                    className="w-full h-9 rounded-md border border-amber-200 px-3 text-sm bg-amber-50/60 text-slate-700"
+                    value={form.reseller_id}
+                    onChange={e => {
+                      const selected = resellers.find(r => r.id === e.target.value);
+                      setForm(f => ({ ...f, reseller_id: e.target.value, reseller_name: selected?.name || "" }));
+                    }}
+                  >
+                    <option value="">— No reseller involved —</option>
+                    {resellers.map(r => (
+                      <option key={r.id} value={r.id}>{r.name}{r.email ? ` (${r.email})` : ""}</option>
+                    ))}
+                  </select>
+                  {form.reseller_name && (
+                    <p className="text-[11px] text-amber-600 mt-1 flex items-center gap-1">
+                      <UserCheck className="w-3 h-3" /> Reseller: <strong>{form.reseller_name}</strong>
+                    </p>
+                  )}
                 </div>
               </div>
             </FormSection>
