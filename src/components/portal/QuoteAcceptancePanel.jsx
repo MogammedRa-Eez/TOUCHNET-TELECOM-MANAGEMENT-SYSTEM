@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X, CheckCircle2, XCircle, FileText, ExternalLink, Download, ChevronDown, ChevronUp, Printer } from "lucide-react";
+import { X, CheckCircle2, XCircle, FileText, ExternalLink, Download, ChevronDown, ChevronUp, Printer, PenLine } from "lucide-react";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import SignaturePad from "@/components/portal/SignaturePad";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
@@ -20,6 +21,8 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
   const [submitting, setSubmitting] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [signatureData, setSignatureData] = useState(null);
+  const [showSignature, setShowSignature] = useState(false);
   const docRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -32,22 +35,44 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
   }, [quote.id]);
 
   const respondMutation = useMutation({
-    mutationFn: ({ status, feedback }) =>
+    mutationFn: ({ status, feedback, signature_data_url }) =>
       base44.entities.Quote.update(quote.id, {
         status,
         responded_at: new Date().toISOString(),
         customer_feedback: feedback,
+        ...(signature_data_url ? { signature_data_url } : {}),
       }),
-    onSuccess: () => {
+    onSuccess: (_, { status }) => {
       queryClient.invalidateQueries({ queryKey: ["portal-quotes"] });
+      if (status === "accepted") {
+        // Notify sales team via email
+        base44.integrations.Core.SendEmail({
+          to: quote.salesperson_name ? `sales@touchnet.co.za` : "sales@touchnet.co.za",
+          subject: `✅ Quote Accepted: ${quote.quote_number} — ${quote.customer_name}`,
+          body: `Hi Team,\n\nGreat news! ${quote.customer_name} has digitally signed and accepted quote ${quote.quote_number}.\n\nQuote: ${quote.title}\nTotal: R${(quote.total || quote.subtotal || 0).toFixed(2)}/month\nCustomer: ${quote.customer_name} (${quote.customer_email})\n${feedback ? `\nCustomer message: "${feedback}"` : ""}\n\nPlease proceed with the onboarding process.\n\nTouchNet Portal`,
+        }).catch(() => {}); // fire-and-forget
+
+        // Also create an in-app notification
+        base44.entities.Notification.create({
+          user_email: "sales@touchnet.co.za",
+          title: `Quote Accepted: ${quote.quote_number}`,
+          message: `${quote.customer_name} digitally signed and accepted quote "${quote.title}" (R${(quote.total || 0).toFixed(2)}/mo).`,
+          type: "success",
+          category: "customer",
+        }).catch(() => {});
+      }
       onResponded?.();
       onClose();
     },
   });
 
   const handleRespond = async (decision) => {
+    if (decision === "accepted" && !signatureData) {
+      setShowSignature(true);
+      return;
+    }
     setSubmitting(true);
-    await respondMutation.mutateAsync({ status: decision, feedback });
+    await respondMutation.mutateAsync({ status: decision, feedback, signature_data_url: signatureData });
     setSubmitting(false);
   };
 
@@ -247,19 +272,27 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
         {/* Response Panel */}
         <div className="w-full max-w-3xl mt-4 bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
           {alreadyResponded ? (
-            <div className={`flex items-center gap-3 rounded-xl p-4 ${quote.status === "accepted" ? "bg-emerald-50 border border-emerald-200" : "bg-red-50 border border-red-200"}`}>
-              {quote.status === "accepted"
-                ? <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-shrink-0" />
-                : <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
-              <div>
-                <p className={`font-bold text-sm ${quote.status === "accepted" ? "text-emerald-700" : "text-red-700"}`}>
-                  You {quote.status === "accepted" ? "accepted" : "declined"} this quote
-                  {quote.responded_at ? ` on ${format(new Date(quote.responded_at), "d MMM yyyy")}` : ""}.
-                </p>
-                {quote.customer_feedback && (
-                  <p className="text-xs text-slate-600 mt-1">Your message: "{quote.customer_feedback}"</p>
-                )}
+            <div className={`rounded-xl p-4 ${quote.status === "accepted" ? "bg-emerald-50 border border-emerald-200" : "bg-red-50 border border-red-200"}`}>
+              <div className="flex items-center gap-3">
+                {quote.status === "accepted"
+                  ? <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-shrink-0" />
+                  : <XCircle className="w-6 h-6 text-red-500 flex-shrink-0" />}
+                <div>
+                  <p className={`font-bold text-sm ${quote.status === "accepted" ? "text-emerald-700" : "text-red-700"}`}>
+                    You {quote.status === "accepted" ? "accepted" : "declined"} this quote
+                    {quote.responded_at ? ` on ${format(new Date(quote.responded_at), "d MMM yyyy")}` : ""}.
+                  </p>
+                  {quote.customer_feedback && (
+                    <p className="text-xs text-slate-600 mt-1">Your message: "{quote.customer_feedback}"</p>
+                  )}
+                </div>
               </div>
+              {quote.status === "accepted" && quote.signature_data_url && (
+                <div className="mt-3 pt-3 border-t border-emerald-200">
+                  <p className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold mb-2">Digital Signature on File</p>
+                  <img src={quote.signature_data_url} alt="Customer signature" className="max-h-20 border border-emerald-200 rounded-lg bg-white p-2" />
+                </div>
+              )}
             </div>
           ) : isExpired ? (
             <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -277,15 +310,34 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
                 value={feedback}
                 onChange={e => setFeedback(e.target.value)}
               />
+
+              {/* Signature section — shown when Accept is clicked */}
+              {showSignature && (
+                <div className="mb-4 rounded-xl p-4 space-y-3"
+                  style={{ background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <PenLine className="w-4 h-4" style={{ color: "#6366f1" }} />
+                    <p className="text-sm font-bold" style={{ color: "#4f46e5" }}>Digital Signature Required</p>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    By signing below, you confirm your acceptance of this quote and agreement to the terms and conditions.
+                  </p>
+                  <SignaturePad onSignature={setSignatureData} disabled={submitting} />
+                  {!signatureData && (
+                    <p className="text-xs text-amber-600 font-semibold">Please draw your signature before submitting.</p>
+                  )}
+                </div>
+              )}
+
               <div className="flex gap-3">
                 <button
                   onClick={() => handleRespond("accepted")}
-                  disabled={submitting}
+                  disabled={submitting || (showSignature && !signatureData)}
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-white text-sm transition-all hover:opacity-90 disabled:opacity-60"
                   style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}
                 >
                   <CheckCircle2 className="w-5 h-5" />
-                  {submitting ? "Submitting…" : "Accept Quote"}
+                  {submitting ? "Submitting…" : showSignature ? "Submit & Accept" : "Accept Quote"}
                 </button>
                 <button
                   onClick={() => handleRespond("declined")}
@@ -297,6 +349,16 @@ export default function QuoteAcceptancePanel({ quote, onClose, onResponded, embe
                   {submitting ? "Submitting…" : "Decline Quote"}
                 </button>
               </div>
+
+              {showSignature && (
+                <button
+                  type="button"
+                  onClick={() => { setShowSignature(false); setSignatureData(null); }}
+                  className="mt-2 w-full text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  ← Cancel signature
+                </button>
+              )}
             </>
           )}
         </div>

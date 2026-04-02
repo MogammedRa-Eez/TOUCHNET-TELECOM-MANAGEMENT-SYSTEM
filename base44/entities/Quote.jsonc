@@ -176,6 +176,10 @@
     "customer_feedback": {
       "type": "string",
       "description": "Customer's feedback or message when accepting/declining"
+    },
+    "signature_data_url": {
+      "type": "string",
+      "description": "Base64 PNG of the customer's digital signature captured on acceptance"
     }
   },
   "required": [
