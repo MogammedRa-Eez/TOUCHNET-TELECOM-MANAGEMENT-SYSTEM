@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   X, MapPin, CheckCircle2, XCircle, Loader2, AlertTriangle,
-  Zap, Wifi, Search, Globe, ArrowLeftRight
+  Zap, Wifi, Search, Globe, ArrowLeftRight, Users
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import "leaflet/dist/leaflet.css";
@@ -9,7 +9,6 @@ import "leaflet/dist/leaflet.css";
 const FIBRE_PROVIDERS = {
   touchnet: {
     name: "TouchNet Fibre", shortName: "TouchNet", color: "#0891b2", logo: "⚡",
-    description: "Your local premium fibre provider with dedicated support",
     coverage: ["Sandton", "Midrand", "Fourways", "Rivonia", "Bryanston", "Rosebank", "Melrose", "Illovo"],
     plans: [
       { speed: "10 Mbps", price: 299, label: "Basic" },
@@ -23,7 +22,6 @@ const FIBRE_PROVIDERS = {
   },
   vumatel: {
     name: "Vumatel", shortName: "Vuma", color: "#e11d48", logo: "🔴",
-    description: "South Africa's largest open-access FTTH network",
     coverage: ["Sandton", "Midrand", "Randburg", "Roodepoort", "Centurion", "Pretoria", "Cape Town", "Durban"],
     plans: [
       { speed: "25 Mbps", price: 399, label: "Starter" },
@@ -37,7 +35,6 @@ const FIBRE_PROVIDERS = {
   },
   openserve: {
     name: "Openserve", shortName: "Openserve", color: "#2563eb", logo: "🔵",
-    description: "Telkom's open-access fibre network with national reach",
     coverage: ["Johannesburg", "Pretoria", "Cape Town", "Durban", "Port Elizabeth", "Bloemfontein"],
     plans: [
       { speed: "10 Mbps", price: 299, label: "Basic" },
@@ -50,7 +47,6 @@ const FIBRE_PROVIDERS = {
   },
   metrofibre: {
     name: "MetroFibre Networx", shortName: "MetroFibre", color: "#7c3aed", logo: "🟣",
-    description: "High-density urban fibre network in Gauteng",
     coverage: ["Sandton", "Fourways", "Midrand", "Centurion", "Rosebank", "Bryanston", "Melrose"],
     plans: [
       { speed: "25 Mbps", price: 349, label: "Value" },
@@ -63,7 +59,6 @@ const FIBRE_PROVIDERS = {
   },
   octotel: {
     name: "Octotel", shortName: "Octotel", color: "#d97706", logo: "🟡",
-    description: "Cape Town's leading open-access FTTH network",
     coverage: ["Cape Town CBD", "Camps Bay", "Sea Point", "Green Point", "Claremont", "Newlands", "Rondebosch"],
     plans: [
       { speed: "25 Mbps", price: 399, label: "Lite" },
@@ -75,7 +70,6 @@ const FIBRE_PROVIDERS = {
   },
   frogfoot: {
     name: "Frogfoot", shortName: "Frogfoot", color: "#059669", logo: "🟢",
-    description: "Premium open-access FTTH in select suburbs",
     coverage: ["Stellenbosch", "Somerset West", "Paarl", "Bellville", "Tyger Valley", "Strand"],
     plans: [
       { speed: "25 Mbps", price: 449, label: "Starter" },
@@ -88,10 +82,25 @@ const FIBRE_PROVIDERS = {
 };
 
 const NODE_STATUS_CFG = {
-  online:      { color: "#059669", border: "#047857", label: "Online",      icon: "✅" },
-  degraded:    { color: "#d97706", border: "#b45309", label: "Degraded",    icon: "⚠️" },
-  maintenance: { color: "#7c3aed", border: "#6d28d9", label: "Maintenance", icon: "🔧" },
-  offline:     { color: "#dc2626", border: "#b91c1c", label: "Offline",     icon: "🔴" },
+  online:      { color: "#059669", label: "Online",      icon: "✅" },
+  degraded:    { color: "#d97706", label: "Degraded",    icon: "⚠️" },
+  maintenance: { color: "#7c3aed", label: "Maintenance", icon: "🔧" },
+  offline:     { color: "#dc2626", label: "Offline",     icon: "🔴" },
+};
+
+const CUSTOMER_STATUS_CFG = {
+  active:     { color: "#059669", label: "Active"     },
+  pending:    { color: "#f59e0b", label: "Pending"    },
+  suspended:  { color: "#ef4444", label: "Suspended"  },
+  terminated: { color: "#64748b", label: "Terminated" },
+};
+
+const PLAN_LABELS = {
+  basic_10mbps:       "10 Mbps",
+  standard_50mbps:    "50 Mbps",
+  premium_100mbps:    "100 Mbps",
+  enterprise_500mbps: "500 Mbps",
+  dedicated_1gbps:    "1 Gbps",
 };
 
 const TABS = [
@@ -115,13 +124,15 @@ const T = {
 };
 
 async function geocodeLocation(str) {
-  if (!str) return null;
-  const res = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(str + ", South Africa")}&limit=1`,
-    { headers: { "Accept-Language": "en" } }
-  );
-  const data = await res.json();
-  if (data?.[0]) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  if (!str || str.trim().length < 3) return null;
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(str + ", South Africa")}&limit=1`,
+      { headers: { "Accept-Language": "en" } }
+    );
+    const data = await res.json();
+    if (data?.[0]) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  } catch {}
   return null;
 }
 
@@ -181,7 +192,7 @@ function CompareTab() {
               style={{
                 background: p.isTouchnet ? `linear-gradient(145deg,rgba(6,182,212,0.08),rgba(99,102,241,0.04))` : T.panel,
                 border: `1px solid ${p.isTouchnet ? "rgba(6,182,212,0.4)" : p.color + "25"}`,
-                boxShadow: p.isTouchnet ? "0 8px 32px rgba(6,182,212,0.15),0 1px 0 rgba(255,255,255,1) inset" : `0 4px 20px ${p.color}10,0 1px 0 rgba(255,255,255,0.9) inset`,
+                boxShadow: p.isTouchnet ? "0 8px 32px rgba(6,182,212,0.15),0 1px 0 rgba(255,255,255,1) inset" : `0 4px 20px ${p.color}10`,
               }}>
               <div className="h-[3px]" style={{ background: `linear-gradient(90deg,${p.color},${p.color}44,transparent)` }} />
               <div className="absolute top-4 right-4 flex flex-col gap-1 items-end">
@@ -193,7 +204,7 @@ function CompareTab() {
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ background: `${p.color}10`, border: `1px solid ${p.color}25` }}>{p.logo}</div>
                   <div>
                     <p className="text-[13px] font-black" style={{ color: T.text }}>{p.name}</p>
-                    <p className="text-[10px]" style={{ color: p.color }}>{p.uptime} uptime SLA</p>
+                    <p className="text-[10px]" style={{ color: p.color }}>{p.uptime} uptime</p>
                   </div>
                 </div>
                 <div className="rounded-xl p-3 text-center" style={{ background: `${p.color}08`, border: `1px solid ${p.color}20` }}>
@@ -201,9 +212,6 @@ function CompareTab() {
                     <>
                       <p className="text-[30px] font-black mono leading-none" style={{ color: p.color }}>R{plan.price}</p>
                       <p className="text-[10px] font-semibold mt-1" style={{ color: T.sub }}>/month · {plan.speed} · {plan.label}</p>
-                      <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold" style={{ background: `${p.color}12`, color: p.color, border: `1px solid ${p.color}25` }}>
-                        R{(plan.price / parseInt(plan.speed)).toFixed(0)}/Mbps
-                      </div>
                     </>
                   ) : <p className="text-[11px] py-2" style={{ color: T.muted }}>Not available at this tier</p>}
                 </div>
@@ -276,7 +284,7 @@ function AreasTab() {
       <div className="relative">
         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: T.muted }} />
         <input className="w-full pl-9 pr-4 py-2.5 rounded-xl text-[12px] outline-none"
-          style={{ background: T.panel, border: `1px solid ${T.border}`, color: T.text, boxShadow: "0 2px 8px rgba(6,182,212,0.06)" }}
+          style={{ background: T.panel, border: `1px solid ${T.border}`, color: T.text }}
           placeholder="Search areas…" value={search} onChange={e => setSearch(e.target.value)} />
       </div>
       <div className="grid grid-cols-3 gap-2">
@@ -322,20 +330,38 @@ function MapTab() {
   const mapInstanceRef = useRef(null);
   const markerRef = useRef(null);
   const nodeMarkersRef = useRef([]);
+  const customerMarkersRef = useRef([]);
   const [address, setAddress] = useState("");
   const [searchStatus, setSearchStatus] = useState(null);
   const [foundProviders, setFoundProviders] = useState([]);
   const [nodes, setNodes] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [nodesLoading, setNodesLoading] = useState(true);
+  const [customersLoading, setCustomersLoading] = useState(true);
   const [overlayReady, setOverlayReady] = useState(false);
   const [statusCounts, setStatusCounts] = useState({});
+  const [customerCounts, setCustomerCounts] = useState({});
+  const [showCustomers, setShowCustomers] = useState(true);
+  const [showNodes, setShowNodes] = useState(true);
 
+  // Load data
   useEffect(() => {
     base44.entities.NetworkNode.list()
-      .then(data => { setNodes(data); const c = {}; data.forEach(n => { c[n.status] = (c[n.status] || 0) + 1; }); setStatusCounts(c); })
+      .then(data => {
+        setNodes(data);
+        const c = {}; data.forEach(n => { c[n.status] = (c[n.status] || 0) + 1; }); setStatusCounts(c);
+      })
       .catch(() => {}).finally(() => setNodesLoading(false));
+
+    base44.entities.Customer.list()
+      .then(data => {
+        setCustomers(data);
+        const c = {}; data.forEach(n => { c[n.status] = (c[n.status] || 0) + 1; }); setCustomerCounts(c);
+      })
+      .catch(() => {}).finally(() => setCustomersLoading(false));
   }, []);
 
+  // Init map
   useEffect(() => {
     let mounted = true;
     async function initMap() {
@@ -357,28 +383,95 @@ function MapTab() {
     return () => { mounted = false; if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null; } };
   }, []);
 
+  // Plot nodes once loaded
   useEffect(() => { if (!nodesLoading && mapInstanceRef.current && nodes.length > 0) plotNodeMarkers(); }, [nodesLoading, nodes]);
+
+  // Plot customers once loaded
+  useEffect(() => { if (!customersLoading && mapInstanceRef.current && customers.length > 0) plotCustomerMarkers(); }, [customersLoading, customers]);
+
+  // Toggle visibility
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    customerMarkersRef.current.forEach(m => showCustomers ? m.addTo(mapInstanceRef.current) : m.remove());
+  }, [showCustomers]);
+
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    nodeMarkersRef.current.forEach(m => showNodes ? m.addTo(mapInstanceRef.current) : m.remove());
+  }, [showNodes]);
 
   const plotNodeMarkers = async () => {
     const L = await import("leaflet");
     nodeMarkersRef.current.forEach(m => m.remove()); nodeMarkersRef.current = [];
-    const results = await Promise.all(nodes.map(async node => { if (!node.location) return null; const coords = await geocodeLocation(node.location); return coords ? { node, coords } : null; }));
+    const results = await Promise.all(
+      nodes.map(async node => { if (!node.location) return null; const coords = await geocodeLocation(node.location); return coords ? { node, coords } : null; })
+    );
     results.filter(Boolean).forEach(({ node, coords }) => {
       const cfg = NODE_STATUS_CFG[node.status] || NODE_STATUS_CFG.online;
       const pulse = ["degraded", "offline"].includes(node.status);
       const iconHtml = `<div style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">${pulse ? `<div style="position:absolute;inset:-6px;border-radius:50%;border:2px solid ${cfg.color};animation:nodepin 1.5s ease infinite;opacity:0.5;"></div>` : ""}<div style="width:34px;height:34px;border-radius:50%;background:white;border:2.5px solid ${cfg.color};display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 4px 16px ${cfg.color}40,0 2px 8px rgba(0,0,0,0.12);">${cfg.icon}</div></div><style>@keyframes nodepin{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.6);opacity:0;}}</style>`;
       const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -24] });
-      const m = L.marker([coords.lat, coords.lng], { icon }).addTo(mapInstanceRef.current)
-        .bindPopup(`<div style="font-family:'Exo 2',sans-serif;min-width:180px;padding:2px;"><b style="color:#0891b2;font-size:13px;">${node.name}</b><br/><span style="font-size:10px;color:${cfg.color};font-weight:700;">${cfg.label}</span>${node.location ? `<br/><span style="font-size:11px;color:#64748b;">📍 ${node.location}</span>` : ""}${node.uptime_percent != null ? `<br/><span style="font-size:11px;color:#64748b;">Uptime: <b style="color:#059669">${node.uptime_percent}%</b></span>` : ""}${node.connected_customers != null ? `<br/><span style="font-size:11px;color:#64748b;">Customers: <b style="color:#0891b2">${node.connected_customers}</b></span>` : ""}</div>`);
+      const m = L.marker([coords.lat, coords.lng], { icon })
+        .addTo(mapInstanceRef.current)
+        .bindPopup(`<div style="font-family:'Exo 2',sans-serif;min-width:180px;padding:2px;"><b style="color:#0891b2;font-size:13px;">${node.name}</b><br/><span style="font-size:10px;color:${cfg.color};font-weight:700;">🖧 Network Node · ${cfg.label}</span>${node.location ? `<br/><span style="font-size:11px;color:#64748b;">📍 ${node.location}</span>` : ""}${node.uptime_percent != null ? `<br/><span style="font-size:11px;color:#64748b;">Uptime: <b style="color:#059669">${node.uptime_percent}%</b></span>` : ""}${node.connected_customers != null ? `<br/><span style="font-size:11px;color:#64748b;">Customers: <b style="color:#0891b2">${node.connected_customers}</b></span>` : ""}</div>`);
       nodeMarkersRef.current.push(m);
     });
     setOverlayReady(true);
   };
 
+  const plotCustomerMarkers = async () => {
+    const L = await import("leaflet");
+    customerMarkersRef.current.forEach(m => m.remove()); customerMarkersRef.current = [];
+
+    // Geocode in batches to avoid flooding nominatim
+    const BATCH = 5;
+    const withAddresses = customers.filter(c => c.address && c.address.trim().length > 3);
+
+    for (let i = 0; i < withAddresses.length; i += BATCH) {
+      const batch = withAddresses.slice(i, i + BATCH);
+      const results = await Promise.all(
+        batch.map(async customer => {
+          const coords = await geocodeLocation(customer.address);
+          return coords ? { customer, coords } : null;
+        })
+      );
+      results.filter(Boolean).forEach(({ customer, coords }) => {
+        if (!mapInstanceRef.current) return;
+        const cfg = CUSTOMER_STATUS_CFG[customer.status] || CUSTOMER_STATUS_CFG.active;
+        const plan = PLAN_LABELS[customer.service_plan] || customer.service_plan?.replace(/_/g, " ") || "—";
+        const initials = customer.full_name?.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase() || "?";
+
+        const iconHtml = `
+          <div style="position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+            <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,${cfg.color},${cfg.color}cc);border:2.5px solid white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:white;box-shadow:0 3px 12px ${cfg.color}50,0 1px 4px rgba(0,0,0,0.15);font-family:'Space Grotesk',sans-serif;">${initials}</div>
+          </div>
+        `;
+        const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -22] });
+        const m = L.marker([coords.lat, coords.lng], { icon })
+          .addTo(mapInstanceRef.current)
+          .bindPopup(`
+            <div style="font-family:'Exo 2',sans-serif;min-width:200px;padding:2px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,${cfg.color},${cfg.color}cc);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:900;">${initials}</div>
+                <div><b style="color:#0f172a;font-size:13px;">${customer.full_name}</b><br/><span style="font-size:10px;color:${cfg.color};font-weight:700;">👤 Client · ${cfg.label}</span></div>
+              </div>
+              ${customer.account_number ? `<div style="font-size:10px;color:#64748b;margin-bottom:2px;">Account: <b style="color:#0891b2">#${customer.account_number}</b></div>` : ""}
+              <div style="font-size:10px;color:#64748b;margin-bottom:2px;">Plan: <b style="color:#7c3aed">${plan}</b></div>
+              ${customer.monthly_rate ? `<div style="font-size:10px;color:#64748b;margin-bottom:2px;">Rate: <b style="color:#059669">R${customer.monthly_rate}/mo</b></div>` : ""}
+              ${customer.address ? `<div style="font-size:10px;color:#64748b;">📍 ${customer.address}</div>` : ""}
+            </div>
+          `);
+        customerMarkersRef.current.push(m);
+      });
+      // Small delay between batches to be polite to geocoder
+      if (i + BATCH < withAddresses.length) await new Promise(r => setTimeout(r, 400));
+    }
+  };
+
   const placeSearchMarker = async (L, lat, lng) => {
     if (!mapInstanceRef.current) return;
     if (markerRef.current) markerRef.current.remove();
-    const iconHtml = `<div style="position:relative;display:flex;align-items:center;justify-content:center;width:28px;height:28px;"><div style="width:22px;height:22px;background:linear-gradient(135deg,#06b6d4,#0284c7);border:3px solid white;border-radius:50%;box-shadow:0 0 20px rgba(6,182,212,0.5),0 2px 12px rgba(6,182,212,0.3);"></div><div style="position:absolute;inset:-8px;border-radius:50%;border:1.5px solid rgba(6,182,212,0.35);animation:sping 2s ease infinite;"></div></div><style>@keyframes sping{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(2.2);opacity:0;}}</style>`;
+    const iconHtml = `<div style="position:relative;display:flex;align-items:center;justify-content:center;width:28px;height:28px;"><div style="width:22px;height:22px;background:linear-gradient(135deg,#06b6d4,#0284c7);border:3px solid white;border-radius:50%;box-shadow:0 0 20px rgba(6,182,212,0.5);"></div><div style="position:absolute;inset:-8px;border-radius:50%;border:1.5px solid rgba(6,182,212,0.35);animation:sping 2s ease infinite;"></div></div><style>@keyframes sping{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(2.2);opacity:0;}}</style>`;
     const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [28, 28], iconAnchor: [14, 14] });
     markerRef.current = L.marker([lat, lng], { icon }).addTo(mapInstanceRef.current);
   };
@@ -401,9 +494,11 @@ function MapTab() {
   };
 
   const alertNodes = nodes.filter(n => ["offline", "degraded"].includes(n.status));
+  const totalCustomersWithAddr = customers.filter(c => c.address && c.address.trim().length > 3).length;
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
+      {/* Search bar */}
       <div className="flex-shrink-0 px-4 py-3 flex gap-2" style={{ background: "rgba(248,252,255,0.98)", borderBottom: `1px solid ${T.border}` }}>
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: T.muted }} />
@@ -417,18 +512,57 @@ function MapTab() {
           {searchStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />} Check
         </button>
       </div>
-      <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 flex-wrap" style={{ background: "rgba(240,249,255,0.95)", borderBottom: `1px solid ${T.border}` }}>
+
+      {/* Status / legend strip */}
+      <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 flex-wrap" style={{ background: "rgba(240,249,255,0.95)", borderBottom: `1px solid ${T.border}` }}>
+        {/* Layer toggles */}
+        <button onClick={() => setShowNodes(v => !v)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+          style={{ background: showNodes ? "rgba(6,182,212,0.1)" : "rgba(241,245,249,0.8)", border: `1px solid ${showNodes ? "rgba(6,182,212,0.35)" : "rgba(226,232,240,0.8)"}`, color: showNodes ? "#0891b2" : T.muted }}>
+          🖧 Nodes {nodes.length > 0 && <span className="mono">{nodes.length}</span>}
+        </button>
+        <button onClick={() => setShowCustomers(v => !v)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+          style={{ background: showCustomers ? "rgba(5,150,105,0.1)" : "rgba(241,245,249,0.8)", border: `1px solid ${showCustomers ? "rgba(5,150,105,0.35)" : "rgba(226,232,240,0.8)"}`, color: showCustomers ? "#059669" : T.muted }}>
+          <Users className="w-3 h-3" /> Clients {customers.length > 0 && <span className="mono">{customers.length}</span>}
+        </button>
+
+        <div className="w-px h-4 flex-shrink-0" style={{ background: "rgba(6,182,212,0.2)" }} />
+
+        {/* Node status counts */}
         {Object.entries(NODE_STATUS_CFG).map(([key, cfg]) => statusCounts[key] > 0 && (
-          <span key={key} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ background: `${cfg.color}10`, color: cfg.color, border: `1px solid ${cfg.color}25` }}>{cfg.icon} {statusCounts[key]} {cfg.label}</span>
+          <span key={key} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ background: `${cfg.color}10`, color: cfg.color, border: `1px solid ${cfg.color}25` }}>{cfg.icon} {statusCounts[key]}</span>
         ))}
-        {nodesLoading && <span className="flex items-center gap-1 text-[10px]" style={{ color: T.muted }}><Loader2 className="w-3 h-3 animate-spin" /> Loading nodes…</span>}
-        {overlayReady && <span className="flex items-center gap-1 text-[10px] font-bold ml-auto" style={{ color: "#059669" }}><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live overlay</span>}
-        {alertNodes.length > 0 && <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ color: "#d97706", background: "rgba(217,119,6,0.08)", border: "1px solid rgba(217,119,6,0.22)" }}><AlertTriangle className="w-3 h-3" /> {alertNodes.length} alert{alertNodes.length > 1 ? "s" : ""}</span>}
+
+        {/* Customer status counts */}
+        {Object.entries(CUSTOMER_STATUS_CFG).map(([key, cfg]) => customerCounts[key] > 0 && (
+          <span key={key} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ background: `${cfg.color}10`, color: cfg.color, border: `1px solid ${cfg.color}25` }}>
+            👤 {customerCounts[key]} {cfg.label}
+          </span>
+        ))}
+
+        {(nodesLoading || customersLoading) && (
+          <span className="flex items-center gap-1 text-[10px]" style={{ color: T.muted }}><Loader2 className="w-3 h-3 animate-spin" /> Loading…</span>
+        )}
+        {overlayReady && (
+          <span className="flex items-center gap-1 text-[10px] font-bold ml-auto" style={{ color: "#059669" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live · {totalCustomersWithAddr} clients plotted
+          </span>
+        )}
+        {alertNodes.length > 0 && (
+          <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ color: "#d97706", background: "rgba(217,119,6,0.08)", border: "1px solid rgba(217,119,6,0.22)" }}>
+            <AlertTriangle className="w-3 h-3" /> {alertNodes.length} alert{alertNodes.length > 1 ? "s" : ""}
+          </span>
+        )}
       </div>
+
+      {/* Map */}
       <div className="flex flex-1 min-h-0 relative">
         <div ref={mapRef} className="flex-1" />
+
+        {/* Coverage result */}
         {searchStatus === "found" && foundProviders.length > 0 && (
-          <div className="absolute top-3 right-3 z-[1000] w-72 rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.97)", border: `1px solid ${T.borderStrong}`, backdropFilter: "blur(16px)", boxShadow: "0 8px 40px rgba(6,182,212,0.12),0 2px 0 rgba(255,255,255,1) inset" }}>
+          <div className="absolute top-3 right-3 z-[1000] w-72 rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.97)", border: `1px solid ${T.borderStrong}`, backdropFilter: "blur(16px)", boxShadow: "0 8px 40px rgba(6,182,212,0.12)" }}>
             <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#06b6d4,#7c3aed,transparent)" }} />
             <div className="px-4 py-3" style={{ borderBottom: `1px solid ${T.border}` }}>
               <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" style={{ color: "#059669" }} /><p className="text-[13px] font-black" style={{ color: T.text }}>Coverage Available!</p></div>
@@ -445,9 +579,10 @@ function MapTab() {
                 </div>
               ))}
             </div>
-            <button onClick={() => setSearchStatus(null)} className="w-full py-2 text-[11px] font-bold transition-colors hover:bg-slate-50" style={{ color: T.muted, borderTop: `1px solid ${T.border}` }}>Dismiss</button>
+            <button onClick={() => setSearchStatus(null)} className="w-full py-2 text-[11px] font-bold hover:bg-slate-50" style={{ color: T.muted, borderTop: `1px solid ${T.border}` }}>Dismiss</button>
           </div>
         )}
+
         {searchStatus === "not_found" && (
           <div className="absolute top-3 right-3 z-[1000] rounded-2xl px-4 py-3" style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(220,38,38,0.25)", backdropFilter: "blur(16px)" }}>
             <div className="flex items-center gap-2"><XCircle className="w-4 h-4 text-red-500" /><p className="text-[12px] font-bold" style={{ color: "#dc2626" }}>Address not found</p></div>
@@ -474,8 +609,7 @@ export default function CoverageChecker({ onClose }) {
         }}>
         <div className="h-[3px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#06b6d4,#7c3aed,#e11d48,#059669,#d97706,#06b6d4)", backgroundSize: "300% 100%", animation: "shimmer 4s linear infinite" }} />
         <style>{`@keyframes shimmer{0%{background-position:0% 0}100%{background-position:300% 0}}`}</style>
-        <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none" style={{ background: "radial-gradient(circle at 80% 20%,rgba(6,182,212,0.07) 0%,transparent 60%)", zIndex: 0 }} />
-        <div className="absolute bottom-0 left-0 w-48 h-48 pointer-events-none" style={{ background: "radial-gradient(circle at 20% 80%,rgba(124,58,237,0.05) 0%,transparent 60%)", zIndex: 0 }} />
+        <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none" style={{ background: "radial-gradient(circle at 80% 20%,rgba(6,182,212,0.07),transparent 60%)", zIndex: 0 }} />
         {/* Header */}
         <div className="relative z-10 flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ borderBottom: `1px solid ${T.border}`, background: "rgba(255,255,255,0.75)", backdropFilter: "blur(12px)" }}>
           <div className="flex items-center gap-3">
@@ -492,7 +626,7 @@ export default function CoverageChecker({ onClose }) {
                   <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> LIVE
                 </span>
               </div>
-              <p className="text-[11px]" style={{ color: "#0891b2" }}>Network status · Multi-provider comparison · Real-time pricing</p>
+              <p className="text-[11px]" style={{ color: "#0891b2" }}>Network nodes · Live clients · Multi-provider comparison</p>
             </div>
           </div>
           <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl transition-all hover:scale-110" style={{ background: "rgba(6,182,212,0.06)", border: `1px solid ${T.border}`, color: T.muted }}>
