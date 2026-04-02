@@ -271,7 +271,7 @@ function LayoutInner({ children, currentPageName }) {
       <style>{`
         * { box-sizing: border-box; }
 
-        body { font-family: 'Outfit', sans-serif; }
+        body { font-family: 'Exo 2', sans-serif; }
         .mono { font-family: 'JetBrains Mono', monospace !important; }
         .heading { font-family: 'Space Grotesk', sans-serif !important; }
 

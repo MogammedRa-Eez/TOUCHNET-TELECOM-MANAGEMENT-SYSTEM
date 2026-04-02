@@ -5,7 +5,7 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["'Outfit'", '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+  			sans: ["'Exo 2'", '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
   			grotesk: ["'Space Grotesk'", 'sans-serif'],
   			mono: ["'JetBrains Mono'", 'monospace'],
   		},
