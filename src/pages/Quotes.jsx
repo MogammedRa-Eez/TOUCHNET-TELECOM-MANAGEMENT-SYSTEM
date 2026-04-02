@@ -95,7 +95,8 @@ export default function Quotes() {
       try {
         const allUsers = await base44.entities.User.list();
         const currentUser = await base44.auth.me();
-        const others = allUsers.filter(u => u.email !== currentUser?.email);
+        // Only notify employees (non-customer roles), never clients
+        const others = allUsers.filter(u => u.email !== currentUser?.email && u.role !== "user");
         await Promise.all(others.map(u =>
           base44.entities.Notification.create({
             user_email: u.email,

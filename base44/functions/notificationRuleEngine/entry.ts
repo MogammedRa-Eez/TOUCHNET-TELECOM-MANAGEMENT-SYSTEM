@@ -367,9 +367,9 @@ async function handleQuote(base44, eventType, data, old_data) {
 async function handleQuoteNote(base44, eventType, data, old_data) {
   if (eventType !== "create") return;
 
-  // Notify all employees except the author
+  // Notify employees only (never customers/clients)
   const allUsers = await base44.asServiceRole.entities.User.list();
-  const others = allUsers.filter(u => u.email !== data.author_email);
+  const others = allUsers.filter(u => u.email !== data.author_email && u.role !== "user");
   const typeLabel = data.note_type ? data.note_type.charAt(0).toUpperCase() + data.note_type.slice(1) : "Note";
 
   for (const u of others) {
