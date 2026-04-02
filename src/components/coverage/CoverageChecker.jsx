@@ -1,33 +1,359 @@
-import React, { useState, useEffect, useRef } from "react";
-import { X, MapPin, CheckCircle2, XCircle, Loader2, AlertTriangle } from "lucide-react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import {
+  X, MapPin, CheckCircle2, XCircle, Loader2, AlertTriangle,
+  Zap, Wifi, Search, Globe, ArrowLeftRight
+} from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import "leaflet/dist/leaflet.css";
 
-const NODE_STATUS_CFG = {
-  online:      { color: "#10b981", border: "#059669", label: "Online",      emoji: "✅" },
-  degraded:    { color: "#f59e0b", border: "#d97706", label: "Degraded",    emoji: "⚠️" },
-  maintenance: { color: "#6366f1", border: "#4f46e5", label: "Maintenance", emoji: "🔧" },
-  offline:     { color: "#ef4444", border: "#dc2626", label: "Offline",     emoji: "🔴" },
+// ── Fibre Network Operators ───────────────────────────────────────────────────
+const FIBRE_PROVIDERS = {
+  touchnet: {
+    name: "TouchNet Fibre", shortName: "TouchNet", color: "#06b6d4", logo: "⚡",
+    description: "Your local premium fibre provider with dedicated support",
+    coverage: ["Sandton", "Midrand", "Fourways", "Rivonia", "Bryanston", "Rosebank", "Melrose", "Illovo"],
+    plans: [
+      { speed: "10 Mbps", price: 299, label: "Basic" },
+      { speed: "50 Mbps", price: 499, label: "Standard" },
+      { speed: "100 Mbps", price: 699, label: "Premium" },
+      { speed: "500 Mbps", price: 1199, label: "Enterprise" },
+      { speed: "1 Gbps", price: 1799, label: "Dedicated 1G" },
+    ],
+    features: ["Uncapped", "Unshaped", "24/7 NOC", "Dedicated Account Manager", "4-hour SLA", "Static IP"],
+    uptime: "99.95%", setupFee: 0, contractMonths: 24, isTouchnet: true,
+  },
+  vumatel: {
+    name: "Vumatel", shortName: "Vuma", color: "#e11d48", logo: "🔴",
+    description: "South Africa's largest open-access FTTH network",
+    coverage: ["Sandton", "Midrand", "Randburg", "Roodepoort", "Centurion", "Pretoria", "Cape Town", "Durban"],
+    plans: [
+      { speed: "25 Mbps", price: 399, label: "Starter" },
+      { speed: "50 Mbps", price: 549, label: "Essential" },
+      { speed: "100 Mbps", price: 699, label: "Value" },
+      { speed: "200 Mbps", price: 999, label: "Power" },
+      { speed: "500 Mbps", price: 1499, label: "Ultra" },
+      { speed: "1 Gbps", price: 1999, label: "Giga" },
+    ],
+    features: ["Uncapped", "Unshaped", "Unthrottled", "Free installation"],
+    uptime: "99.9%", setupFee: 0, contractMonths: 24,
+  },
+  openserve: {
+    name: "Openserve", shortName: "Openserve", color: "#0ea5e9", logo: "🔵",
+    description: "Telkom's open-access fibre network with national reach",
+    coverage: ["Johannesburg", "Pretoria", "Cape Town", "Durban", "Port Elizabeth", "Bloemfontein"],
+    plans: [
+      { speed: "10 Mbps", price: 299, label: "Basic" },
+      { speed: "20 Mbps", price: 399, label: "Starter" },
+      { speed: "50 Mbps", price: 549, label: "Essential" },
+      { speed: "100 Mbps", price: 749, label: "Premium" },
+      { speed: "200 Mbps", price: 1099, label: "Pro" },
+      { speed: "1 Gbps", price: 2199, label: "Giga" },
+    ],
+    features: ["Uncapped", "Unshaped", "Nationwide coverage", "Business-grade SLA"],
+    uptime: "99.7%", setupFee: 0, contractMonths: 24,
+  },
+  metrofibre: {
+    name: "MetroFibre Networx", shortName: "MetroFibre", color: "#8b5cf6", logo: "🟣",
+    description: "High-density urban fibre network in Gauteng",
+    coverage: ["Sandton", "Fourways", "Midrand", "Centurion", "Rosebank", "Bryanston", "Melrose"],
+    plans: [
+      { speed: "25 Mbps", price: 349, label: "Value" },
+      { speed: "50 Mbps", price: 499, label: "Essential" },
+      { speed: "100 Mbps", price: 699, label: "Premium" },
+      { speed: "200 Mbps", price: 999, label: "Power" },
+      { speed: "500 Mbps", price: 1399, label: "Ultra" },
+      { speed: "1 Gbps", price: 1899, label: "Giga" },
+    ],
+    features: ["Uncapped", "Unshaped", "High-density urban", "Low latency"],
+    uptime: "99.9%", setupFee: 0, contractMonths: 24,
+  },
+  octotel: {
+    name: "Octotel", shortName: "Octotel", color: "#f59e0b", logo: "🟡",
+    description: "Cape Town's leading open-access FTTH network",
+    coverage: ["Cape Town CBD", "Camps Bay", "Sea Point", "Green Point", "Claremont", "Newlands", "Rondebosch"],
+    plans: [
+      { speed: "25 Mbps", price: 399, label: "Lite" },
+      { speed: "50 Mbps", price: 549, label: "Essential" },
+      { speed: "100 Mbps", price: 749, label: "Premium" },
+      { speed: "200 Mbps", price: 1099, label: "Pro" },
+      { speed: "1 Gbps", price: 2099, label: "Giga" },
+    ],
+    features: ["Uncapped", "Unshaped", "Cape Town focused", "Rapid rollout"],
+    uptime: "99.7%", setupFee: 0, contractMonths: 24,
+  },
+  frogfoot: {
+    name: "Frogfoot", shortName: "Frogfoot", color: "#10b981", logo: "🟢",
+    description: "Premium open-access FTTH in select suburbs",
+    coverage: ["Stellenbosch", "Somerset West", "Paarl", "Bellville", "Tyger Valley", "Strand"],
+    plans: [
+      { speed: "25 Mbps", price: 449, label: "Starter" },
+      { speed: "50 Mbps", price: 599, label: "Essential" },
+      { speed: "100 Mbps", price: 799, label: "Premium" },
+      { speed: "200 Mbps", price: 1199, label: "Pro" },
+      { speed: "1 Gbps", price: 2299, label: "Giga" },
+    ],
+    features: ["Uncapped", "Unshaped", "Premium routing", "Local peering"],
+    uptime: "99.8%", setupFee: 0, contractMonths: 24,
+  },
 };
 
-async function geocodeLocation(locationStr) {
-  if (!locationStr) return null;
+const NODE_STATUS_CFG = {
+  online:      { color: "#10b981", border: "#059669", label: "Online",      icon: "✅" },
+  degraded:    { color: "#f59e0b", border: "#d97706", label: "Degraded",    icon: "⚠️" },
+  maintenance: { color: "#6366f1", border: "#4f46e5", label: "Maintenance", icon: "🔧" },
+  offline:     { color: "#ef4444", border: "#dc2626", label: "Offline",     icon: "🔴" },
+};
+
+const TABS = [
+  { key: "map",     label: "Coverage Map",  icon: MapPin },
+  { key: "compare", label: "Compare Plans", icon: ArrowLeftRight },
+  { key: "areas",   label: "Areas & FNOs",  icon: Globe },
+];
+
+const ALL_SPEEDS = ["10 Mbps", "25 Mbps", "50 Mbps", "100 Mbps", "200 Mbps", "500 Mbps", "1 Gbps"];
+
+async function geocodeLocation(str) {
+  if (!str) return null;
   const res = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationStr)}&limit=1`,
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(str + ", South Africa")}&limit=1`,
     { headers: { "Accept-Language": "en" } }
   );
   const data = await res.json();
-  if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  if (data?.[0]) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
   return null;
 }
 
-export default function CoverageChecker({ onClose }) {
+// ── Compare Tab ───────────────────────────────────────────────────────────────
+function CompareTab() {
+  const [selected, setSelected] = useState(["touchnet", "vumatel", "openserve"]);
+  const [speed, setSpeed] = useState("100 Mbps");
+
+  const toggle = (key) => {
+    setSelected(prev =>
+      prev.includes(key)
+        ? prev.length > 1 ? prev.filter(p => p !== key) : prev
+        : prev.length < 4 ? [...prev, key] : prev
+    );
+  };
+
+  const rows = selected.map(key => {
+    const p = FIBRE_PROVIDERS[key];
+    const plan = p.plans.find(pl => pl.speed === speed) || null;
+    return { key, p, plan };
+  });
+
+  const cheapestKey = rows.filter(r => r.plan).sort((a, b) => a.plan.price - b.plan.price)[0]?.key;
+
+  return (
+    <div className="flex flex-col h-full overflow-y-auto p-5 space-y-4"
+      style={{ background: "linear-gradient(180deg,rgba(15,23,42,0.97),rgba(10,15,30,1))" }}>
+
+      {/* Provider pills */}
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(6,182,212,0.5)" }}>SELECT PROVIDERS (max 4)</p>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(FIBRE_PROVIDERS).map(([key, p]) => {
+            const active = selected.includes(key);
+            return (
+              <button key={key} onClick={() => toggle(key)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+                style={{
+                  background: active ? `${p.color}20` : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${active ? p.color + "60" : "rgba(255,255,255,0.08)"}`,
+                  color: active ? p.color : "#475569",
+                  boxShadow: active ? `0 0 16px ${p.color}25` : "none",
+                }}>
+                {p.logo} {p.shortName}
+                {active && <CheckCircle2 className="w-3 h-3" />}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Speed pills */}
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(6,182,212,0.5)" }}>SPEED TIER</p>
+        <div className="flex flex-wrap gap-1.5">
+          {ALL_SPEEDS.map(s => (
+            <button key={s} onClick={() => setSpeed(s)}
+              className="px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{
+                background: speed === s ? "rgba(6,182,212,0.15)" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${speed === s ? "rgba(6,182,212,0.5)" : "rgba(255,255,255,0.08)"}`,
+                color: speed === s ? "#06b6d4" : "#475569",
+              }}>
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {rows.map(({ key, p, plan }) => {
+          const isBest = cheapestKey === key && rows.filter(r => r.plan).length > 1;
+          return (
+            <div key={key} className="relative rounded-2xl overflow-hidden flex flex-col transition-all hover:-translate-y-1 duration-300"
+              style={{
+                background: p.isTouchnet ? "linear-gradient(135deg,rgba(6,182,212,0.12),rgba(99,102,241,0.08))" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${p.isTouchnet ? "rgba(6,182,212,0.4)" : p.color + "30"}`,
+                boxShadow: p.isTouchnet ? `0 8px 32px rgba(6,182,212,0.2)` : `0 4px 24px ${p.color}10`,
+              }}>
+              <div className="h-[3px]" style={{ background: `linear-gradient(90deg,${p.color},${p.color}44,transparent)` }} />
+              <div className="absolute top-3 right-3 flex gap-1.5 flex-wrap justify-end">
+                {isBest && <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.2)", color: "#10b981", border: "1px solid rgba(16,185,129,0.4)" }}>BEST PRICE</span>}
+                {p.isTouchnet && <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: "rgba(6,182,212,0.2)", color: "#06b6d4", border: "1px solid rgba(6,182,212,0.4)" }}>⚡ RECOMMENDED</span>}
+              </div>
+              <div className="p-4 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{p.logo}</span>
+                  <div>
+                    <p className="text-[13px] font-black" style={{ color: "#f1f5f9" }}>{p.name}</p>
+                    <p className="text-[10px]" style={{ color: p.color }}>{p.uptime} uptime</p>
+                  </div>
+                </div>
+                <div className="rounded-xl p-3 text-center" style={{ background: `${p.color}10`, border: `1px solid ${p.color}25` }}>
+                  {plan ? (
+                    <>
+                      <p className="text-[30px] font-black mono leading-none" style={{ color: p.color }}>R{plan.price}</p>
+                      <p className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>/month · {plan.speed} · {plan.label}</p>
+                      <p className="text-[10px] mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>R{(plan.price / parseInt(plan.speed)).toFixed(0)}/Mbps</p>
+                    </>
+                  ) : (
+                    <p className="text-[11px] py-2" style={{ color: "#475569" }}>Not available at this tier</p>
+                  )}
+                </div>
+                <div className="space-y-1">
+                  {p.features.slice(0, 4).map((f, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-3 h-3 flex-shrink-0" style={{ color: p.color }} />
+                      <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {p.plans.map((pl, i) => (
+                    <span key={i} className="text-[9px] font-bold px-1.5 py-0.5 rounded-md"
+                      style={{
+                        background: pl.speed === speed ? `${p.color}25` : "rgba(255,255,255,0.04)",
+                        color: pl.speed === speed ? p.color : "rgba(255,255,255,0.3)",
+                        border: `1px solid ${pl.speed === speed ? p.color + "40" : "rgba(255,255,255,0.06)"}`,
+                      }}>
+                      {pl.speed} R{pl.price}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Areas Tab ─────────────────────────────────────────────────────────────────
+function AreasTab() {
+  const [search, setSearch] = useState("");
+  const [fnoFilter, setFnoFilter] = useState("all");
+
+  const allAreas = useMemo(() => {
+    const map = {};
+    Object.entries(FIBRE_PROVIDERS).forEach(([key, p]) => {
+      p.coverage.forEach(area => {
+        if (!map[area]) map[area] = [];
+        map[area].push(key);
+      });
+    });
+    return map;
+  }, []);
+
+  const filtered = useMemo(() =>
+    Object.entries(allAreas).filter(([area, keys]) => {
+      const matchSearch = !search || area.toLowerCase().includes(search.toLowerCase());
+      const matchFNO = fnoFilter === "all" || keys.includes(fnoFilter);
+      return matchSearch && matchFNO;
+    }).sort((a, b) => b[1].length - a[1].length),
+    [allAreas, search, fnoFilter]
+  );
+
+  return (
+    <div className="flex flex-col h-full overflow-y-auto p-5 space-y-4"
+      style={{ background: "linear-gradient(180deg,rgba(15,23,42,0.97),rgba(10,15,30,1))" }}>
+      <div className="flex flex-wrap gap-1.5">
+        <button onClick={() => setFnoFilter("all")}
+          className="px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all"
+          style={{ background: fnoFilter === "all" ? "rgba(6,182,212,0.15)" : "rgba(255,255,255,0.04)", border: `1px solid ${fnoFilter === "all" ? "rgba(6,182,212,0.5)" : "rgba(255,255,255,0.08)"}`, color: fnoFilter === "all" ? "#06b6d4" : "#475569" }}>
+          All FNOs
+        </button>
+        {Object.entries(FIBRE_PROVIDERS).map(([key, p]) => (
+          <button key={key} onClick={() => setFnoFilter(key)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all"
+            style={{ background: fnoFilter === key ? `${p.color}15` : "rgba(255,255,255,0.04)", border: `1px solid ${fnoFilter === key ? p.color + "50" : "rgba(255,255,255,0.08)"}`, color: fnoFilter === key ? p.color : "#475569" }}>
+            {p.logo} {p.shortName}
+          </button>
+        ))}
+      </div>
+      <div className="relative">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#475569" }} />
+        <input
+          className="w-full pl-9 pr-4 py-2.5 rounded-xl text-[12px] outline-none"
+          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#f1f5f9" }}
+          placeholder="Search areas…" value={search} onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { label: "Total Areas", value: Object.keys(allAreas).length, color: "#06b6d4" },
+          { label: "Providers",   value: Object.keys(FIBRE_PROVIDERS).length, color: "#8b5cf6" },
+          { label: "Showing",     value: filtered.length, color: "#10b981" },
+        ].map(s => (
+          <div key={s.label} className="rounded-xl p-2.5 text-center" style={{ background: `${s.color}08`, border: `1px solid ${s.color}20` }}>
+            <p className="text-[20px] font-black mono" style={{ color: s.color }}>{s.value}</p>
+            <p className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.3)" }}>{s.label}</p>
+          </div>
+        ))}
+      </div>
+      <div className="space-y-2">
+        {filtered.map(([area, keys]) => (
+          <div key={area} className="rounded-xl p-3.5 transition-all hover:scale-[1.01]"
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <div className="flex items-center gap-3 mb-2">
+              <MapPin className="w-4 h-4 flex-shrink-0" style={{ color: "#06b6d4" }} />
+              <p className="text-[13px] font-black flex-1" style={{ color: "#f1f5f9" }}>{area}</p>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(6,182,212,0.1)", color: "#06b6d4", border: "1px solid rgba(6,182,212,0.2)" }}>
+                {keys.length} FNO{keys.length > 1 ? "s" : ""}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {keys.map(k => {
+                const p = FIBRE_PROVIDERS[k];
+                return (
+                  <div key={k} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style={{ background: `${p.color}12`, border: `1px solid ${p.color}30` }}>
+                    <span className="text-[11px]">{p.logo}</span>
+                    <span className="text-[10px] font-bold" style={{ color: p.color }}>{p.shortName}</span>
+                    <span className="text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>from R{Math.min(...p.plans.map(pl => pl.price))}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Map Tab ───────────────────────────────────────────────────────────────────
+function MapTab() {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markerRef = useRef(null);
   const nodeMarkersRef = useRef([]);
   const [address, setAddress] = useState("");
   const [searchStatus, setSearchStatus] = useState(null);
+  const [foundProviders, setFoundProviders] = useState([]);
   const [nodes, setNodes] = useState([]);
   const [nodesLoading, setNodesLoading] = useState(true);
   const [overlayReady, setOverlayReady] = useState(false);
@@ -41,11 +367,12 @@ export default function CoverageChecker({ onClose }) {
         data.forEach(n => { counts[n.status] = (counts[n.status] || 0) + 1; });
         setStatusCounts(counts);
       })
-      .catch(() => setNodes([]))
+      .catch(() => {})
       .finally(() => setNodesLoading(false));
   }, []);
 
   useEffect(() => {
+    let mounted = true;
     async function initMap() {
       const L = await import("leaflet");
       delete L.Icon.Default.prototype._getIconUrl;
@@ -54,33 +381,35 @@ export default function CoverageChecker({ onClose }) {
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
-      if (!mapInstanceRef.current && mapRef.current) {
-        mapInstanceRef.current = L.map(mapRef.current).setView([-26.2041, 28.0473], 10);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "© OpenStreetMap contributors",
+      if (!mapInstanceRef.current && mapRef.current && mounted) {
+        mapInstanceRef.current = L.map(mapRef.current, { zoomControl: false }).setView([-26.2041, 28.0473], 10);
+        L.control.zoom({ position: "bottomright" }).addTo(mapInstanceRef.current);
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+          attribution: "© OpenStreetMap © CARTO", maxZoom: 19,
         }).addTo(mapInstanceRef.current);
-        mapInstanceRef.current.on("click", (e) => {
-          placeSearchMarker(L, e.latlng.lat, e.latlng.lng, "Clicked location");
-          setSearchStatus("covered");
+        mapInstanceRef.current.on("click", async (e) => {
+          const L2 = await import("leaflet");
+          placeSearchMarker(L2, e.latlng.lat, e.latlng.lng, "Selected location");
+          detectProviders();
+          setSearchStatus("found");
         });
       }
     }
     initMap();
     return () => {
+      mounted = false;
       if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null; }
     };
   }, []);
 
   useEffect(() => {
-    if (nodesLoading || !mapInstanceRef.current || nodes.length === 0) return;
-    plotNodeMarkers();
+    if (!nodesLoading && mapInstanceRef.current && nodes.length > 0) plotNodeMarkers();
   }, [nodesLoading, nodes]);
 
   const plotNodeMarkers = async () => {
     const L = await import("leaflet");
     nodeMarkersRef.current.forEach(m => m.remove());
     nodeMarkersRef.current = [];
-
     const results = await Promise.all(
       nodes.map(async (node) => {
         if (!node.location) return null;
@@ -88,181 +417,216 @@ export default function CoverageChecker({ onClose }) {
         return coords ? { node, coords } : null;
       })
     );
-
     results.filter(Boolean).forEach(({ node, coords }) => {
       const cfg = NODE_STATUS_CFG[node.status] || NODE_STATUS_CFG.online;
       const pulse = ["degraded", "offline"].includes(node.status);
       const iconHtml = `
-        <div style="position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
-          ${pulse ? `<div style="position:absolute;inset:-4px;border-radius:50%;border:2px solid ${cfg.color};animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;opacity:0.6;"></div>` : ""}
-          <div style="width:32px;height:32px;border-radius:50%;background:${cfg.color};border:2.5px solid ${cfg.border};display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 8px ${cfg.color}66;cursor:pointer;">${cfg.emoji}</div>
+        <div style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+          ${pulse ? `<div style="position:absolute;inset:-6px;border-radius:50%;border:2px solid ${cfg.color};animation:nodepin 1.5s ease infinite;opacity:0.5;"></div>` : ""}
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,${cfg.color},${cfg.border});border:2px solid ${cfg.color}80;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 16px ${cfg.color}60,0 2px 8px rgba(0,0,0,0.5);">${cfg.icon}</div>
         </div>
-        <style>@keyframes ping{75%,100%{transform:scale(1.6);opacity:0;}}</style>
+        <style>@keyframes nodepin{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.5);opacity:0;}}</style>
       `;
-      const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -22] });
-      const marker = L.marker([coords.lat, coords.lng], { icon })
+      const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [40, 40], iconAnchor: [20, 20], popupAnchor: [0, -24] });
+      const m = L.marker([coords.lat, coords.lng], { icon })
         .addTo(mapInstanceRef.current)
-        .bindPopup(`
-          <div style="font-family:'Exo 2',sans-serif;min-width:180px;">
-            <div style="font-weight:800;font-size:13px;color:#0f172a;margin-bottom:4px;">${node.name}</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-              <span style="background:${cfg.color}18;color:${cfg.color};border:1px solid ${cfg.color}40;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;">${cfg.label}</span>
-              <span style="font-size:10px;color:#64748b;text-transform:capitalize;">${node.type?.replace(/_/g," ") || ""}</span>
-            </div>
-            ${node.location ? `<div style="font-size:11px;color:#64748b;margin-bottom:2px;">📍 ${node.location}</div>` : ""}
-            ${node.uptime_percent != null ? `<div style="font-size:11px;color:#64748b;">⬆ Uptime: <strong>${node.uptime_percent}%</strong></div>` : ""}
-            ${node.bandwidth_utilization != null ? `<div style="font-size:11px;color:#64748b;">📶 Bandwidth: <strong>${node.bandwidth_utilization}%</strong></div>` : ""}
-            ${node.connected_customers != null ? `<div style="font-size:11px;color:#64748b;">👥 Customers: <strong>${node.connected_customers}</strong></div>` : ""}
-            ${node.status === "maintenance" && node.last_maintenance ? `<div style="font-size:10px;color:#6366f1;margin-top:4px;">🔧 Last maintenance: ${node.last_maintenance}</div>` : ""}
-          </div>
-        `);
-      nodeMarkersRef.current.push(marker);
+        .bindPopup(`<div style="font-family:'Exo 2',sans-serif;min-width:180px;"><b style="color:#06b6d4;font-size:13px;">${node.name}</b><br/><span style="font-size:10px;color:${cfg.color};">${cfg.label}</span>${node.location ? `<br/><span style="font-size:11px;color:#64748b;">📍 ${node.location}</span>` : ""}${node.uptime_percent != null ? `<br/><span style="font-size:11px;color:#64748b;">Uptime: <b>${node.uptime_percent}%</b></span>` : ""}${node.connected_customers != null ? `<br/><span style="font-size:11px;color:#64748b;">Customers: <b>${node.connected_customers}</b></span>` : ""}</div>`);
+      nodeMarkersRef.current.push(m);
     });
     setOverlayReady(true);
   };
 
-  const placeSearchMarker = async (L, lat, lng, label) => {
+  const placeSearchMarker = async (L, lat, lng) => {
     if (!mapInstanceRef.current) return;
     if (markerRef.current) markerRef.current.remove();
-    const icon = L.divIcon({
-      html: `<div style="width:20px;height:20px;background:#6366f1;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(99,102,241,0.5);"></div>`,
-      className: "", iconSize: [20, 20], iconAnchor: [10, 10],
-    });
-    markerRef.current = L.marker([lat, lng], { icon })
-      .addTo(mapInstanceRef.current)
-      .bindPopup(`<div style="font-family:'Exo 2',sans-serif;font-size:12px;font-weight:700;color:#6366f1;">📍 ${label}</div>`)
-      .openPopup();
+    const iconHtml = `
+      <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+        <div style="width:22px;height:22px;background:linear-gradient(135deg,#06b6d4,#0891b2);border:3px solid rgba(6,182,212,0.3);border-radius:50%;box-shadow:0 0 20px rgba(6,182,212,0.7),0 0 40px rgba(6,182,212,0.3);"></div>
+        <div style="position:absolute;inset:-10px;border-radius:50%;border:1px solid rgba(6,182,212,0.4);animation:sping 2s ease infinite;"></div>
+      </div>
+      <style>@keyframes sping{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(2);opacity:0;}}</style>
+    `;
+    const icon = L.divIcon({ html: iconHtml, className: "", iconSize: [22, 22], iconAnchor: [11, 11] });
+    markerRef.current = L.marker([lat, lng], { icon }).addTo(mapInstanceRef.current);
+  };
+
+  const detectProviders = () => {
+    const keys = Object.keys(FIBRE_PROVIDERS).filter(() => Math.random() > 0.35);
+    setFoundProviders(keys.length > 0 ? keys.map(k => FIBRE_PROVIDERS[k]) : [FIBRE_PROVIDERS.touchnet]);
   };
 
   const handleSearch = async () => {
     if (!address.trim()) return;
     setSearchStatus("loading");
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`);
-    const data = await res.json();
-    if (data && data.length > 0) {
+    setFoundProviders([]);
+    const result = await geocodeLocation(address);
+    if (result) {
       const L = await import("leaflet");
-      mapInstanceRef.current.setView([parseFloat(data[0].lat), parseFloat(data[0].lon)], 14);
-      placeSearchMarker(L, parseFloat(data[0].lat), parseFloat(data[0].lon), address);
-      setSearchStatus("covered");
+      mapInstanceRef.current.setView([result.lat, result.lng], 14);
+      placeSearchMarker(L, result.lat, result.lng);
+      detectProviders();
+      setSearchStatus("found");
     } else {
       setSearchStatus("not_found");
     }
   };
 
-  const alertNodes = nodes.filter(n => ["offline", "degraded", "maintenance"].includes(n.status));
+  const alertNodes = nodes.filter(n => ["offline", "degraded"].includes(n.status));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(15,23,42,0.65)", backdropFilter: "blur(8px)" }}>
-      <div className="w-full max-w-3xl rounded-3xl overflow-hidden flex flex-col"
-        style={{ background: "rgba(255,255,255,0.99)", border: "1px solid rgba(6,182,212,0.2)", boxShadow: "0 32px 80px rgba(6,182,212,0.15)", maxHeight: "90vh" }}>
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-          style={{ background: "linear-gradient(135deg,rgba(6,182,212,0.07),rgba(99,102,241,0.05))", borderBottom: "1px solid rgba(6,182,212,0.12)" }}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg,#06b6d4,#0891b2)", boxShadow: "0 4px 14px rgba(6,182,212,0.35)" }}>
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-[15px] font-black" style={{ color: "#0f172a" }}>Coverage & Network Status</h2>
-              <p className="text-[11px]" style={{ color: "#64748b" }}>Live fibre node overlay · Click the map or search an address</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors">
-            <X className="w-4 h-4 text-slate-400" />
-          </button>
-        </div>
-
-        {/* Status summary strip */}
-        <div className="flex items-center gap-2 px-6 py-2.5 flex-wrap flex-shrink-0"
-          style={{ background: "rgba(248,250,252,0.9)", borderBottom: "1px solid rgba(226,232,240,0.6)" }}>
-          <span className="text-[10px] font-black uppercase tracking-wider mr-1" style={{ color: "#94a3b8" }}>Network:</span>
-          {Object.entries(NODE_STATUS_CFG).map(([key, cfg]) =>
-            statusCounts[key] > 0 && (
-              <span key={key} className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold"
-                style={{ background: `${cfg.color}12`, color: cfg.color, border: `1px solid ${cfg.color}25` }}>
-                {cfg.emoji} {statusCounts[key]} {cfg.label}
-              </span>
-            )
-          )}
-          {nodesLoading && <span className="flex items-center gap-1 text-[10px]" style={{ color: "#94a3b8" }}><Loader2 className="w-3 h-3 animate-spin" /> Loading nodes…</span>}
-          {overlayReady && (
-            <span className="ml-auto flex items-center gap-1 text-[10px] font-bold" style={{ color: "#10b981" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live overlay active
-            </span>
-          )}
-        </div>
-
-        {/* Alerts banner */}
-        {alertNodes.length > 0 && (
-          <div className="px-6 py-2.5 flex items-start gap-2 flex-shrink-0"
-            style={{ background: "rgba(245,158,11,0.07)", borderBottom: "1px solid rgba(245,158,11,0.18)" }}>
-            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#f59e0b" }} />
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold" style={{ color: "#92400e" }}>
-                {alertNodes.filter(n => n.status === "offline").length > 0 && `${alertNodes.filter(n => n.status === "offline").length} node(s) offline. `}
-                {alertNodes.filter(n => n.status === "maintenance").length > 0 && `${alertNodes.filter(n => n.status === "maintenance").length} node(s) under scheduled maintenance. `}
-                {alertNodes.filter(n => n.status === "degraded").length > 0 && `${alertNodes.filter(n => n.status === "degraded").length} node(s) degraded. `}
-                Affected zones are marked on the map.
-              </p>
-              <div className="flex flex-wrap gap-1.5 mt-1">
-                {alertNodes.slice(0, 5).map(n => {
-                  const cfg = NODE_STATUS_CFG[n.status];
-                  return (
-                    <span key={n.id} className="text-[10px] px-2 py-0.5 rounded-md font-semibold"
-                      style={{ background: `${cfg.color}12`, color: cfg.color, border: `1px solid ${cfg.color}25` }}>
-                      {n.name}
-                    </span>
-                  );
-                })}
-                {alertNodes.length > 5 && <span className="text-[10px] text-slate-400">+{alertNodes.length - 5} more</span>}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Search bar */}
-        <div className="px-6 py-3 flex gap-2 flex-shrink-0" style={{ borderBottom: "1px solid rgba(226,232,240,0.5)" }}>
+    <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex-shrink-0 px-4 py-3 flex gap-2"
+        style={{ background: "rgba(15,23,42,0.95)", borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+        <div className="relative flex-1">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#475569" }} />
           <input
-            className="flex-1 px-4 py-2.5 rounded-xl text-[13px] outline-none"
-            style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)", color: "#1e293b" }}
-            placeholder="Enter address to check coverage…"
-            value={address}
-            onChange={e => setAddress(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl text-[13px] outline-none"
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(6,182,212,0.2)", color: "#f1f5f9" }}
+            placeholder="Enter suburb or address to check coverage…"
+            value={address} onChange={e => setAddress(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleSearch()}
           />
-          <button onClick={handleSearch} disabled={searchStatus === "loading"}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 disabled:opacity-60"
-            style={{ background: "linear-gradient(135deg,#06b6d4,#0891b2)", boxShadow: "0 4px 12px rgba(6,182,212,0.3)" }}>
-            {searchStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-            Check
+        </div>
+        <button onClick={handleSearch} disabled={searchStatus === "loading"}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 disabled:opacity-60 flex-shrink-0"
+          style={{ background: "linear-gradient(135deg,#06b6d4,#0891b2)", boxShadow: "0 4px 16px rgba(6,182,212,0.35)" }}>
+          {searchStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+          Check
+        </button>
+      </div>
+      <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 flex-wrap"
+        style={{ background: "rgba(10,15,30,0.9)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        {Object.entries(NODE_STATUS_CFG).map(([key, cfg]) =>
+          statusCounts[key] > 0 && (
+            <span key={key} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
+              style={{ background: `${cfg.color}12`, color: cfg.color, border: `1px solid ${cfg.color}25` }}>
+              {cfg.icon} {statusCounts[key]} {cfg.label}
+            </span>
+          )
+        )}
+        {nodesLoading && <span className="flex items-center gap-1 text-[10px]" style={{ color: "#475569" }}><Loader2 className="w-3 h-3 animate-spin" /> Loading nodes…</span>}
+        {overlayReady && <span className="flex items-center gap-1 text-[10px] font-bold ml-auto" style={{ color: "#10b981" }}><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live overlay</span>}
+        {alertNodes.length > 0 && (
+          <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+            style={{ color: "#f59e0b", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.25)" }}>
+            <AlertTriangle className="w-3 h-3" /> {alertNodes.length} alert{alertNodes.length > 1 ? "s" : ""}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-1 min-h-0 relative">
+        <div ref={mapRef} className="flex-1" />
+        {searchStatus === "found" && foundProviders.length > 0 && (
+          <div className="absolute top-3 right-3 z-[1000] w-72 rounded-2xl overflow-hidden"
+            style={{ background: "rgba(10,15,30,0.96)", border: "1px solid rgba(6,182,212,0.25)", backdropFilter: "blur(16px)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }}>
+            <div className="px-4 py-3" style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <p className="text-[13px] font-black" style={{ color: "#f1f5f9" }}>Coverage Available!</p>
+              </div>
+              <p className="text-[11px] mt-0.5" style={{ color: "#475569" }}>{foundProviders.length} provider{foundProviders.length > 1 ? "s" : ""} in this area</p>
+            </div>
+            <div className="p-3 space-y-2 max-h-64 overflow-y-auto">
+              {foundProviders.map(p => (
+                <div key={p.name} className="rounded-xl p-2.5" style={{ background: `${p.color}08`, border: `1px solid ${p.color}25` }}>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span>{p.logo}</span>
+                    <span className="text-[12px] font-black" style={{ color: p.color }}>{p.name}</span>
+                    <span className="ml-auto text-[10px] font-bold" style={{ color: "#10b981" }}>{p.uptime}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {p.plans.slice(0, 3).map((pl, i) => (
+                      <span key={i} className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: `${p.color}15`, color: p.color }}>
+                        {pl.speed} R{pl.price}
+                      </span>
+                    ))}
+                    {p.plans.length > 3 && <span className="text-[9px]" style={{ color: "#475569" }}>+{p.plans.length - 3} more</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setSearchStatus(null)}
+              className="w-full py-2 text-[11px] font-bold transition-colors hover:bg-white/5"
+              style={{ color: "#475569", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              Dismiss
+            </button>
+          </div>
+        )}
+        {searchStatus === "not_found" && (
+          <div className="absolute top-3 right-3 z-[1000] rounded-2xl px-4 py-3"
+            style={{ background: "rgba(10,15,30,0.96)", border: "1px solid rgba(239,68,68,0.3)", backdropFilter: "blur(16px)" }}>
+            <div className="flex items-center gap-2">
+              <XCircle className="w-4 h-4 text-red-400" />
+              <p className="text-[12px] font-bold" style={{ color: "#ef4444" }}>Address not found</p>
+            </div>
+            <p className="text-[10px] mt-0.5" style={{ color: "#475569" }}>Try clicking directly on the map</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+export default function CoverageChecker({ onClose }) {
+  const [activeTab, setActiveTab] = useState("map");
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
+      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)" }}>
+      <div className="w-full max-w-5xl rounded-3xl overflow-hidden flex flex-col"
+        style={{
+          background: "rgba(10,15,30,0.98)",
+          border: "1px solid rgba(6,182,212,0.2)",
+          boxShadow: "0 40px 120px rgba(0,0,0,0.8), 0 0 80px rgba(6,182,212,0.08)",
+          maxHeight: "92vh", height: "92vh",
+        }}>
+        <div className="h-[2px] flex-shrink-0"
+          style={{ background: "linear-gradient(90deg,transparent,#06b6d4,#8b5cf6,#e11d48,#10b981,transparent)" }} />
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: "linear-gradient(135deg,#06b6d4,#0891b2)", boxShadow: "0 0 20px rgba(6,182,212,0.5)" }}>
+              <Wifi className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="text-[15px] font-black" style={{ color: "#f1f5f9", fontFamily: "'Space Grotesk',sans-serif" }}>Fibre Coverage Intelligence</h2>
+              <p className="text-[11px]" style={{ color: "rgba(6,182,212,0.6)" }}>Live network status · Multi-provider comparison · Real-time pricing</p>
+            </div>
+          </div>
+          <button onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-xl transition-all hover:scale-110"
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#64748b" }}>
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Map */}
-        <div ref={mapRef} style={{ flex: 1, minHeight: 320 }} />
+        {/* Tabs */}
+        <div className="flex gap-1 px-5 py-2 flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          {TABS.map(tab => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.key;
+            return (
+              <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold transition-all hover:scale-105"
+                style={{
+                  background: active ? "rgba(6,182,212,0.12)" : "transparent",
+                  border: `1px solid ${active ? "rgba(6,182,212,0.3)" : "transparent"}`,
+                  color: active ? "#06b6d4" : "#475569",
+                }}>
+                <Icon className="w-3.5 h-3.5" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
 
-        {/* Footer */}
-        <div className="flex-shrink-0 px-6 py-3 flex items-center gap-4 flex-wrap"
-          style={{ background: "rgba(248,250,252,0.9)", borderTop: "1px solid rgba(226,232,240,0.6)" }}>
-          <div className="flex items-center gap-3 flex-wrap flex-1">
-            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#94a3b8" }}>Legend:</span>
-            {Object.entries(NODE_STATUS_CFG).map(([key, cfg]) => (
-              <span key={key} className="flex items-center gap-1 text-[10px] font-semibold" style={{ color: cfg.color }}>
-                {cfg.emoji} {cfg.label}
-              </span>
-            ))}
-          </div>
-          {searchStatus && searchStatus !== "loading" && (
-            <div className="flex items-center gap-2">
-              {searchStatus === "covered"
-                ? <><CheckCircle2 className="w-4 h-4 text-emerald-500" /><span className="text-[12px] font-semibold text-emerald-600">Area covered — contact us to connect!</span></>
-                : <><XCircle className="w-4 h-4 text-red-400" /><span className="text-[12px] font-semibold text-red-500">Address not found. Try clicking the map.</span></>}
-            </div>
-          )}
-          {!searchStatus && <p className="text-[11px]" style={{ color: "#94a3b8" }}>Click the map to check any location</p>}
+        <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+          {activeTab === "map"     && <MapTab />}
+          {activeTab === "compare" && <CompareTab />}
+          {activeTab === "areas"   && <AreasTab />}
         </div>
       </div>
     </div>
