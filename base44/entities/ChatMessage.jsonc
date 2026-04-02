@@ -1,0 +1,27 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "sender_email": {
+      "type": "string",
+      "description": "Email of the sender"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Display name of the sender"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "room": {
+      "type": "string",
+      "default": "general",
+      "description": "Chat room/channel name"
+    }
+  },
+  "required": [
+    "sender_email",
+    "content"
+  ]
+}

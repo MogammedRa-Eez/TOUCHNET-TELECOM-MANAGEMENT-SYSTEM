@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
+import { base44 } from "@/api/base44Client";
 import {
   LayoutDashboard, Users, Receipt, TicketCheck, Network, UserCog,
   Bot, Shield, Package, Settings, Mail, HeartHandshake,
@@ -13,6 +14,7 @@ import UserMenu from "@/components/layout/UserMenu";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 import GlobalSearch from "@/components/layout/GlobalSearch";
+import EmployeeChat from "@/components/chat/EmployeeChat";
 
 const NAV_GROUPS = [
   {
@@ -253,7 +255,15 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
 function LayoutInner({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [tick, setTick] = useState(0);
+  const [chatUser, setChatUser] = useState(null);
   const { can, loading } = useRBAC();
+
+  useEffect(() => {
+    base44.auth.me().then(u => {
+      // Only show chat for employees (not customers/clients)
+      if (u && u.role !== "user") setChatUser(u);
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => setTick(t => t + 1), 1000);
@@ -382,6 +392,9 @@ function LayoutInner({ children, currentPageName }) {
           {children}
         </main>
       </div>
+
+      {/* Employee-only live chat */}
+      {chatUser && <EmployeeChat user={chatUser} />}
     </div>
   );
 }
