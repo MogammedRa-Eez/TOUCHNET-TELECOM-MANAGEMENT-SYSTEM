@@ -31,11 +31,9 @@ export default function QuoteNotesPanel({ quote, onClose }) {
   const addMut = useMutation({
     mutationFn: async (data) => {
       const note = await base44.entities.QuoteNote.create(data);
-      // Notify all employees via in-app notification
-      // We create a notification record — the notification bell picks it up
-      // Get all users and notify those who are not the author
+      // Notify employees only — never notify customers/clients
       const allUsers = await base44.entities.User.list();
-      const others = allUsers.filter(u => u.email !== data.author_email);
+      const others = allUsers.filter(u => u.email !== data.author_email && u.role !== "user");
       await Promise.all(others.map(u =>
         base44.entities.Notification.create({
           user_email: u.email,

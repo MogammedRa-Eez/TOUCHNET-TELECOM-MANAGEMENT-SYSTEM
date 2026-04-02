@@ -17,7 +17,7 @@ export default function CoverageChecker({ onClose }) {
       prompt: `You are a coverage checker for TouchNet, a South African fibre ISP operating in Gauteng (Sandton, Johannesburg, Midrand, Centurion, Pretoria areas).
 Given the address: "${address}"
 Determine if this address is likely within TouchNet's coverage area.
-Respond with coverage: true if it's in Gauteng/Johannesburg metro area, false otherwise.
+Respond with covered: true if it's in Gauteng/Johannesburg metro area, false otherwise.
 Also provide a short friendly message and suggested plan if covered.`,
       response_json_schema: {
         type: "object",
@@ -40,7 +40,6 @@ Also provide a short friendly message and suggested plan if covered.`,
       <div className="w-full max-w-md rounded-3xl overflow-hidden shadow-2xl"
         style={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(6,182,212,0.2)" }}>
 
-        {/* Header */}
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#06b6d4,#6366f1,transparent)" }} />
         <div className="flex items-center justify-between px-6 py-4"
           style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
@@ -72,11 +71,7 @@ Also provide a short friendly message and suggested plan if covered.`,
                 onChange={e => setAddress(e.target.value)}
                 placeholder="e.g. 15 Rivonia Road, Sandton"
                 className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
-                style={{
-                  background: "rgba(248,250,252,0.9)",
-                  border: "1px solid rgba(226,232,240,0.9)",
-                  color: "#1e293b",
-                }}
+                style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)", color: "#1e293b" }}
               />
             </div>
             <button
@@ -89,7 +84,6 @@ Also provide a short friendly message and suggested plan if covered.`,
             </button>
           </form>
 
-          {/* Result */}
           {result && (
             <div className="rounded-2xl overflow-hidden"
               style={{
