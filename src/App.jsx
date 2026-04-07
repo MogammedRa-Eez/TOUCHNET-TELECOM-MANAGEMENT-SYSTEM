@@ -15,6 +15,7 @@ import AIAssistant from './pages/AIAssistant';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import SystemDemo from './pages/SystemDemo';
+import CoverageCheck from './pages/CoverageCheck';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -94,6 +95,7 @@ const AuthenticatedApp = () => {
         </LayoutWrapper>
       } />
       <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
+      <Route path="/CoverageCheck" element={<CoverageCheck />} />
       <Route path="/CynetSecurity" element={
         <LayoutWrapper currentPageName="CynetSecurity">
           <CynetSecurity />
