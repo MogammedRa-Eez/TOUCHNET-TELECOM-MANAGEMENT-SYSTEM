@@ -1,185 +1,77 @@
 import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
-import { X, MapPin, Search, Wifi, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { MapContainer, TileLayer, Circle, Popup } from "react-leaflet";
+import { X, MapPin } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-// Fix default marker icons
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl:       "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
 
 const PROVIDERS = [
-  { name: "Openserve",  color: "#6366f1", radius: 15000 },
-  { name: "Vumatel",   color: "#10b981", radius: 12000 },
-  { name: "Frogfoot",  color: "#f59e0b", radius: 10000 },
-  { name: "TouchNet",  color: "#ef4444", radius: 18000 },
+  { name: "Openserve",  color: "#6366f1", zones: [[-25.7479, 28.2293], [-26.2041, 28.0473], [-33.9249, 18.4241]] },
+  { name: "Vumatel",   color: "#10b981", zones: [[-25.7879, 28.2773], [-26.1041, 28.1073], [-29.8587, 31.0218]] },
+  { name: "Frogfoot",  color: "#f59e0b", zones: [[-25.8579, 28.1893], [-26.0241, 28.2173]] },
+  { name: "TouchNet",  color: "#ef4444", zones: [[-25.7679, 28.2493], [-26.1741, 28.0873], [-33.8649, 18.5041]] },
 ];
 
-// Default center: South Africa
-const DEFAULT_CENTER = [-26.2041, 28.0473];
-
 export default function CoverageChecker({ onClose }) {
-  const [address, setAddress]     = useState("");
-  const [coords, setCoords]       = useState(null);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState("");
-  const [coverage, setCoverage]   = useState(null);
+  const [activeProviders, setActiveProviders] = useState(
+    Object.fromEntries(PROVIDERS.map(p => [p.name, true]))
+  );
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!address.trim()) return;
-    setLoading(true);
-    setError("");
-    setCoverage(null);
-    setCoords(null);
-
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=za&limit=1`,
-      { headers: { "Accept-Language": "en" } }
-    );
-    const data = await res.json();
-
-    if (!data.length) {
-      setError("Address not found. Please try a more specific address.");
-      setLoading(false);
-      return;
-    }
-
-    const { lat, lon } = data[0];
-    const latNum = parseFloat(lat);
-    const lonNum = parseFloat(lon);
-    setCoords([latNum, lonNum]);
-
-    // Simulate coverage check — in production, replace with real API calls
-    const available = PROVIDERS.filter(() => Math.random() > 0.4);
-    setCoverage(available);
-    setLoading(false);
-  };
+  const toggle = (name) => setActiveProviders(prev => ({ ...prev, [name]: !prev[name] }));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(15,23,42,0.6)", backdropFilter: "blur(8px)" }}>
-      <div className="w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl"
-        style={{ background: "#fff", border: "1px solid rgba(99,102,241,0.15)" }}>
+      style={{ background: "rgba(10,5,25,0.75)", backdropFilter: "blur(8px)" }}>
+      <div className="relative w-full max-w-4xl rounded-2xl overflow-hidden"
+        style={{ background: "#1a1330", border: "1px solid rgba(155,143,239,0.25)", boxShadow: "0 20px 60px rgba(124,111,224,0.25)" }}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4"
-          style={{ background: "linear-gradient(135deg,#0891b2,#06b6d4)", borderBottom: "1px solid rgba(6,182,212,0.2)" }}>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-white font-black text-[15px]">Coverage Checker</p>
-              <p className="text-cyan-100 text-[11px]">Check fibre availability at your address</p>
-            </div>
+        <div className="flex items-center justify-between px-5 py-4"
+          style={{ borderBottom: "1px solid rgba(155,143,239,0.15)" }}>
+          <div className="flex items-center gap-2.5">
+            <MapPin className="w-5 h-5" style={{ color: "#9b8fef" }} />
+            <h2 className="text-[15px] font-black" style={{ color: "#c4bcf7" }}>Fibre Coverage Map</h2>
           </div>
           <button onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
-            <X className="w-4 h-4 text-white" />
+            className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-white/10">
+            <X className="w-4 h-4" style={{ color: "#9b8fef" }} />
           </button>
         </div>
 
-        <div className="p-5 space-y-4">
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-[13px] outline-none"
-                style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(99,102,241,0.18)", color: "#1e293b" }}
-                placeholder="Enter your address (e.g. 12 Main St, Sandton)"
-                value={address}
-                onChange={e => setAddress(e.target.value)}
-              />
-            </div>
-            <button type="submit" disabled={loading}
-              className="px-5 py-2.5 rounded-xl text-[13px] font-bold text-white flex items-center gap-2 transition-all hover:scale-105 disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg,#0891b2,#06b6d4)" }}>
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              Check
+        {/* Provider toggles */}
+        <div className="flex items-center gap-2 px-5 py-3 flex-wrap"
+          style={{ borderBottom: "1px solid rgba(155,143,239,0.1)" }}>
+          {PROVIDERS.map(p => (
+            <button key={p.name}
+              onClick={() => toggle(p.name)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
+              style={{
+                background: activeProviders[p.name] ? `${p.color}18` : "rgba(255,255,255,0.04)",
+                border: `1px solid ${activeProviders[p.name] ? p.color + "40" : "rgba(255,255,255,0.08)"}`,
+                color: activeProviders[p.name] ? p.color : "#64748b",
+              }}>
+              <span className="w-2 h-2 rounded-full" style={{ background: activeProviders[p.name] ? p.color : "#334155" }} />
+              {p.name}
             </button>
-          </form>
+          ))}
+        </div>
 
-          {error && (
-            <p className="text-[12px] font-semibold text-red-500 flex items-center gap-1.5">
-              <XCircle className="w-4 h-4" /> {error}
-            </p>
-          )}
-
-          {/* Coverage results */}
-          {coverage && (
-            <div className="rounded-2xl overflow-hidden"
-              style={{ border: "1px solid rgba(99,102,241,0.12)" }}>
-              <div className="px-4 py-3"
-                style={{ background: coverage.length > 0 ? "rgba(16,185,129,0.07)" : "rgba(239,68,68,0.07)", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
-                <div className="flex items-center gap-2">
-                  {coverage.length > 0
-                    ? <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    : <XCircle className="w-4 h-4 text-red-400" />}
-                  <p className="text-[13px] font-black" style={{ color: "#1e293b" }}>
-                    {coverage.length > 0
-                      ? `${coverage.length} provider${coverage.length > 1 ? "s" : ""} available in your area!`
-                      : "No fibre coverage at this address yet"}
-                  </p>
-                </div>
-              </div>
-              {coverage.length > 0 && (
-                <div className="flex flex-wrap gap-2 px-4 py-3">
-                  {coverage.map(p => (
-                    <div key={p.name} className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-[12px] font-bold"
-                      style={{ background: `${p.color}12`, border: `1px solid ${p.color}30`, color: p.color }}>
-                      <Wifi className="w-3.5 h-3.5" /> {p.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Map */}
-          <div className="rounded-2xl overflow-hidden" style={{ height: 300, border: "1px solid rgba(99,102,241,0.12)" }}>
-            <MapContainer
-              center={coords || DEFAULT_CENTER}
-              zoom={coords ? 13 : 6}
-              key={coords ? coords.join(",") : "default"}
-              style={{ height: "100%", width: "100%" }}
-              scrollWheelZoom={false}>
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-              />
-              {coords && (
-                <>
-                  <Marker position={coords}>
-                    <Popup>{address}</Popup>
-                  </Marker>
-                  {coverage && coverage.map(p => (
-                    <Circle
-                      key={p.name}
-                      center={coords}
-                      radius={p.radius}
-                      pathOptions={{ color: p.color, fillColor: p.color, fillOpacity: 0.06, weight: 1.5 }}
-                    />
-                  ))}
-                </>
-              )}
-            </MapContainer>
-          </div>
-
-          {/* Provider legend */}
-          <div className="flex flex-wrap gap-3">
-            {PROVIDERS.map(p => (
-              <div key={p.name} className="flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: "#64748b" }}>
-                <span className="w-3 h-3 rounded-full" style={{ background: p.color }} />
-                {p.name}
-              </div>
-            ))}
-          </div>
+        {/* Map */}
+        <div style={{ height: 480 }}>
+          <MapContainer center={[-28.5, 25.5]} zoom={5} style={{ height: "100%", width: "100%" }}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; OpenStreetMap contributors'
+            />
+            {PROVIDERS.filter(p => activeProviders[p.name]).map(p =>
+              p.zones.map((coords, i) => (
+                <Circle key={`${p.name}-${i}`}
+                  center={coords}
+                  radius={15000}
+                  pathOptions={{ color: p.color, fillColor: p.color, fillOpacity: 0.2, weight: 2 }}>
+                  <Popup>{p.name} Coverage Zone</Popup>
+                </Circle>
+              ))
+            )}
+          </MapContainer>
         </div>
       </div>
     </div>
