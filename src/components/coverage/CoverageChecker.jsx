@@ -38,8 +38,8 @@ const STATIC_PROVIDERS = [
 const STATUS_COLORS = { live: "#9b8fef", billed: "#10b981" };
 
 const MAP_STYLES = [
-  { id: "dark",   label: "Dark",    url: "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" },
-  { id: "street", label: "Street",  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" },
+  { id: "dark",   label: "Dark",   url: "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" },
+  { id: "street", label: "Street", url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" },
 ];
 
 function FlyTo({ coords }) {
@@ -74,9 +74,7 @@ export default function CoverageChecker({ onClose }) {
     }
   };
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  useEffect(() => { fetchProjects(); }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -97,7 +95,7 @@ export default function CoverageChecker({ onClose }) {
   };
 
   const toggle = (name) => setActiveProviders(prev => ({ ...prev, [name]: !prev[name] }));
-  const liveCount   = projects.filter(p => p.status === "live").length;
+  const liveCount = projects.filter(p => p.status === "live").length;
   const billedCount = projects.filter(p => p.status === "billed").length;
   const currentStyle = MAP_STYLES.find(s => s.id === mapStyle);
 
