@@ -1,0 +1,143 @@
+{
+  "name": "FibreProject",
+  "type": "object",
+  "properties": {
+    "quote_number": {
+      "type": "string",
+      "description": "Unique quote number - identifier across quote, project, billing"
+    },
+    "project_name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "Linked Customer ID"
+    },
+    "customer_name": {
+      "type": "string",
+      "description": "Customer name"
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Customer email"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "lead",
+        "quoted",
+        "approved",
+        "in_progress",
+        "testing",
+        "live",
+        "billed",
+        "cancelled"
+      ],
+      "default": "lead",
+      "description": "Overall project status"
+    },
+    "current_task_index": {
+      "type": "number",
+      "default": 0,
+      "description": "Index of the currently active task (0-based)"
+    },
+    "annuity_amount": {
+      "type": "number",
+      "description": "Monthly recurring/annuity amount (R)"
+    },
+    "once_off_amount": {
+      "type": "number",
+      "description": "Once-off installation/setup amount (R)"
+    },
+    "vendor_quote_signed": {
+      "type": "boolean",
+      "default": false
+    },
+    "po_submitted": {
+      "type": "boolean",
+      "default": false
+    },
+    "po_sent_to_vendor": {
+      "type": "boolean",
+      "default": false
+    },
+    "circuit_id": {
+      "type": "string",
+      "description": "Circuit ID from vendor"
+    },
+    "monitoring_ip": {
+      "type": "string",
+      "description": "Monitoring IP for IRIS device monitoring"
+    },
+    "assigned_engineer": {
+      "type": "string",
+      "description": "TNET engineer assigned"
+    },
+    "forecasted_go_live_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Forecasted go-live date"
+    },
+    "actual_go_live_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Actual go-live date"
+    },
+    "billing_start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date billing commenced"
+    },
+    "contract_signed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "General project notes"
+    },
+    "site_address": {
+      "type": "string",
+      "description": "Installation site address"
+    },
+    "service_plan": {
+      "type": "string",
+      "description": "Service plan / speed"
+    },
+    "welcome_email_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "activation_email_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "contract_activated": {
+      "type": "boolean",
+      "default": false
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "Linked Invoice ID once billed"
+    },
+    "coverage_lat": {
+      "type": "number",
+      "description": "Geocoded latitude of site address for coverage map"
+    },
+    "coverage_lng": {
+      "type": "number",
+      "description": "Geocoded longitude of site address for coverage map"
+    },
+    "coverage_synced": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether coverage coordinates have been geocoded and synced"
+    }
+  },
+  "required": [
+    "quote_number",
+    "project_name",
+    "customer_name"
+  ]
+}
