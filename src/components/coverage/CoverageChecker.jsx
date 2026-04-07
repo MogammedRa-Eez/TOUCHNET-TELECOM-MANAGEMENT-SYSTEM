@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Circle, Popup, ZoomControl, useMap } from "react-leaflet";
 import L from "leaflet";
-import { X, MapPin, RefreshCw, Wifi, CheckCircle2, Search, Layers, Info, ChevronDown, ChevronUp } from "lucide-react";
+import { X, MapPin, RefreshCw, Search, Layers, Info, ChevronDown, ChevronUp } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import "leaflet/dist/leaflet.css";
 
@@ -13,9 +13,49 @@ L.Icon.Default.mergeOptions({
 });
 
 const STATIC_PROVIDERS = [
-  { name: "Openserve", color: "#6366f1", zones: [[-25.7479, 28.2293, "Pretoria East"], [-26.2041, 28.0473, "Johannesburg South"], [-33.9249, 18.4241, "Cape Town CBD"]] },
-  { name: "Vumatel",   color: "#10b981", zones: [[-25.7879, 28.2773, "Pretoria North"], [-26.1041, 28.1073, "Sandton"], [-29.8587, 31.0218, "Durban North"]] },
-  { name: "Frogfoot",  color: "#f59e0b", zones: [[-25.8579, 28.1893, "Centurion"], [-26.0241, 28.2173, "Midrand"]] },
+  { name: "Openserve", color: "#6366f1", zones: [
+    [-25.7479, 28.2293, "Pretoria East"], [-26.2041, 28.0473, "Johannesburg South"],
+    [-33.9249, 18.4241, "Cape Town CBD"], [-29.8587, 31.0218, "Durban CBD"],
+    [-26.1952, 28.0341, "Roodepoort"], [-33.9600, 25.6022, "Gqeberha"],
+    [-33.0292, 27.8546, "East London"],
+  ]},
+  { name: "Vumatel", color: "#10b981", zones: [
+    [-25.7879, 28.2773, "Pretoria North"], [-26.1041, 28.1073, "Sandton"],
+    [-29.8587, 31.0218, "Durban North"], [-26.0765, 28.0556, "Randburg"],
+    [-26.1367, 28.2411, "Bedfordview"], [-33.9321, 18.8602, "Stellenbosch"],
+    [-26.1715, 27.9681, "Krugersdorp"],
+  ]},
+  { name: "Frogfoot", color: "#f59e0b", zones: [
+    [-25.8579, 28.1893, "Centurion"], [-26.0241, 28.2173, "Midrand"],
+    [-26.0274, 28.1527, "Fourways"], [-26.2309, 28.2772, "Alberton"],
+    [-33.9830, 22.4533, "George"], [-25.6530, 27.2318, "Rustenburg"],
+  ]},
+  { name: "DFA", color: "#ef4444", zones: [
+    [-26.2041, 28.0473, "Johannesburg CBD"], [-25.7479, 28.2293, "Pretoria"],
+    [-29.8587, 31.0218, "Durban"], [-33.9249, 18.4241, "Cape Town"],
+    [-33.9600, 25.6022, "Gqeberha"], [-26.3054, 27.8497, "Soweto"],
+    [-26.1479, 28.3041, "Germiston"], [-26.0911, 27.7853, "Roodepoort"],
+  ]},
+  { name: "MFN", color: "#a855f7", zones: [
+    [-26.1041, 28.1073, "Sandton"], [-26.0241, 28.2173, "Midrand"],
+    [-25.8579, 28.1893, "Centurion"], [-26.0765, 28.0556, "Randburg"],
+    [-26.1715, 27.9681, "Krugersdorp"], [-25.9025, 28.4211, "Kempton Park"],
+  ]},
+  { name: "Zoom Fibre", color: "#06b6d4", zones: [
+    [-26.1041, 28.1073, "Sandton"], [-26.0274, 28.1527, "Fourways"],
+    [-25.9025, 28.4211, "Kempton Park"], [-26.2309, 28.2772, "Alberton"],
+    [-26.3054, 27.8497, "Soweto"], [-26.1367, 28.2411, "Bedfordview"],
+  ]},
+  { name: "Herotel", color: "#f97316", zones: [
+    [-33.9600, 25.6022, "Gqeberha"], [-33.0292, 27.8546, "East London"],
+    [-29.1197, 26.2140, "Bloemfontein"], [-33.9830, 22.4533, "George"],
+    [-32.2968, 24.5328, "Beaufort West"],
+  ]},
+  { name: "Link Africa", color: "#84cc16", zones: [
+    [-26.2041, 28.0473, "Johannesburg"], [-25.7479, 28.2293, "Pretoria"],
+    [-29.1197, 26.2140, "Bloemfontein"], [-25.6530, 27.2318, "Rustenburg"],
+    [-24.7764, 29.4639, "Polokwane"],
+  ]},
 ];
 
 const STATUS_COLORS = { live: "#9b8fef", billed: "#10b981" };
@@ -215,7 +255,7 @@ export default function CoverageChecker({ onClose }) {
               )}
             </div>
 
-            {/* Selected project */}
+            {/* Selected project detail */}
             {selectedProject && (
               <div className="p-3" style={{ borderTop: "1px solid rgba(155,143,239,0.12)" }}>
                 <div className="flex items-center justify-between mb-2">
@@ -256,10 +296,11 @@ export default function CoverageChecker({ onClose }) {
               <ZoomControl position="bottomright" />
               <TileLayer url={currentStyle.url} attribution='&copy; OpenStreetMap contributors' />
               {flyTo && <FlyTo coords={flyTo} />}
+
               {STATIC_PROVIDERS.filter(p => activeProviders[p.name]).map(p =>
                 p.zones.map(([lat, lng, label], i) => (
-                  <Circle key={`${p.name}-${i}`} center={[lat, lng]} radius={15000}
-                    pathOptions={{ color: p.color, fillColor: p.color, fillOpacity: 0.18, weight: 2 }}>
+                  <Circle key={`${p.name}-${i}`} center={[lat, lng]} radius={12000}
+                    pathOptions={{ color: p.color, fillColor: p.color, fillOpacity: 0.15, weight: 2 }}>
                     <Popup>
                       <p style={{ fontWeight: 700, marginBottom: 2 }}>{p.name}</p>
                       <p style={{ fontSize: 11, color: "#64748b" }}>{label}</p>
@@ -267,6 +308,7 @@ export default function CoverageChecker({ onClose }) {
                   </Circle>
                 ))
               )}
+
               {showTouchNet && projects.map(project => (
                 <Circle key={project.id}
                   center={[project.coverage_lat, project.coverage_lng]}
