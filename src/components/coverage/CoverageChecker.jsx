@@ -4,10 +4,10 @@ import { X, MapPin } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
 const PROVIDERS = [
-  { name: "Openserve",  color: "#6366f1", zones: [[-25.7479, 28.2293], [-26.2041, 28.0473], [-33.9249, 18.4241]] },
+  { name: "Openserve", color: "#6366f1", zones: [[-25.7479, 28.2293], [-26.2041, 28.0473], [-33.9249, 18.4241]] },
   { name: "Vumatel",   color: "#10b981", zones: [[-25.7879, 28.2773], [-26.1041, 28.1073], [-29.8587, 31.0218]] },
   { name: "Frogfoot",  color: "#f59e0b", zones: [[-25.8579, 28.1893], [-26.0241, 28.2173]] },
-  { name: "TouchNet",  color: "#ef4444", zones: [[-25.7679, 28.2493], [-26.1741, 28.0873], [-33.8649, 18.5041]] },
+  { name: "TouchNet",  color: "#9b8fef", zones: [[-25.7679, 28.2493], [-26.1741, 28.0873], [-33.8649, 18.5041]] },
 ];
 
 export default function CoverageChecker({ onClose }) {

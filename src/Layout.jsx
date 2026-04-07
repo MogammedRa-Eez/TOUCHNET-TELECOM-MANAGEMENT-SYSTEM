@@ -163,7 +163,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
               <img src="https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/9158e4b04_tnet2-removebg-preview.png" alt="Logo" className="w-13 h-13 object-contain" style={{ filter: "drop-shadow(0 0 6px rgba(155,143,239,0.6))" }} />
             </div>
             <div>
-              <img src={LOGO_URL} alt="TouchNet" className="h-5 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.92 }} />
+              <img src={LOGO_URL} alt="TouchNet" className="h-8 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 8px rgba(196,188,247,0.6))", opacity: 1 }} />
               <p className="text-[8px] font-bold tracking-[0.22em] uppercase mt-0.5" style={{ color: "rgba(196,188,247,0.45)", fontFamily: "'JetBrains Mono', monospace" }}>MANAGEMENT SYSTEM</p>
             </div>
           </div>
