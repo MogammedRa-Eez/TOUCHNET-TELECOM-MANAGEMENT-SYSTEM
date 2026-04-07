@@ -1,0 +1,41 @@
+{
+  "name": "CoverageSearch",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "The address or area searched"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Resolved display name from geocoder"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Resolved latitude"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Resolved longitude"
+    },
+    "covered": {
+      "type": "boolean",
+      "description": "Whether the searched location falls within coverage"
+    },
+    "nearest_zone": {
+      "type": "string",
+      "description": "Nearest coverage zone label if covered"
+    },
+    "suburb": {
+      "type": "string",
+      "description": "Normalised suburb/area name extracted from display_name"
+    },
+    "province": {
+      "type": "string",
+      "description": "Province extracted from display_name"
+    }
+  },
+  "required": [
+    "query"
+  ]
+}

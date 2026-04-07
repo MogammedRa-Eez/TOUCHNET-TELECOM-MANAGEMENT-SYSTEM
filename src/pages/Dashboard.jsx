@@ -16,6 +16,7 @@ import RecentActivity from "../components/dashboard/RecentActivity";
 import UserActivityPanel from "../components/dashboard/UserActivityPanel";
 import NetworkGlobe from "../components/dashboard/NetworkGlobe";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
+import CoverageSearchChart from "@/components/coverage/CoverageSearchChart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
@@ -431,6 +432,11 @@ export default function Dashboard() {
           </div>
           <TicketOverview tickets={tickets} />
         </div>
+      </Section>
+
+      {/* ── Coverage Demand Analytics (admin only) ── */}
+      <Section title="Coverage Demand Analytics" icon={MapPin} color="#9b8fef" defaultOpen={false}>
+        <CoverageSearchChart />
       </Section>
 
       {/* ── Activity ── */}

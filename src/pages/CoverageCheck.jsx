@@ -80,6 +80,18 @@ export default function CoverageCheck() {
   const [submitting, setSubmitting]     = useState(false);
   const [form, setForm]                 = useState({ name: "", email: "", phone: "", address: "", plan: "standard_50mbps", notes: "" });
 
+  const extractSuburb = (displayName) => {
+    if (!displayName) return "";
+    const parts = displayName.split(",").map(p => p.trim());
+    return parts[0] || "";
+  };
+
+  const extractProvince = (displayName) => {
+    if (!displayName) return "";
+    const provinces = ["Gauteng","Western Cape","KwaZulu-Natal","Eastern Cape","Limpopo","Mpumalanga","North West","Free State","Northern Cape"];
+    return provinces.find(p => displayName.includes(p)) || "";
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!address.trim()) return;
@@ -103,6 +115,17 @@ export default function CoverageCheck() {
       setFlyTo([lat, lng]);
       setForm(f => ({ ...f, address: data[0].display_name, plan: selectedPlan }));
       setStep("result");
+      // Log search for analytics
+      base44.entities.CoverageSearch.create({
+        query: address,
+        display_name: data[0].display_name,
+        lat,
+        lng,
+        covered: coverage.covered,
+        nearest_zone: coverage.zone?.label || "",
+        suburb: extractSuburb(data[0].display_name),
+        province: extractProvince(data[0].display_name),
+      }).catch(() => {}); // fire-and-forget
     } catch {
       setResult({ error: "Failed to search address. Please try again." });
       setStep("result");
