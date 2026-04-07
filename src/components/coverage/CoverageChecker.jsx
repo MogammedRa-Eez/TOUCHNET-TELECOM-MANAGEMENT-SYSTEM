@@ -36,21 +36,22 @@ Also provide a short friendly message and suggested plan if covered.`,
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(0,0,10,0.6)", backdropFilter: "blur(6px)" }}>
-      <div className="w-full max-w-md rounded-3xl overflow-hidden shadow-2xl"
-        style={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(6,182,212,0.2)" }}>
+      style={{ background: "rgba(26,19,48,0.6)", backdropFilter: "blur(8px)" }}>
+      <div className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl"
+        style={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(155,143,239,0.2)" }}>
 
-        <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#06b6d4,#6366f1,transparent)" }} />
+        <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#7c6fe0,#9b8fef,#c4bcf7,transparent)" }} />
+
         <div className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
+          style={{ borderBottom: "1px solid rgba(155,143,239,0.1)" }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}>
-              <MapPin className="w-4 h-4" style={{ color: "#06b6d4" }} />
+              style={{ background: "rgba(155,143,239,0.1)", border: "1px solid rgba(155,143,239,0.2)" }}>
+              <MapPin className="w-4 h-4" style={{ color: "#7c6fe0" }} />
             </div>
             <div>
-              <p className="text-[14px] font-black" style={{ color: "#0f172a" }}>Coverage Checker</p>
-              <p className="text-[10px]" style={{ color: "#94a3b8" }}>Check if TouchNet serves your area</p>
+              <p className="text-[14px] font-bold" style={{ color: "#1a1330", fontFamily: "'Space Grotesk',sans-serif" }}>Coverage Checker</p>
+              <p className="text-[11px]" style={{ color: "#94a3b8" }}>Check if TouchNet serves your area</p>
             </div>
           </div>
           <button onClick={onClose}
@@ -62,7 +63,7 @@ Also provide a short friendly message and suggested plan if covered.`,
         <div className="px-6 py-5 space-y-4">
           <form onSubmit={checkCoverage} className="space-y-3">
             <div>
-              <label className="text-[11px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#94a3b8" }}>
+              <label className="text-[10px] font-bold uppercase tracking-wider mb-1.5 block" style={{ color: "#9b8fef" }}>
                 Your Address
               </label>
               <input
@@ -71,14 +72,14 @@ Also provide a short friendly message and suggested plan if covered.`,
                 onChange={e => setAddress(e.target.value)}
                 placeholder="e.g. 15 Rivonia Road, Sandton"
                 className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
-                style={{ background: "rgba(248,250,252,0.9)", border: "1px solid rgba(226,232,240,0.9)", color: "#1e293b" }}
+                style={{ background: "rgba(243,240,253,0.8)", border: "1px solid rgba(155,143,239,0.2)", color: "#1a1330" }}
               />
             </div>
             <button
               type="submit"
               disabled={loading || !address.trim()}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg,#06b6d4,#0891b2)", boxShadow: "0 4px 16px rgba(6,182,212,0.3)" }}>
+              style={{ background: "linear-gradient(135deg,#7c6fe0,#9b8fef)", boxShadow: "0 4px 16px rgba(124,111,224,0.35)" }}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
               {loading ? "Checking coverage…" : "Check Coverage"}
             </button>
@@ -106,11 +107,11 @@ Also provide a short friendly message and suggested plan if covered.`,
 
                     {result.covered && result.suggested_plan && (
                       <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl"
-                        style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.15)" }}>
-                        <Wifi className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#06b6d4" }} />
+                        style={{ background: "rgba(155,143,239,0.08)", border: "1px solid rgba(155,143,239,0.18)" }}>
+                        <Wifi className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#7c6fe0" }} />
                         <div>
-                          <p className="text-[10px] uppercase tracking-wider font-bold" style={{ color: "#06b6d4" }}>Recommended Plan</p>
-                          <p className="text-[12px] font-semibold" style={{ color: "#0f172a" }}>{result.suggested_plan}</p>
+                          <p className="text-[10px] uppercase tracking-wider font-bold" style={{ color: "#7c6fe0" }}>Recommended Plan</p>
+                          <p className="text-[12px] font-semibold" style={{ color: "#1a1330" }}>{result.suggested_plan}</p>
                           {result.estimated_speed && (
                             <p className="text-[11px]" style={{ color: "#64748b" }}>{result.estimated_speed}</p>
                           )}
@@ -121,7 +122,7 @@ Also provide a short friendly message and suggested plan if covered.`,
                     {result.covered && (
                       <a href="mailto:sales@touchnet.co.za?subject=Coverage%20Enquiry"
                         className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-bold px-3 py-2 rounded-xl text-white transition-all hover:opacity-90"
-                        style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+                        style={{ background: "linear-gradient(135deg,#7c6fe0,#9b8fef)" }}>
                         Contact Sales →
                       </a>
                     )}

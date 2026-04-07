@@ -5,10 +5,8 @@ import { base44 } from "@/api/base44Client";
 import {
   LayoutDashboard, Users, Receipt, TicketCheck, Network, UserCog,
   Bot, Shield, Package, Settings, Mail, HeartHandshake,
-  ChevronRight, Home, Play, FileText, Bell, X, Menu, Activity,
-  Cpu
+  Home, Play, FileText, Bell, X, Menu, Activity, Cpu, Zap,
 } from "lucide-react";
-// Shield already imported above — used for Cynet Security nav item
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
 import NotificationBell from "@/components/notifications/NotificationBell";
@@ -16,13 +14,27 @@ import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 import GlobalSearch from "@/components/layout/GlobalSearch";
 import EmployeeChat from "@/components/chat/EmployeeChat";
 
+/* ── Palette constants ─────────────────────────────────── */
+const C = {
+  primary:   "#9b8fef",
+  primaryDim: "#7c6fe0",
+  soft:      "#c4bcf7",
+  violet:    "#7c3aed",
+  glow:      "rgba(155,143,239,0.35)",
+  glowSoft:  "rgba(155,143,239,0.15)",
+  border:    "rgba(155,143,239,0.2)",
+  borderMd:  "rgba(155,143,239,0.35)",
+  sidebarBg: "#1a1330",
+  sidebarMid:"#221a42",
+};
+
 const NAV_GROUPS = [
   {
     label: "Overview",
     items: [
       { name: "Home",       page: "Home",      icon: Home,             perm: null },
       { name: "Dashboard",  page: "Dashboard", icon: LayoutDashboard,  perm: "dashboard" },
-    ]
+    ],
   },
   {
     label: "Business",
@@ -32,70 +44,72 @@ const NAV_GROUPS = [
       { name: "Quotes",         page: "Quotes",        icon: FileText,     perm: "customers" },
       { name: "Tickets",        page: "Tickets",       icon: TicketCheck,  perm: "tickets" },
       { name: "Fibre Projects", page: "FibreProjects", icon: Network,      perm: "projects" },
-    ]
+    ],
   },
   {
     label: "Infrastructure",
     items: [
-      { name: "Network",   page: "Network",        icon: Activity, perm: "network" },
-      { name: "Inventory", page: "Inventory",       icon: Package,  perm: "network" },
-      { name: "Cynet Security", page: "CynetSecurity", icon: Shield, perm: "cyber_security" },
-    ]
+      { name: "Network",        page: "Network",       icon: Activity, perm: "network" },
+      { name: "Inventory",      page: "Inventory",     icon: Package,  perm: "network" },
+      { name: "Cynet Security", page: "CynetSecurity", icon: Shield,   perm: "cyber_security" },
+    ],
   },
   {
     label: "Team",
     items: [
       { name: "Employees",     page: "Employees",           icon: UserCog,        perm: "employees" },
       { name: "HR Dashboard",  page: "HRDashboard",         icon: HeartHandshake, perm: "employees" },
-      { name: "My Department", page: "DepartmentDashboard", icon: LayoutDashboard,perm: null },
-    ]
+      { name: "My Department", page: "DepartmentDashboard", icon: LayoutDashboard, perm: null },
+    ],
   },
   {
     label: "Tools",
     items: [
-      { name: "Outlook",        page: "OutlookMail",      icon: Mail,          perm: "outlook" },
-      { name: "AI Assistant",   page: "AIAssistant",      icon: Bot,           perm: "ai_assistant" },
-      { name: "Customer Portal",page: "CustomerPortalMain",icon: HeartHandshake,perm: null },
-      { name: "System Demo",    page: "SystemDemo",       icon: Play,          perm: null },
-    ]
+      { name: "Outlook",         page: "OutlookMail",       icon: Mail,           perm: "outlook" },
+      { name: "AI Assistant",    page: "AIAssistant",       icon: Bot,            perm: "ai_assistant" },
+      { name: "Customer Portal", page: "CustomerPortalMain", icon: HeartHandshake, perm: null },
+      { name: "System Demo",     page: "SystemDemo",        icon: Play,           perm: null },
+    ],
   },
   {
     label: "Admin",
     items: [
-      { name: "Roles",         page: "RolesManagement",     icon: Shield,   perm: "roles_management" },
-      { name: "Notifications", page: "NotificationSettings", icon: Bell,    perm: "roles_management" },
-      { name: "Settings",      page: "UserSettings",         icon: Settings, perm: null },
-    ]
+      { name: "Roles",          page: "RolesManagement",     icon: Shield,   perm: "roles_management" },
+      { name: "Notifications",  page: "NotificationSettings", icon: Bell,    perm: "roles_management" },
+      { name: "Settings",       page: "UserSettings",         icon: Settings, perm: null },
+    ],
   },
 ];
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
-// Animated scan line ticker
+/* ── Subtle shimmer scan line ──────────────────────────── */
 function ScanLine() {
   const [pos, setPos] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setPos(p => (p + 1) % 100), 30);
+    const id = setInterval(() => setPos(p => (p + 1) % 100), 35);
     return () => clearInterval(id);
   }, []);
   return (
     <div style={{
       position: "absolute", left: 0, right: 0, top: `${pos}%`,
       height: 1,
-      background: "linear-gradient(90deg, transparent, rgba(6,182,212,0.25), transparent)",
+      background: `linear-gradient(90deg, transparent, ${C.glow}, transparent)`,
       pointerEvents: "none",
-      transition: "top 0.03s linear",
+      transition: "top 0.035s linear",
+      zIndex: 1,
     }} />
   );
 }
 
+/* ── Sidebar ───────────────────────────────────────────── */
 function Sidebar({ currentPageName, open, onClose, can, loading }) {
   return (
     <>
       {open && (
         <div
           className="fixed inset-0 z-40 lg:hidden"
-          style={{ background: "rgba(0,0,10,0.85)", backdropFilter: "blur(8px)" }}
+          style={{ background: "rgba(10,5,25,0.7)", backdropFilter: "blur(10px)" }}
           onClick={onClose}
         />
       )}
@@ -104,72 +118,86 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         className={`fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{
           width: 256,
-          background: "linear-gradient(175deg, #010b12 0%, #030e17 45%, #020a14 100%)",
-          borderRight: "1px solid rgba(6,182,212,0.18)",
+          background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #1e1640 50%, ${C.sidebarMid} 100%)`,
+          borderRight: `1px solid ${C.border}`,
           flexShrink: 0,
           overflow: "hidden",
           position: "relative",
         }}
       >
-        {/* Grid overlay */}
+        {/* Dot grid overlay */}
         <div style={{
           position: "absolute", inset: 0,
-          backgroundImage: "linear-gradient(rgba(6,182,212,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.04) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
+          backgroundImage: `radial-gradient(circle, ${C.glowSoft} 1px, transparent 1px)`,
+          backgroundSize: "28px 28px",
+          pointerEvents: "none",
+          opacity: 0.6,
+        }} />
+
+        {/* Ambient orbs */}
+        <div style={{
+          position: "absolute", top: -80, left: -60, width: 260, height: 260,
+          background: `radial-gradient(circle, rgba(124,111,224,0.18) 0%, transparent 68%)`,
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", bottom: 60, right: -80, width: 200, height: 200,
+          background: `radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 68%)`,
           pointerEvents: "none",
         }} />
 
-        {/* Glow orbs */}
-        <div style={{ position: "absolute", top: -60, left: -40, width: 220, height: 220, background: "radial-gradient(circle, rgba(6,182,212,0.14) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: 100, right: -60, width: 160, height: 160, background: "radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-        {/* Scan line */}
         <ScanLine />
 
-        {/* Logo header */}
+        {/* ── Logo header ── */}
         <div
-          className="flex items-center justify-between px-5 h-[64px] flex-shrink-0"
+          className="flex items-center justify-between px-4 h-[64px] flex-shrink-0"
           style={{
-            borderBottom: "1px solid rgba(6,182,212,0.2)",
-            background: "rgba(6,182,212,0.06)",
+            borderBottom: `1px solid ${C.border}`,
+            background: "rgba(155,143,239,0.08)",
             position: "relative", zIndex: 2,
           }}
         >
           <div className="flex items-center gap-3">
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{
-                background: "linear-gradient(135deg, rgba(6,182,212,0.2), rgba(6,182,212,0.05))",
-                border: "1px solid rgba(6,182,212,0.4)",
-                boxShadow: "0 0 16px rgba(6,182,212,0.3), inset 0 0 8px rgba(6,182,212,0.1)",
+                background: "linear-gradient(135deg, rgba(155,143,239,0.25), rgba(124,111,224,0.1))",
+                border: `1px solid ${C.borderMd}`,
+                boxShadow: `0 0 18px ${C.glow}, inset 0 0 8px rgba(155,143,239,0.1)`,
               }}
             >
-              <Cpu className="w-4 h-4" style={{ color: "#06b6d4" }} />
+              <Cpu className="w-4 h-4" style={{ color: C.soft }} />
             </div>
-            <img src={LOGO_URL} alt="TouchNet" className="h-5 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.9 }} />
+            <div>
+              <img src={LOGO_URL} alt="TouchNet" className="h-5 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.92 }} />
+              <p className="text-[8px] font-bold tracking-[0.22em] uppercase mt-0.5" style={{ color: "rgba(196,188,247,0.45)", fontFamily: "'JetBrains Mono', monospace" }}>MANAGEMENT SYSTEM</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="lg:hidden w-7 h-7 flex items-center justify-center rounded transition-colors"
-            style={{ color: "#06b6d4", border: "1px solid rgba(6,182,212,0.2)" }}
+            className="lg:hidden w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+            style={{ color: C.soft, border: `1px solid ${C.border}`, background: "rgba(155,143,239,0.08)" }}
           >
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-5 px-2.5 space-y-5 sidebar-scroll" style={{ position: "relative", zIndex: 2 }}>
+        {/* ── Navigation ── */}
+        <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-4 sidebar-scroll" style={{ position: "relative", zIndex: 2 }}>
           {NAV_GROUPS.map(group => {
             const visibleItems = loading ? group.items : group.items.filter(i => i.perm === null || can(i.perm));
             if (visibleItems.length === 0) return null;
             return (
               <div key={group.label}>
-                <div className="flex items-center gap-2 px-2 mb-2">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: "rgba(6,182,212,0.4)" }}>
+                {/* Section label */}
+                <div className="flex items-center gap-2 px-2 mb-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.primaryDim, boxShadow: `0 0 6px ${C.primary}` }} />
+                  <p className="text-[9px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(196,188,247,0.4)", fontFamily: "'Space Grotesk', sans-serif" }}>
                     {group.label}
                   </p>
-                  <div className="flex-1 h-px" style={{ background: "rgba(6,182,212,0.1)" }} />
+                  <div className="flex-1 h-px" style={{ background: "rgba(155,143,239,0.1)" }} />
                 </div>
+
                 <div className="space-y-0.5">
                   {visibleItems.map(item => {
                     const Icon = item.icon;
@@ -179,44 +207,50 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                         key={item.page}
                         to={createPageUrl(item.page)}
                         onClick={onClose}
-                        className="flex items-center gap-3 px-3 py-2 text-[13px] font-medium transition-all duration-150 group"
+                        className="flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium transition-all duration-150 relative group"
                         style={{
-                          borderRadius: 8,
+                          borderRadius: 10,
                           ...(isActive ? {
-                            background: "rgba(6,182,212,0.1)",
-                            color: "#22d3ee",
-                            border: "1px solid rgba(6,182,212,0.3)",
-                            boxShadow: "0 0 20px rgba(6,182,212,0.1), inset 0 0 12px rgba(6,182,212,0.06)",
+                            background: "linear-gradient(135deg, rgba(155,143,239,0.18), rgba(124,111,224,0.1))",
+                            color: C.soft,
+                            border: `1px solid rgba(155,143,239,0.35)`,
+                            boxShadow: `0 2px 16px rgba(124,111,224,0.15), inset 0 0 12px rgba(155,143,239,0.06)`,
                           } : {
-                            color: "#334155",
+                            color: "rgba(196,188,247,0.45)",
                             border: "1px solid transparent",
-                          })
+                          }),
                         }}
                       >
-                        {/* Active indicator bar */}
+                        {/* Active left bar */}
                         {isActive && (
                           <span style={{
-                            position: "absolute",
-                            left: 0,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            width: 2,
-                            height: "60%",
-                            background: "#06b6d4",
-                            borderRadius: "0 2px 2px 0",
-                            boxShadow: "0 0 8px rgba(6,182,212,0.8)",
+                            position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
+                            width: 3, height: "60%",
+                            background: `linear-gradient(180deg, ${C.soft}, ${C.primary})`,
+                            borderRadius: "0 3px 3px 0",
+                            boxShadow: `0 0 10px ${C.glow}`,
                           }} />
                         )}
-                        <Icon
-                          className="w-4 h-4 flex-shrink-0"
-                          style={{ color: isActive ? "#06b6d4" : "#1e3a4f" }}
-                        />
-                        <span className="flex-1 truncate" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>{item.name}</span>
+
+                        <div
+                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                          style={{
+                            background: isActive ? "rgba(155,143,239,0.2)" : "rgba(155,143,239,0.07)",
+                            border: isActive ? `1px solid rgba(155,143,239,0.3)` : "1px solid transparent",
+                          }}
+                        >
+                          <Icon className="w-3.5 h-3.5" style={{ color: isActive ? C.soft : "rgba(155,143,239,0.55)" }} />
+                        </div>
+
+                        <span className="flex-1 truncate" style={{ fontFamily: "'Inter', sans-serif", fontWeight: isActive ? 600 : 500 }}>
+                          {item.name}
+                        </span>
+
                         {isActive && (
                           <span style={{
                             width: 5, height: 5, borderRadius: "50%",
-                            background: "#06b6d4",
-                            boxShadow: "0 0 8px rgba(6,182,212,1)",
+                            background: C.soft,
+                            boxShadow: `0 0 8px ${C.glow}`,
                             flexShrink: 0,
                           }} />
                         )}
@@ -229,21 +263,24 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           })}
         </nav>
 
-        {/* Status */}
-        <div className="px-3 pb-3 flex-shrink-0" style={{ borderTop: "1px solid rgba(6,182,212,0.1)", paddingTop: 12, position: "relative", zIndex: 2 }}>
+        {/* ── Footer status ── */}
+        <div className="px-3 pb-4 flex-shrink-0" style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12, position: "relative", zIndex: 2 }}>
           <div style={{
-            background: "rgba(6,182,212,0.05)",
-            border: "1px solid rgba(6,182,212,0.2)",
-            borderRadius: 8,
-            padding: "8px 12px",
+            background: "rgba(155,143,239,0.07)",
+            border: `1px solid ${C.border}`,
+            borderRadius: 10,
+            padding: "10px 12px",
           }}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "rgba(6,182,212,0.5)" }}>System Status</span>
-              <span className="text-[10px] font-bold" style={{ color: "#06b6d4" }}>ONLINE</span>
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center gap-1.5">
+                <Zap className="w-3 h-3" style={{ color: C.primary }} />
+                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.4)" }}>System Status</span>
+              </div>
+              <span className="text-[9px] font-black tracking-wider" style={{ color: C.soft }}>ONLINE</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full" style={{ background: "#10b981", boxShadow: "0 0 8px rgba(16,185,129,1)" }} />
-              <span className="text-[11px]" style={{ color: "#6ee7b7", fontFamily: "'JetBrains Mono', monospace" }}>ALL SYSTEMS NOMINAL</span>
+              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#10b981", boxShadow: "0 0 8px rgba(16,185,129,0.9)" }} />
+              <span className="text-[10px]" style={{ color: "rgba(155,143,239,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>ALL SYSTEMS NOMINAL</span>
             </div>
           </div>
         </div>
@@ -252,6 +289,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
   );
 }
 
+/* ── Main Layout ───────────────────────────────────────── */
 function LayoutInner({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [tick, setTick] = useState(0);
@@ -260,7 +298,6 @@ function LayoutInner({ children, currentPageName }) {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      // Only show chat for employees (not customers/clients)
       if (u && u.role !== "user") setChatUser(u);
     }).catch(() => {});
   }, []);
@@ -277,67 +314,7 @@ function LayoutInner({ children, currentPageName }) {
   const timeStr = now.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f7ff" }}>
-      <style>{`
-        * { box-sizing: border-box; }
-
-        body { font-family: 'Exo 2', sans-serif; }
-        .mono { font-family: 'JetBrains Mono', monospace !important; }
-        .heading { font-family: 'Space Grotesk', sans-serif !important; }
-
-        .sidebar-scroll::-webkit-scrollbar { width: 2px; }
-        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(6,182,212,0.3); border-radius: 2px; }
-
-        .content-scroll::-webkit-scrollbar { width: 5px; }
-        .content-scroll::-webkit-scrollbar-track { background: transparent; }
-        .content-scroll::-webkit-scrollbar-thumb { background: rgba(6,182,212,0.2); border-radius: 5px; }
-        .content-scroll::-webkit-scrollbar-thumb:hover { background: rgba(6,182,212,0.4); }
-
-        /* Top bar */
-        .top-bar {
-          background: rgba(255,255,255,0.96);
-          backdrop-filter: blur(24px);
-          border-bottom: 1px solid rgba(6,182,212,0.15);
-          box-shadow: 0 1px 0 rgba(6,182,212,0.08), 0 4px 24px rgba(6,182,212,0.05);
-          position: relative;
-        }
-        .top-bar::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #06b6d4 0%, #22d3ee 30%, #818cf8 60%, #ec4899 85%, #f59e0b 100%);
-          box-shadow: 0 0 12px rgba(6,182,212,0.5);
-        }
-
-        /* Page background */
-        .page-bg {
-          background-color: #f0f9ff;
-          background-image:
-            radial-gradient(circle at 10% 10%, rgba(6,182,212,0.06) 0%, transparent 45%),
-            radial-gradient(circle at 90% 90%, rgba(99,102,241,0.05) 0%, transparent 45%),
-            linear-gradient(rgba(6,182,212,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6,182,212,0.04) 1px, transparent 1px);
-          background-size: auto, auto, 40px 40px, 40px 40px;
-        }
-
-        /* HUD corner bracket decoration */
-        .hud-bracket {
-          position: absolute;
-          width: 8px; height: 8px;
-          border-color: rgba(6,182,212,0.4);
-          border-style: solid;
-        }
-        .hud-tl { top: 4px; left: 4px; border-width: 1px 0 0 1px; }
-        .hud-tr { top: 4px; right: 4px; border-width: 1px 1px 0 0; }
-        .hud-bl { bottom: 4px; left: 4px; border-width: 0 0 1px 1px; }
-        .hud-br { bottom: 4px; right: 4px; border-width: 0 1px 1px 0; }
-
-        /* Neon active nav item absolute bar */
-        .nav-item-wrap { position: relative; }
-      `}</style>
-
+    <div className="flex h-screen overflow-hidden" style={{ background: "#f3f0fd" }}>
       <Sidebar
         currentPageName={currentPageName}
         open={mobileOpen}
@@ -347,53 +324,61 @@ function LayoutInner({ children, currentPageName }) {
       />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        {/* Top bar */}
+        {/* ── Top bar ── */}
         <header className="top-bar h-[60px] flex items-center px-5 gap-4 flex-shrink-0 z-30">
           <button
             onClick={() => setMobileOpen(true)}
-            className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+            className="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
+            style={{ color: C.primaryDim, background: "rgba(155,143,239,0.08)", border: `1px solid ${C.border}` }}
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-4 h-4" />
           </button>
 
-          {/* Breadcrumb with HUD style */}
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest mono" style={{ color: "#06b6d4", opacity: 0.6 }}>TOUCHNET TMS</span>
+          {/* Breadcrumb */}
+          <div className="hidden sm:flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.primary, boxShadow: `0 0 8px ${C.glow}` }} />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: C.primary, opacity: 0.65, fontFamily: "'JetBrains Mono', monospace" }}>TOUCHNET TMS</span>
+            </div>
             {currentItem && (
-              <div className="flex items-center gap-1.5">
-                {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: "#06b6d4" }} />}
-                <span className="text-sm font-bold tracking-tight text-slate-800" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {currentItem.name}
-                </span>
-              </div>
+              <>
+                <span style={{ color: "rgba(155,143,239,0.25)", fontSize: 14 }}>›</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style={{ background: "rgba(155,143,239,0.08)", border: `1px solid ${C.border}` }}>
+                  {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: C.primary }} />}
+                  <span className="text-[13px] font-bold tracking-tight" style={{ color: "#2d1f6e", fontFamily: "'Space Grotesk', sans-serif" }}>
+                    {currentItem.name}
+                  </span>
+                </div>
+              </>
             )}
           </div>
 
           <div className="flex-1" />
 
           {/* Live clock */}
-          <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded"
-            style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.15)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 6px rgba(52,211,153,1)" }} />
-            <span className="mono text-[11px] font-semibold" style={{ color: "#06b6d4" }}>{timeStr}</span>
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg"
+            style={{ background: "rgba(155,143,239,0.07)", border: `1px solid ${C.border}` }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#10b981", boxShadow: "0 0 7px rgba(16,185,129,0.9)" }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: C.primaryDim, letterSpacing: "0.05em" }}>
+              {timeStr}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
             <GlobalSearch />
             <DemoUserSwitcher />
             <NotificationBell />
-            <div className="w-px h-5" style={{ background: "rgba(6,182,212,0.2)" }} />
+            <div className="w-px h-5" style={{ background: `rgba(155,143,239,0.2)` }} />
             <UserMenu />
           </div>
         </header>
 
-        {/* Page content */}
+        {/* ── Page content ── */}
         <main className="flex-1 overflow-y-auto content-scroll page-bg">
           {children}
         </main>
       </div>
 
-      {/* Employee-only live chat */}
       {chatUser && <EmployeeChat user={chatUser} />}
     </div>
   );
