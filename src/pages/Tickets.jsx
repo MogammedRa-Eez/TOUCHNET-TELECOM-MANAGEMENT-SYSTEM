@@ -4,7 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock,
   CheckCircle2, ChevronDown, ChevronUp, RefreshCw, Filter,
-  ArrowUpRight, User, Building2, Tag, Calendar, MessageSquare, Zap
+  ArrowUpRight, User, Building2, Tag, Calendar, MessageSquare, Zap,
+  Smartphone, ExternalLink
 } from "lucide-react";
 import SLAWorkflowPanel from "@/components/tickets/SLAWorkflowPanel";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -285,6 +286,26 @@ export default function Tickets() {
             </button>
           )}
         </div>
+      </div>
+
+      {/* ── WhatsApp Support Banner ── */}
+      <div className="flex items-center gap-4 px-5 py-4 rounded-2xl"
+        style={{ background: "linear-gradient(135deg,rgba(37,211,102,0.08),rgba(18,140,126,0.06))", border: "1px solid rgba(37,211,102,0.2)" }}>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: "linear-gradient(135deg,#25D366,#128C7E)", boxShadow: "0 4px 14px rgba(37,211,102,0.3)" }}>
+          <Smartphone className="w-5 h-5 text-white" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-black" style={{ color: "#1e293b" }}>WhatsApp Support — Two-Way Ticket Integration</p>
+          <p className="text-[11px] mt-0.5" style={{ color: "#64748b" }}>
+            Customers can raise &amp; track tickets directly via WhatsApp. Tickets sync automatically into this dashboard.
+          </p>
+        </div>
+        <a href={base44.agents.getWhatsAppConnectURL('touchnet_assistant')} target="_blank" rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white flex-shrink-0 transition-all hover:scale-105"
+          style={{ background: "linear-gradient(135deg,#25D366,#128C7E)", boxShadow: "0 3px 10px rgba(37,211,102,0.35)" }}>
+          <ExternalLink className="w-3.5 h-3.5" /> Connect WhatsApp
+        </a>
       </div>
 
       {/* ── SLA Panel ── */}

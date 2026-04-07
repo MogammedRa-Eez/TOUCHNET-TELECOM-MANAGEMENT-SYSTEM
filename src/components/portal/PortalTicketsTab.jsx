@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import {
   TicketCheck, Plus, AlertCircle, ArrowUpCircle, CheckCircle,
   XCircle, Clock, Loader2, X, ChevronDown, ChevronUp, Send,
-  Bot, Sparkles, Mail, BookOpen
+  Bot, Sparkles, Mail, BookOpen, Smartphone
 } from "lucide-react";
 
 const PRIORITY_CFG = {
@@ -253,13 +253,27 @@ Suggest a short, friendly solution or troubleshooting steps based on the KB. Be 
         </div>
       )}
 
-      {/* Gmail ingestion info banner */}
-      <div className="rounded-xl px-4 py-3 flex items-center gap-3"
-        style={{ background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.15)" }}>
-        <Mail className="w-4 h-4 flex-shrink-0" style={{ color: "#06b6d4" }} />
-        <p className="text-[11px]" style={{ color: "#475569" }}>
-          You can also email <strong style={{ color: "#0891b2" }}>support@touchnet.co.za</strong> — our AI will automatically create and analyse your ticket.
-        </p>
+      {/* Contact channels banner */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="rounded-xl px-4 py-3 flex items-center gap-3"
+          style={{ background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.15)" }}>
+          <Mail className="w-4 h-4 flex-shrink-0" style={{ color: "#06b6d4" }} />
+          <p className="text-[11px]" style={{ color: "#475569" }}>
+            Email <strong style={{ color: "#0891b2" }}>support@touchnet.co.za</strong> — AI auto-creates your ticket.
+          </p>
+        </div>
+        <a href={base44.agents.getWhatsAppConnectURL('touchnet_assistant')} target="_blank" rel="noopener noreferrer"
+          className="rounded-xl px-4 py-3 flex items-center gap-3 transition-all hover:scale-[1.02]"
+          style={{ background: "rgba(37,211,102,0.07)", border: "1px solid rgba(37,211,102,0.2)", textDecoration: "none" }}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: "linear-gradient(135deg,#25D366,#128C7E)" }}>
+            <Smartphone className="w-4 h-4 text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] font-bold" style={{ color: "#059669" }}>WhatsApp Support</p>
+            <p className="text-[10px]" style={{ color: "#64748b" }}>Raise &amp; track tickets via WhatsApp</p>
+          </div>
+        </a>
       </div>
 
       {/* Ticket List */}
