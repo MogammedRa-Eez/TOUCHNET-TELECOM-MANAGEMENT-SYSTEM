@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Circle, Popup, ZoomControl, useMap, Marker, LayerGroup } from "react-leaflet";
 import L from "leaflet";
-import {
-  X, MapPin, Search, Loader2, CheckCircle2, XCircle,
-  BarChart3, Zap, ArrowUpRight, Layers, Globe
-} from "lucide-react";
+import { X, MapPin, Search, Loader2, CheckCircle2, XCircle, BarChart3, Zap, ArrowUpRight, Globe } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import "leaflet/dist/leaflet.css";
 
@@ -16,72 +13,68 @@ L.Icon.Default.mergeOptions({
 });
 
 const PROVIDERS = {
-  touchnet: {
-    id: "touchnet", name: "TouchNet", color: "#9b8fef", glowColor: "rgba(155,143,239,0.4)", logo: "🔮",
+  touchnet:  { id: "touchnet",  name: "TouchNet",  color: "#9b8fef", logo: "🔮", glowColor: "rgba(155,143,239,0.4)",
     zones: [
-      { lat: -26.1041, lng: 28.1073, label: "Sandton", radius: 10000 },
-      { lat: -26.0274, lng: 28.1527, label: "Fourways", radius: 9000 },
-      { lat: -25.8579, lng: 28.1893, label: "Centurion", radius: 11000 },
-      { lat: -26.0765, lng: 28.0556, label: "Randburg", radius: 9000 },
-      { lat: -25.9025, lng: 28.4211, label: "Kempton Park", radius: 9000 },
-      { lat: -25.7479, lng: 28.2293, label: "Pretoria East", radius: 11000 },
-      { lat: -26.2041, lng: 28.0473, label: "JHB South", radius: 10000 },
-      { lat: -26.1367, lng: 28.2411, label: "Bedfordview", radius: 8000 },
-      { lat: -26.2309, lng: 28.2772, label: "Alberton", radius: 8000 },
-      { lat: -33.9249, lng: 18.4241, label: "Cape Town CBD", radius: 10000 },
-      { lat: -29.8587, lng: 31.0218, label: "Durban North", radius: 10000 },
-      { lat: -29.1197, lng: 26.214, label: "Bloemfontein", radius: 9000 },
+      { lat: -26.1041, lng: 28.1073, label: "Sandton",       radius: 10000 },
+      { lat: -26.0274, lng: 28.1527, label: "Fourways",       radius: 9000  },
+      { lat: -25.8579, lng: 28.1893, label: "Centurion",      radius: 11000 },
+      { lat: -26.0765, lng: 28.0556, label: "Randburg",       radius: 9000  },
+      { lat: -25.9025, lng: 28.4211, label: "Kempton Park",   radius: 9000  },
+      { lat: -25.7479, lng: 28.2293, label: "Pretoria East",  radius: 11000 },
+      { lat: -26.2041, lng: 28.0473, label: "JHB South",      radius: 10000 },
+      { lat: -26.1367, lng: 28.2411, label: "Bedfordview",    radius: 8000  },
+      { lat: -26.2309, lng: 28.2772, label: "Alberton",       radius: 8000  },
+      { lat: -33.9249, lng: 18.4241, label: "Cape Town CBD",  radius: 10000 },
+      { lat: -29.8587, lng: 31.0218, label: "Durban North",   radius: 10000 },
+      { lat: -29.1197, lng: 26.2140, label: "Bloemfontein",   radius: 9000  },
     ],
     plans: [
-      { label: "Basic", speed: "10 Mbps", price: 399 },
-      { label: "Standard", speed: "50 Mbps", price: 599 },
-      { label: "Premium", speed: "100 Mbps", price: 899 },
+      { label: "Basic",      speed: "10 Mbps",  price: 399  },
+      { label: "Standard",   speed: "50 Mbps",  price: 599  },
+      { label: "Premium",    speed: "100 Mbps", price: 899  },
       { label: "Enterprise", speed: "500 Mbps", price: 1499 },
-      { label: "Gigabit", speed: "1 Gbps", price: 2999 },
+      { label: "Gigabit",    speed: "1 Gbps",   price: 2999 },
     ],
   },
-  openserve: {
-    id: "openserve", name: "Openserve", color: "#06b6d4", glowColor: "rgba(6,182,212,0.35)", logo: "🌐",
+  openserve: { id: "openserve", name: "Openserve", color: "#06b6d4", logo: "🌐", glowColor: "rgba(6,182,212,0.35)",
     zones: [
-      { lat: -26.1041, lng: 28.1073, label: "Sandton", radius: 12000 },
-      { lat: -25.7479, lng: 28.2293, label: "Pretoria", radius: 15000 },
-      { lat: -26.2041, lng: 28.0473, label: "Johannesburg", radius: 14000 },
-      { lat: -33.9249, lng: 18.4241, label: "Cape Town", radius: 13000 },
-      { lat: -29.8587, lng: 31.0218, label: "Durban", radius: 12000 },
+      { lat: -26.1041, lng: 28.1073, label: "Sandton",       radius: 12000 },
+      { lat: -25.7479, lng: 28.2293, label: "Pretoria",      radius: 15000 },
+      { lat: -26.2041, lng: 28.0473, label: "Johannesburg",  radius: 14000 },
+      { lat: -33.9249, lng: 18.4241, label: "Cape Town",     radius: 13000 },
+      { lat: -29.8587, lng: 31.0218, label: "Durban",        radius: 12000 },
     ],
     plans: [
-      { label: "Lite", speed: "10 Mbps", price: 349 },
-      { label: "Home", speed: "50 Mbps", price: 549 },
-      { label: "Fast", speed: "100 Mbps", price: 799 },
-      { label: "Giga", speed: "1 Gbps", price: 2699 },
+      { label: "Lite", speed: "10 Mbps",  price: 349  },
+      { label: "Home", speed: "50 Mbps",  price: 549  },
+      { label: "Fast", speed: "100 Mbps", price: 799  },
+      { label: "Giga", speed: "1 Gbps",   price: 2699 },
     ],
   },
-  vumatel: {
-    id: "vumatel", name: "Vumatel", color: "#f59e0b", glowColor: "rgba(245,158,11,0.35)", logo: "⚡",
+  vumatel:   { id: "vumatel",   name: "Vumatel",   color: "#f59e0b", logo: "⚡", glowColor: "rgba(245,158,11,0.35)",
     zones: [
-      { lat: -26.1041, lng: 28.1073, label: "Sandton", radius: 8000 },
-      { lat: -26.0274, lng: 28.1527, label: "Fourways", radius: 7500 },
+      { lat: -26.1041, lng: 28.1073, label: "Sandton",   radius: 8000 },
+      { lat: -26.0274, lng: 28.1527, label: "Fourways",  radius: 7500 },
       { lat: -33.9249, lng: 18.4241, label: "Cape Town", radius: 9000 },
-      { lat: -26.0765, lng: 28.0556, label: "Randburg", radius: 7000 },
+      { lat: -26.0765, lng: 28.0556, label: "Randburg",  radius: 7000 },
     ],
     plans: [
-      { label: "Basic", speed: "25 Mbps", price: 459 },
-      { label: "Value", speed: "50 Mbps", price: 649 },
+      { label: "Basic", speed: "25 Mbps",  price: 459  },
+      { label: "Value", speed: "50 Mbps",  price: 649  },
       { label: "Speed", speed: "200 Mbps", price: 1099 },
     ],
   },
-  frogfoot: {
-    id: "frogfoot", name: "Frogfoot", color: "#10b981", glowColor: "rgba(16,185,129,0.35)", logo: "🐸",
+  frogfoot:  { id: "frogfoot",  name: "Frogfoot",  color: "#10b981", logo: "🐸", glowColor: "rgba(16,185,129,0.35)",
     zones: [
-      { lat: -26.0274, lng: 28.1527, label: "Northriding", radius: 7000 },
+      { lat: -26.0274, lng: 28.1527, label: "Northriding",  radius: 7000 },
       { lat: -25.9025, lng: 28.4211, label: "Kempton Park", radius: 7500 },
-      { lat: -26.2309, lng: 28.2772, label: "Alberton", radius: 7000 },
-      { lat: -26.1367, lng: 28.2411, label: "Bedfordview", radius: 6500 },
+      { lat: -26.2309, lng: 28.2772, label: "Alberton",     radius: 7000 },
+      { lat: -26.1367, lng: 28.2411, label: "Bedfordview",  radius: 6500 },
     ],
     plans: [
-      { label: "Starter", speed: "10 Mbps", price: 299 },
-      { label: "Home", speed: "25 Mbps", price: 449 },
-      { label: "Fast", speed: "100 Mbps", price: 749 },
+      { label: "Starter", speed: "10 Mbps",  price: 299 },
+      { label: "Home",    speed: "25 Mbps",  price: 449 },
+      { label: "Fast",    speed: "100 Mbps", price: 749 },
     ],
   },
 };
@@ -110,55 +103,52 @@ function FlyTo({ coords }) {
 }
 
 export default function CoverageChecker({ onClose }) {
-  const [address, setAddress] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [results, setResults] = useState([]);
-  const [flyTo, setFlyTo] = useState(null);
-  const [markerPos, setMarkerPos] = useState(null);
-  const [error, setError] = useState(null);
-  const [activeProviders, setActiveProviders] = useState(Object.keys(PROVIDERS));
+  const [address, setAddress]         = useState("");
+  const [searching, setSearching]     = useState(false);
+  const [results, setResults]         = useState([]);
+  const [flyTo, setFlyTo]             = useState(null);
+  const [markerPos, setMarkerPos]     = useState(null);
+  const [error, setError]             = useState(null);
+  const [activeProviders, setActive]  = useState(Object.keys(PROVIDERS));
   const [showCompare, setShowCompare] = useState(false);
 
   const available = results.filter(r => r.covered);
 
-  const toggleProvider = (id) => setActiveProviders(prev =>
-    prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
-  );
+  const toggleProvider = (id) =>
+    setActive(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!address.trim()) return;
     setSearching(true); setError(null); setResults([]);
     try {
-      const res = await fetch(
+      const res  = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ", South Africa")}&limit=1&countrycodes=za`,
         { headers: { "User-Agent": "TouchNet-CoverageCheck/1.0" } }
       );
       const data = await res.json();
       if (!data?.[0]) { setError("Address not found. Try a suburb or city."); return; }
       const lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
-      setResults(checkAllProviders(lat, lng));
+      const allResults = checkAllProviders(lat, lng);
+      setResults(allResults);
       setFlyTo([lat, lng]);
       setMarkerPos([lat, lng]);
       base44.entities.CoverageSearch.create({
         query: address, display_name: data[0].display_name, lat, lng,
-        covered: checkAllProviders(lat, lng).some(r => r.provider.id === "touchnet" && r.covered),
+        covered: allResults.some(r => r.provider.id === "touchnet" && r.covered),
       }).catch(() => {});
     } catch { setError("Search failed. Please try again."); }
-    finally { setSearching(false); }
+    finally   { setSearching(false); }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
       style={{ background: "rgba(3,2,10,0.92)", backdropFilter: "blur(16px)" }}>
-      <style>{`@keyframes ping { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(3);opacity:0} }`}</style>
 
       <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden flex flex-col"
         style={{ background: "linear-gradient(160deg,#050310 0%,#0d0820 100%)", border: "1px solid rgba(155,143,239,0.25)", boxShadow: "0 32px 80px rgba(124,111,224,0.3)", height: "88vh", maxHeight: 680 }}>
 
-        {/* Top gradient line */}
-        <div className="h-[2px] flex-shrink-0"
-          style={{ background: "linear-gradient(90deg,#7c6fe0,#9b8fef,#c4bcf7,#10b981,transparent)" }} />
+        <div className="h-[2px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#7c6fe0,#9b8fef,#c4bcf7,#10b981,transparent)" }} />
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 flex-shrink-0"
@@ -175,15 +165,14 @@ export default function CoverageChecker({ onClose }) {
               </p>
             </div>
           </div>
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all">
+          <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all">
             <X className="w-4 h-4" style={{ color: "#9b8fef" }} />
           </button>
         </div>
 
         <div className="flex flex-1 overflow-hidden">
 
-          {/* Left panel */}
+          {/* Sidebar */}
           <div className="w-56 flex-shrink-0 flex flex-col overflow-y-auto"
             style={{ borderRight: "1px solid rgba(155,143,239,0.1)", background: "rgba(5,3,14,0.8)" }}>
 
@@ -192,8 +181,7 @@ export default function CoverageChecker({ onClose }) {
               <form onSubmit={handleSearch} className="space-y-2">
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#9b8fef" }} />
-                  <input value={address} onChange={e => setAddress(e.target.value)}
-                    placeholder="Enter address…"
+                  <input value={address} onChange={e => setAddress(e.target.value)} placeholder="Enter address…"
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl text-[12px] outline-none"
                     style={{ background: "rgba(155,143,239,0.08)", border: "1px solid rgba(155,143,239,0.2)", color: "#e2e8f0" }} />
                 </div>
@@ -232,9 +220,9 @@ export default function CoverageChecker({ onClose }) {
                   </button>
                 )}
                 {available.some(r => r.provider.id === "touchnet") && (
-                  <a href="/CoverageCheck"
+                  <a href="/CoverageCheck" style={{ textDecoration: "none" }}
                     className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-black text-white transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 12px rgba(16,185,129,0.35)", textDecoration: "none", display: "flex" }}>
+                    style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 12px rgba(16,185,129,0.35)", display: "flex" }}>
                     <Zap className="w-3.5 h-3.5" /> Sign Up Now
                   </a>
                 )}
@@ -264,8 +252,10 @@ export default function CoverageChecker({ onClose }) {
           <div className="flex-1 relative">
             <MapContainer center={[-28.5, 25.5]} zoom={6} zoomControl={false} style={{ height: "100%", width: "100%" }}>
               <ZoomControl position="bottomright" />
-              <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
-                attribution='&copy; OpenStreetMap contributors' />
+              <TileLayer
+                url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+              />
               {flyTo && <FlyTo coords={flyTo} />}
 
               {Object.values(PROVIDERS).map(provider =>
@@ -315,7 +305,6 @@ export default function CoverageChecker({ onClose }) {
               )}
             </MapContainer>
 
-            {/* Map status badge */}
             {results.length > 0 && (
               <div className="absolute bottom-10 right-3 z-[999] rounded-xl px-3 py-2"
                 style={{ background: "rgba(5,3,14,0.92)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`, backdropFilter: "blur(10px)" }}>
@@ -357,7 +346,7 @@ export default function CoverageChecker({ onClose }) {
               <table className="w-full text-left" style={{ borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "rgba(255,255,255,0.02)" }}>
-                    {["Provider","Plan","Download","Upload","Price/mo","Contract","Value"].map(h => (
+                    {["Provider","Plan","Download","Price/mo","Value"].map(h => (
                       <th key={h} className="px-3 py-2.5 text-[9px] font-black uppercase tracking-wider"
                         style={{ color: "rgba(196,188,247,0.4)", borderBottom: "1px solid rgba(155,143,239,0.12)" }}>{h}</th>
                     ))}
@@ -378,19 +367,10 @@ export default function CoverageChecker({ onClose }) {
                           </td>
                           <td className="px-3 py-2.5 text-[12px] font-bold" style={{ color: "#94a3b8" }}>{plan.label}</td>
                           <td className="px-3 py-2.5 text-[13px] font-black" style={{ color: "#e2e8f0", fontFamily: "monospace" }}>{plan.speed}</td>
-                          <td className="px-3 py-2.5 text-[11px]" style={{ color: "#64748b" }}>{plan.upload || "—"}</td>
                           <td className="px-3 py-2.5 text-[14px] font-black" style={{ color: provider.color }}>R{plan.price}</td>
                           <td className="px-3 py-2.5">
-                            <span className="text-[10px] px-1.5 py-0.5 rounded font-bold"
-                              style={{ background: "rgba(255,255,255,0.04)", color: "#64748b" }}>
-                              {plan.contract || 24}mo
-                            </span>
-                          </td>
-                          <td className="px-3 py-2.5">
-                            <div className="flex items-center gap-1">
-                              <div className="w-12 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-                                <div className="h-1.5 rounded-full" style={{ width: `${Math.min(100, vs / 4)}%`, background: vs > 40 ? "#10b981" : vs > 20 ? "#f59e0b" : "#ef4444" }} />
-                              </div>
+                            <div className="w-12 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                              <div className="h-1.5 rounded-full" style={{ width: `${Math.min(100, vs / 4)}%`, background: vs > 40 ? "#10b981" : vs > 20 ? "#f59e0b" : "#ef4444" }} />
                             </div>
                           </td>
                         </tr>
