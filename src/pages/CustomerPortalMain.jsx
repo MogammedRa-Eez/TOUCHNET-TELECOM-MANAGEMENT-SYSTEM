@@ -77,6 +77,18 @@ function StatChip({ icon: Icon, label, value, color }) {
 }
 
 // ── Sidebar ────────────────────────────────────────────────────────────────────
+const C = {
+  primary:    "#9b8fef",
+  soft:       "#c4bcf7",
+  primaryDim: "#7c6fe0",
+  glow:       "rgba(155,143,239,0.35)",
+  glowSoft:   "rgba(155,143,239,0.15)",
+  border:     "rgba(155,143,239,0.2)",
+  borderMd:   "rgba(155,143,239,0.35)",
+  sidebarBg:  "#1a1330",
+  sidebarMid: "#221a42",
+};
+
 function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoices, tickets, projects, sc }) {
   const initials = customer?.full_name?.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase() || "??";
 
@@ -90,7 +102,7 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
       {/* Mobile overlay */}
       {open && (
         <div className="fixed inset-0 z-40 lg:hidden"
-          style={{ background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)" }}
+          style={{ background: "rgba(10,5,25,0.7)", backdropFilter: "blur(10px)" }}
           onClick={onClose} />
       )}
 
@@ -101,51 +113,87 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
         ${open ? "translate-x-0" : "-translate-x-full"}
       `} style={{
         width: 260,
-        background: "rgba(255,255,255,0.98)",
-        borderRight: "1px solid rgba(99,102,241,0.1)",
-        boxShadow: "4px 0 32px rgba(99,102,241,0.07)",
+        background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #1e1640 50%, ${C.sidebarMid} 100%)`,
+        borderRight: `1px solid ${C.border}`,
         flexShrink: 0,
+        overflow: "hidden",
+        position: "relative",
       }}>
 
-        {/* Top accent */}
-        <div className="h-[3px] flex-shrink-0"
-          style={{ background: "linear-gradient(90deg,#6366f1,#06b6d4,#8b5cf6,#10b981)" }} />
+        {/* Dot grid overlay */}
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: `radial-gradient(circle, ${C.glowSoft} 1px, transparent 1px)`,
+          backgroundSize: "28px 28px",
+          pointerEvents: "none",
+          opacity: 0.6,
+        }} />
+
+        {/* Ambient orbs */}
+        <div style={{
+          position: "absolute", top: -80, left: -60, width: 260, height: 260,
+          background: `radial-gradient(circle, rgba(124,111,224,0.18) 0%, transparent 68%)`,
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", bottom: 60, right: -80, width: 200, height: 200,
+          background: `radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 68%)`,
+          pointerEvents: "none",
+        }} />
 
         {/* Logo header */}
-        <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-          style={{ borderBottom: "1px solid rgba(99,102,241,0.07)" }}>
-          <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" />
-          <button onClick={onClose} className="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors">
-            <X className="w-4 h-4 text-slate-400" />
+        <div className="flex items-center justify-between px-4 h-[64px] flex-shrink-0"
+          style={{ borderBottom: `1px solid ${C.border}`, background: "rgba(155,143,239,0.08)", position: "relative", zIndex: 2 }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+              style={{ border: `1px solid ${C.borderMd}`, boxShadow: `0 0 16px ${C.glow}`, background: "rgba(26,19,48,0.85)" }}>
+              <img src="https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/9158e4b04_tnet2-removebg-preview.png" alt="Logo"
+                className="w-9 h-9 object-contain" style={{ filter: "drop-shadow(0 0 4px rgba(155,143,239,0.6))" }} />
+            </div>
+            <div>
+              <img src={LOGO_URL} alt="TouchNet" className="h-6 object-contain"
+                style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 6px rgba(196,188,247,0.5))", opacity: 1 }} />
+              <p className="text-[8px] font-bold tracking-[0.2em] uppercase mt-0.5"
+                style={{ color: "rgba(196,188,247,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>CUSTOMER PORTAL</p>
+            </div>
+          </div>
+          <button onClick={onClose}
+            className="lg:hidden w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+            style={{ color: C.soft, border: `1px solid ${C.border}`, background: "rgba(155,143,239,0.08)" }}>
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* User card */}
-        <div className="mx-3 my-3 rounded-2xl px-4 py-3 flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${sc.color}08, rgba(99,102,241,0.05))`, border: `1px solid ${sc.color}18` }}>
+        <div className="mx-3 my-3 rounded-xl px-3 py-3 flex-shrink-0"
+          style={{ background: "rgba(155,143,239,0.08)", border: `1px solid ${C.border}`, position: "relative", zIndex: 2 }}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-[13px] flex-shrink-0"
-              style={{ background: `${sc.color}15`, border: `1px solid ${sc.color}25`, color: sc.color, fontFamily: "'Space Grotesk',sans-serif" }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center font-black text-[12px] flex-shrink-0"
+              style={{ background: `${sc.color}20`, border: `1px solid ${sc.color}35`, color: sc.color, fontFamily: "'Space Grotesk',sans-serif" }}>
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-bold truncate" style={{ color: "#1e293b" }}>{customer?.full_name}</p>
+              <p className="text-[12px] font-bold truncate" style={{ color: C.soft }}>{customer?.full_name}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color }} />
-                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color, boxShadow: `0 0 6px ${sc.color}` }} />
+                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
               </div>
             </div>
           </div>
           {customer?.account_number && (
-            <p className="text-[10px] mono mt-2 font-semibold" style={{ color: "#94a3b8" }}>
+            <p className="text-[10px] mono mt-2 font-semibold" style={{ color: "rgba(196,188,247,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>
               #{customer.account_number}
             </p>
           )}
         </div>
 
         {/* Nav items */}
-        <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1" style={{ color: "#94a3b8" }}>Navigation</p>
+        <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5 sidebar-scroll" style={{ position: "relative", zIndex: 2 }}>
+          <div className="flex items-center gap-2 px-2 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.primaryDim, boxShadow: `0 0 6px ${C.primary}` }} />
+            <p className="text-[9px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(196,188,247,0.4)", fontFamily: "'Space Grotesk', sans-serif" }}>Navigation</p>
+            <div className="flex-1 h-px" style={{ background: "rgba(155,143,239,0.1)" }} />
+          </div>
           {NAV_ITEMS.map(item => {
             const Icon = item.icon;
             const isActive = activeTab === item.key;
@@ -153,23 +201,38 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
             return (
               <button key={item.key}
                 onClick={() => { setActiveTab(item.key); onClose(); }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 group"
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium transition-all duration-150 relative"
                 style={{
-                  background: isActive ? "linear-gradient(135deg,rgba(99,102,241,0.12),rgba(99,102,241,0.06))" : "transparent",
-                  border: isActive ? "1px solid rgba(99,102,241,0.2)" : "1px solid transparent",
-                  boxShadow: isActive ? "0 2px 12px rgba(99,102,241,0.1)" : "none",
+                  borderRadius: 10,
+                  ...(isActive ? {
+                    background: "linear-gradient(135deg, rgba(155,143,239,0.18), rgba(124,111,224,0.1))",
+                    color: C.soft,
+                    border: `1px solid rgba(155,143,239,0.35)`,
+                    boxShadow: `0 2px 16px rgba(124,111,224,0.15), inset 0 0 12px rgba(155,143,239,0.06)`,
+                  } : {
+                    color: "rgba(196,188,247,0.45)",
+                    border: "1px solid transparent",
+                  }),
                 }}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                {isActive && (
+                  <span style={{
+                    position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
+                    width: 3, height: "60%",
+                    background: `linear-gradient(180deg, ${C.soft}, ${C.primary})`,
+                    borderRadius: "0 3px 3px 0",
+                    boxShadow: `0 0 10px ${C.glow}`,
+                  }} />
+                )}
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
                   style={{
-                    background: isActive ? "rgba(99,102,241,0.15)" : "rgba(241,245,249,0.8)",
-                    border: `1px solid ${isActive ? "rgba(99,102,241,0.3)" : "rgba(226,232,240,0.8)"}`,
+                    background: isActive ? "rgba(155,143,239,0.2)" : "rgba(155,143,239,0.07)",
+                    border: isActive ? `1px solid rgba(155,143,239,0.3)` : "1px solid transparent",
                   }}>
-                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#6366f1" : "#94a3b8" }} />
+                  <Icon className="w-3.5 h-3.5" style={{ color: isActive ? C.soft : "rgba(155,143,239,0.55)" }} />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-bold leading-tight" style={{ color: isActive ? "#4f46e5" : "#475569" }}>{item.label}</p>
-                  <p className="text-[10px] truncate" style={{ color: "#94a3b8" }}>{item.desc}</p>
-                </div>
+                <span className="flex-1 truncate text-left" style={{ fontFamily: "'Inter', sans-serif", fontWeight: isActive ? 600 : 500 }}>
+                  {item.label}
+                </span>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   {badge > 0 && (
                     <span className="min-w-[18px] h-[18px] px-1 text-[9px] font-black rounded-full flex items-center justify-center text-white"
@@ -177,7 +240,9 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
                       {badge}
                     </span>
                   )}
-                  {isActive && <ChevronRight className="w-3.5 h-3.5" style={{ color: "#6366f1" }} />}
+                  {isActive && (
+                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.soft, boxShadow: `0 0 8px ${C.glow}`, flexShrink: 0 }} />
+                  )}
                 </div>
               </button>
             );
@@ -185,14 +250,12 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
         </nav>
 
         {/* Bottom: plan info + logout */}
-        <div className="flex-shrink-0 px-3 py-3 space-y-2"
-          style={{ borderTop: "1px solid rgba(99,102,241,0.07)" }}>
-          <div className="rounded-xl px-3 py-2.5"
-            style={{ background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.1)" }}>
+        <div className="px-3 pb-4 flex-shrink-0" style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12, position: "relative", zIndex: 2 }}>
+          <div style={{ background: "rgba(155,143,239,0.07)", border: `1px solid ${C.border}`, borderRadius: 10, padding: "10px 12px", marginBottom: 8 }}>
             <div className="flex items-center gap-2">
-              <Wifi className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#6366f1" }} />
+              <Wifi className="w-3.5 h-3.5 flex-shrink-0" style={{ color: C.primary }} />
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-bold truncate" style={{ color: "#334155" }}>
+                <p className="text-[11px] font-bold truncate" style={{ color: C.soft }}>
                   {PLAN_LABELS[customer?.service_plan] || customer?.service_plan?.replace(/_/g," ") || "—"}
                 </p>
                 {customer?.monthly_rate && (
@@ -203,7 +266,7 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
           </div>
           <button onClick={() => base44.auth.logout("/")}
             className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-[1.02] active:scale-95"
-            style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)", color: "#ef4444" }}>
+            style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
             <LogOut className="w-3.5 h-3.5" /> Sign Out
           </button>
         </div>
