@@ -158,15 +158,9 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           }}
         >
           <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{
-                background: "linear-gradient(135deg, rgba(155,143,239,0.25), rgba(124,111,224,0.1))",
-                border: `1px solid ${C.borderMd}`,
-                boxShadow: `0 0 18px ${C.glow}, inset 0 0 8px rgba(155,143,239,0.1)`,
-              }}
-            >
-              <Cpu className="w-4 h-4" style={{ color: C.soft }} />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+              style={{ border: `1px solid ${C.borderMd}`, boxShadow: `0 0 18px ${C.glow}` }}>
+              <img src="https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/9158e4b04_tnet2-removebg-preview.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <img src={LOGO_URL} alt="TouchNet" className="h-5 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.92 }} />
