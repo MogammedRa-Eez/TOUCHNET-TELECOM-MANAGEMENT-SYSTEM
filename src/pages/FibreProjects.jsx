@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Search, Filter, FileText, TrendingUp, Play, LayoutGrid, Kanban } from "lucide-react";
+import { Plus, Search, Filter, FileText, TrendingUp, Play, LayoutGrid, Kanban, GanttChartSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,6 +13,7 @@ import ProjectDetailModal from "@/components/projects/ProjectDetailModal";
 import ProjectForecastReport from "@/components/projects/ProjectForecastReport";
 import GuidedDemo from "@/components/projects/GuidedDemo";
 import ProjectKanbanBoard from "@/components/projects/ProjectKanbanBoard";
+import GanttTimeline from "@/components/projects/GanttTimeline";
 
 const STATUS_FILTERS = [
   { value: "all", label: "All Projects" },
@@ -35,7 +36,7 @@ export default function FibreProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showReport, setShowReport] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
-  const [viewMode, setViewMode] = useState("grid"); // "grid" | "kanban"
+  const [viewMode, setViewMode] = useState("grid"); // "grid" | "kanban" | "gantt"
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ["fibre-projects"],
@@ -106,23 +107,25 @@ export default function FibreProjects() {
         </div>
         <div className="flex gap-2">
           {/* View toggle */}
-          <div className="flex rounded-lg border border-slate-200 overflow-hidden">
-            <button
-              className="px-2.5 py-1.5 transition-colors"
-              style={{ background: viewMode === "grid" ? "#6366f1" : "#fff", color: viewMode === "grid" ? "#fff" : "#64748b" }}
-              onClick={() => setViewMode("grid")}
-              title="Grid view"
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-            <button
-              className="px-2.5 py-1.5 transition-colors"
-              style={{ background: viewMode === "kanban" ? "#6366f1" : "#fff", color: viewMode === "kanban" ? "#fff" : "#64748b" }}
-              onClick={() => setViewMode("kanban")}
-              title="Kanban view"
-            >
-              <Kanban className="w-4 h-4" />
-            </button>
+          <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(155,143,239,0.25)" }}>
+            {[
+              { mode: "grid",   icon: LayoutGrid,       title: "Grid view" },
+              { mode: "kanban", icon: Kanban,            title: "Kanban view" },
+              { mode: "gantt",  icon: GanttChartSquare,  title: "Gantt timeline" },
+            ].map(({ mode, icon: Icon, title }) => (
+              <button key={mode}
+                className="px-3 py-1.5 transition-all"
+                style={{
+                  background: viewMode === mode ? "linear-gradient(135deg,#7c6fe0,#9b8fef)" : "rgba(243,240,253,0.5)",
+                  color: viewMode === mode ? "#fff" : "#9b8fef",
+                  borderRight: "1px solid rgba(155,143,239,0.15)",
+                }}
+                onClick={() => setViewMode(mode)}
+                title={title}
+              >
+                <Icon className="w-4 h-4" />
+              </button>
+            ))}
           </div>
           <Button variant="outline" onClick={() => setShowDemo(true)} className="gap-2">
             <Play className="w-4 h-4" /> Demo
@@ -138,9 +141,11 @@ export default function FibreProjects() {
         </div>
       </div>
 
-      {/* Project Grid / Kanban */}
+      {/* Project Grid / Kanban / Gantt */}
       {isLoading ? (
         <div className="text-center py-20 text-slate-400">Loading projects...</div>
+      ) : viewMode === "gantt" ? (
+        <GanttTimeline projects={projects} />
       ) : viewMode === "kanban" ? (
         <ProjectKanbanBoard
           projects={projects}
