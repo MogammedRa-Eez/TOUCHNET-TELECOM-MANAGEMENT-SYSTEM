@@ -13,20 +13,21 @@ L.Icon.Default.mergeOptions({
 });
 
 const PROVIDERS = {
-  touchnet:  { id: "touchnet",  name: "TouchNet",  color: "#38bdf8", logo: "🔮", glowColor: "rgba(56,189,248,0.4)",
+  touchnet: {
+    id: "touchnet", name: "TouchNet", color: "#38bdf8", logo: "🔮", glowColor: "rgba(56,189,248,0.4)",
     zones: [
       { lat: -26.1041, lng: 28.1073, label: "Sandton",      radius: 10000 },
-      { lat: -26.0274, lng: 28.1527, label: "Fourways",      radius: 9000  },
-      { lat: -25.8579, lng: 28.1893, label: "Centurion",     radius: 11000 },
-      { lat: -26.0765, lng: 28.0556, label: "Randburg",      radius: 9000  },
-      { lat: -25.9025, lng: 28.4211, label: "Kempton Park",  radius: 9000  },
-      { lat: -25.7479, lng: 28.2293, label: "Pretoria East", radius: 11000 },
-      { lat: -26.2041, lng: 28.0473, label: "JHB South",     radius: 10000 },
-      { lat: -26.1367, lng: 28.2411, label: "Bedfordview",   radius: 8000  },
-      { lat: -26.2309, lng: 28.2772, label: "Alberton",      radius: 8000  },
-      { lat: -33.9249, lng: 18.4241, label: "Cape Town CBD", radius: 10000 },
-      { lat: -29.8587, lng: 31.0218, label: "Durban North",  radius: 10000 },
-      { lat: -29.1197, lng: 26.2140, label: "Bloemfontein",  radius: 9000  },
+      { lat: -26.0274, lng: 28.1527, label: "Fourways",     radius: 9000  },
+      { lat: -25.8579, lng: 28.1893, label: "Centurion",    radius: 11000 },
+      { lat: -26.0765, lng: 28.0556, label: "Randburg",     radius: 9000  },
+      { lat: -25.9025, lng: 28.4211, label: "Kempton Park", radius: 9000  },
+      { lat: -25.7479, lng: 28.2293, label: "Pretoria East",radius: 11000 },
+      { lat: -26.2041, lng: 28.0473, label: "JHB South",   radius: 10000 },
+      { lat: -26.1367, lng: 28.2411, label: "Bedfordview",  radius: 8000  },
+      { lat: -26.2309, lng: 28.2772, label: "Alberton",     radius: 8000  },
+      { lat: -33.9249, lng: 18.4241, label: "Cape Town CBD",radius: 10000 },
+      { lat: -29.8587, lng: 31.0218, label: "Durban North", radius: 10000 },
+      { lat: -29.1197, lng: 26.2140, label: "Bloemfontein", radius: 9000  },
     ],
     plans: [
       { label: "Basic",      speed: "10 Mbps",  price: 399  },
@@ -36,7 +37,8 @@ const PROVIDERS = {
       { label: "Gigabit",    speed: "1 Gbps",   price: 2999 },
     ],
   },
-  openserve: { id: "openserve", name: "Openserve", color: "#06b6d4", logo: "🌐", glowColor: "rgba(6,182,212,0.35)",
+  openserve: {
+    id: "openserve", name: "Openserve", color: "#06b6d4", logo: "🌐", glowColor: "rgba(6,182,212,0.35)",
     zones: [
       { lat: -26.1041, lng: 28.1073, label: "Sandton",      radius: 12000 },
       { lat: -25.7479, lng: 28.2293, label: "Pretoria",     radius: 15000 },
@@ -51,7 +53,8 @@ const PROVIDERS = {
       { label: "Giga", speed: "1 Gbps",   price: 2699 },
     ],
   },
-  vumatel:   { id: "vumatel",   name: "Vumatel",   color: "#f59e0b", logo: "⚡", glowColor: "rgba(245,158,11,0.35)",
+  vumatel: {
+    id: "vumatel", name: "Vumatel", color: "#f59e0b", logo: "⚡", glowColor: "rgba(245,158,11,0.35)",
     zones: [
       { lat: -26.1041, lng: 28.1073, label: "Sandton",   radius: 8000 },
       { lat: -26.0274, lng: 28.1527, label: "Fourways",  radius: 7500 },
@@ -64,7 +67,8 @@ const PROVIDERS = {
       { label: "Speed", speed: "200 Mbps", price: 1099 },
     ],
   },
-  frogfoot:  { id: "frogfoot",  name: "Frogfoot",  color: "#10b981", logo: "🐸", glowColor: "rgba(16,185,129,0.35)",
+  frogfoot: {
+    id: "frogfoot", name: "Frogfoot", color: "#10b981", logo: "🐸", glowColor: "rgba(16,185,129,0.35)",
     zones: [
       { lat: -26.0274, lng: 28.1527, label: "Northriding",  radius: 7000 },
       { lat: -25.9025, lng: 28.4211, label: "Kempton Park", radius: 7500 },
@@ -80,9 +84,9 @@ const PROVIDERS = {
 };
 
 const MAP_STYLES = {
-  dark_blue: { label: "Dark Blue", icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  dark_blue: { label: "Dark Blue", icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                                         attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                                        attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                                              attribution: "&copy; OpenStreetMap &copy; CARTO" },
   satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", attribution: "Tiles &copy; Esri" },
 };
 
@@ -110,15 +114,15 @@ function FlyTo({ coords }) {
 }
 
 export default function CoverageChecker({ onClose }) {
-  const [address, setAddress]         = useState("");
-  const [searching, setSearching]     = useState(false);
-  const [results, setResults]         = useState([]);
-  const [flyTo, setFlyTo]             = useState(null);
-  const [markerPos, setMarkerPos]     = useState(null);
-  const [error, setError]             = useState(null);
-  const [activeProviders, setActive]  = useState(Object.keys(PROVIDERS));
-  const [showCompare, setShowCompare] = useState(false);
-  const [mapStyle, setMapStyle]       = useState("dark_blue");
+  const [address, setAddress]        = useState("");
+  const [searching, setSearching]    = useState(false);
+  const [results, setResults]        = useState([]);
+  const [flyTo, setFlyTo]            = useState(null);
+  const [markerPos, setMarkerPos]    = useState(null);
+  const [error, setError]            = useState(null);
+  const [activeProviders, setActive] = useState(Object.keys(PROVIDERS));
+  const [showCompare, setShowCompare]= useState(false);
+  const [mapStyle, setMapStyle]      = useState("dark_blue");
 
   const available = results.filter(r => r.covered);
 
@@ -145,8 +149,11 @@ export default function CoverageChecker({ onClose }) {
         query: address, display_name: data[0].display_name, lat, lng,
         covered: allResults.some(r => r.provider.id === "touchnet" && r.covered),
       }).catch(() => {});
-    } catch { setError("Search failed. Please try again."); }
-    finally   { setSearching(false); }
+    } catch {
+      setError("Search failed. Please try again.");
+    } finally {
+      setSearching(false);
+    }
   };
 
   return (
@@ -369,7 +376,7 @@ export default function CoverageChecker({ onClose }) {
               <table className="w-full text-left" style={{ borderCollapse: "collapse" }}>
                 <thead>
                   <tr>
-                    {["Provider","Plan","Download","Price/mo","Value"].map(h => (
+                    {["Provider", "Plan", "Download", "Price/mo", "Value"].map(h => (
                       <th key={h} className="px-3 py-2.5 text-[9px] font-black uppercase tracking-wider"
                         style={{ color: "rgba(147,210,255,0.45)", borderBottom: "1px solid rgba(56,189,248,0.12)" }}>{h}</th>
                     ))}
