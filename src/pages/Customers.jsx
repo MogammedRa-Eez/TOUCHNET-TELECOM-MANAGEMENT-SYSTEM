@@ -49,14 +49,14 @@ function KPIStrip({ customers }) {
         { label: "Monthly Revenue", value: `R${(mrr/1000).toFixed(1)}k`,      icon: DollarSign,  color: "#06b6d4" },
       ].map(k => (
         <div key={k.label} className="relative overflow-hidden rounded-2xl px-5 py-4"
-          style={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
+          style={{ background: "rgba(12, 8, 28, 0.95)", border: `1px solid ${k.color}30`, boxShadow: `0 2px 16px ${k.color}18` }}>
           {/* top accent */}
           <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${k.color}, transparent)` }} />
           {/* ambient glow */}
           <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${k.color}15, transparent 70%)` }} />
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(100,116,139,0.6)" }}>{k.label}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(196,181,253,0.55)" }}>{k.label}</p>
               <p className="text-3xl font-black mono" style={{ color: k.color }}>{k.value}</p>
             </div>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${k.color}12`, border: `1px solid ${k.color}25` }}>
@@ -78,12 +78,12 @@ function CustomerCard({ customer, onClick }) {
       onClick={() => onClick(customer)}
       className="rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group"
       style={{
-        background: "rgba(255,255,255,0.97)",
-        border: "1px solid rgba(99,102,241,0.1)",
-        boxShadow: "0 2px 12px rgba(99,102,241,0.05)",
+        background: "rgba(12, 8, 28, 0.95)",
+        border: `1px solid ${sc.color}28`,
+        boxShadow: `0 2px 12px ${sc.color}14`,
       }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}18, 0 2px 12px rgba(99,102,241,0.08)`; e.currentTarget.style.borderColor = `${sc.color}40`; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 12px rgba(99,102,241,0.05)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.1)"; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}28, 0 2px 12px rgba(139,92,246,0.14)`; e.currentTarget.style.borderColor = `${sc.color}55`; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = `0 2px 12px ${sc.color}14`; e.currentTarget.style.borderColor = `${sc.color}28`; }}
     >
       {/* Status top bar */}
       <div className="h-[2px] rounded-full mb-3" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
@@ -252,7 +252,7 @@ export default function Customers() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#1e293b" }}>Customer Management</h1>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0e8ff" }}>Customer Management</h1>
           <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
             {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active
           </p>
@@ -305,7 +305,7 @@ export default function Customers() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             className="w-full pl-10 pr-4 py-2.5 text-[13px] outline-none transition-all rounded-xl"
-            style={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(99,102,241,0.15)", color: "#1e293b" }}
+            style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.25)", color: "#e8d5ff" }}
             placeholder="Search by name, email, account number…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -324,9 +324,9 @@ export default function Customers() {
               <button key={s} onClick={() => setStatusFilter(s)}
                 className="px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all"
                 style={{
-                  background: active ? (cfg ? cfg.bg : "rgba(99,102,241,0.12)") : "rgba(255,255,255,0.8)",
-                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(99,102,241,0.35)"}` : "1px solid rgba(99,102,241,0.1)",
-                  color: active ? (cfg ? cfg.color : "#6366f1") : "#94a3b8",
+                  background: active ? (cfg ? cfg.bg : "rgba(139,92,246,0.15)") : "rgba(139,92,246,0.06)",
+                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(139,92,246,0.45)"}` : "1px solid rgba(139,92,246,0.14)",
+                  color: active ? (cfg ? cfg.color : "#a78bfa") : "rgba(196,181,253,0.55)",
                   boxShadow: active ? `0 0 12px ${cfg ? cfg.color + "20" : "rgba(99,102,241,0.1)"}` : "none",
                 }}>
                 {cfg && active && <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ background: cfg.color }} />}
@@ -345,8 +345,8 @@ export default function Customers() {
             <button key={mode} onClick={() => setViewMode(mode)}
               className="px-3 py-2 transition-all"
               style={{
-                background: viewMode === mode ? "rgba(99,102,241,0.12)" : "rgba(255,255,255,0.8)",
-                color: viewMode === mode ? "#6366f1" : "#94a3b8",
+                background: viewMode === mode ? "rgba(139,92,246,0.18)" : "rgba(139,92,246,0.05)",
+                color: viewMode === mode ? "#a78bfa" : "rgba(196,181,253,0.45)",
               }}>
               <Icon className="w-4 h-4" />
             </button>
@@ -383,9 +383,9 @@ export default function Customers() {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(10, 6, 24, 0.97)", border: "1px solid rgba(139,92,246,0.22)", boxShadow: "0 4px 24px rgba(139,92,246,0.14)" }}>
           {/* List header */}
-          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "#f8f9ff", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
+          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(139,92,246,0.09)", borderBottom: "1px solid rgba(139,92,246,0.15)" }}>
             <div className="w-9 flex-shrink-0" />
             <p className="flex-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Customer</p>
             <p className="hidden md:block w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Account</p>
@@ -398,7 +398,7 @@ export default function Customers() {
           {filtered.map(c => (
             <CustomerRow key={c.id} customer={c} onClick={setSelected} />
           ))}
-          <div className="px-5 py-2.5" style={{ background: "#f8f9ff", borderTop: "1px solid rgba(99,102,241,0.06)" }}>
+          <div className="px-5 py-2.5" style={{ background: "rgba(139,92,246,0.07)", borderTop: "1px solid rgba(139,92,246,0.12)" }}>
             <p className="text-[11px] mono" style={{ color: "rgba(100,116,139,0.5)" }}>
               {filtered.length} of {customers.length} customers
             </p>

@@ -46,9 +46,9 @@ function KPICard({ label, value, sub, icon: Icon, color, accent, chartData, char
   return (
     <div className="relative overflow-hidden rounded-2xl group cursor-default transition-all duration-300 hover:-translate-y-1"
       style={{
-        background: "rgba(255,255,255,0.97)",
-        border: `1px solid ${color}22`,
-        boxShadow: `0 4px 32px ${color}12, 0 1px 0 rgba(255,255,255,1) inset`,
+        background: "rgba(12, 8, 28, 0.95)",
+        border: `1px solid ${color}35`,
+        boxShadow: `0 4px 32px ${color}20, 0 1px 0 rgba(139,92,246,0.08) inset`,
       }}>
 
       {/* Animated prismatic top bar */}
@@ -67,9 +67,9 @@ function KPICard({ label, value, sub, icon: Icon, color, accent, chartData, char
 
       <div className="relative px-5 pt-4 pb-1 flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(100,116,139,0.5)" }}>{label}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(196,181,253,0.55)" }}>{label}</p>
           <p className="text-[30px] font-black mono leading-tight mt-0.5 tracking-tight" style={{ color }}>{value}</p>
-          {sub && <p className="text-[11px] mt-0.5 font-medium" style={{ color: "rgba(100,116,139,0.65)" }}>{sub}</p>}
+          {sub && <p className="text-[11px] mt-0.5 font-medium" style={{ color: "rgba(196,181,253,0.5)" }}>{sub}</p>}
         </div>
         <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 group-hover:scale-110"
           style={{
@@ -123,9 +123,9 @@ function RevenueBreakdown({ invoices }) {
   return (
     <div className="relative overflow-hidden rounded-2xl px-6 py-5"
       style={{
-        background: "rgba(255,255,255,0.97)",
-        border: "1px solid rgba(99,102,241,0.1)",
-        boxShadow: "0 4px 32px rgba(99,102,241,0.07)",
+        background: "rgba(12, 8, 28, 0.95)",
+        border: "1px solid rgba(139,92,246,0.22)",
+        boxShadow: "0 4px 32px rgba(139,92,246,0.14)",
       }}>
       {/* Top prismatic bar */}
       <div className="absolute top-0 left-0 right-0 h-[3px]"
@@ -139,7 +139,7 @@ function RevenueBreakdown({ invoices }) {
               style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
               <BarChart3 className="w-3.5 h-3.5" style={{ color: "#6366f1" }} />
             </div>
-            <p className="text-[13px] font-black uppercase tracking-wider" style={{ color: "#1e293b" }}>Revenue Breakdown</p>
+            <p className="text-[13px] font-black uppercase tracking-wider" style={{ color: "#c4b5fd" }}>Revenue Breakdown</p>
             <span className="text-[10px] font-black mono px-2 py-0.5 rounded-full"
               style={{ background: "rgba(99,102,241,0.07)", color: "#6366f1", border: "1px solid rgba(99,102,241,0.15)" }}>
               R{(total).toLocaleString()} total
@@ -166,7 +166,7 @@ function RevenueBreakdown({ invoices }) {
                     style={{ background: `${s.color}12`, border: `1px solid ${s.color}25` }}>
                     <Icon className="w-3 h-3" style={{ color: s.color }} />
                   </div>
-                  <span className="text-[12px] font-semibold" style={{ color: "#475569" }}>{s.label}</span>
+                  <span className="text-[12px] font-semibold" style={{ color: "#c4b5fd" }}>{s.label}</span>
                   <span className="text-[13px] font-black mono" style={{ color: s.color }}>R{s.value.toLocaleString()}</span>
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
                     style={{ background: `${s.color}10`, color: s.color }}>{s.pct.toFixed(1)}%</span>
@@ -195,7 +195,7 @@ function RevenueBreakdown({ invoices }) {
               <span className="text-[14px] font-black mono" style={{ color: "#10b981" }}>{(paid/total*100).toFixed(0)}%</span>
             </div>
           </div>
-          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#94a3b8" }}>Collected</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "rgba(196,181,253,0.6)" }}>Collected</p>
         </div>
       </div>
     </div>
@@ -216,9 +216,9 @@ function InvoiceRow({ inv, isAdmin, onPdf, onEdit, onDelete, onStatusChange, ind
       <div
         className="flex items-center gap-3 px-5 py-3.5 cursor-pointer transition-all duration-150"
         onClick={() => setOpen(v => !v)}
-        style={{ background: open ? `${sc.color}05` : "transparent" }}
-        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "rgba(99,102,241,0.025)"; }}
-        onMouseLeave={e => { if (!open) e.currentTarget.style.background = "transparent"; }}
+        style={{ background: open ? `${sc.color}10` : "transparent" }}
+        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "rgba(139,92,246,0.06)"; }}
+        onMouseLeave={e => { if (!open) e.currentTarget.style.background = open ? `${sc.color}10` : "transparent"; }}
       >
         {/* Index + Avatar */}
         <div className="flex items-center gap-2.5 flex-shrink-0">
@@ -241,7 +241,7 @@ function InvoiceRow({ inv, isAdmin, onPdf, onEdit, onDelete, onStatusChange, ind
 
         {/* Customer */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold truncate" style={{ color: "#1e293b" }}>{inv.customer_name}</p>
+          <p className="text-[13px] font-bold truncate" style={{ color: "#e8d5ff" }}>{inv.customer_name}</p>
           {inv.description && (
             <p className="text-[10px] truncate hidden sm:block" style={{ color: "#94a3b8" }}>{inv.description}</p>
           )}
@@ -313,12 +313,12 @@ function InvoiceRow({ inv, isAdmin, onPdf, onEdit, onDelete, onStatusChange, ind
               { label: "Sage Invoice ID", value: inv.sage_invoice_id || "Not synced",             icon: ArrowUpRight },
             ].map(item => (
               <div key={item.label} className="rounded-xl px-3 py-2.5 transition-all hover:scale-[1.02]"
-                style={{ background: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 1px 4px rgba(99,102,241,0.06)" }}>
+                style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.15)", boxShadow: "0 1px 4px rgba(139,92,246,0.1)" }}>
                 <div className="flex items-center gap-1.5 mb-1">
                   <item.icon className="w-3 h-3" style={{ color: sc.color }} />
-                  <p className="text-[9px] uppercase tracking-wider font-black" style={{ color: "rgba(100,116,139,0.5)" }}>{item.label}</p>
+                  <p className="text-[9px] uppercase tracking-wider font-black" style={{ color: "rgba(196,181,253,0.5)" }}>{item.label}</p>
                 </div>
-                <p className="text-[12px] font-bold capitalize truncate" style={{ color: "#334155" }}>{item.value}</p>
+                <p className="text-[12px] font-bold capitalize truncate" style={{ color: "#e2d9f3" }}>{item.value}</p>
               </div>
             ))}
           </div>
@@ -442,7 +442,7 @@ export default function Billing() {
                 style={{ background: "linear-gradient(135deg,rgba(99,102,241,0.15),rgba(99,102,241,0.06))", border: "1px solid rgba(99,102,241,0.2)", boxShadow: "0 4px 16px rgba(99,102,241,0.12)" }}>
                 <CircleDollarSign className="w-4.5 h-4.5" style={{ color: "#6366f1" }} />
               </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f172a", fontFamily: "'Space Grotesk', sans-serif" }}>
+              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0e8ff", fontFamily: "'Space Grotesk', sans-serif" }}>
                 Billing & Invoices
               </h1>
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full"
@@ -514,10 +514,10 @@ export default function Billing() {
             <input
               className="w-full pl-10 pr-8 py-3 text-[13px] font-medium outline-none rounded-xl transition-all"
               style={{
-                background: "rgba(255,255,255,0.95)",
-                border: "1px solid rgba(99,102,241,0.15)",
-                color: "#1e293b",
-                boxShadow: "0 2px 12px rgba(99,102,241,0.06)",
+                background: "rgba(139,92,246,0.07)",
+                border: "1px solid rgba(139,92,246,0.25)",
+                color: "#e8d5ff",
+                boxShadow: "0 2px 12px rgba(139,92,246,0.1)",
               }}
               placeholder="Search customer name or invoice number…"
               value={search}
@@ -540,9 +540,9 @@ export default function Billing() {
                 <button key={s} onClick={() => setStatusFilter(s)}
                   className="px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all hover:scale-105"
                   style={{
-                    background: active ? (cfg ? cfg.bg : "rgba(99,102,241,0.1)") : "rgba(255,255,255,0.9)",
-                    border: active ? `1px solid ${cfg ? cfg.border : "rgba(99,102,241,0.3)"}` : "1px solid rgba(99,102,241,0.1)",
-                    color: active ? (cfg ? cfg.color : "#6366f1") : "#94a3b8",
+                    background: active ? (cfg ? cfg.bg : "rgba(139,92,246,0.15)") : "rgba(139,92,246,0.06)",
+                    border: active ? `1px solid ${cfg ? cfg.border : "rgba(139,92,246,0.45)"}` : "1px solid rgba(139,92,246,0.14)",
+                    color: active ? (cfg ? cfg.color : "#a78bfa") : "rgba(196,181,253,0.55)",
                     boxShadow: active ? `0 2px 12px ${cfg ? cfg.color + "20" : "rgba(99,102,241,0.12)"}` : "none",
                   }}>
                   {s === "all" ? "All" : s}
@@ -556,9 +556,9 @@ export default function Billing() {
         {/* ── Invoice Table ── */}
         <div className="rounded-2xl overflow-hidden"
           style={{
-            background: "rgba(255,255,255,0.98)",
-            border: "1px solid rgba(99,102,241,0.1)",
-            boxShadow: "0 8px 40px rgba(99,102,241,0.08)",
+            background: "rgba(10, 6, 24, 0.97)",
+            border: "1px solid rgba(139,92,246,0.22)",
+            boxShadow: "0 8px 40px rgba(139,92,246,0.14)",
           }}>
 
           {/* Prismatic header accent */}
@@ -567,7 +567,7 @@ export default function Billing() {
 
           {/* Column headers */}
           <div className="flex items-center gap-3 px-5 py-3"
-            style={{ background: "linear-gradient(180deg,rgba(248,249,255,1),rgba(241,245,255,0.8))", borderBottom: "1px solid rgba(99,102,241,0.07)" }}>
+            style={{ background: "rgba(139,92,246,0.08)", borderBottom: "1px solid rgba(139,92,246,0.15)" }}>
             <div className="hidden lg:block w-6 flex-shrink-0" />
             <div className="flex-shrink-0 w-9" />
             <p className="hidden sm:block w-28 text-[9px] font-black uppercase tracking-[0.2em] flex-shrink-0" style={{ color: "#94a3b8" }}>Invoice #</p>
@@ -622,7 +622,7 @@ export default function Billing() {
           {/* Footer */}
           {!isLoading && filtered.length > 0 && (
             <div className="px-5 py-3 flex items-center justify-between flex-wrap gap-2"
-              style={{ background: "linear-gradient(180deg,rgba(248,249,255,1),rgba(241,245,255,0.8))", borderTop: "1px solid rgba(99,102,241,0.07)" }}>
+              style={{ background: "rgba(139,92,246,0.06)", borderTop: "1px solid rgba(139,92,246,0.12)" }}>
               <div className="flex items-center gap-3">
                 <p className="text-[11px] mono" style={{ color: "#94a3b8" }}>
                   Showing <span className="font-bold" style={{ color: "#6366f1" }}>{filtered.length}</span> of {invoices.length} invoices

@@ -431,24 +431,102 @@
 }
 
 /* ─── Table styling ──────────────────────────────────────── */
-table { border-collapse: collapse; }
-thead tr { background: rgba(139, 92, 246, 0.08) !important; }
+table { border-collapse: collapse; width: 100%; }
+thead tr { background: rgba(139, 92, 246, 0.1) !important; }
 thead th {
   color: #c4b5fd !important;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.22) !important;
+  padding: 10px 14px !important;
 }
 tbody tr {
-  border-bottom: 1px solid rgba(139, 92, 246, 0.06) !important;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.07) !important;
   transition: background 0.15s;
 }
 tbody tr:hover {
-  background: rgba(139, 92, 246, 0.06) !important;
+  background: rgba(139, 92, 246, 0.07) !important;
 }
-tbody td { color: #e2d9f3 !important; }
+tbody td {
+  color: #e2d9f3 !important;
+  padding: 10px 14px !important;
+}
+
+/* ─── Global dark-theme card / panel overrides ───────────── */
+/* All page containers and cards use dark theme */
+.page-panel {
+  background: rgba(12, 8, 28, 0.92) !important;
+  border: 1px solid rgba(139, 92, 246, 0.2) !important;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(139, 92, 246, 0.12);
+}
+
+/* Header text in pages */
+h1, h2, h3 { color: #f0e8ff !important; }
+h4, h5, h6 { color: #c4b5fd !important; }
+
+/* Body text readability */
+p, span:not(.badge):not([class*="text-"]), label { color: #cbd5e1; }
+
+/* Ensure dark backgrounds on key utility classes used in pages */
+.bg-white, .bg-gray-50, .bg-slate-50 {
+  background-color: rgba(12, 8, 28, 0.95) !important;
+}
+
+/* Inline style overrides via attribute selectors for common white backgrounds */
+[style*="background: rgba(255,255,255"] {
+  background: rgba(14, 10, 30, 0.95) !important;
+}
+[style*="background: white"] {
+  background: rgba(14, 10, 30, 0.95) !important;
+}
+[style*="background: #fff"] {
+  background: rgba(14, 10, 30, 0.95) !important;
+}
+[style*="background: #ffffff"] {
+  background: rgba(14, 10, 30, 0.95) !important;
+}
+[style*="background: #f8f9ff"],
+[style*="background: #f8fafc"],
+[style*="background: #f1f5f9"],
+[style*="background: #f8f9fc"],
+[style*="background: linear-gradient(180deg,rgba(248,249,255"],
+[style*="background: linear-gradient(180deg,rgba(241,245,255"] {
+  background: rgba(8, 5, 20, 0.9) !important;
+}
+
+/* Text overrides for light text classes used on light-bg components */
+[style*="color: #0f172a"],
+[style*="color: #1e293b"],
+[style*="color: #334155"],
+[style*="color: #475569"] {
+  color: #e8d5ff !important;
+}
+[style*="color: rgba(100,116,139,"],
+[style*="color: rgba(100, 116, 139,"] {
+  color: #a78bfa !important;
+}
+[style*="color: #94a3b8"],
+[style*="color: #64748b"] {
+  color: #9d8ec7 !important;
+}
+
+/* Section titles and labels */
+[style*="color: #1e293b"],
+[style*="color: #0f172a"] {
+  color: #f0e8ff !important;
+}
+
+/* KPI card text */
+[style*="color: rgba(100,116,139,0.5)"],
+[style*="color: rgba(100,116,139,0.6)"] {
+  color: rgba(196, 181, 253, 0.6) !important;
+}
+[style*="color: rgba(100,116,139,0.65)"] {
+  color: rgba(196, 181, 253, 0.65) !important;
+}
 
 /* ─── Recharts overrides ─────────────────────────────────── */
 .recharts-cartesian-grid-horizontal line,
