@@ -65,18 +65,33 @@ module.exports = {
           border:               'hsl(var(--sidebar-border))',
           ring:                 'hsl(var(--sidebar-ring))',
         },
-        /* ── Brand palette for inline use ── */
-        cyan:  { DEFAULT: '#0ea5e9', soft: '#7dd3fc', dim: '#0284c7', glow: 'rgba(14,165,233,0.35)' },
-        teal:  { DEFAULT: '#06b6d4', light: '#67e8f9' },
+        /* ── Brand palette ── */
+        brand: {
+          blue:       '#2563eb',
+          'blue-soft':'#93c5fd',
+          'blue-dim': '#1d4ed8',
+          red:        '#dc2626',
+          'red-soft': '#fca5a5',
+          'red-dim':  '#b91c1c',
+        },
         /* keep legacy names so existing components don't break */
-        lilac:  { DEFAULT: '#0ea5e9', soft: '#7dd3fc', dim: '#0284c7' },
-        violet: { DEFAULT: '#0284c7', light: '#38bdf8' },
+        cyan:   { DEFAULT: '#2563eb', soft: '#93c5fd', dim: '#1d4ed8' },
+        teal:   { DEFAULT: '#1d4ed8', light: '#60a5fa' },
+        lilac:  { DEFAULT: '#2563eb', soft: '#93c5fd', dim: '#1d4ed8' },
+        violet: { DEFAULT: '#1d4ed8', light: '#3b82f6' },
       },
       boxShadow: {
-        'lilac-sm': '0 2px 12px rgba(139,92,246,0.12)',
-        'lilac-md': '0 4px 24px rgba(139,92,246,0.18)',
-        'lilac-lg': '0 8px 40px rgba(139,92,246,0.22)',
-        'lilac-glow': '0 0 20px rgba(155,143,239,0.5)',
+        'blue-sm':   '0 2px 12px rgba(37,99,235,0.1)',
+        'blue-md':   '0 4px 24px rgba(37,99,235,0.16)',
+        'blue-lg':   '0 8px 40px rgba(37,99,235,0.2)',
+        'blue-glow': '0 0 20px rgba(37,99,235,0.45)',
+        'red-sm':    '0 2px 12px rgba(220,38,38,0.1)',
+        'red-glow':  '0 0 20px rgba(220,38,38,0.45)',
+        /* legacy aliases */
+        'lilac-sm':  '0 2px 12px rgba(37,99,235,0.1)',
+        'lilac-md':  '0 4px 24px rgba(37,99,235,0.16)',
+        'lilac-lg':  '0 8px 40px rgba(37,99,235,0.2)',
+        'lilac-glow':'0 0 20px rgba(37,99,235,0.45)',
       },
       keyframes: {
         'accordion-down': {
@@ -88,14 +103,19 @@ module.exports = {
           to:   { height: '0' },
         },
         'glow-pulse': {
-          '0%, 100%': { boxShadow: '0 0 8px rgba(155,143,239,0.4)' },
-          '50%':      { boxShadow: '0 0 20px rgba(155,143,239,0.8)' },
+          '0%, 100%': { boxShadow: '0 0 8px rgba(37,99,235,0.4)' },
+          '50%':      { boxShadow: '0 0 20px rgba(37,99,235,0.8)' },
+        },
+        'glow-pulse-red': {
+          '0%, 100%': { boxShadow: '0 0 8px rgba(220,38,38,0.4)' },
+          '50%':      { boxShadow: '0 0 20px rgba(220,38,38,0.8)' },
         },
       },
       animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up':   'accordion-up 0.2s ease-out',
-        'glow-pulse':     'glow-pulse 2.5s ease-in-out infinite',
+        'accordion-down':  'accordion-down 0.2s ease-out',
+        'accordion-up':    'accordion-up 0.2s ease-out',
+        'glow-pulse':      'glow-pulse 2.5s ease-in-out infinite',
+        'glow-pulse-red':  'glow-pulse-red 2.5s ease-in-out infinite',
       },
     },
   },
@@ -103,5 +123,7 @@ module.exports = {
   safelist: [
     'bg-lilac', 'text-lilac', 'border-lilac',
     'bg-violet', 'text-violet', 'border-violet',
+    'bg-brand-blue', 'text-brand-blue',
+    'bg-brand-red', 'text-brand-red',
   ],
 };

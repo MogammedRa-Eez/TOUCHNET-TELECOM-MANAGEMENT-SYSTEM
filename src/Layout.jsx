@@ -16,16 +16,19 @@ import EmployeeChat from "@/components/chat/EmployeeChat";
 
 /* ── Palette constants ─────────────────────────────────── */
 const C = {
-  primary:    "#0ea5e9",
-  primaryDim: "#0284c7",
-  soft:       "#7dd3fc",
-  violet:     "#06b6d4",
-  glow:       "rgba(14,165,233,0.38)",
-  glowSoft:   "rgba(14,165,233,0.14)",
-  border:     "rgba(14,165,233,0.2)",
-  borderMd:   "rgba(14,165,233,0.38)",
-  sidebarBg:  "#040e1f",
-  sidebarMid: "#071428",
+  primary:    "#2563eb",
+  primaryDim: "#1d4ed8",
+  soft:       "#93c5fd",
+  violet:     "#3b82f6",
+  glow:       "rgba(37,99,235,0.38)",
+  glowSoft:   "rgba(37,99,235,0.14)",
+  border:     "rgba(37,99,235,0.2)",
+  borderMd:   "rgba(37,99,235,0.38)",
+  sidebarBg:  "#04081a",
+  sidebarMid: "#070d24",
+  red:        "#dc2626",
+  redSoft:    "#fca5a5",
+  redGlow:    "rgba(220,38,38,0.35)",
 };
 
 const NAV_GROUPS = [
@@ -109,7 +112,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
       {open && (
         <div
           className="fixed inset-0 z-40 lg:hidden"
-          style={{ background: "rgba(10,5,25,0.7)", backdropFilter: "blur(10px)" }}
+          style={{ background: "rgba(4,8,26,0.85)", backdropFilter: "blur(10px)" }}
           onClick={onClose}
         />
       )}
@@ -118,7 +121,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         className={`fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{
           width: 256,
-          background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #061220 50%, ${C.sidebarMid} 100%)`,
+          background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #080f28 50%, ${C.sidebarMid} 100%)`,
           borderRight: `1px solid ${C.border}`,
           flexShrink: 0,
           overflow: "hidden",
@@ -137,12 +140,12 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         {/* Ambient orbs */}
         <div style={{
           position: "absolute", top: -80, left: -60, width: 260, height: 260,
-          background: `radial-gradient(circle, rgba(14,165,233,0.18) 0%, transparent 68%)`,
+          background: `radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 68%)`,
           pointerEvents: "none",
         }} />
         <div style={{
           position: "absolute", bottom: 60, right: -80, width: 200, height: 200,
-          background: `radial-gradient(circle, rgba(6,182,212,0.14) 0%, transparent 68%)`,
+          background: `radial-gradient(circle, rgba(220,38,38,0.12) 0%, transparent 68%)`,
           pointerEvents: "none",
         }} />
 
@@ -153,24 +156,24 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           className="flex items-center justify-between px-4 h-[64px] flex-shrink-0"
           style={{
             borderBottom: `1px solid ${C.border}`,
-            background: "rgba(155,143,239,0.08)",
+            background: "rgba(37,99,235,0.07)",
             position: "relative", zIndex: 2,
           }}
         >
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-              style={{ border: `1px solid ${C.borderMd}`, boxShadow: `0 0 22px ${C.glow}`, background: "rgba(26,19,48,0.85)" }}>
-              <img src="https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/9158e4b04_tnet2-removebg-preview.png" alt="Logo" className="w-13 h-13 object-contain" style={{ filter: "drop-shadow(0 0 6px rgba(155,143,239,0.6))" }} />
+              style={{ border: `1px solid ${C.borderMd}`, boxShadow: `0 0 22px ${C.glow}`, background: "rgba(4,8,26,0.85)" }}>
+              <img src="https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/9158e4b04_tnet2-removebg-preview.png" alt="Logo" className="w-13 h-13 object-contain" style={{ filter: "drop-shadow(0 0 6px rgba(37,99,235,0.7))" }} />
             </div>
             <div>
-              <img src={LOGO_URL} alt="TouchNet" className="h-8 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 8px rgba(196,188,247,0.6))", opacity: 1 }} />
-              <p className="text-[8px] font-bold tracking-[0.22em] uppercase mt-0.5" style={{ color: "rgba(125,211,252,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>MANAGEMENT SYSTEM</p>
+              <img src={LOGO_URL} alt="TouchNet" className="h-8 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 8px rgba(147,197,253,0.7))", opacity: 1 }} />
+              <p className="text-[8px] font-bold tracking-[0.22em] uppercase mt-0.5" style={{ color: "rgba(147,197,253,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>MANAGEMENT SYSTEM</p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="lg:hidden w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
-            style={{ color: C.soft, border: `1px solid ${C.border}`, background: "rgba(155,143,239,0.08)" }}
+            style={{ color: C.soft, border: `1px solid ${C.border}`, background: "rgba(37,99,235,0.07)" }}
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -186,10 +189,10 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                 {/* Section label */}
                 <div className="flex items-center gap-2 px-2 mb-1.5">
                   <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.primaryDim, boxShadow: `0 0 6px ${C.primary}`, flexShrink: 0 }} />
-                  <p className="text-[9px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(125,211,252,0.45)", fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <p className="text-[9px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(147,197,253,0.45)", fontFamily: "'Space Grotesk', sans-serif" }}>
                     {group.label}
                   </p>
-                  <div className="flex-1 h-px" style={{ background: "rgba(155,143,239,0.1)" }} />
+                  <div className="flex-1 h-px" style={{ background: "rgba(37,99,235,0.12)" }} />
                 </div>
 
                 <div className="space-y-0.5">
@@ -205,12 +208,12 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                         style={{
                           borderRadius: 10,
                           ...(isActive ? {
-                            background: "linear-gradient(135deg, rgba(14,165,233,0.16), rgba(6,182,212,0.09))",
+                            background: "linear-gradient(135deg, rgba(37,99,235,0.16), rgba(29,78,216,0.09))",
                             color: C.soft,
-                            border: `1px solid rgba(14,165,233,0.32)`,
-                            boxShadow: `0 2px 16px rgba(14,165,233,0.14), inset 0 0 12px rgba(14,165,233,0.05)`,
+                            border: `1px solid rgba(37,99,235,0.32)`,
+                            boxShadow: `0 2px 16px rgba(37,99,235,0.14), inset 0 0 12px rgba(37,99,235,0.05)`,
                           } : {
-                            color: "rgba(125,211,252,0.45)",
+                            color: "rgba(147,197,253,0.45)",
                             border: "1px solid transparent",
                           }),
                         }}
@@ -229,11 +232,11 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                         <div
                           className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
                           style={{
-                            background: isActive ? "rgba(14,165,233,0.18)" : "rgba(14,165,233,0.06)",
-                            border: isActive ? `1px solid rgba(14,165,233,0.3)` : "1px solid transparent",
+                            background: isActive ? "rgba(37,99,235,0.18)" : "rgba(37,99,235,0.06)",
+                            border: isActive ? `1px solid rgba(37,99,235,0.3)` : "1px solid transparent",
                           }}
                         >
-                          <Icon className="w-3.5 h-3.5" style={{ color: isActive ? C.soft : "rgba(14,165,233,0.5)" }} />
+                          <Icon className="w-3.5 h-3.5" style={{ color: isActive ? C.soft : "rgba(37,99,235,0.5)" }} />
                         </div>
 
                         <span className="flex-1 truncate" style={{ fontFamily: "'Inter', sans-serif", fontWeight: isActive ? 600 : 500, fontSize: 13 }}>
@@ -260,7 +263,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         {/* ── Footer status ── */}
         <div className="px-3 pb-4 flex-shrink-0" style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12, position: "relative", zIndex: 2 }}>
           <div style={{
-            background: "rgba(14,165,233,0.06)",
+            background: "rgba(37,99,235,0.06)",
             border: `1px solid ${C.border}`,
             borderRadius: 12,
             padding: "10px 12px",
@@ -268,13 +271,13 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
                 <Zap className="w-3 h-3" style={{ color: C.primary }} />
-                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(125,211,252,0.45)" }}>System Status</span>
+                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(147,197,253,0.45)" }}>System Status</span>
               </div>
               <span className="text-[9px] font-black tracking-wider" style={{ color: C.soft }}>ONLINE</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#10b981", boxShadow: "0 0 8px rgba(16,185,129,0.9)" }} />
-              <span className="text-[10px]" style={{ color: "rgba(14,165,233,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>ALL SYSTEMS NOMINAL</span>
+              <span className="text-[10px]" style={{ color: "rgba(37,99,235,0.6)", fontFamily: "'JetBrains Mono', monospace" }}>ALL SYSTEMS NOMINAL</span>
             </div>
           </div>
         </div>
@@ -308,7 +311,7 @@ function LayoutInner({ children, currentPageName }) {
   const timeStr = now.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f7ff" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#f0f4ff" }}>
       <Sidebar
         currentPageName={currentPageName}
         open={mobileOpen}
@@ -323,7 +326,7 @@ function LayoutInner({ children, currentPageName }) {
           <button
             onClick={() => setMobileOpen(true)}
             className="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
-            style={{ color: C.primaryDim, background: "rgba(14,165,233,0.07)", border: `1px solid ${C.border}` }}
+            style={{ color: C.primaryDim, background: "rgba(37,99,235,0.07)", border: `1px solid ${C.border}` }}
           >
             <Menu className="w-4 h-4" />
           </button>
@@ -336,8 +339,8 @@ function LayoutInner({ children, currentPageName }) {
             </div>
             {currentItem && (
               <>
-                <span style={{ color: "rgba(14,165,233,0.3)", fontSize: 14 }}>›</span>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style={{ background: "rgba(14,165,233,0.07)", border: `1px solid ${C.border}` }}>
+                <span style={{ color: "rgba(37,99,235,0.35)", fontSize: 14 }}>›</span>
+                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style={{ background: "rgba(37,99,235,0.07)", border: `1px solid ${C.border}` }}>
                   {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: C.primary }} />}
                   <span className="text-[13px] font-bold tracking-tight" style={{ color: "#0c2a4a", fontFamily: "'Space Grotesk', sans-serif" }}>
                     {currentItem.name}
@@ -351,7 +354,7 @@ function LayoutInner({ children, currentPageName }) {
 
           {/* Live clock */}
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg"
-            style={{ background: "rgba(14,165,233,0.06)", border: `1px solid ${C.border}` }}>
+            style={{ background: "rgba(37,99,235,0.06)", border: `1px solid ${C.border}` }}>
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#10b981", boxShadow: "0 0 7px rgba(16,185,129,0.9)" }} />
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: C.primaryDim, letterSpacing: "0.05em" }}>
               {timeStr}
@@ -362,7 +365,7 @@ function LayoutInner({ children, currentPageName }) {
             <GlobalSearch />
             <DemoUserSwitcher />
             <NotificationBell />
-            <div className="w-px h-5" style={{ background: `rgba(14,165,233,0.2)` }} />
+            <div className="w-px h-5" style={{ background: `rgba(37,99,235,0.2)` }} />
             <UserMenu />
           </div>
         </header>
