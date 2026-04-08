@@ -84,10 +84,10 @@ const PROVIDERS = {
 };
 
 const MAP_STYLES = {
-  dark_blue: { label: "Dark",      icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                                     attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                                    attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                                          attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",                     attribution: "Tiles &copy; Esri" },
+  dark_blue: { label: "Dark",      icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                              attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                             attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                                   attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",              attribution: "Tiles &copy; Esri" },
 };
 
 const haversineDistance = (lat1, lng1, lat2, lng2) => {
@@ -162,56 +162,57 @@ export default function CoverageChecker({ onClose }) {
 
       <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden flex flex-col"
         style={{
-          background: "linear-gradient(160deg,#0e0a1e 0%,#130d28 100%)",
-          border: "1px solid rgba(168,85,247,0.3)",
-          boxShadow: "0 32px 80px rgba(168,85,247,0.25), 0 0 0 1px rgba(168,85,247,0.1)",
+          background: "linear-gradient(160deg,#0a0d15 0%,#0e0a1e 100%)",
+          border: "1px solid rgba(16,185,129,0.25)",
+          boxShadow: "0 32px 80px rgba(16,185,129,0.15), 0 0 0 1px rgba(168,85,247,0.1)",
           height: "88vh", maxHeight: 680,
         }}>
 
-        {/* Neon prismatic top line */}
-        <div className="h-[2px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#b91c1c,#dc2626,#f472b6,#a855f7,#e879f9,#c084fc,transparent)", boxShadow: "0 0 16px rgba(168,85,247,0.6)" }} />
+        {/* Neon prismatic top line — green + purple + red */}
+        <div className="h-[2px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)", boxShadow: "0 0 14px rgba(16,185,129,0.5)" }} />
 
-        {/* Ambient orb */}
-        <div style={{ position: "absolute", top: -100, right: -100, width: 300, height: 300, background: "radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+        {/* Ambient orbs */}
+        <div style={{ position: "absolute", top: -80, right: -80, width: 260, height: 260, background: "radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+        <div style={{ position: "absolute", bottom: -60, left: -60, width: 200, height: 200, background: "radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 flex-shrink-0 relative z-10"
-          style={{ borderBottom: "1px solid rgba(168,85,247,0.15)", background: "rgba(168,85,247,0.06)" }}>
+          style={{ borderBottom: "1px solid rgba(16,185,129,0.15)", background: "rgba(16,185,129,0.05)" }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 20px rgba(168,85,247,0.55)" }}>
+              style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 20px rgba(16,185,129,0.5)" }}>
               <Globe className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-[15px] font-black" style={{ color: "#d8b4fe" }}>Coverage Intelligence Map</h2>
-              <p className="text-[10px]" style={{ color: "rgba(216,180,254,0.45)", fontFamily: "monospace" }}>
+              <h2 className="text-[15px] font-black" style={{ color: "#6ee7b7" }}>Coverage Intelligence Map</h2>
+              <p className="text-[10px]" style={{ color: "rgba(110,231,183,0.5)", fontFamily: "monospace" }}>
                 {Object.keys(PROVIDERS).length} providers · Real-time check
               </p>
             </div>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all"
-            style={{ border: "1px solid rgba(168,85,247,0.2)" }}>
-            <X className="w-4 h-4" style={{ color: "#d8b4fe" }} />
+            style={{ border: "1px solid rgba(16,185,129,0.25)" }}>
+            <X className="w-4 h-4" style={{ color: "#6ee7b7" }} />
           </button>
         </div>
 
         <div className="flex flex-1 overflow-hidden relative z-10">
           {/* Sidebar */}
           <div className="w-56 flex-shrink-0 flex flex-col overflow-y-auto"
-            style={{ borderRight: "1px solid rgba(168,85,247,0.15)", background: "rgba(8,5,16,0.92)" }}>
+            style={{ borderRight: "1px solid rgba(16,185,129,0.12)", background: "rgba(8,5,16,0.92)" }}>
 
             {/* Search */}
-            <div className="p-3" style={{ borderBottom: "1px solid rgba(168,85,247,0.1)" }}>
+            <div className="p-3" style={{ borderBottom: "1px solid rgba(16,185,129,0.1)" }}>
               <form onSubmit={handleSearch} className="space-y-2">
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#a855f7" }} />
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#10b981" }} />
                   <input value={address} onChange={e => setAddress(e.target.value)} placeholder="Enter address…"
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl text-[12px] outline-none"
-                    style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.25)", color: "#e9d5ff" }} />
+                    style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.25)", color: "#e9d5ff" }} />
                 </div>
                 <button type="submit" disabled={searching || !address.trim()}
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-black text-white transition-all hover:scale-[1.02] disabled:opacity-50"
-                  style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 18px rgba(168,85,247,0.5)" }}>
+                  style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 18px rgba(16,185,129,0.4)" }}>
                   {searching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
                   {searching ? "Scanning…" : "Check Coverage"}
                 </button>
@@ -221,14 +222,14 @@ export default function CoverageChecker({ onClose }) {
 
             {/* Results */}
             {results.length > 0 && (
-              <div className="p-3 space-y-2" style={{ borderBottom: "1px solid rgba(168,85,247,0.1)" }}>
-                <p className="text-[9px] font-black uppercase tracking-[0.2em]" style={{ color: "rgba(216,180,254,0.5)" }}>Coverage Results</p>
+              <div className="p-3 space-y-2" style={{ borderBottom: "1px solid rgba(16,185,129,0.1)" }}>
+                <p className="text-[9px] font-black uppercase tracking-[0.2em]" style={{ color: "rgba(110,231,183,0.6)" }}>Coverage Results</p>
                 {results.map(({ provider, covered, zone }) => (
                   <div key={provider.id} className="flex items-center gap-2 px-2 py-1.5 rounded-xl"
                     style={{ background: covered ? `${provider.color}12` : "rgba(255,255,255,0.02)", border: `1px solid ${covered ? provider.color + "35" : "rgba(255,255,255,0.05)"}` }}>
                     <span className="text-base">{provider.logo}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] font-bold truncate" style={{ color: covered ? "#e9d5ff" : "#374151" }}>{provider.name}</p>
+                      <p className="text-[11px] font-bold truncate" style={{ color: covered ? "#e9d5ff" : "#4b5563" }}>{provider.name}</p>
                       {covered && <p className="text-[9px]" style={{ color: provider.color }}>✓ {zone?.label}</p>}
                     </div>
                     {covered
@@ -239,14 +240,14 @@ export default function CoverageChecker({ onClose }) {
                 {available.length > 1 && (
                   <button onClick={() => setShowCompare(true)}
                     className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-black text-white transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 16px rgba(168,85,247,0.45)" }}>
+                    style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 16px rgba(168,85,247,0.4)" }}>
                     <BarChart3 className="w-3.5 h-3.5" /> Compare Plans
                   </button>
                 )}
                 {available.some(r => r.provider.id === "touchnet") && (
                   <a href="/CoverageCheck"
                     className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-black text-white transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg,#b91c1c,#dc2626)", boxShadow: "0 4px 16px rgba(220,38,38,0.45)", textDecoration: "none", display: "flex" }}>
+                    style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 16px rgba(16,185,129,0.4)", textDecoration: "none", display: "flex" }}>
                     <Zap className="w-3.5 h-3.5" /> Sign Up Now
                   </a>
                 )}
@@ -254,16 +255,16 @@ export default function CoverageChecker({ onClose }) {
             )}
 
             {/* Map style switcher */}
-            <div className="p-3" style={{ borderBottom: "1px solid rgba(168,85,247,0.1)" }}>
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(216,180,254,0.5)" }}>Map View</p>
+            <div className="p-3" style={{ borderBottom: "1px solid rgba(16,185,129,0.1)" }}>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(110,231,183,0.6)" }}>Map View</p>
               <div className="grid grid-cols-2 gap-1">
                 {Object.entries(MAP_STYLES).map(([key, style]) => (
                   <button key={key} onClick={() => setMapStyle(key)}
                     className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all"
                     style={{
-                      background: mapStyle === key ? "rgba(168,85,247,0.18)" : "rgba(255,255,255,0.02)",
-                      border: `1px solid ${mapStyle === key ? "rgba(168,85,247,0.45)" : "rgba(255,255,255,0.05)"}`,
-                      color: mapStyle === key ? "#d8b4fe" : "#4b5563",
+                      background: mapStyle === key ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${mapStyle === key ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.05)"}`,
+                      color: mapStyle === key ? "#6ee7b7" : "#4b5563",
                     }}>
                     <span>{style.icon}</span> {style.label}
                   </button>
@@ -273,7 +274,7 @@ export default function CoverageChecker({ onClose }) {
 
             {/* Layer toggles */}
             <div className="p-3 flex-1">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(216,180,254,0.5)" }}>Map Layers</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(110,231,183,0.6)" }}>Map Layers</p>
               <div className="space-y-1.5">
                 {Object.values(PROVIDERS).map(p => (
                   <button key={p.id} onClick={() => toggleProvider(p.id)}
@@ -281,7 +282,7 @@ export default function CoverageChecker({ onClose }) {
                     style={{ background: activeProviders.includes(p.id) ? `${p.color}10` : "transparent", border: `1px solid ${activeProviders.includes(p.id) ? p.color + "30" : "rgba(255,255,255,0.04)"}` }}>
                     <span className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{ background: activeProviders.includes(p.id) ? p.color : "#1f2937", border: `1.5px solid ${p.color}`, boxShadow: activeProviders.includes(p.id) ? `0 0 10px ${p.glowColor}` : "none" }} />
-                    <span className="text-[11px] font-bold" style={{ color: activeProviders.includes(p.id) ? "#d8b4fe" : "#374151" }}>
+                    <span className="text-[11px] font-bold" style={{ color: activeProviders.includes(p.id) ? "#d8b4fe" : "#4b5563" }}>
                       {p.logo} {p.name}
                     </span>
                   </button>
@@ -346,12 +347,12 @@ export default function CoverageChecker({ onClose }) {
 
             {results.length > 0 && (
               <div className="absolute bottom-10 right-3 z-[999] rounded-xl px-3 py-2"
-                style={{ background: "rgba(13,10,26,0.95)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.35)" : "rgba(220,38,38,0.35)"}`, backdropFilter: "blur(12px)", boxShadow: `0 4px 20px ${available.length > 0 ? "rgba(16,185,129,0.2)" : "rgba(220,38,38,0.2)"}` }}>
+                style={{ background: "rgba(10,13,21,0.97)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.4)" : "rgba(220,38,38,0.35)"}`, backdropFilter: "blur(12px)", boxShadow: `0 4px 20px ${available.length > 0 ? "rgba(16,185,129,0.2)" : "rgba(220,38,38,0.2)"}` }}>
                 <div className="flex items-center gap-2">
                   {available.length > 0
                     ? <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#10b981" }} />
                     : <XCircle className="w-3.5 h-3.5" style={{ color: "#dc2626" }} />}
-                  <span className="text-[11px] font-bold" style={{ color: available.length > 0 ? "#10b981" : "#dc2626" }}>
+                  <span className="text-[11px] font-bold" style={{ color: available.length > 0 ? "#34d399" : "#f87171" }}>
                     {available.length > 0 ? `${available.length} available` : "No coverage"}
                   </span>
                 </div>
@@ -366,19 +367,19 @@ export default function CoverageChecker({ onClose }) {
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
           style={{ background: "rgba(8,5,16,0.97)", backdropFilter: "blur(24px)" }}>
           <div className="w-full max-w-3xl max-h-[85vh] rounded-3xl overflow-hidden flex flex-col"
-            style={{ background: "linear-gradient(160deg,#0e0a1e,#130d28)", border: "1px solid rgba(168,85,247,0.3)", boxShadow: "0 32px 80px rgba(168,85,247,0.25)" }}>
-            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#b91c1c,#dc2626,#f472b6,#a855f7,#e879f9,transparent)", boxShadow: "0 0 16px rgba(168,85,247,0.6)" }} />
+            style={{ background: "linear-gradient(160deg,#0a0d15,#0e0a1e)", border: "1px solid rgba(16,185,129,0.25)", boxShadow: "0 32px 80px rgba(16,185,129,0.15)" }}>
+            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)", boxShadow: "0 0 12px rgba(16,185,129,0.5)" }} />
             <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-              style={{ borderBottom: "1px solid rgba(168,85,247,0.15)" }}>
+              style={{ borderBottom: "1px solid rgba(16,185,129,0.15)" }}>
               <div className="flex items-center gap-3">
-                <BarChart3 className="w-5 h-5" style={{ color: "#a855f7" }} />
+                <BarChart3 className="w-5 h-5" style={{ color: "#10b981" }} />
                 <div>
-                  <h3 className="text-[15px] font-black" style={{ color: "#d8b4fe" }}>Plan Comparison</h3>
-                  <p className="text-[10px]" style={{ color: "rgba(216,180,254,0.45)" }}>{available.length} providers available at your address</p>
+                  <h3 className="text-[15px] font-black" style={{ color: "#6ee7b7" }}>Plan Comparison</h3>
+                  <p className="text-[10px]" style={{ color: "rgba(110,231,183,0.5)" }}>{available.length} providers available at your address</p>
                 </div>
               </div>
               <button onClick={() => setShowCompare(false)} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10">
-                <X className="w-4 h-4" style={{ color: "#d8b4fe" }} />
+                <X className="w-4 h-4" style={{ color: "#6ee7b7" }} />
               </button>
             </div>
             <div className="overflow-auto flex-1 p-5">
@@ -387,7 +388,7 @@ export default function CoverageChecker({ onClose }) {
                   <tr>
                     {["Provider", "Plan", "Download", "Price/mo", "Value"].map(h => (
                       <th key={h} className="px-3 py-2.5 text-[9px] font-black uppercase tracking-wider"
-                        style={{ color: "rgba(216,180,254,0.5)", borderBottom: "1px solid rgba(168,85,247,0.15)" }}>{h}</th>
+                        style={{ color: "rgba(110,231,183,0.7)", borderBottom: "1px solid rgba(16,185,129,0.15)" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -396,7 +397,7 @@ export default function CoverageChecker({ onClose }) {
                     provider.plans.map((plan, pi) => {
                       const vs = Math.round((parseInt(plan.speed) / plan.price) * 100);
                       return (
-                        <tr key={`${provider.id}-${pi}`} style={{ borderBottom: "1px solid rgba(168,85,247,0.06)" }}
+                        <tr key={`${provider.id}-${pi}`} style={{ borderBottom: "1px solid rgba(16,185,129,0.06)" }}
                           className="transition-all hover:bg-white/[0.02]">
                           <td className="px-3 py-2.5">
                             <div className="flex items-center gap-1.5">
@@ -404,7 +405,7 @@ export default function CoverageChecker({ onClose }) {
                               <span className="text-[11px] font-bold" style={{ color: provider.color }}>{provider.name}</span>
                             </div>
                           </td>
-                          <td className="px-3 py-2.5 text-[12px] font-bold" style={{ color: "#6b7280" }}>{plan.label}</td>
+                          <td className="px-3 py-2.5 text-[12px] font-bold" style={{ color: "rgba(216,180,254,0.7)" }}>{plan.label}</td>
                           <td className="px-3 py-2.5 text-[13px] font-black mono" style={{ color: "#e9d5ff" }}>{plan.speed}</td>
                           <td className="px-3 py-2.5 text-[14px] font-black" style={{ color: provider.color }}>R{plan.price}</td>
                           <td className="px-3 py-2.5">
@@ -418,10 +419,10 @@ export default function CoverageChecker({ onClose }) {
                   )}
                 </tbody>
               </table>
-              <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(168,85,247,0.12)" }}>
+              <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(16,185,129,0.12)" }}>
                 <a href="/CoverageCheck"
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-[12px] font-black text-white transition-all hover:scale-105"
-                  style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 20px rgba(168,85,247,0.5)", textDecoration: "none" }}>
+                  style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 20px rgba(16,185,129,0.4)", textDecoration: "none" }}>
                   <ArrowUpRight className="w-4 h-4" /> Full Coverage Page & Sign Up
                 </a>
               </div>
