@@ -49,14 +49,12 @@ function KPIStrip({ customers }) {
         { label: "Monthly Revenue", value: `R${(mrr/1000).toFixed(1)}k`,      icon: DollarSign,  color: "#06b6d4" },
       ].map(k => (
         <div key={k.label} className="relative overflow-hidden rounded-2xl px-5 py-4"
-          style={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
-          {/* top accent */}
+          style={{ background: "rgba(14,11,26,0.92)", border: `1px solid ${k.color}25`, boxShadow: `0 2px 16px ${k.color}12` }}>
           <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${k.color}, transparent)` }} />
-          {/* ambient glow */}
           <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${k.color}15, transparent 70%)` }} />
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(100,116,139,0.6)" }}>{k.label}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(216,180,254,0.5)" }}>{k.label}</p>
               <p className="text-3xl font-black mono" style={{ color: k.color }}>{k.value}</p>
             </div>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${k.color}12`, border: `1px solid ${k.color}25` }}>
@@ -78,12 +76,12 @@ function CustomerCard({ customer, onClick }) {
       onClick={() => onClick(customer)}
       className="rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group"
       style={{
-        background: "rgba(255,255,255,0.97)",
-        border: "1px solid rgba(99,102,241,0.1)",
-        boxShadow: "0 2px 12px rgba(99,102,241,0.05)",
+        background: "rgba(14,11,26,0.92)",
+        border: `1px solid ${sc.color}25`,
+        boxShadow: `0 2px 12px ${sc.color}10`,
       }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}18, 0 2px 12px rgba(99,102,241,0.08)`; e.currentTarget.style.borderColor = `${sc.color}40`; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 12px rgba(99,102,241,0.05)"; e.currentTarget.style.borderColor = "rgba(99,102,241,0.1)"; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}25`; e.currentTarget.style.borderColor = `${sc.color}50`; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = `0 2px 12px ${sc.color}10`; e.currentTarget.style.borderColor = `${sc.color}25`; }}
     >
       {/* Status top bar */}
       <div className="h-[2px] rounded-full mb-3" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
@@ -95,8 +93,8 @@ function CustomerCard({ customer, onClick }) {
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-bold text-slate-800 text-[13px] truncate">{customer.full_name}</p>
-          <p className="text-[10px] mono text-slate-400 truncate">{customer.email}</p>
+          <p className="font-bold text-[13px] truncate" style={{ color: "#e9d5ff" }}>{customer.full_name}</p>
+          <p className="text-[10px] mono truncate" style={{ color: "rgba(216,180,254,0.5)" }}>{customer.email}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color, boxShadow: `0 0 4px ${sc.color}` }} />
             <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
@@ -107,16 +105,16 @@ function CustomerCard({ customer, onClick }) {
       {/* Metrics row */}
       <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(99,102,241,0.07)" }}>
         <div className="text-center">
-          <p className="text-[11px] font-black mono text-indigo-600">{PLAN_SHORT[customer.service_plan] || "—"}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5">Speed</p>
+          <p className="text-[11px] font-black mono" style={{ color: "#a855f7" }}>{PLAN_SHORT[customer.service_plan] || "—"}</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "rgba(216,180,254,0.4)" }}>Speed</p>
         </div>
         <div className="text-center">
           <p className="text-[11px] font-black mono" style={{ color: "#06b6d4" }}>R{customer.monthly_rate?.toFixed(0) || "—"}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5">/ month</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "rgba(216,180,254,0.4)" }}>/ month</p>
         </div>
         <div className="text-center">
           <p className="text-[11px] font-black">{CONN_ICON[customer.connection_type] || "—"}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5 capitalize">{customer.connection_type || "—"}</p>
+          <p className="text-[9px] mt-0.5 capitalize" style={{ color: "rgba(216,180,254,0.4)" }}>{customer.connection_type || "—"}</p>
         </div>
       </div>
 
@@ -147,17 +145,17 @@ function CustomerRow({ customer, onClick }) {
 
       {/* Name + email */}
       <div className="min-w-0 flex-1">
-        <p className="font-bold text-slate-800 text-[13px] truncate">{customer.full_name}</p>
-        <p className="text-[11px] text-slate-400 mono truncate">{customer.email}</p>
+        <p className="font-bold text-[13px] truncate" style={{ color: "#e9d5ff" }}>{customer.full_name}</p>
+        <p className="text-[11px] mono truncate" style={{ color: "rgba(216,180,254,0.5)" }}>{customer.email}</p>
       </div>
 
       {/* Account */}
-      <p className="hidden md:block text-[11px] mono text-slate-400 w-24 truncate flex-shrink-0">{customer.account_number || "—"}</p>
+      <p className="hidden md:block text-[11px] mono w-24 truncate flex-shrink-0" style={{ color: "rgba(216,180,254,0.45)" }}>{customer.account_number || "—"}</p>
 
       {/* Plan */}
       <div className="hidden lg:flex items-center gap-1.5 w-32 flex-shrink-0">
-        <Wifi className="w-3 h-3 text-indigo-400 flex-shrink-0" />
-        <span className="text-[11px] text-slate-600 truncate">{PLAN_SHORT[customer.service_plan] || "—"}</span>
+        <Wifi className="w-3 h-3 flex-shrink-0" style={{ color: "#a855f7" }} />
+          <span className="text-[11px] truncate" style={{ color: "rgba(216,180,254,0.65)" }}>{PLAN_SHORT[customer.service_plan] || "—"}</span>
       </div>
 
       {/* Connection */}
@@ -247,13 +245,13 @@ export default function Customers() {
   };
 
   return (
-    <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+    <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto relative">
 
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#1e293b" }}>Customer Management</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0ebff", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(168,85,247,0.5)" }}>
             {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active
           </p>
         </div>
@@ -305,7 +303,7 @@ export default function Customers() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             className="w-full pl-10 pr-4 py-2.5 text-[13px] outline-none transition-all rounded-xl"
-            style={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(99,102,241,0.15)", color: "#1e293b" }}
+            style={{ background: "rgba(14,11,26,0.92)", border: "1px solid rgba(168,85,247,0.2)", color: "#e9d5ff" }}
             placeholder="Search by name, email, account number…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -324,10 +322,10 @@ export default function Customers() {
               <button key={s} onClick={() => setStatusFilter(s)}
                 className="px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all"
                 style={{
-                  background: active ? (cfg ? cfg.bg : "rgba(99,102,241,0.12)") : "rgba(255,255,255,0.8)",
-                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(99,102,241,0.35)"}` : "1px solid rgba(99,102,241,0.1)",
-                  color: active ? (cfg ? cfg.color : "#6366f1") : "#94a3b8",
-                  boxShadow: active ? `0 0 12px ${cfg ? cfg.color + "20" : "rgba(99,102,241,0.1)"}` : "none",
+                  background: active ? (cfg ? cfg.bg : "rgba(168,85,247,0.12)") : "rgba(14,11,26,0.85)",
+                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(168,85,247,0.4)"}` : "1px solid rgba(168,85,247,0.15)",
+                  color: active ? (cfg ? cfg.color : "#c084fc") : "rgba(216,180,254,0.5)",
+                  boxShadow: active ? `0 0 12px ${cfg ? cfg.color + "25" : "rgba(168,85,247,0.2)"}` : "none",
                 }}>
                 {cfg && active && <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ background: cfg.color }} />}
                 {s === "all" ? "All" : s}
@@ -361,13 +359,13 @@ export default function Customers() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 rounded-2xl"
-          style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          style={{ background: "rgba(14,11,26,0.92)", border: "1px solid rgba(168,85,247,0.15)" }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
             style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.15)" }}>
             <Users className="w-7 h-7" style={{ color: "#6366f1" }} />
           </div>
-          <p className="text-slate-500 font-semibold text-sm">No customers found</p>
-          <p className="text-slate-400 text-xs mt-1">Try adjusting your search or filter</p>
+          <p className="font-semibold text-sm" style={{ color: "rgba(216,180,254,0.6)" }}>No customers found</p>
+          <p className="text-xs mt-1" style={{ color: "rgba(168,85,247,0.4)" }}>Try adjusting your search or filter</p>
           {isAdmin && (
             <button onClick={() => setShowOnboarding(true)}
               className="mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
@@ -383,23 +381,24 @@ export default function Customers() {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(14,11,26,0.94)", border: "1px solid rgba(168,85,247,0.2)", boxShadow: "0 2px 16px rgba(168,85,247,0.1)" }}>
+          <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)" }} />
           {/* List header */}
-          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "#f8f9ff", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
+          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(168,85,247,0.05)", borderBottom: "1px solid rgba(168,85,247,0.1)" }}>
             <div className="w-9 flex-shrink-0" />
-            <p className="flex-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Customer</p>
-            <p className="hidden md:block w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Account</p>
-            <p className="hidden lg:block w-32 text-[10px] font-bold uppercase tracking-widest text-slate-400">Plan</p>
-            <p className="hidden xl:block w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Connect.</p>
-            <p className="hidden sm:block w-20 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Rate</p>
-            <p className="w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</p>
+            <p className="flex-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#6ee7b7" }}>Customer</p>
+            <p className="hidden md:block w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#6ee7b7" }}>Account</p>
+            <p className="hidden lg:block w-32 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#6ee7b7" }}>Plan</p>
+            <p className="hidden xl:block w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#6ee7b7" }}>Connect.</p>
+            <p className="hidden sm:block w-20 text-right text-[10px] font-bold uppercase tracking-widest" style={{ color: "#6ee7b7" }}>Rate</p>
+            <p className="w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#6ee7b7" }}>Status</p>
             <div className="w-4" />
           </div>
           {filtered.map(c => (
             <CustomerRow key={c.id} customer={c} onClick={setSelected} />
           ))}
-          <div className="px-5 py-2.5" style={{ background: "#f8f9ff", borderTop: "1px solid rgba(99,102,241,0.06)" }}>
-            <p className="text-[11px] mono" style={{ color: "rgba(100,116,139,0.5)" }}>
+          <div className="px-5 py-2.5" style={{ background: "rgba(168,85,247,0.04)", borderTop: "1px solid rgba(168,85,247,0.08)" }}>
+            <p className="text-[11px] mono" style={{ color: "rgba(216,180,254,0.45)" }}>
               {filtered.length} of {customers.length} customers
             </p>
           </div>
