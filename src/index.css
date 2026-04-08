@@ -336,7 +336,23 @@ p, span, label, td, th, li {
   0%, 100% { box-shadow: 0 0 10px rgba(232, 121, 249, 0.5); }
   50%       { box-shadow: 0 0 24px rgba(232, 121, 249, 0.9); }
 }
-.glow-pulse-pink { animation: glow-pulse-pink 2.5s ease-in-out infinite; }
+.glow-pulse-pink  { animation: glow-pulse-pink  2.5s ease-in-out infinite; }
+
+@keyframes glow-pulse-green {
+  0%, 100% { box-shadow: 0 0 10px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.2); }
+  50%       { box-shadow: 0 0 24px rgba(16,185,129,0.9), 0 0 48px rgba(16,185,129,0.4); }
+}
+.glow-pulse-green { animation: glow-pulse-green 2.5s ease-in-out infinite; }
+
+/* ─── Network grid overlay ───────────────────────────────── */
+.network-grid {
+  background-image:
+    radial-gradient(ellipse at 30% 60%, rgba(16,185,129,0.09) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 30%, rgba(52,211,153,0.07) 0%, transparent 40%),
+    linear-gradient(rgba(16,185,129,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16,185,129,0.025) 1px, transparent 1px);
+  background-size: auto, auto, 40px 40px, 40px 40px;
+}
 
 /* ─── Fade-in utility ────────────────────────────────────── */
 @keyframes fade-up {

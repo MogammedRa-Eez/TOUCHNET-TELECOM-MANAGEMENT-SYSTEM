@@ -89,6 +89,8 @@ module.exports = {
         'red-sm':      '0 2px 12px rgba(220,38,38,0.15)',
         'red-glow':    '0 0 24px rgba(220,38,38,0.55)',
         'pink-glow':   '0 0 24px rgba(232,121,249,0.55)',
+        'green-sm':    '0 2px 12px rgba(16,185,129,0.15)',
+        'green-glow':  '0 0 24px rgba(16,185,129,0.6)',
         /* legacy aliases pointing to purple */
         'blue-sm':     '0 2px 12px rgba(168,85,247,0.15)',
         'blue-md':     '0 4px 24px rgba(168,85,247,0.22)',
@@ -120,6 +122,10 @@ module.exports = {
           '0%, 100%': { boxShadow: '0 0 10px rgba(232,121,249,0.5)' },
           '50%':      { boxShadow: '0 0 24px rgba(232,121,249,0.9)' },
         },
+        'glow-pulse-green': {
+          '0%, 100%': { boxShadow: '0 0 10px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.2)' },
+          '50%':      { boxShadow: '0 0 24px rgba(16,185,129,0.9), 0 0 48px rgba(16,185,129,0.4)' },
+        },
       },
       animation: {
         'accordion-down':   'accordion-down 0.2s ease-out',
@@ -127,6 +133,7 @@ module.exports = {
         'glow-pulse':       'glow-pulse 2.5s ease-in-out infinite',
         'glow-pulse-red':   'glow-pulse-red 2.5s ease-in-out infinite',
         'glow-pulse-pink':  'glow-pulse-pink 2.5s ease-in-out infinite',
+        'glow-pulse-green': 'glow-pulse-green 2.5s ease-in-out infinite',
       },
     },
   },

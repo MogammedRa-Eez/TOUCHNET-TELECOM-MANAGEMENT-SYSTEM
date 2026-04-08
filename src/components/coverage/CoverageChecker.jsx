@@ -84,10 +84,10 @@ const PROVIDERS = {
 };
 
 const MAP_STYLES = {
-  dark_blue: { label: "Dark",      icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                              attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                             attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                                   attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",              attribution: "Tiles &copy; Esri" },
+  dark_blue: { label: "Dark",      icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                         attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                        attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                              attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",         attribution: "Tiles &copy; Esri" },
 };
 
 const haversineDistance = (lat1, lng1, lat2, lng2) => {
@@ -168,10 +168,8 @@ export default function CoverageChecker({ onClose }) {
           height: "88vh", maxHeight: 680,
         }}>
 
-        {/* Neon prismatic top line — green + purple + red */}
         <div className="h-[2px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)", boxShadow: "0 0 14px rgba(16,185,129,0.5)" }} />
 
-        {/* Ambient orbs */}
         <div style={{ position: "absolute", top: -80, right: -80, width: 260, height: 260, background: "radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
         <div style={{ position: "absolute", bottom: -60, left: -60, width: 200, height: 200, background: "radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
@@ -254,7 +252,7 @@ export default function CoverageChecker({ onClose }) {
               </div>
             )}
 
-            {/* Map style switcher */}
+            {/* Map style */}
             <div className="p-3" style={{ borderBottom: "1px solid rgba(16,185,129,0.1)" }}>
               <p className="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: "rgba(110,231,183,0.6)" }}>Map View</p>
               <div className="grid grid-cols-2 gap-1">
@@ -347,7 +345,7 @@ export default function CoverageChecker({ onClose }) {
 
             {results.length > 0 && (
               <div className="absolute bottom-10 right-3 z-[999] rounded-xl px-3 py-2"
-                style={{ background: "rgba(10,13,21,0.97)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.4)" : "rgba(220,38,38,0.35)"}`, backdropFilter: "blur(12px)", boxShadow: `0 4px 20px ${available.length > 0 ? "rgba(16,185,129,0.2)" : "rgba(220,38,38,0.2)"}` }}>
+                style={{ background: "rgba(10,13,21,0.97)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.4)" : "rgba(220,38,38,0.35)"}`, backdropFilter: "blur(12px)" }}>
                 <div className="flex items-center gap-2">
                   {available.length > 0
                     ? <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#10b981" }} />
@@ -368,14 +366,14 @@ export default function CoverageChecker({ onClose }) {
           style={{ background: "rgba(8,5,16,0.97)", backdropFilter: "blur(24px)" }}>
           <div className="w-full max-w-3xl max-h-[85vh] rounded-3xl overflow-hidden flex flex-col"
             style={{ background: "linear-gradient(160deg,#0a0d15,#0e0a1e)", border: "1px solid rgba(16,185,129,0.25)", boxShadow: "0 32px 80px rgba(16,185,129,0.15)" }}>
-            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)", boxShadow: "0 0 12px rgba(16,185,129,0.5)" }} />
+            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)" }} />
             <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
               style={{ borderBottom: "1px solid rgba(16,185,129,0.15)" }}>
               <div className="flex items-center gap-3">
                 <BarChart3 className="w-5 h-5" style={{ color: "#10b981" }} />
                 <div>
                   <h3 className="text-[15px] font-black" style={{ color: "#6ee7b7" }}>Plan Comparison</h3>
-                  <p className="text-[10px]" style={{ color: "rgba(110,231,183,0.5)" }}>{available.length} providers available at your address</p>
+                  <p className="text-[10px]" style={{ color: "rgba(110,231,183,0.5)" }}>{available.length} providers available</p>
                 </div>
               </div>
               <button onClick={() => setShowCompare(false)} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10">
