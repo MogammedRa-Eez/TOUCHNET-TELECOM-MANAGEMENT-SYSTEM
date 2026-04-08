@@ -95,8 +95,8 @@ function CustomerCard({ customer, onClick }) {
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-bold text-slate-800 text-[13px] truncate">{customer.full_name}</p>
-          <p className="text-[10px] mono text-slate-400 truncate">{customer.email}</p>
+          <p className="font-bold text-[13px] truncate" style={{ color: "#e8d5ff" }}>{customer.full_name}</p>
+          <p className="text-[10px] mono truncate" style={{ color: "rgba(196,181,253,0.5)" }}>{customer.email}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color, boxShadow: `0 0 4px ${sc.color}` }} />
             <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
@@ -105,18 +105,18 @@ function CustomerCard({ customer, onClick }) {
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(99,102,241,0.07)" }}>
+      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(139,92,246,0.12)" }}>
         <div className="text-center">
-          <p className="text-[11px] font-black mono text-indigo-600">{PLAN_SHORT[customer.service_plan] || "—"}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5">Speed</p>
+          <p className="text-[11px] font-black mono" style={{ color: "#a78bfa" }}>{PLAN_SHORT[customer.service_plan] || "—"}</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "rgba(196,181,253,0.4)" }}>Speed</p>
         </div>
         <div className="text-center">
           <p className="text-[11px] font-black mono" style={{ color: "#06b6d4" }}>R{customer.monthly_rate?.toFixed(0) || "—"}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5">/ month</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "rgba(196,181,253,0.4)" }}>/ month</p>
         </div>
         <div className="text-center">
           <p className="text-[11px] font-black">{CONN_ICON[customer.connection_type] || "—"}</p>
-          <p className="text-[9px] text-slate-400 mt-0.5 capitalize">{customer.connection_type || "—"}</p>
+          <p className="text-[9px] mt-0.5 capitalize" style={{ color: "rgba(196,181,253,0.4)" }}>{customer.connection_type || "—"}</p>
         </div>
       </div>
 
@@ -147,22 +147,22 @@ function CustomerRow({ customer, onClick }) {
 
       {/* Name + email */}
       <div className="min-w-0 flex-1">
-        <p className="font-bold text-slate-800 text-[13px] truncate">{customer.full_name}</p>
-        <p className="text-[11px] text-slate-400 mono truncate">{customer.email}</p>
+        <p className="font-bold text-[13px] truncate" style={{ color: "#e8d5ff" }}>{customer.full_name}</p>
+        <p className="text-[11px] mono truncate" style={{ color: "rgba(196,181,253,0.5)" }}>{customer.email}</p>
       </div>
 
       {/* Account */}
-      <p className="hidden md:block text-[11px] mono text-slate-400 w-24 truncate flex-shrink-0">{customer.account_number || "—"}</p>
+      <p className="hidden md:block text-[11px] mono w-24 truncate flex-shrink-0" style={{ color: "rgba(196,181,253,0.45)" }}>{customer.account_number || "—"}</p>
 
       {/* Plan */}
       <div className="hidden lg:flex items-center gap-1.5 w-32 flex-shrink-0">
-        <Wifi className="w-3 h-3 text-indigo-400 flex-shrink-0" />
-        <span className="text-[11px] text-slate-600 truncate">{PLAN_SHORT[customer.service_plan] || "—"}</span>
+        <Wifi className="w-3 h-3 flex-shrink-0" style={{ color: "#a78bfa" }} />
+        <span className="text-[11px] truncate" style={{ color: "#c4b5fd" }}>{PLAN_SHORT[customer.service_plan] || "—"}</span>
       </div>
 
       {/* Connection */}
       <div className="hidden xl:block w-24 flex-shrink-0">
-        <span className="text-[12px]">{CONN_ICON[customer.connection_type] || ""} <span className="text-slate-500 capitalize text-[11px]">{customer.connection_type || "—"}</span></span>
+        <span className="text-[12px]">{CONN_ICON[customer.connection_type] || ""} <span className="capitalize text-[11px]" style={{ color: "rgba(196,181,253,0.55)" }}>{customer.connection_type || "—"}</span></span>
       </div>
 
       {/* Rate */}
@@ -361,13 +361,13 @@ export default function Customers() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 rounded-2xl"
-          style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          style={{ background: "rgba(10,6,24,0.95)", border: "1px solid rgba(139,92,246,0.18)" }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-            style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.15)" }}>
-            <Users className="w-7 h-7" style={{ color: "#6366f1" }} />
+            style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)" }}>
+            <Users className="w-7 h-7" style={{ color: "#a78bfa" }} />
           </div>
-          <p className="text-slate-500 font-semibold text-sm">No customers found</p>
-          <p className="text-slate-400 text-xs mt-1">Try adjusting your search or filter</p>
+          <p className="font-semibold text-sm" style={{ color: "#c4b5fd" }}>No customers found</p>
+          <p className="text-xs mt-1" style={{ color: "rgba(196,181,253,0.45)" }}>Try adjusting your search or filter</p>
           {isAdmin && (
             <button onClick={() => setShowOnboarding(true)}
               className="mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
@@ -387,12 +387,12 @@ export default function Customers() {
           {/* List header */}
           <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(139,92,246,0.09)", borderBottom: "1px solid rgba(139,92,246,0.15)" }}>
             <div className="w-9 flex-shrink-0" />
-            <p className="flex-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Customer</p>
-            <p className="hidden md:block w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Account</p>
-            <p className="hidden lg:block w-32 text-[10px] font-bold uppercase tracking-widest text-slate-400">Plan</p>
-            <p className="hidden xl:block w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Connect.</p>
-            <p className="hidden sm:block w-20 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Rate</p>
-            <p className="w-24 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</p>
+            <p className="flex-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Customer</p>
+            <p className="hidden md:block w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Account</p>
+            <p className="hidden lg:block w-32 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Plan</p>
+            <p className="hidden xl:block w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Connect.</p>
+            <p className="hidden sm:block w-20 text-right text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Rate</p>
+            <p className="w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Status</p>
             <div className="w-4" />
           </div>
           {filtered.map(c => (

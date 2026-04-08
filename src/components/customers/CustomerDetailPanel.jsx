@@ -31,7 +31,7 @@ function StatPill({ label, value, color }) {
     <div className="flex flex-col items-center justify-center rounded-xl py-3 px-2"
       style={{ background: `${color}10`, border: `1px solid ${color}25` }}>
       <span className="text-lg font-black mono" style={{ color }}>{value}</span>
-      <span className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: "rgba(100,116,139,0.7)" }}>{label}</span>
+      <span className="text-[9px] uppercase tracking-wider mt-0.5" style={{ color: "rgba(196,181,253,0.5)" }}>{label}</span>
     </div>
   );
 }
