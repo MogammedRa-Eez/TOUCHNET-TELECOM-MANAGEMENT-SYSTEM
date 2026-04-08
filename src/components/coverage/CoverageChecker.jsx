@@ -84,10 +84,10 @@ const PROVIDERS = {
 };
 
 const MAP_STYLES = {
-  dark_blue: { label: "Dark",      icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                        attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                       attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                             attribution: "&copy; OpenStreetMap &copy; CARTO" },
-  satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",        attribution: "Tiles &copy; Esri" },
+  dark_blue: { label: "Dark",      icon: "🌌", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",                                 attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  light:     { label: "Light",     icon: "☀️", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",                                attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  voyager:   { label: "Street",    icon: "🗺️", url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",                      attribution: "&copy; OpenStreetMap &copy; CARTO" },
+  satellite: { label: "Satellite", icon: "🛰️", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", attribution: "Tiles &copy; Esri" },
 };
 
 const haversineDistance = (lat1, lng1, lat2, lng2) => {
@@ -278,8 +278,12 @@ export default function CoverageChecker({ onClose }) {
                   <button key={p.id} onClick={() => toggleProvider(p.id)}
                     className="w-full flex items-center gap-2 px-2 py-2 rounded-xl transition-all"
                     style={{ background: activeProviders.includes(p.id) ? `${p.color}10` : "transparent", border: `1px solid ${activeProviders.includes(p.id) ? p.color + "30" : "rgba(255,255,255,0.04)"}` }}>
-                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                      style={{ background: activeProviders.includes(p.id) ? p.color : "#1f2937", border: `1.5px solid ${p.color}`, boxShadow: activeProviders.includes(p.id) ? `0 0 10px ${p.glowColor}` : "none" }} />
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all"
+                      style={{
+                        background: activeProviders.includes(p.id) ? p.color : "#1f2937",
+                        border: `1.5px solid ${p.color}`,
+                        boxShadow: activeProviders.includes(p.id) ? `0 0 10px ${p.glowColor}` : "none",
+                      }} />
                     <span className="text-[11px] font-bold" style={{ color: activeProviders.includes(p.id) ? "#d8b4fe" : "#4b5563" }}>
                       {p.logo} {p.name}
                     </span>
