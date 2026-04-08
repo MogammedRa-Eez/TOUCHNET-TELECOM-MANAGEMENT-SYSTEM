@@ -14,7 +14,7 @@ L.Icon.Default.mergeOptions({
 
 const PROVIDERS = {
   touchnet: {
-    id: "touchnet", name: "TouchNet", color: "#a855f7", logo: "🔮", glowColor: "rgba(168,85,247,0.4)",
+    id: "touchnet", name: "TouchNet", color: "#10b981", logo: "🔮", glowColor: "rgba(16,185,129,0.4)",
     zones: [
       { lat: -26.1041, lng: 28.1073, label: "Sandton",       radius: 10000 },
       { lat: -26.0274, lng: 28.1527, label: "Fourways",      radius: 9000  },
@@ -68,7 +68,7 @@ const PROVIDERS = {
     ],
   },
   frogfoot: {
-    id: "frogfoot", name: "Frogfoot", color: "#10b981", logo: "🐸", glowColor: "rgba(16,185,129,0.35)",
+    id: "frogfoot", name: "Frogfoot", color: "#a855f7", logo: "🐸", glowColor: "rgba(168,85,247,0.35)",
     zones: [
       { lat: -26.0274, lng: 28.1527, label: "Northriding",  radius: 7000 },
       { lat: -25.9025, lng: 28.4211, label: "Kempton Park", radius: 7500 },
@@ -158,20 +158,17 @@ export default function CoverageChecker({ onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
-      style={{ background: "rgba(8,5,16,0.95)", backdropFilter: "blur(20px)" }}>
+      style={{ background: "rgba(4,13,9,0.96)", backdropFilter: "blur(20px)" }}>
 
       <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden flex flex-col"
         style={{
-          background: "linear-gradient(160deg,#0a0d15 0%,#0e0a1e 100%)",
-          border: "1px solid rgba(16,185,129,0.25)",
-          boxShadow: "0 32px 80px rgba(16,185,129,0.15), 0 0 0 1px rgba(168,85,247,0.1)",
+          background: "linear-gradient(160deg,#040d0a 0%,#061410 100%)",
+          border: "1px solid rgba(16,185,129,0.3)",
+          boxShadow: "0 32px 80px rgba(16,185,129,0.18), 0 0 0 1px rgba(52,211,153,0.08)",
           height: "88vh", maxHeight: 680,
         }}>
 
-        <div className="h-[2px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)", boxShadow: "0 0 14px rgba(16,185,129,0.5)" }} />
-
-        <div style={{ position: "absolute", top: -80, right: -80, width: 260, height: 260, background: "radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-        <div style={{ position: "absolute", bottom: -60, left: -60, width: 200, height: 200, background: "radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+        <div className="h-[2px] flex-shrink-0" style={{ background: "linear-gradient(90deg,#059669,#10b981,#34d399,#6ee7b7,#a855f7,#10b981,#059669)", boxShadow: "0 0 16px rgba(16,185,129,0.7)" }} />
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 flex-shrink-0 relative z-10"
@@ -183,13 +180,13 @@ export default function CoverageChecker({ onClose }) {
             </div>
             <div>
               <h2 className="text-[15px] font-black" style={{ color: "#6ee7b7" }}>Coverage Intelligence Map</h2>
-              <p className="text-[10px]" style={{ color: "rgba(110,231,183,0.5)", fontFamily: "monospace" }}>
+              <p className="text-[10px] mono" style={{ color: "rgba(110,231,183,0.5)" }}>
                 {Object.keys(PROVIDERS).length} providers · Real-time check
               </p>
             </div>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all"
-            style={{ border: "1px solid rgba(16,185,129,0.25)" }}>
+            style={{ border: "1px solid rgba(16,185,129,0.3)" }}>
             <X className="w-4 h-4" style={{ color: "#6ee7b7" }} />
           </button>
         </div>
@@ -197,7 +194,7 @@ export default function CoverageChecker({ onClose }) {
         <div className="flex flex-1 overflow-hidden relative z-10">
           {/* Sidebar */}
           <div className="w-56 flex-shrink-0 flex flex-col overflow-y-auto"
-            style={{ borderRight: "1px solid rgba(16,185,129,0.12)", background: "rgba(8,5,16,0.92)" }}>
+            style={{ borderRight: "1px solid rgba(16,185,129,0.12)", background: "rgba(4,13,9,0.95)" }}>
 
             {/* Search */}
             <div className="p-3" style={{ borderBottom: "1px solid rgba(16,185,129,0.1)" }}>
@@ -206,11 +203,11 @@ export default function CoverageChecker({ onClose }) {
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#10b981" }} />
                   <input value={address} onChange={e => setAddress(e.target.value)} placeholder="Enter address…"
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl text-[12px] outline-none"
-                    style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.25)", color: "#e9d5ff" }} />
+                    style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.3)", color: "#d1fae5" }} />
                 </div>
                 <button type="submit" disabled={searching || !address.trim()}
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-black text-white transition-all hover:scale-[1.02] disabled:opacity-50"
-                  style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 18px rgba(16,185,129,0.4)" }}>
+                  style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 18px rgba(16,185,129,0.45)" }}>
                   {searching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
                   {searching ? "Scanning…" : "Check Coverage"}
                 </button>
@@ -227,7 +224,7 @@ export default function CoverageChecker({ onClose }) {
                     style={{ background: covered ? `${provider.color}12` : "rgba(255,255,255,0.02)", border: `1px solid ${covered ? provider.color + "35" : "rgba(255,255,255,0.05)"}` }}>
                     <span className="text-base">{provider.logo}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] font-bold truncate" style={{ color: covered ? "#e9d5ff" : "#4b5563" }}>{provider.name}</p>
+                      <p className="text-[11px] font-bold truncate" style={{ color: covered ? "#d1fae5" : "#4b5563" }}>{provider.name}</p>
                       {covered && <p className="text-[9px]" style={{ color: provider.color }}>✓ {zone?.label}</p>}
                     </div>
                     {covered
@@ -238,14 +235,14 @@ export default function CoverageChecker({ onClose }) {
                 {available.length > 1 && (
                   <button onClick={() => setShowCompare(true)}
                     className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-black text-white transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 16px rgba(168,85,247,0.4)" }}>
+                    style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 16px rgba(16,185,129,0.4)" }}>
                     <BarChart3 className="w-3.5 h-3.5" /> Compare Plans
                   </button>
                 )}
                 {available.some(r => r.provider.id === "touchnet") && (
                   <a href="/CoverageCheck"
                     className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-black text-white transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg,#059669,#10b981)", boxShadow: "0 4px 16px rgba(16,185,129,0.4)", textDecoration: "none", display: "flex" }}>
+                    style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 16px rgba(168,85,247,0.4)", textDecoration: "none", display: "flex" }}>
                     <Zap className="w-3.5 h-3.5" /> Sign Up Now
                   </a>
                 )}
@@ -260,8 +257,8 @@ export default function CoverageChecker({ onClose }) {
                   <button key={key} onClick={() => setMapStyle(key)}
                     className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-all"
                     style={{
-                      background: mapStyle === key ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.02)",
-                      border: `1px solid ${mapStyle === key ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.05)"}`,
+                      background: mapStyle === key ? "rgba(16,185,129,0.18)" : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${mapStyle === key ? "rgba(16,185,129,0.45)" : "rgba(255,255,255,0.05)"}`,
                       color: mapStyle === key ? "#6ee7b7" : "#4b5563",
                     }}>
                     <span>{style.icon}</span> {style.label}
@@ -284,7 +281,7 @@ export default function CoverageChecker({ onClose }) {
                         border: `1.5px solid ${p.color}`,
                         boxShadow: activeProviders.includes(p.id) ? `0 0 10px ${p.glowColor}` : "none",
                       }} />
-                    <span className="text-[11px] font-bold" style={{ color: activeProviders.includes(p.id) ? "#d8b4fe" : "#4b5563" }}>
+                    <span className="text-[11px] font-bold" style={{ color: activeProviders.includes(p.id) ? "#d1fae5" : "#4b5563" }}>
                       {p.logo} {p.name}
                     </span>
                   </button>
@@ -349,7 +346,7 @@ export default function CoverageChecker({ onClose }) {
 
             {results.length > 0 && (
               <div className="absolute bottom-10 right-3 z-[999] rounded-xl px-3 py-2"
-                style={{ background: "rgba(10,13,21,0.97)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.4)" : "rgba(220,38,38,0.35)"}`, backdropFilter: "blur(12px)" }}>
+                style={{ background: "rgba(4,13,9,0.97)", border: `1px solid ${available.length > 0 ? "rgba(16,185,129,0.45)" : "rgba(220,38,38,0.35)"}`, backdropFilter: "blur(12px)" }}>
                 <div className="flex items-center gap-2">
                   {available.length > 0
                     ? <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#10b981" }} />
@@ -367,17 +364,17 @@ export default function CoverageChecker({ onClose }) {
       {/* Comparison modal */}
       {showCompare && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-          style={{ background: "rgba(8,5,16,0.97)", backdropFilter: "blur(24px)" }}>
+          style={{ background: "rgba(4,13,9,0.97)", backdropFilter: "blur(24px)" }}>
           <div className="w-full max-w-3xl max-h-[85vh] rounded-3xl overflow-hidden flex flex-col"
-            style={{ background: "linear-gradient(160deg,#0a0d15,#0e0a1e)", border: "1px solid rgba(16,185,129,0.25)", boxShadow: "0 32px 80px rgba(16,185,129,0.15)" }}>
-            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#10b981,#34d399,#a855f7,#e879f9,#dc2626,transparent)" }} />
+            style={{ background: "linear-gradient(160deg,#040d0a,#061410)", border: "1px solid rgba(16,185,129,0.3)", boxShadow: "0 32px 80px rgba(16,185,129,0.18)" }}>
+            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#059669,#10b981,#34d399,#a855f7,#c084fc,transparent)" }} />
             <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
               style={{ borderBottom: "1px solid rgba(16,185,129,0.15)" }}>
               <div className="flex items-center gap-3">
                 <BarChart3 className="w-5 h-5" style={{ color: "#10b981" }} />
                 <div>
                   <h3 className="text-[15px] font-black" style={{ color: "#6ee7b7" }}>Plan Comparison</h3>
-                  <p className="text-[10px]" style={{ color: "rgba(110,231,183,0.5)" }}>{available.length} providers available</p>
+                  <p className="text-[10px] mono" style={{ color: "rgba(110,231,183,0.5)" }}>{available.length} providers available</p>
                 </div>
               </div>
               <button onClick={() => setShowCompare(false)} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10">
@@ -390,7 +387,7 @@ export default function CoverageChecker({ onClose }) {
                   <tr>
                     {["Provider", "Plan", "Download", "Price/mo", "Value"].map(h => (
                       <th key={h} className="px-3 py-2.5 text-[9px] font-black uppercase tracking-wider"
-                        style={{ color: "rgba(110,231,183,0.7)", borderBottom: "1px solid rgba(16,185,129,0.15)" }}>{h}</th>
+                        style={{ color: "#34d399", borderBottom: "1px solid rgba(16,185,129,0.2)" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -399,7 +396,7 @@ export default function CoverageChecker({ onClose }) {
                     provider.plans.map((plan, pi) => {
                       const vs = Math.round((parseInt(plan.speed) / plan.price) * 100);
                       return (
-                        <tr key={`${provider.id}-${pi}`} style={{ borderBottom: "1px solid rgba(16,185,129,0.06)" }}
+                        <tr key={`${provider.id}-${pi}`} style={{ borderBottom: "1px solid rgba(16,185,129,0.07)" }}
                           className="transition-all hover:bg-white/[0.02]">
                           <td className="px-3 py-2.5">
                             <div className="flex items-center gap-1.5">
@@ -407,8 +404,8 @@ export default function CoverageChecker({ onClose }) {
                               <span className="text-[11px] font-bold" style={{ color: provider.color }}>{provider.name}</span>
                             </div>
                           </td>
-                          <td className="px-3 py-2.5 text-[12px] font-bold" style={{ color: "rgba(216,180,254,0.7)" }}>{plan.label}</td>
-                          <td className="px-3 py-2.5 text-[13px] font-black mono" style={{ color: "#e9d5ff" }}>{plan.speed}</td>
+                          <td className="px-3 py-2.5 text-[12px] font-bold" style={{ color: "#a7f3d0" }}>{plan.label}</td>
+                          <td className="px-3 py-2.5 text-[13px] font-black mono" style={{ color: "#d1fae5" }}>{plan.speed}</td>
                           <td className="px-3 py-2.5 text-[14px] font-black" style={{ color: provider.color }}>R{plan.price}</td>
                           <td className="px-3 py-2.5">
                             <div className="w-12 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
