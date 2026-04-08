@@ -39,7 +39,7 @@ function KPICard({ label, count, color, icon: Icon, onClick, active }) {
     <button onClick={onClick}
       className="relative overflow-hidden rounded-2xl px-4 py-4 text-left w-full transition-all hover:scale-[1.02] active:scale-[0.98]"
       style={{
-        background: active ? `${color}12` : "rgba(14,11,26,0.92)",
+        background: active ? `${color}0f` : "#ffffff",
         border: `1px solid ${active ? color + "40" : color + "18"}`,
         boxShadow: active ? `0 4px 20px ${color}18, 0 0 0 2px ${color}20` : "0 1px 8px rgba(99,102,241,0.06)",
       }}>
@@ -49,7 +49,7 @@ function KPICard({ label, count, color, icon: Icon, onClick, active }) {
         style={{ background: `radial-gradient(circle, ${color}12, transparent 70%)` }} />
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(216,180,254,0.5)" }}>{label}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(100,116,139,0.5)" }}>{label}</p>
           <p className="text-3xl font-black mono" style={{ color }}>{count}</p>
         </div>
         <div className="w-9 h-9 rounded-xl flex items-center justify-center"
@@ -96,8 +96,8 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
 
         {/* Subject + customer */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold truncate" style={{ color: "#e9d5ff" }}>{ticket.subject}</p>
-          <p className="text-[10px] truncate" style={{ color: "rgba(216,180,254,0.5)" }}>{ticket.customer_name || "No customer"} · {ticket.category?.replace(/_/g," ")}</p>
+          <p className="text-[13px] font-bold text-slate-800 truncate">{ticket.subject}</p>
+          <p className="text-[10px] text-slate-400 truncate">{ticket.customer_name || "No customer"} · {ticket.category?.replace(/_/g," ")}</p>
         </div>
 
         {/* Priority */}
@@ -114,7 +114,7 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
         </span>
 
         {/* Dept */}
-        <p className="hidden lg:block w-24 text-[11px] capitalize flex-shrink-0" style={{ color: "rgba(216,180,254,0.5)" }}>
+        <p className="hidden lg:block w-24 text-[11px] text-slate-400 capitalize flex-shrink-0">
           {ticket.department?.replace(/_/g," ") || "—"}
         </p>
 
@@ -164,12 +164,12 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
 
           {ticket.description && (
             <div className="rounded-xl px-4 py-3"
-              style={{ background: "rgba(14,11,26,0.85)", border: `1px solid ${sc.color}20` }}>
+              style={{ background: "rgba(255,255,255,0.8)", border: "1px solid rgba(99,102,241,0.08)" }}>
               <div className="flex items-center gap-1.5 mb-1">
                 <MessageSquare className="w-3 h-3" style={{ color: sc.color }} />
-                <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: "rgba(110,231,183,0.55)" }}>Description</p>
+                <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: "rgba(100,116,139,0.5)" }}>Description</p>
               </div>
-              <p className="text-[12px] leading-relaxed" style={{ color: "rgba(216,180,254,0.75)" }}>{ticket.description}</p>
+              <p className="text-[12px] text-slate-600 leading-relaxed">{ticket.description}</p>
             </div>
           )}
 
@@ -266,8 +266,8 @@ export default function Tickets() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0ebff", fontFamily: "'Space Grotesk',sans-serif" }}>Support Tickets</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(168,85,247,0.5)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f172a" }}>Support Tickets</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
             {visibleTickets.length} tickets · {visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length} open
             {criticalCount > 0 && <span className="ml-1 text-red-500 font-bold">· {criticalCount} critical</span>}
           </p>
@@ -331,7 +331,7 @@ export default function Tickets() {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             className="w-full pl-10 pr-8 py-2.5 text-[13px] outline-none rounded-xl"
-            style={{ background: "rgba(14,11,26,0.92)", border: "1px solid rgba(168,85,247,0.2)", color: "#e9d5ff" }}
+            style={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(99,102,241,0.15)", color: "#1e293b" }}
             placeholder="Search by subject, customer, ticket number…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -351,9 +351,9 @@ export default function Tickets() {
               <button key={p} onClick={() => setPriorityFilter(p)}
                 className="px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all hover:scale-105"
                 style={{
-                  background: active ? (cfg ? cfg.bg : "rgba(168,85,247,0.1)") : "rgba(14,11,26,0.85)",
-                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(168,85,247,0.35)"}` : "1px solid rgba(168,85,247,0.15)",
-                  color: active ? (cfg ? cfg.color : "#c084fc") : "rgba(216,180,254,0.5)",
+                  background: active ? (cfg ? cfg.bg : "rgba(99,102,241,0.1)") : "rgba(255,255,255,0.9)",
+                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(99,102,241,0.3)"}` : "1px solid rgba(99,102,241,0.1)",
+                  color: active ? (cfg ? cfg.color : "#6366f1") : "#94a3b8",
                 }}>
                 {p === "all" ? "All Priority" : p}
                 <span className="ml-1 opacity-50 font-normal">({cnt})</span>
@@ -366,22 +366,22 @@ export default function Tickets() {
       {/* ── Ticket List ── */}
       <div className="rounded-2xl overflow-hidden"
         style={{
-          background: "rgba(14,11,26,0.94)",
-          border: "1px solid rgba(168,85,247,0.2)",
-          boxShadow: "0 4px 24px rgba(168,85,247,0.1)",
+          background: "#ffffff",
+          border: "1px solid rgba(99,102,241,0.1)",
+          boxShadow: "0 4px 24px rgba(99,102,241,0.07)",
         }}>
         {/* Accent bar */}
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#f59e0b,#ef4444,#3b82f6,#10b981,transparent)" }} />
 
         {/* Column headers */}
         <div className="flex items-center gap-3 px-4 py-2.5"
-          style={{ background: "rgba(168,85,247,0.05)", borderBottom: "1px solid rgba(168,85,247,0.1)" }}>
+          style={{ background: "linear-gradient(180deg,#f8f9ff,#f1f5ff)", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
           <div className="w-9 flex-shrink-0" />
-          <p className="hidden sm:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#6ee7b7" }}>Ticket #</p>
-          <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "#6ee7b7" }}>Subject</p>
-          <p className="hidden md:block text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#6ee7b7" }}>Priority</p>
-          <p className="text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#6ee7b7" }}>Status</p>
-          <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#6ee7b7" }}>Dept</p>
+          <p className="hidden sm:block w-24 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Ticket #</p>
+          <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Subject</p>
+          <p className="hidden md:block text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Priority</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Status</p>
+          <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Dept</p>
           <div className="w-20 flex-shrink-0" />
         </div>
 
@@ -395,8 +395,8 @@ export default function Tickets() {
               style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.12)" }}>
               <TicketCheck className="w-6 h-6" style={{ color: "#6366f1" }} />
             </div>
-            <p className="font-bold text-[13px]" style={{ color: "rgba(216,180,254,0.6)" }}>No tickets found</p>
-            <p className="text-[11px] mt-1" style={{ color: "rgba(168,85,247,0.4)" }}>Try adjusting your filters</p>
+            <p className="font-bold text-slate-500 text-[13px]">No tickets found</p>
+            <p className="text-[11px] text-slate-400 mt-1">Try adjusting your filters</p>
           </div>
         ) : (
           filtered.map(t => (
@@ -413,8 +413,8 @@ export default function Tickets() {
 
         {!isLoading && filtered.length > 0 && (
           <div className="px-4 py-2.5 flex items-center justify-between"
-            style={{ background: "rgba(168,85,247,0.04)", borderTop: "1px solid rgba(168,85,247,0.08)" }}>
-            <p className="text-[11px] mono" style={{ color: "rgba(216,180,254,0.45)" }}>
+            style={{ background: "linear-gradient(180deg,#f8f9ff,#f1f5ff)", borderTop: "1px solid rgba(99,102,241,0.07)" }}>
+            <p className="text-[11px] mono" style={{ color: "rgba(100,116,139,0.55)" }}>
               {filtered.length} of {visibleTickets.length} tickets
             </p>
             <div className="flex gap-3">

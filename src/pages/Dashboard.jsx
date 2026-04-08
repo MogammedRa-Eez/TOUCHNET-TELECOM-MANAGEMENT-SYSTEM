@@ -124,30 +124,30 @@ function KPIDrawer({ kpiKey, customers, invoices, tickets, nodes, onClose }) {
 
   return (
     <div className="absolute inset-x-0 top-full mt-2 z-50 rounded-2xl overflow-hidden"
-    style={{ background: "rgba(14,11,26,0.98)", border: "1px solid rgba(168,85,247,0.25)", boxShadow: "0 20px 60px rgba(168,85,247,0.2)" }}>
-    <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#a855f7,#e879f9,#10b981,transparent)" }} />
-    <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(168,85,247,0.1)" }}>
-      <p className="text-[13px] font-bold" style={{ color: "#d8b4fe" }}>{item.title}</p>
-      <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10">
-        <X className="w-3.5 h-3.5" style={{ color: "#a855f7" }} />
-      </button>
-    </div>
-    <div className="p-4 grid grid-cols-2 gap-2.5">
-      {item.rows.map(row => (
-        <div key={row.label} className="rounded-xl p-3 relative overflow-hidden"
-          style={{ background: `${row.color}10`, border: `1px solid ${row.color}25` }}>
-          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${row.color}, transparent)` }} />
-          <p className="text-[22px] font-black mono" style={{ color: row.color }}>{row.value}</p>
-          <p className="text-[10px] mt-0.5" style={{ color: "rgba(216,180,254,0.5)" }}>{row.label}</p>
-        </div>
-      ))}
-    </div>
-    <div className="px-4 pb-4">
-      <Link to={item.link} className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:opacity-90 hover:scale-[1.01]"
-        style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 12px rgba(168,85,247,0.4)" }}>
-        <Eye className="w-3.5 h-3.5" /> {item.linkLabel} <ArrowUpRight className="w-3.5 h-3.5" />
-      </Link>
-    </div>
+      style={{ background: "white", border: "1px solid rgba(99,102,241,0.15)", boxShadow: "0 20px 60px rgba(99,102,241,0.18)" }}>
+      <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#6366f1,#8b5cf6,transparent)" }} />
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
+        <p className="text-[13px] font-bold text-slate-800">{item.title}</p>
+        <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-slate-100">
+          <X className="w-3.5 h-3.5 text-slate-400" />
+        </button>
+      </div>
+      <div className="p-4 grid grid-cols-2 gap-2.5">
+        {item.rows.map(row => (
+          <div key={row.label} className="rounded-xl p-3 relative overflow-hidden"
+            style={{ background: `${row.color}08`, border: `1px solid ${row.color}18` }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${row.color}, transparent)` }} />
+            <p className="text-[22px] font-black mono" style={{ color: row.color }}>{row.value}</p>
+            <p className="text-[10px] mt-0.5" style={{ color: "rgba(100,116,139,0.6)" }}>{row.label}</p>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 pb-4">
+        <Link to={item.link} className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:opacity-90 hover:scale-[1.01]"
+          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}>
+          <Eye className="w-3.5 h-3.5" /> {item.linkLabel} <ArrowUpRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
     </div>
   );
 }
@@ -163,15 +163,15 @@ function Section({ title, icon: Icon, children, defaultOpen = true, badge, color
             style={{ background: `${color}10`, border: `1px solid ${color}20` }}>
             <Icon className="w-3.5 h-3.5" style={{ color }} />
           </div>
-          <span className="text-[14px] font-black transition-colors tracking-tight" style={{ color: "#d8b4fe" }}>{title}</span>
+          <span className="text-[14px] font-black text-slate-700 group-hover:text-slate-900 transition-colors tracking-tight">{title}</span>
           {badge != null && (
             <span className="px-2 py-0.5 rounded-full text-[9px] font-bold"
               style={{ background: `${color}12`, color, border: `1px solid ${color}20` }}>{badge}</span>
           )}
         </div>
         <div className="flex items-center gap-1 opacity-40 group-hover:opacity-70 transition-opacity">
-          <span className="text-[10px] font-bold" style={{ color: "rgba(168,85,247,0.45)" }}>{open ? "Collapse" : "Expand"}</span>
-          {open ? <ChevronUp className="w-4 h-4" style={{ color: "rgba(168,85,247,0.5)" }} /> : <ChevronDown className="w-4 h-4" style={{ color: "rgba(168,85,247,0.4)" }} />}
+          <span className="text-[10px] font-bold" style={{ color: "#94a3b8" }}>{open ? "Collapse" : "Expand"}</span>
+          {open ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
         </div>
       </button>
       {open && children}
@@ -212,7 +212,7 @@ function SystemHealthStrip({ customers, invoices, tickets, nodes }) {
           </div>
           <div className="min-w-0">
             <p className="text-[18px] font-black mono leading-none" style={{ color: item.color }}>{item.value}</p>
-            <p className="text-[10px] mt-0.5 truncate" style={{ color: "rgba(216,180,254,0.55)" }}>{item.label}</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 truncate">{item.label}</p>
           </div>
           <ArrowUpRight className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-30" style={{ color: item.color }} />
         </Link>
@@ -278,13 +278,13 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto relative" onClick={() => setActiveKPI(null)}>
+    <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto" onClick={() => setActiveKPI(null)}>
 
       {/* ── Header ── */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0ebff", fontFamily: "'Space Grotesk',sans-serif" }}>Operations Overview</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(168,85,247,0.5)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f172a" }}>Operations Overview</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.5)" }}>
             {new Date().toLocaleDateString("en-ZA", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </p>
         </div>
@@ -292,30 +292,30 @@ export default function Dashboard() {
           {/* System health indicator */}
           {nodes.filter(n => n.status === "offline").length === 0 && tickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length === 0 ? (
             <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold"
-              style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.25)", color: "#34d399" }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#10b981", boxShadow: "0 0 8px rgba(16,185,129,0.8)" }} />
+              style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.18)", color: "#059669" }}>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="mono">All Systems Operational</span>
             </div>
           ) : (
             <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold"
-              style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.3)", color: "#f87171" }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#ef4444", boxShadow: "0 0 8px rgba(239,68,68,0.8)" }} />
+              style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", color: "#dc2626" }}>
+              <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
               <span className="mono">Issues Detected</span>
             </div>
           )}
           <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px]"
-            style={{ background: "rgba(168,85,247,0.07)", border: "1px solid rgba(168,85,247,0.18)", color: "#c084fc" }}>
+            style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.12)", color: "#94a3b8" }}>
             <Clock className="w-3 h-3" />
             <span className="mono">Updated {timeLabel}</span>
           </div>
           <button onClick={handleRefresh} disabled={refreshing}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-60"
-            style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "white", boxShadow: "0 4px 12px rgba(168,85,247,0.4)" }}>
+            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "white", boxShadow: "0 4px 12px rgba(99,102,241,0.3)" }}>
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Refreshing…" : "Refresh"}
           </button>
           <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold"
-            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.25)", color: "#34d399" }}>
+            style={{ background: "rgba(6,182,212,0.07)", border: "1px solid rgba(6,182,212,0.18)", color: "#06b6d4" }}>
             <Zap className="w-3.5 h-3.5" />
             <span className="mono">LIVE</span>
           </div>
@@ -395,26 +395,26 @@ export default function Dashboard() {
           <div className="lg:col-span-2 flex flex-col gap-5">
             <NetworkHealth nodes={nodes} />
             <div className="rounded-2xl p-5 flex-1"
-              style={{ background: "rgba(14,11,26,0.92)", border: "1px solid rgba(168,85,247,0.18)", boxShadow: "0 2px 16px rgba(168,85,247,0.1)" }}>
+              style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#d8b4fe" }}>
-                  <Activity className="w-3.5 h-3.5" style={{ color: "#a855f7" }} /> Quick Stats
+                <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#1e293b" }}>
+                  <Activity className="w-3.5 h-3.5" style={{ color: "#6366f1" }} /> Quick Stats
                 </p>
                 <span className="text-[10px] px-2 py-0.5 rounded mono font-bold"
-                  style={{ background: "rgba(16,185,129,0.1)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }}>Live</span>
+                  style={{ background: "rgba(6,182,212,0.08)", color: "#06b6d4", border: "1px solid rgba(6,182,212,0.18)" }}>Live</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Avg Uptime",       value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.1)",  link: "/Network" },
-                  { label: "Paid Invoices",    value: invoices.filter(i=>i.status==="paid").length, color: "#a855f7", bg: "rgba(168,85,247,0.1)", link: "/Billing" },
-                  { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.1)", link: "/Tickets" },
-                  { label: "Suspended",        value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.1)", link: "/Customers" },
+                  { label: "Avg Uptime",       value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.07)", link: "/Network" },
+                  { label: "Paid Invoices",    value: invoices.filter(i=>i.status==="paid").length, color: "#3b82f6", bg: "rgba(59,130,246,0.07)", link: "/Billing" },
+                  { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.07)", link: "/Tickets" },
+                  { label: "Suspended",        value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.07)", link: "/Customers" },
                 ].map(stat => (
                   <Link to={stat.link} key={stat.label}
                     className="rounded-xl p-3 transition-all hover:scale-105"
                     style={{ background: stat.bg, border: `1px solid ${stat.color}20` }}>
                     <p className="text-[20px] font-black mono" style={{ color: stat.color }}>{stat.value}</p>
-                    <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "rgba(216,180,254,0.55)" }}>{stat.label}</p>
+                    <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "#94a3b8" }}>{stat.label}</p>
                     <ArrowUpRight className="w-3 h-3 mt-1 opacity-40" style={{ color: stat.color }} />
                   </Link>
                 ))}

@@ -170,36 +170,30 @@ export default function Network() {
   });
 
   return (
-    <div className="p-5 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
+    <div className="p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0ebff", fontFamily: "'Space Grotesk',sans-serif" }}>Network Infrastructure</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(168,85,247,0.5)" }}>
-            {nodes.length} nodes · {nodes.filter(n=>n.status==="online").length} online · {nodes.filter(n=>n.status==="offline").length} offline
-          </p>
+          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Network Infrastructure</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Monitor and manage network nodes</p>
         </div>
-        <button onClick={() => { setEditing(null); setShowForm(true); }}
-          className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-          style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)", boxShadow: "0 4px 20px rgba(168,85,247,0.35)" }}>
-          <Plus className="w-4 h-4" /> Add Node
-        </button>
+        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
+          <Plus className="w-4 h-4 mr-2" /> Add Node
+        </Button>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.2)" }}>
+      <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
         {[
-          { id: "nodes",    label: "Nodes",             icon: Server },
-          { id: "topology", label: "Topology",          icon: GitFork },
-          { id: "metrics",  label: "Live Metrics",      icon: Activity },
-          { id: "trends",   label: "Trends & Capacity", icon: TrendingUp },
+          { id: "nodes", label: "Nodes", icon: Server },
+          { id: "topology", label: "Topology", icon: GitFork },
+          { id: "metrics", label: "Live Metrics", icon: Activity },
+          { id: "trends", label: "Trends & Capacity", icon: TrendingUp },
         ].map(tab => {
           const Icon = tab.icon;
           return (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all"
-              style={activeTab === tab.id
-                ? { background: "linear-gradient(135deg,#7c3aed,#a855f7)", color: "#fff", boxShadow: "0 2px 12px rgba(168,85,247,0.4)" }
-                : { color: "rgba(168,85,247,0.5)" }}>
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+              style={activeTab === tab.id ? { background: "linear-gradient(135deg, #6366f1, #8b5cf6)" } : {}}>
               <Icon className="w-3.5 h-3.5" /> {tab.label}
             </button>
           );
@@ -208,11 +202,11 @@ export default function Network() {
 
       {/* Topology Tab */}
       {activeTab === "topology" && (
-        <div className="rounded-2xl p-6" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.18)" }}>
+        <div className="rounded-xl p-6" style={{ background: "#070b1f", border: "1px solid rgba(99,102,241,0.15)" }}>
           {nodes.length === 0 ? (
-            <div className="py-16 text-center">
-              <GitFork className="w-10 h-10 mx-auto mb-3" style={{ color: "rgba(168,85,247,0.3)" }} />
-              <p className="text-[13px]" style={{ color: "rgba(216,180,254,0.4)" }}>No nodes to visualize</p>
+            <div className="py-16 text-center text-slate-500">
+              <GitFork className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+              <p className="text-[13px]">No nodes to visualize</p>
             </div>
           ) : (
             <NetworkTopology nodes={nodes} />
@@ -220,27 +214,29 @@ export default function Network() {
         </div>
       )}
 
+      {/* Trends Tab */}
       {activeTab === "trends" && (
-        <div className="rounded-2xl p-6" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.18)" }}>
+        <div className="rounded-xl p-6" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
           <NetworkTrends nodes={nodes} />
         </div>
       )}
 
+      {/* Live Metrics Tab */}
       {activeTab === "metrics" && (
         <div className="space-y-4">
           {nodes.length === 0 ? (
-            <div className="rounded-2xl py-16 text-center" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.18)" }}>
-              <Activity className="w-10 h-10 mx-auto mb-3" style={{ color: "rgba(168,85,247,0.3)" }} />
-              <p className="text-[13px]" style={{ color: "rgba(216,180,254,0.4)" }}>No nodes to monitor</p>
+            <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+              <Activity className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+              <p className="text-[13px]">No nodes to monitor</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {nodes.map(node => (
-                <div key={node.id} className="rounded-2xl p-5" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.18)" }}>
+                <div key={node.id} className="rounded-xl p-5" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
                   <div className="flex items-center gap-2 mb-4">
                     <div className={`w-2 h-2 rounded-full ${statusConfig[node.status]?.dot || "bg-slate-500"}`} />
-                    <h3 className="text-sm font-semibold" style={{ color: "#e9d5ff" }}>{node.name}</h3>
-                    <span className="text-[10px] mono ml-auto" style={{ color: "rgba(168,85,247,0.5)" }}>{node.ip_address}</span>
+                    <h3 className="text-sm font-semibold text-slate-200">{node.name}</h3>
+                    <span className="text-[10px] font-mono text-slate-500 ml-auto">{node.ip_address}</span>
                   </div>
                   <NetworkMetricsChart node={node} />
                 </div>
@@ -250,107 +246,101 @@ export default function Network() {
         </div>
       )}
 
-      {activeTab === "nodes" && (
-        <div className="rounded-2xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.18)" }}>
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(168,85,247,0.5)" }} />
-            <input placeholder="Search nodes..." className="w-full pl-10 pr-4 py-2.5 text-[13px] outline-none rounded-xl" style={{ background: "rgba(168,85,247,0.06)", border: "1px solid rgba(168,85,247,0.18)", color: "#e9d5ff" }} value={search} onChange={e => setSearch(e.target.value)} />
-          </div>
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-3 py-2.5 rounded-xl text-[12px] font-bold outline-none" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.18)", color: "#e9d5ff" }}>
-            <option value="all">All Status</option>
-            <option value="online">Online</option>
-            <option value="offline">Offline</option>
-            <option value="degraded">Degraded</option>
-            <option value="maintenance">Maintenance</option>
-          </select>
+      {/* Filters (nodes tab only) */}
+      {activeTab === "nodes" && <div className="rounded-xl p-4 flex flex-col sm:flex-row gap-3" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Input placeholder="Search nodes..." className="pl-10 bg-transparent border-slate-700 text-slate-200 placeholder-slate-600" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-      )}
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-40 bg-transparent border-slate-700 text-slate-300"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent className="bg-[#0d1527] border-slate-700 text-slate-200">
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="online">Online</SelectItem>
+            <SelectItem value="offline">Offline</SelectItem>
+            <SelectItem value="degraded">Degraded</SelectItem>
+            <SelectItem value="maintenance">Maintenance</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>}
 
       {/* Node cards (nodes tab only) */}
       {activeTab === "nodes" && (isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}
+          {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl bg-slate-800" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-2xl py-16 text-center" style={{ background: "rgba(14,11,26,0.95)", border: "1px solid rgba(168,85,247,0.15)" }}>
-          <Server className="w-10 h-10 mx-auto mb-3" style={{ color: "rgba(168,85,247,0.3)" }} />
-          <p className="text-[13px]" style={{ color: "rgba(216,180,254,0.4)" }}>No network nodes found</p>
+        <div className="rounded-xl py-16 text-center text-slate-500" style={{ background: "#0a0f2e", border: "1px solid rgba(99,102,241,0.15)" }}>
+          <Server className="w-10 h-10 mx-auto mb-3 text-slate-700" />
+          <p className="text-[13px]">No network nodes found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map(node => {
+
             const sc = statusConfig[node.status] || statusConfig.online;
             const capacityPct = node.max_capacity ? Math.round((node.connected_customers || 0) / node.max_capacity * 100) : 0;
             return (
-              <div key={node.id} className="relative overflow-hidden rounded-2xl p-5 transition-all duration-200 group"
-                style={{ background: "rgba(14,11,26,0.95)", border: `1px solid ${sc.color}25` }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = sc.border; e.currentTarget.style.boxShadow = `0 4px 24px ${sc.color}18`; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = `${sc.color}25`; e.currentTarget.style.boxShadow = "none"; }}>
-                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
-                <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${sc.color}12, transparent 70%)` }} />
-
+              <div key={node.id} className="rounded-xl p-5 transition-all duration-200 group" style={{ background: "#0a0f2e", border: `1px solid rgba(99,102,241,0.12)` }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = sc.border}
+                onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(6,182,212,0.12)"}
+              >
+                {/* Top accent */}
+                <div className="h-[2px] rounded-t-xl -mt-5 -mx-5 mb-4 rounded-tl-xl rounded-tr-xl" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-2.5 h-2.5 rounded-full ${sc.dot} animate-pulse`} />
                     <div>
-                      <h3 className="font-bold text-[13px]" style={{ color: "#e9d5ff" }}>{node.name}</h3>
-                      <p className="text-[10px] mono" style={{ color: "rgba(168,85,247,0.5)" }}>{node.type?.replace(/_/g, " ").toUpperCase()}</p>
+                      <h3 className="font-semibold text-slate-200 text-[13px]">{node.name}</h3>
+                      <p className="text-[10px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.type?.replace(/_/g, " ").toUpperCase()}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg mono uppercase" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}` }}>{node.status}</span>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`, fontFamily: "'JetBrains Mono', monospace" }}>{node.status}</span>
                 </div>
 
                 <div className="space-y-2.5 text-[12px]">
-                  {[
-                    { label: "IP Address", value: node.ip_address || "—", mono: true, color: "#a855f7" },
-                    { label: "Location",   value: node.location || "—",   mono: false, color: "#e9d5ff" },
-                    { label: "Firmware",   value: node.firmware_version || "—", mono: true, color: "#c084fc" },
-                  ].map(r => (
-                    <div key={r.label} className="flex justify-between">
-                      <span style={{ color: "rgba(168,85,247,0.45)" }}>{r.label}</span>
-                      <span style={{ color: r.color, fontFamily: r.mono ? "'JetBrains Mono',monospace" : "inherit" }}>{r.value}</span>
-                    </div>
-                  ))}
                   <div className="flex justify-between">
-                    <span style={{ color: "rgba(168,85,247,0.45)" }}>Uptime</span>
-                    <span className="mono font-bold" style={{ color: "#10b981" }}>{node.uptime_percent?.toFixed(1) || 0}%</span>
+                    <span className="text-slate-500">IP Address</span>
+                    <span className="text-slate-300" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.ip_address || "—"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Location</span>
+                    <span className="text-slate-300">{node.location || "—"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Uptime</span>
+                    <span className="text-emerald-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.uptime_percent?.toFixed(1) || 0}%</span>
                   </div>
                   <div>
-                    <div className="flex justify-between mb-1.5">
-                      <span style={{ color: "rgba(168,85,247,0.45)" }}>Bandwidth</span>
-                      <span className="mono" style={{ color: "#e9d5ff" }}>{node.bandwidth_utilization || 0}%</span>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-slate-500">Bandwidth</span>
+                      <span className="text-slate-300" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.bandwidth_utilization || 0}%</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(168,85,247,0.1)" }}>
+                    <div className="h-1 rounded-full overflow-hidden" style={{ background: "#1e293b" }}>
                       <div className="h-full rounded-full transition-all" style={{ width: `${node.bandwidth_utilization || 0}%`, background: node.bandwidth_utilization > 80 ? "#ef4444" : "#06b6d4" }} />
                     </div>
                   </div>
                   <div>
-                    <div className="flex justify-between mb-1.5">
-                      <span style={{ color: "rgba(168,85,247,0.45)" }}>Capacity</span>
-                      <span className="mono" style={{ color: "#e9d5ff" }}>{node.connected_customers || 0}/{node.max_capacity || 0}</span>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-slate-500">Capacity</span>
+                      <span className="text-slate-300" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{node.connected_customers || 0}/{node.max_capacity || 0}</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(168,85,247,0.1)" }}>
-                      <div className="h-full rounded-full transition-all" style={{ width: `${capacityPct}%`, background: capacityPct > 80 ? "#f59e0b" : "#a855f7" }} />
+                    <div className="h-1 rounded-full overflow-hidden" style={{ background: "#1e293b" }}>
+                      <div className="h-full rounded-full transition-all" style={{ width: `${capacityPct}%`, background: capacityPct > 80 ? "#f59e0b" : "#8b5cf6" }} />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-1 mt-4 pt-3 opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderTop: "1px solid rgba(168,85,247,0.08)" }}>
-                  <button title="Live Metrics" onClick={() => setActiveTab("metrics")}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                    style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)" }}>
-                    <Activity className="w-3.5 h-3.5" style={{ color: "#3b82f6" }} />
-                  </button>
-                  <button onClick={() => { setEditing(node); setShowForm(true); }}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                    style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.15)" }}>
-                    <Pencil className="w-3.5 h-3.5" style={{ color: "#a855f7" }} />
-                  </button>
-                  <button onClick={() => { if (confirm("Delete this node?")) deleteMut.mutate(node.id); }}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-                    style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.15)" }}>
-                    <Trash2 className="w-3.5 h-3.5" style={{ color: "#ef4444" }} />
-                  </button>
+                <div className="flex justify-end gap-1 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-blue-900/20" title="Live Metrics" onClick={() => { setActiveTab("metrics"); }}>
+                    <Activity className="w-3.5 h-3.5 text-blue-400" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-800" onClick={() => { setEditing(node); setShowForm(true); }}>
+                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-red-900/20" onClick={() => { if (confirm("Delete this node?")) deleteMut.mutate(node.id); }}>
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                  </Button>
                 </div>
               </div>
             );
