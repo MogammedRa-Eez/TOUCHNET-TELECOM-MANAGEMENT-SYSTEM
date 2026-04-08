@@ -66,8 +66,11 @@ module.exports = {
           ring:                 'hsl(var(--sidebar-ring))',
         },
         /* ── Brand palette for inline use ── */
-        lilac:  { DEFAULT: '#9b8fef', soft: '#c4bcf7', dim: '#7c6fe0' },
-        violet: { DEFAULT: '#7c3aed', light: '#a78bfa' },
+        cyan:  { DEFAULT: '#0ea5e9', soft: '#7dd3fc', dim: '#0284c7', glow: 'rgba(14,165,233,0.35)' },
+        teal:  { DEFAULT: '#06b6d4', light: '#67e8f9' },
+        /* keep legacy names so existing components don't break */
+        lilac:  { DEFAULT: '#0ea5e9', soft: '#7dd3fc', dim: '#0284c7' },
+        violet: { DEFAULT: '#0284c7', light: '#38bdf8' },
       },
       boxShadow: {
         'lilac-sm': '0 2px 12px rgba(139,92,246,0.12)',
