@@ -249,7 +249,7 @@ function InvoiceRow({ inv, isAdmin, onPdf, onEdit, onDelete, onStatusChange, ind
 
         {/* Amount */}
         <p className="hidden sm:block w-28 text-right text-[15px] font-black mono flex-shrink-0"
-          style={{ color: isPaid ? "#10b981" : isOver ? "#ef4444" : "#1e293b" }}>
+          style={{ color: isPaid ? "#10b981" : isOver ? "#ef4444" : "#c4b5fd" }}>
           R{(inv.total ?? inv.amount ?? 0).toFixed(2)}
         </p>
 
@@ -594,8 +594,8 @@ export default function Billing() {
                 </div>
                 <Sparkles className="absolute -top-1 -right-1 w-4 h-4" style={{ color: "#a78bfa" }} />
               </div>
-              <p className="font-bold text-[14px]" style={{ color: "#334155" }}>No invoices found</p>
-              <p className="text-[12px] mt-1" style={{ color: "#94a3b8" }}>Adjust search or filter to see results</p>
+              <p className="font-bold text-[14px]" style={{ color: "#c4b5fd" }}>No invoices found</p>
+              <p className="text-[12px] mt-1" style={{ color: "rgba(196,181,253,0.45)" }}>Adjust search or filter to see results</p>
               {isAdmin && (
                 <button onClick={() => { setEditing(null); setShowForm(true); }}
                   className="mt-5 flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"

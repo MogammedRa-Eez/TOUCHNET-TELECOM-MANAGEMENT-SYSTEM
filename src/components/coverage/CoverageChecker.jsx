@@ -28,7 +28,6 @@ Respond with a JSON object.`,
         },
       });
 
-      // Save search to entity
       base44.entities.CoverageSearch.create({
         query: query.trim(),
         covered: res.covered,
@@ -56,16 +55,14 @@ Respond with a JSON object.`,
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Top accent */}
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#6366f1,#06b6d4,#8b5cf6,transparent)" }} />
 
-        {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4"
           style={{ borderBottom: "1px solid rgba(139,92,246,0.12)" }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
               style={{ background: "rgba(6,182,212,0.15)", border: "1px solid rgba(6,182,212,0.3)" }}>
-              <MapPin className="w-4.5 h-4.5" style={{ color: "#06b6d4" }} />
+              <MapPin className="w-4 h-4" style={{ color: "#06b6d4" }} />
             </div>
             <div>
               <p className="text-[15px] font-black" style={{ color: "#e8d5ff" }}>Coverage Checker</p>
@@ -79,7 +76,6 @@ Respond with a JSON object.`,
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-6 py-5 space-y-4">
           <div className="flex gap-2">
             <div className="relative flex-1">
@@ -106,7 +102,6 @@ Respond with a JSON object.`,
             </button>
           </div>
 
-          {/* Result */}
           {result && (
             <div className="rounded-2xl overflow-hidden"
               style={{
