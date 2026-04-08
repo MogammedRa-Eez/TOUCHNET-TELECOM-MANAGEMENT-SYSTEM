@@ -394,7 +394,7 @@ export default function Dashboard() {
 
           <div className="lg:col-span-2 flex flex-col gap-5">
             <NetworkHealth nodes={nodes} />
-            <div className="bg-[#ced4de] p-5 rounded-2xl flex-1"
+            <div className="bg-[#0c3992] p-5 rounded-2xl flex-1"
             style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
               <div className="flex items-center justify-between mb-4">
                 <p className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#1e293b" }}>
