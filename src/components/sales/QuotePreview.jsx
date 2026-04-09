@@ -3,7 +3,7 @@ import { X, FileText, Mail, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import QuoteDocument from "./QuoteDocument";
+import QuoteDocument from "./QuoteDocument.jsx";
 
 export async function generateQuotePDF(quote, docRef) {
   const canvas = await html2canvas(docRef.current, { scale: 2, useCORS: true, logging: false });

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import QuoteDocument from "@/components/sales/QuoteDocument";
+import QuoteDocument from "@/components/sales/QuoteDocument.jsx";
 import { format } from "date-fns";
 import QuoteBuilder from "@/components/sales/QuoteBuilder";
 import QuotePreview from "@/components/sales/QuotePreview";
