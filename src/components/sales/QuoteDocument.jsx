@@ -171,7 +171,7 @@ export default function QuoteDocument({ quote, docRef }) {
 
       {/* ── Line Items ── */}
       {includedItems.length > 0 && (
-        <div style={{ padding: "8px 40px 24px" }}>
+        <div style={{ padding: "8px 40px 24px", background: "#ffffff" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
             <thead>
               <tr style={{ background: "#1e293b" }}>
