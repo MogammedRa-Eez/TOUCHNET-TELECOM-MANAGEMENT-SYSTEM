@@ -143,7 +143,7 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
     <>
     {showNotes && quote?.id && <QuoteNotesPanel quote={form} onClose={() => setShowNotes(false)} />}
     <div className="fixed inset-0 z-50 flex overflow-hidden" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
-      <div className="flex flex-col w-full max-w-5xl mx-auto my-4 rounded-2xl overflow-hidden bg-white shadow-2xl">
+      <div className="flex flex-col w-full max-w-5xl mx-auto my-4 rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#ffffff" }}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0" style={{ background: "linear-gradient(135deg,#e11d48,#9f1239)", color: "#fff" }}>
           <div className="flex items-center gap-3">
@@ -178,9 +178,9 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-3">
-          {/* LEFT */}
-          <div className="lg:col-span-2 p-6 space-y-6 border-r overflow-y-auto">
+        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-3" style={{ background: "#ffffff" }}>
+        {/* LEFT */}
+        <div className="lg:col-span-2 p-6 space-y-6 border-r overflow-y-auto" style={{ background: "#ffffff" }}>
             <FormSection title="Quote Details">
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
@@ -315,7 +315,7 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
           </div>
 
           {/* RIGHT */}
-          <div className="p-6 space-y-6 bg-slate-50 overflow-y-auto">
+          <div className="p-6 space-y-6 overflow-y-auto" style={{ background: "#f8fafc" }}>
             <FormSection title="Quote Status">
               <select className="w-full h-9 rounded-md border border-input px-3 text-sm bg-white" value={form.status} onChange={e => set("status", e.target.value)}>
                 {["draft","sent","viewed","accepted","declined","expired"].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>)}

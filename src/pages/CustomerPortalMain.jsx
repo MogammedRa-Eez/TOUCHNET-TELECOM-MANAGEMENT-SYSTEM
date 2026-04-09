@@ -21,7 +21,7 @@ import PortalServicePlanTab from "@/components/portal/PortalServicePlanTab";
 import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
 import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
 import { MapPin } from "lucide-react";
-import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
+import CoverageChecker from "@/components/coverage/CoverageChecker";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 

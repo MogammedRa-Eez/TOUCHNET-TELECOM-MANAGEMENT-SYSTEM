@@ -26,7 +26,6 @@ export default function CoverageChecker({ onClose }) {
         }
       });
       setResult(res);
-      // Log the search
       try {
         await base44.entities.CoverageSearch.create({
           address: address.trim(),
