@@ -5,8 +5,11 @@ import {
   Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock,
   CheckCircle2, ChevronDown, ChevronUp, RefreshCw,
   User, Building2, Tag, Calendar, MessageSquare, Zap,
-  Smartphone, ExternalLink
+  Smartphone, ExternalLink, Download
 } from "lucide-react";
+import { toast } from "sonner";
+import { exportToCsv } from "@/utils/exportCsv";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import SLAWorkflowPanel from "@/components/tickets/SLAWorkflowPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
@@ -214,7 +217,22 @@ export default function Tickets() {
   const [search,         setSearch]         = useState("");
   const [statusFilter,   setStatusFilter]   = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
+  const [confirmDelete,  setConfirmDelete]  = useState(null);
   const queryClient = useQueryClient();
+
+  const handleExportCsv = () => {
+    exportToCsv(filtered, [
+      { key: "ticket_number", label: "Ticket #" },
+      { key: "subject",       label: "Subject" },
+      { key: "customer_name", label: "Customer" },
+      { key: "status",        label: "Status" },
+      { key: "priority",      label: "Priority" },
+      { key: "category",      label: "Category" },
+      { key: "department",    label: "Department" },
+      { key: "assigned_to",   label: "Assigned To" },
+    ], "tickets");
+    toast.success("Tickets exported to CSV");
+  };
 
   const { data: tickets = [], isLoading, refetch } = useQuery({
     queryKey: ["tickets"],
@@ -282,6 +300,11 @@ export default function Tickets() {
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
             style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.2)", color: "#a78bfa" }}>
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          </button>
+          <button onClick={handleExportCsv}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
+            <Download className="w-3.5 h-3.5" /> Export CSV
           </button>
           {isAdmin && (
             <button onClick={() => { setEditing(null); setShowForm(true); }}
@@ -412,7 +435,7 @@ export default function Tickets() {
               ticket={t}
               isAdmin={isAdmin}
               onEdit={(t) => { setEditing(t); setShowForm(true); }}
-              onDelete={(id) => { if (confirm("Delete this ticket?")) deleteMut.mutate(id); }}
+              onDelete={(id) => setConfirmDelete(id)}
               onStatusChange={(id, status) => statusMut.mutate({ id, status })}
             />
           ))
@@ -443,6 +466,15 @@ export default function Tickets() {
           customers={customers}
           onSubmit={handleSubmit}
           onCancel={() => { setShowForm(false); setEditing(null); }}
+        />
+      )}
+
+      {confirmDelete && (
+        <ConfirmDialog
+          title="Delete Ticket?"
+          message="This will permanently remove the ticket. This action cannot be undone."
+          onConfirm={() => { deleteMut.mutate(confirmDelete); setConfirmDelete(null); toast.success("Ticket deleted"); }}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
     </div>

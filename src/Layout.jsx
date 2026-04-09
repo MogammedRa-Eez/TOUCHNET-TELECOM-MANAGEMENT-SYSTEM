@@ -13,6 +13,7 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 import GlobalSearch from "@/components/layout/GlobalSearch";
 import EmployeeChat from "@/components/chat/EmployeeChat";
+import QuickActionButton from "@/components/layout/QuickActionButton";
 
 /* ── Palette constants ─────────────────────────────────── */
 const C = {
@@ -371,6 +372,7 @@ function LayoutInner({ children, currentPageName }) {
           </div>
 
           <div className="flex items-center gap-2">
+            <QuickActionButton />
             <GlobalSearch />
             <DemoUserSwitcher />
             <NotificationBell />

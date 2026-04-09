@@ -4,8 +4,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Upload, Users, Wifi, DollarSign, AlertTriangle,
-         LayoutGrid, List, TrendingUp, Zap, Activity, ChevronDown, RefreshCw } from "lucide-react";
+         LayoutGrid, List, TrendingUp, Zap, Activity, ChevronDown, RefreshCw, Download, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { exportToCsv } from "@/utils/exportCsv";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import CustomerForm from "../components/customers/CustomerForm";
 import CustomerImport from "../components/customers/CustomerImport";
@@ -69,6 +71,29 @@ function KPIStrip({ customers }) {
   );
 }
 
+// ── Health score ─────────────────────────────────────────────────────────────
+function HealthScore({ customer }) {
+  // Simple score: deduct for suspended/terminated, overdue balance, no plan
+  let score = 100;
+  if (customer.status === "suspended")  score -= 40;
+  if (customer.status === "terminated") score -= 80;
+  if (customer.balance < 0)             score -= 20;
+  if (!customer.service_plan)           score -= 10;
+  score = Math.max(0, Math.min(100, score));
+
+  const color = score >= 80 ? "#10b981" : score >= 50 ? "#f59e0b" : "#ef4444";
+  const label = score >= 80 ? "Healthy" : score >= 50 ? "At Risk" : "Critical";
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
+        <div className="h-1.5 rounded-full transition-all" style={{ width: `${score}%`, background: color, boxShadow: `0 0 6px ${color}80` }} />
+      </div>
+      <span className="text-[9px] font-bold" style={{ color }}>{label}</span>
+    </div>
+  );
+}
+
 // ── Customer card (grid view) ─────────────────────────────────────────────────
 function CustomerCard({ customer, onClick }) {
   const sc = STATUS_CFG[customer.status] || STATUS_CFG.pending;
@@ -120,8 +145,11 @@ function CustomerCard({ customer, onClick }) {
         </div>
       </div>
 
+      <div className="mt-3 pt-2" style={{ borderTop: "1px solid rgba(139,92,246,0.1)" }}>
+        <HealthScore customer={customer} />
+      </div>
       {customer.account_number && (
-        <p className="text-[9px] mono text-slate-300 mt-2 text-right">{customer.account_number}</p>
+        <p className="text-[9px] mono mt-1.5 text-right" style={{ color: "rgba(196,181,253,0.3)" }}>{customer.account_number}</p>
       )}
     </div>
   );
@@ -192,11 +220,28 @@ export default function Customers() {
   const [showImport, setShowImport]       = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [editing, setEditing]             = useState(null);
-  const [selected, setSelected]           = useState(null);   // detail panel
+  const [selected, setSelected]           = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null); // customer to delete
   const [search, setSearch]               = useState("");
   const [statusFilter, setStatusFilter]   = useState("all");
-  const [viewMode, setViewMode]           = useState("list"); // "list" | "grid"
+  const [viewMode, setViewMode]           = useState("list");
   const queryClient = useQueryClient();
+
+  // CSV export
+  const handleExportCsv = () => {
+    exportToCsv(filtered, [
+      { key: "full_name",      label: "Name" },
+      { key: "email",          label: "Email" },
+      { key: "phone",          label: "Phone" },
+      { key: "address",        label: "Address" },
+      { key: "account_number", label: "Account Number" },
+      { key: "status",         label: "Status" },
+      { key: "service_plan",   label: "Plan" },
+      { key: "monthly_rate",   label: "Monthly Rate" },
+      { key: "connection_type",label: "Connection Type" },
+    ], "customers");
+    toast.success("Customers exported to CSV");
+  };
 
   const { data: customers = [], isLoading, refetch } = useQuery({
     queryKey: ["customers"],
@@ -263,6 +308,12 @@ export default function Customers() {
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
             style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", color: "#6366f1" }}>
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          </button>
+          <button
+            onClick={handleExportCsv}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
+            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
+            <Download className="w-3.5 h-3.5" /> Export CSV
           </button>
           {isAdmin && (
             <>
@@ -413,7 +464,16 @@ export default function Customers() {
           isAdmin={isAdmin}
           onClose={() => setSelected(null)}
           onEdit={() => { setEditing(selected); setSelected(null); setShowForm(true); }}
-          onDelete={() => { if (confirm(`Delete ${selected.full_name}?`)) deleteMut.mutate(selected.id); }}
+          onDelete={() => { setConfirmDelete(selected); setSelected(null); }}
+        />
+      )}
+
+      {confirmDelete && (
+        <ConfirmDialog
+          title={`Delete ${confirmDelete.full_name}?`}
+          message="This will permanently remove the customer and all associated data. This action cannot be undone."
+          onConfirm={() => { deleteMut.mutate(confirmDelete.id); setConfirmDelete(null); }}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
 

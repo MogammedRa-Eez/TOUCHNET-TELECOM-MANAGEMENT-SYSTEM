@@ -1,12 +1,15 @@
 import React, { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus, Search, Pencil, Trash2, Receipt, DollarSign, AlertCircle,
   CheckCircle2, FileText, RefreshCw, ChevronDown, ChevronUp, Zap,
   BarChart3, Clock, CalendarDays, CreditCard, ArrowUpRight, Sparkles,
-  TrendingUp, Activity, Layers, CircleDollarSign
+  TrendingUp, Activity, Layers, CircleDollarSign, Download
 } from "lucide-react";
+import { exportToCsv } from "@/utils/exportCsv";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import InvoiceForm from "../components/billing/InvoiceForm";
@@ -368,7 +371,23 @@ export default function Billing() {
   const [pdfInvoice,   setPdfInvoice]   = useState(null);
   const [search,       setSearch]       = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const queryClient = useQueryClient();
+
+  const handleExportCsv = () => {
+    exportToCsv(filtered, [
+      { key: "invoice_number",  label: "Invoice #" },
+      { key: "customer_name",   label: "Customer" },
+      { key: "amount",          label: "Amount" },
+      { key: "tax",             label: "Tax" },
+      { key: "total",           label: "Total" },
+      { key: "status",          label: "Status" },
+      { key: "due_date",        label: "Due Date" },
+      { key: "paid_date",       label: "Paid Date" },
+      { key: "payment_method",  label: "Payment Method" },
+    ], "invoices");
+    toast.success("Invoices exported to CSV");
+  };
 
   const { data: invoices = [], isLoading, refetch } = useQuery({
     queryKey: ["invoices"],
@@ -394,8 +413,15 @@ export default function Billing() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["invoices"] }),
   });
   const statusMut = useMutation({
-    mutationFn: ({ id, status }) => base44.entities.Invoice.update(id, { status }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["invoices"] }),
+    mutationFn: ({ id, status }) => {
+      const update = { status };
+      if (status === "paid") update.paid_date = new Date().toISOString().slice(0, 10);
+      return base44.entities.Invoice.update(id, update);
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      if (vars.status === "paid") toast.success("Invoice marked as paid");
+    },
   });
 
   const totalPaid    = invoices.filter(i => i.status === "paid").reduce((a, i) => a + (i.total || 0), 0);
@@ -460,6 +486,11 @@ export default function Billing() {
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.18)", color: "#6366f1" }}>
               <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
+            <button onClick={handleExportCsv}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
+              style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
+              <Download className="w-3.5 h-3.5" /> Export CSV
             </button>
             {isAdmin && (
               <button onClick={() => { setEditing(null); setShowForm(true); }}
@@ -613,7 +644,7 @@ export default function Billing() {
                 isAdmin={isAdmin}
                 onPdf={setPdfInvoice}
                 onEdit={(inv) => { setEditing(inv); setShowForm(true); }}
-                onDelete={(id) => { if (confirm("Delete this invoice?")) deleteMut.mutate(id); }}
+                onDelete={(id) => setConfirmDelete(id)}
                 onStatusChange={(id, status) => statusMut.mutate({ id, status })}
               />
             ))
@@ -658,6 +689,15 @@ export default function Billing() {
           customers={customers}
           onSubmit={handleSubmit}
           onCancel={() => { setShowForm(false); setEditing(null); }}
+        />
+      )}
+
+      {confirmDelete && (
+        <ConfirmDialog
+          title="Delete Invoice?"
+          message="This will permanently remove the invoice. This action cannot be undone."
+          onConfirm={() => { deleteMut.mutate(confirmDelete); setConfirmDelete(null); toast.success("Invoice deleted"); }}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
     </div>
