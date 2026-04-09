@@ -263,25 +263,137 @@ export default function Quotes() {
   const handleSendEmail = async (quote) => {
     if (!quote.customer_email) return;
     setSendingEmailId(quote.id);
+
     const contractMonths = quote.contract_months || 24;
     const appBaseUrl = 'https://app.base44.com/apps/69a157d4dbdca56a3bccf4d3';
     const quoteLink = `${appBaseUrl}/quote?id=${quote.id}`;
-    const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f4f7;font-family:'Helvetica Neue',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 0;">
-<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
-<tr><td style="background:linear-gradient(135deg,#0f172a,#1e293b);padding:32px 40px;text-align:center;">
-<h1 style="color:#ffffff;font-size:24px;font-weight:700;margin:0 0 4px;">${quote.title}</h1>
-<p style="color:rgba(255,255,255,0.5);font-size:13px;margin:0;">Ref: ${quote.quote_number || '—'}</p></td></tr>
-<tr><td style="padding:36px 40px;">
-<p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px;">Dear <strong>${quote.customer_name}</strong>,</p>
-<p style="color:#6b7280;font-size:14px;line-height:1.7;margin:0 0 28px;">${quote.cover_message || 'Please find your quote below. We look forward to doing business with you.'}</p>
-<table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;"><tr><td align="center">
-<a href="${quoteLink}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#e11d48,#9f1239);color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;letter-spacing:0.02em;">
-View &amp; Respond to Quote →
-</a></td></tr></table>
-<p style="color:#9ca3af;font-size:12px;line-height:1.6;margin:0 0 24px;">Or copy this link: <a href="${quoteLink}" style="color:#6366f1;">${quoteLink}</a></p>
-<p style="color:#374151;font-size:14px;margin:0;">Warm regards,<br><strong>${quote.salesperson_name || 'TouchNet Sales Team'}</strong></p>
-</td></tr></table></td></tr></table></body></html>`;
+    const includedItems = (quote.line_items || []).filter(i => !i.optional || i.included);
+    const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
+
+    const lineItemsHtml = includedItems.length > 0 ? `
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:0;">
+        <tr style="background:#1e293b;">
+          <th style="padding:10px 14px;text-align:left;color:#f8fafc;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;width:55%;">Description</th>
+          <th style="padding:10px 14px;text-align:center;color:#f8fafc;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;width:10%;">Qty</th>
+          <th style="padding:10px 14px;text-align:right;color:#f8fafc;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;width:15%;">Unit</th>
+          <th style="padding:10px 14px;text-align:right;color:#f8fafc;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;width:20%;">Total/mo</th>
+        </tr>
+        ${includedItems.map((item, idx) => `
+          <tr style="background:${idx % 2 === 0 ? '#f8fafc' : '#ffffff'};border-bottom:1px solid #e2e8f0;">
+            <td style="padding:12px 14px;vertical-align:top;">
+              <div style="font-weight:700;color:#0f172a;font-size:13px;">${item.description || ''}</div>
+              ${item.detail ? `<div style="font-size:11px;color:#64748b;margin-top:3px;">${item.detail}</div>` : ''}
+            </td>
+            <td style="padding:12px 14px;text-align:center;color:#334155;font-size:13px;vertical-align:top;">${item.quantity || 1}</td>
+            <td style="padding:12px 14px;text-align:right;color:#334155;font-size:13px;vertical-align:top;">R ${(item.unit_price || 0).toFixed(2)}</td>
+            <td style="padding:12px 14px;text-align:right;font-weight:700;color:#0f172a;font-size:13px;vertical-align:top;">R ${((item.quantity || 1) * (item.unit_price || 0)).toFixed(2)}</td>
+          </tr>
+        `).join('')}
+        ${quote.discount_percent > 0 ? `
+          <tr style="background:#f1f5f9;border-bottom:1px solid #e2e8f0;">
+            <td colspan="3" style="padding:10px 14px;text-align:right;font-size:13px;color:#334155;font-weight:600;">Discount (${quote.discount_percent}%)</td>
+            <td style="padding:10px 14px;text-align:right;font-size:13px;color:#16a34a;font-weight:700;">- R ${(quote.discount_amount || 0).toFixed(2)}</td>
+          </tr>` : ''}
+        <tr style="background:#f1f5f9;">
+          <td colspan="3" style="padding:14px;text-align:right;font-weight:700;font-size:14px;color:#0f172a;">Total ZAR excl. VAT</td>
+          <td style="padding:14px;text-align:right;">
+            <div style="font-size:18px;font-weight:800;color:#0f172a;">R ${(quote.subtotal || quote.total || 0).toFixed(2)}</div>
+            <div style="font-size:11px;color:#64748b;margin-top:2px;">per month · ${contractMonths} months</div>
+          </td>
+        </tr>
+      </table>` : '';
+
+    const sectionsHtml = (quote.sections || []).map(s => {
+      if (s.type === 'divider') return `<hr style="border:none;border-top:1px solid #e2e8f0;margin:16px 0;" />`;
+      return `<div style="margin-bottom:18px;">
+        ${s.heading ? `<div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">${s.heading}</div>` : ''}
+        ${s.type === 'text' && s.content ? `<div style="font-size:13px;color:#334155;line-height:1.7;white-space:pre-line;">${s.content}</div>` : ''}
+        ${(s.type === 'link' || s.type === 'file') && s.url ? `<a href="${s.url}" style="display:inline-block;padding:8px 16px;background:#e11d48;color:#fff;font-size:12px;font-weight:700;text-decoration:none;border-radius:6px;">${s.label || 'Open Link'}</a>` : ''}
+        ${s.type === 'image' && s.image_url ? `<img src="${s.image_url}" style="width:100%;max-height:220px;object-fit:cover;border-radius:6px;" />` : ''}
+      </div>`;
+    }).join('');
+
+    const htmlBody = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8" /></head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:'Helvetica Neue',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 12px;">
+<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+  <!-- Header -->
+  <tr><td style="background:#0f172a;padding:28px 36px;text-align:center;">
+    <img src="${LOGO_URL}" alt="TouchNet" style="height:44px;object-fit:contain;display:block;margin:0 auto 16px;" />
+    <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 4px;">${quote.title}</h1>
+    <p style="color:rgba(255,255,255,0.45);font-size:12px;margin:0;">Ref: ${quote.quote_number || '—'} &nbsp;·&nbsp; ${contractMonths}-month contract</p>
+  </td></tr>
+
+  <!-- Info strip -->
+  <tr><td>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #e2e8f0;">
+      <tr>
+        <td style="padding:18px 24px;width:50%;border-right:1px solid #e2e8f0;vertical-align:top;">
+          <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">Prepared For</p>
+          <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.customer_company || quote.customer_name}</p>
+          ${quote.customer_company ? `<p style="font-size:12px;color:#475569;margin:2px 0 0;">${quote.customer_name}</p>` : ''}
+          ${quote.customer_email ? `<p style="font-size:12px;color:#e11d48;margin:4px 0 0;">${quote.customer_email}</p>` : ''}
+        </td>
+        <td style="padding:18px 24px;width:50%;vertical-align:top;">
+          <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">From</p>
+          <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.salesperson_name || 'TouchNet Sales'}</p>
+          <p style="font-size:12px;color:#e11d48;margin:2px 0 0;">Touchnet · www.touchnet.co.za</p>
+          <p style="font-size:12px;color:#475569;margin:2px 0 0;">010 060 0400</p>
+          ${quote.valid_until ? `<p style="font-size:11px;color:#b91c1c;margin:6px 0 0;font-weight:600;">Valid until: ${quote.valid_until}</p>` : ''}
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- Cover message -->
+  <tr><td style="padding:24px 36px 16px;">
+    <p style="font-size:14px;color:#374151;line-height:1.7;margin:0;">Dear <strong>${quote.customer_name}</strong>,</p>
+    <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:12px 0 0;">${quote.cover_message || 'Please find your quotation below. We look forward to doing business with you.'}</p>
+  </td></tr>
+
+  <!-- Line items -->
+  ${includedItems.length > 0 ? `<tr><td style="padding:0 36px 24px;">${lineItemsHtml}</td></tr>` : ''}
+
+  <!-- Content sections -->
+  ${sectionsHtml ? `<tr><td style="padding:0 36px 8px;">${sectionsHtml}</td></tr>` : ''}
+
+  <!-- CTA button -->
+  <tr><td style="padding:16px 36px 24px;text-align:center;">
+    <a href="${quoteLink}" style="display:inline-block;padding:14px 36px;background:#e11d48;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;">
+      View &amp; Accept Quote →
+    </a>
+    <p style="font-size:11px;color:#9ca3af;margin:10px 0 0;">Or open: <a href="${quoteLink}" style="color:#6366f1;">${quoteLink}</a></p>
+  </td></tr>
+
+  <!-- Banking details -->
+  <tr><td style="padding:0 36px 24px;">
+    <table width="100%" cellpadding="12" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+      <tr><td>
+        <p style="font-size:11px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 8px;">Banking Details</p>
+        <p style="font-size:12px;color:#334155;margin:2px 0;">Account Name: <strong>Touchnet Telecommunications (PTY) LTD</strong></p>
+        <p style="font-size:12px;color:#334155;margin:2px 0;">Account Number: <strong>001991264</strong> &nbsp;·&nbsp; Standard Bank</p>
+        <p style="font-size:12px;color:#334155;margin:2px 0;">Branch Code: <strong>00 43 05</strong> (Rosebank)</p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <!-- Terms -->
+  ${quote.terms ? `<tr><td style="padding:0 36px 28px;border-top:1px solid #e2e8f0;">
+    <p style="font-size:11px;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 8px;">Terms &amp; Conditions</p>
+    <p style="font-size:11px;color:#475569;line-height:1.7;white-space:pre-line;">${quote.terms}</p>
+  </td></tr>` : ''}
+
+  <!-- Footer -->
+  <tr><td style="background:#f8fafc;padding:16px 36px;text-align:center;border-top:1px solid #e2e8f0;">
+    <p style="font-size:11px;color:#94a3b8;margin:0;">© TouchNet Telecommunications · 151 Katherine Street, Sandton, Johannesburg</p>
+  </td></tr>
+
+</table>
+</td></tr></table>
+</body></html>`;
+
     await base44.functions.invoke('sendQuoteEmailGmail', {
       to: quote.customer_email,
       subject: `Quote: ${quote.title} [${quote.quote_number}]`,
