@@ -17,23 +17,23 @@ import QuickActionButton from "@/components/layout/QuickActionButton";
 
 /* ── Palette constants ─────────────────────────────────── */
 const C = {
-  primary:    "#8b5cf6",
-  primaryDim: "#7c3aed",
-  soft:       "#c4b5fd",
-  violet:     "#a78bfa",
-  glow:       "rgba(139,92,246,0.45)",
-  glowSoft:   "rgba(139,92,246,0.18)",
-  border:     "rgba(139,92,246,0.22)",
-  borderMd:   "rgba(139,92,246,0.42)",
-  sidebarBg:  "#04030d",
-  sidebarMid: "#07051a",
-  red:        "#ef4444",
-  redSoft:    "#fca5a5",
-  redGlow:    "rgba(239,68,68,0.38)",
-  blue:       "#3b82f6",
-  blueSoft:   "#93c5fd",
-  blueGlow:   "rgba(59,130,246,0.38)",
-  cyan:       "#06b6d4",
+  primary:    "#a78bfa",
+  primaryDim: "#8b5cf6",
+  soft:       "#ddd6fe",
+  violet:     "#c4b5fd",
+  glow:       "rgba(167,139,250,0.55)",
+  glowSoft:   "rgba(167,139,250,0.22)",
+  border:     "rgba(167,139,250,0.26)",
+  borderMd:   "rgba(167,139,250,0.48)",
+  sidebarBg:  "#06061a",
+  sidebarMid: "#0a0b22",
+  red:        "#f87171",
+  redSoft:    "#fecaca",
+  redGlow:    "rgba(248,113,113,0.45)",
+  blue:       "#60a5fa",
+  blueSoft:   "#bae6fd",
+  blueGlow:   "rgba(96,165,250,0.45)",
+  cyan:       "#22d3ee",
 };
 
 const NAV_GROUPS = [
@@ -126,7 +126,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         className={`fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{
           width: 256,
-          background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #0a0520 50%, ${C.sidebarMid} 100%)`,
+          background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #0d0e28 50%, ${C.sidebarMid} 100%)`,
           borderRight: `1px solid ${C.border}`,
           flexShrink: 0,
           overflow: "hidden",
