@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +18,7 @@ import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 import InvoicePDFModal from "@/components/billing/InvoicePDFModal";
 import { AreaChart, Area, ResponsiveContainer, Tooltip } from "recharts";
+import jsPDF from "jspdf";
 
 // ── Status config ──────────────────────────────────────────────────────────────
 const STATUS_CFG = {
@@ -28,6 +29,7 @@ const STATUS_CFG = {
   cancelled: { color: "#94a3b8", bg: "rgba(148,163,184,0.06)", border: "rgba(148,163,184,0.15)", label: "Cancelled", dot: "#cbd5e1",  glow: "rgba(148,163,184,0.2)"  },
 };
 const STATUS_FILTERS = ["all", "paid", "sent", "overdue", "draft", "cancelled"];
+const PAGE_SIZE = 20;
 
 function buildChartData(invoices) {
   const months = {};
@@ -271,7 +273,28 @@ function InvoiceRow({ inv, isAdmin, onPdf, onEdit, onDelete, onStatusChange, ind
         </p>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Sage sync indicator */}
+          <span
+            title={inv.sage_invoice_id ? `Synced to Sage: ${inv.sage_invoice_id}` : "Not synced to Sage"}
+            className="hidden sm:flex w-5 h-5 rounded-full items-center justify-center text-[8px] font-black flex-shrink-0 cursor-help"
+            style={{
+              background: inv.sage_invoice_id ? "rgba(16,185,129,0.15)" : "rgba(100,116,139,0.1)",
+              border: `1px solid ${inv.sage_invoice_id ? "rgba(16,185,129,0.3)" : "rgba(100,116,139,0.2)"}`,
+              color: inv.sage_invoice_id ? "#10b981" : "#94a3b8",
+            }}
+          >S</span>
+          {/* Mark Paid quick button — always visible for non-paid invoices */}
+          {isAdmin && !["paid", "cancelled"].includes(inv.status) && (
+            <button
+              onClick={e => { e.stopPropagation(); onStatusChange(inv.id, "paid"); }}
+              className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold transition-all hover:scale-105 active:scale-95"
+              style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}
+              title="Mark as Paid"
+            >
+              <CheckCircle2 className="w-3 h-3" /> Paid
+            </button>
+          )}
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-150"
             onClick={e => e.stopPropagation()}>
             <button onClick={() => onPdf(inv)}
@@ -372,7 +395,10 @@ export default function Billing() {
   const [search,       setSearch]       = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
+
+  useEffect(() => { setPage(1); }, [search, statusFilter]);
 
   const handleExportCsv = () => {
     exportToCsv(filtered, [
@@ -387,6 +413,48 @@ export default function Billing() {
       { key: "payment_method",  label: "Payment Method" },
     ], "invoices");
     toast.success("Invoices exported to CSV");
+  };
+
+  const handleExportPdf = () => {
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pw = doc.internal.pageSize.getWidth();
+    doc.setFillColor(15, 23, 42);
+    doc.rect(0, 0, pw, 28, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(15);
+    doc.setFont(undefined, "bold");
+    doc.text("Invoice Report — TouchNet", 14, 12);
+    doc.setFontSize(9);
+    doc.setFont(undefined, "normal");
+    doc.text(`Generated: ${new Date().toLocaleDateString("en-ZA")} · ${filtered.length} invoices`, 14, 21);
+    const cols = [14, 48, 100, 132, 160, 185];
+    const headers = ["Invoice #", "Customer", "Amount", "Status", "Due Date", "Paid"];
+    doc.setFontSize(8);
+    doc.setFont(undefined, "bold");
+    doc.setFillColor(241, 245, 249);
+    doc.rect(10, 32, pw - 20, 8, "F");
+    doc.setTextColor(71, 85, 105);
+    headers.forEach((h, i) => doc.text(h, cols[i], 37.5));
+    doc.setFont(undefined, "normal");
+    let y = 46;
+    filtered.forEach((inv, idx) => {
+      if (y > 270) { doc.addPage(); y = 20; }
+      if (idx % 2 === 0) {
+        doc.setFillColor(248, 250, 252);
+        doc.rect(10, y - 4, pw - 20, 8, "F");
+      }
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(8);
+      doc.text((inv.invoice_number || "—").slice(0, 14), cols[0], y);
+      doc.text((inv.customer_name || "—").slice(0, 22), cols[1], y);
+      doc.text(`R${(inv.total || 0).toFixed(2)}`, cols[2], y);
+      doc.text(inv.status || "—", cols[3], y);
+      doc.text(inv.due_date || "—", cols[4], y);
+      doc.text(inv.paid_date || "—", cols[5], y);
+      y += 8;
+    });
+    doc.save(`invoices_${new Date().toISOString().slice(0, 10)}.pdf`);
+    toast.success("PDF exported successfully");
   };
 
   const { data: invoices = [], isLoading, refetch } = useQuery({
@@ -446,6 +514,8 @@ export default function Billing() {
   };
 
   const filteredTotal = filtered.reduce((a, i) => a + (i.total ?? i.amount ?? 0), 0);
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <div className="min-h-screen relative">
@@ -491,6 +561,11 @@ export default function Billing() {
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
               <Download className="w-3.5 h-3.5" /> Export CSV
+            </button>
+            <button onClick={handleExportPdf}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
+              style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.2)", color: "#6366f1" }}>
+              <FileText className="w-3.5 h-3.5" /> Export PDF
             </button>
             {isAdmin && (
               <button onClick={() => { setEditing(null); setShowForm(true); }}
@@ -636,11 +711,11 @@ export default function Billing() {
               )}
             </div>
           ) : (
-            filtered.map((inv, idx) => (
+            paginated.map((inv, idx) => (
               <InvoiceRow
                 key={inv.id}
                 inv={inv}
-                index={idx}
+                index={(page - 1) * PAGE_SIZE + idx}
                 isAdmin={isAdmin}
                 onPdf={setPdfInvoice}
                 onEdit={(inv) => { setEditing(inv); setShowForm(true); }}
@@ -656,7 +731,7 @@ export default function Billing() {
               style={{ background: "rgba(139,92,246,0.06)", borderTop: "1px solid rgba(139,92,246,0.12)" }}>
               <div className="flex items-center gap-3">
                 <p className="text-[11px] mono" style={{ color: "#94a3b8" }}>
-                  Showing <span className="font-bold" style={{ color: "#6366f1" }}>{filtered.length}</span> of {invoices.length} invoices
+                  Showing <span className="font-bold" style={{ color: "#6366f1" }}>{paginated.length}</span> of <span className="font-bold">{filtered.length}</span> ({invoices.length} total)
                 </p>
                 {statusFilter !== "all" && (
                   <button onClick={() => setStatusFilter("all")}
@@ -666,9 +741,19 @@ export default function Billing() {
                   </button>
                 )}
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px]" style={{ color: "#94a3b8" }}>Subtotal</span>
-                <span className="text-[14px] font-black mono" style={{ color: "#10b981" }}>R{filteredTotal.toFixed(2)}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-[11px]" style={{ color: "#94a3b8" }}>Total: <span className="font-black mono" style={{ color: "#10b981" }}>R{filteredTotal.toFixed(2)}</span></span>
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center font-bold transition-all hover:scale-105 disabled:opacity-30"
+                      style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", color: "#6366f1" }}>‹</button>
+                    <span className="text-[11px] font-bold mono px-2" style={{ color: "#c4b5fd" }}>{page}/{totalPages}</span>
+                    <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center font-bold transition-all hover:scale-105 disabled:opacity-30"
+                      style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", color: "#6366f1" }}>›</button>
+                  </div>
+                )}
               </div>
             </div>
           )}

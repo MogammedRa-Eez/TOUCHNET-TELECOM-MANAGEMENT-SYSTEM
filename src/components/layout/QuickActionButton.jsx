@@ -82,7 +82,7 @@ export default function QuickActionButton() {
           </div>
           <div className="px-3 pb-2 pt-1" style={{ borderTop: "1px solid rgba(139,92,246,0.1)" }}>
             <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "rgba(196,181,253,0.3)" }}>
-              <Zap className="w-2.5 h-2.5 inline mr-1" />Press N to toggle
+              <Zap className="w-2.5 h-2.5 inline mr-1" />N · ? for shortcuts
             </p>
           </div>
         </div>

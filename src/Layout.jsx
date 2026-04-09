@@ -14,6 +14,7 @@ import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
 import GlobalSearch from "@/components/layout/GlobalSearch";
 import EmployeeChat from "@/components/chat/EmployeeChat";
 import QuickActionButton from "@/components/layout/QuickActionButton";
+import KeyboardShortcutGuide from "@/components/layout/KeyboardShortcutGuide";
 
 /* ── Palette constants ─────────────────────────────────── */
 const C = {
@@ -301,6 +302,7 @@ function LayoutInner({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [tick, setTick] = useState(0);
   const [chatUser, setChatUser] = useState(null);
+  const [showGuide, setShowGuide] = useState(false);
   const { can, loading } = useRBAC();
 
   useEffect(() => {
@@ -312,6 +314,16 @@ function LayoutInner({ children, currentPageName }) {
   useEffect(() => {
     const id = setInterval(() => setTick(t => t + 1), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const handler = (e) => {
+      const tag = document.activeElement?.tagName;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
+      if (e.key === "?") setShowGuide(v => !v);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, []);
 
   const allItems = NAV_GROUPS.flatMap(g => g.items);
@@ -388,6 +400,7 @@ function LayoutInner({ children, currentPageName }) {
       </div>
 
       {chatUser && <EmployeeChat user={chatUser} />}
+      {showGuide && <KeyboardShortcutGuide onClose={() => setShowGuide(false)} />}
     </div>
   );
 }
