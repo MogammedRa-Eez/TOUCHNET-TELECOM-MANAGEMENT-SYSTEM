@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { to, subject, body, quote_id } = await req.json();
+    const { to, subject, body, quote_id, quote_number } = await req.json();
     if (!to || !subject || !body) {
       return Response.json({ error: 'Missing required fields: to, subject, body' }, { status: 400 });
     }
@@ -43,6 +43,14 @@ Deno.serve(async (req) => {
     const result = await res.json();
 
     // Mark quote as sent if quote_id provided
+    // Build a direct quote view link
+    const appBaseUrl = 'https://app.base44.com/apps/69a157d4dbdca56a3bccf4d3';
+    const quoteLink = quote_id
+      ? `${appBaseUrl}/quote?id=${quote_id}`
+      : quote_number
+        ? `${appBaseUrl}/quote?ref=${quote_number}`
+        : null;
+
     if (quote_id) {
       await base44.asServiceRole.entities.Quote.update(quote_id, {
         status: 'sent',

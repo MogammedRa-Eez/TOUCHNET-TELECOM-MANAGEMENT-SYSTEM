@@ -264,6 +264,8 @@ export default function Quotes() {
     if (!quote.customer_email) return;
     setSendingEmailId(quote.id);
     const contractMonths = quote.contract_months || 24;
+    const appBaseUrl = 'https://app.base44.com/apps/69a157d4dbdca56a3bccf4d3';
+    const quoteLink = `${appBaseUrl}/quote?id=${quote.id}`;
     const htmlBody = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f4f4f7;font-family:'Helvetica Neue',Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 0;">
 <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
@@ -273,6 +275,11 @@ export default function Quotes() {
 <tr><td style="padding:36px 40px;">
 <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px;">Dear <strong>${quote.customer_name}</strong>,</p>
 <p style="color:#6b7280;font-size:14px;line-height:1.7;margin:0 0 28px;">${quote.cover_message || 'Please find your quote below. We look forward to doing business with you.'}</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;"><tr><td align="center">
+<a href="${quoteLink}" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#e11d48,#9f1239);color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;letter-spacing:0.02em;">
+View &amp; Respond to Quote →
+</a></td></tr></table>
+<p style="color:#9ca3af;font-size:12px;line-height:1.6;margin:0 0 24px;">Or copy this link: <a href="${quoteLink}" style="color:#6366f1;">${quoteLink}</a></p>
 <p style="color:#374151;font-size:14px;margin:0;">Warm regards,<br><strong>${quote.salesperson_name || 'TouchNet Sales Team'}</strong></p>
 </td></tr></table></td></tr></table></body></html>`;
     await base44.functions.invoke('sendQuoteEmailGmail', {
@@ -280,6 +287,7 @@ export default function Quotes() {
       subject: `Quote: ${quote.title} [${quote.quote_number}]`,
       body: htmlBody,
       quote_id: quote.id,
+      quote_number: quote.quote_number,
     });
     queryClient.invalidateQueries({ queryKey: ["quotes"] });
     setSendingEmailId(null);
