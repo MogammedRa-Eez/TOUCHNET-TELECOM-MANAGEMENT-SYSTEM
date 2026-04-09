@@ -65,42 +65,64 @@ module.exports = {
           border:               'hsl(var(--sidebar-border))',
           ring:                 'hsl(var(--sidebar-ring))',
         },
-        /* ── Brand palette ── */
+        /* ── Brand ── */
         brand: {
-          purple:        '#8b5cf6',
-          'purple-soft': '#c4b5fd',
-          'purple-dim':  '#7c3aed',
-          blue:          '#3b82f6',
-          'blue-soft':   '#93c5fd',
-          'blue-dim':    '#2563eb',
-          red:           '#ef4444',
-          'red-soft':    '#fca5a5',
-          'red-dim':     '#dc2626',
+          violet:        '#8b5cf6',
+          'violet-soft': '#c4b5fd',
+          'violet-dim':  '#7c3aed',
+          indigo:        '#6366f1',
+          'indigo-soft': '#a5b4fc',
           cyan:          '#06b6d4',
+          'cyan-soft':   '#a5f3fc',
+          emerald:       '#10b981',
+          'emerald-soft':'#6ee7b7',
+          amber:         '#f59e0b',
+          'amber-soft':  '#fde68a',
+          rose:          '#ef4444',
+          'rose-soft':   '#fca5a5',
           pink:          '#ec4899',
+          'pink-soft':   '#f9a8d4',
         },
-        /* keep legacy names so existing components don't break */
-        cyan:   { DEFAULT: '#06b6d4', soft: '#67e8f9', dim: '#0891b2' },
+        /* Legacy aliases for backwards compatibility */
+        cyan:   { DEFAULT: '#06b6d4', soft: '#a5f3fc', dim: '#0891b2' },
         teal:   { DEFAULT: '#14b8a6', light: '#5eead4' },
         lilac:  { DEFAULT: '#8b5cf6', soft: '#c4b5fd', dim: '#7c3aed' },
         violet: { DEFAULT: '#7c3aed', light: '#a78bfa' },
       },
       boxShadow: {
-        'purple-sm':   '0 2px 12px rgba(139,92,246,0.15)',
-        'purple-md':   '0 4px 24px rgba(139,92,246,0.22)',
-        'purple-lg':   '0 8px 40px rgba(139,92,246,0.28)',
-        'purple-glow': '0 0 24px rgba(139,92,246,0.55)',
-        'blue-sm':     '0 2px 12px rgba(59,130,246,0.15)',
-        'blue-md':     '0 4px 24px rgba(59,130,246,0.22)',
-        'blue-lg':     '0 8px 40px rgba(59,130,246,0.28)',
-        'blue-glow':   '0 0 24px rgba(59,130,246,0.55)',
-        'red-sm':      '0 2px 12px rgba(239,68,68,0.15)',
-        'red-glow':    '0 0 24px rgba(239,68,68,0.55)',
-        /* legacy aliases */
-        'lilac-sm':    '0 2px 12px rgba(139,92,246,0.15)',
-        'lilac-md':    '0 4px 24px rgba(139,92,246,0.22)',
-        'lilac-lg':    '0 8px 40px rgba(139,92,246,0.28)',
-        'lilac-glow':  '0 0 24px rgba(139,92,246,0.55)',
+        /* Violet */
+        'violet-sm':   '0 2px 12px rgba(139,92,246,0.18)',
+        'violet-md':   '0 4px 24px rgba(139,92,246,0.28)',
+        'violet-lg':   '0 8px 48px rgba(139,92,246,0.35)',
+        'violet-glow': '0 0 24px rgba(139,92,246,0.6)',
+        /* Indigo */
+        'indigo-sm':   '0 2px 12px rgba(99,102,241,0.18)',
+        'indigo-md':   '0 4px 24px rgba(99,102,241,0.28)',
+        'indigo-glow': '0 0 24px rgba(99,102,241,0.6)',
+        /* Cyan */
+        'cyan-sm':     '0 2px 12px rgba(6,182,212,0.18)',
+        'cyan-glow':   '0 0 24px rgba(6,182,212,0.6)',
+        /* Emerald */
+        'emerald-sm':  '0 2px 12px rgba(16,185,129,0.18)',
+        'emerald-glow':'0 0 24px rgba(16,185,129,0.6)',
+        /* Rose */
+        'rose-sm':     '0 2px 12px rgba(239,68,68,0.18)',
+        'rose-glow':   '0 0 24px rgba(239,68,68,0.6)',
+        /* Legacy aliases */
+        'purple-sm':   '0 2px 12px rgba(139,92,246,0.18)',
+        'purple-md':   '0 4px 24px rgba(139,92,246,0.28)',
+        'purple-lg':   '0 8px 48px rgba(139,92,246,0.35)',
+        'purple-glow': '0 0 24px rgba(139,92,246,0.6)',
+        'blue-sm':     '0 2px 12px rgba(99,102,241,0.18)',
+        'blue-md':     '0 4px 24px rgba(99,102,241,0.28)',
+        'blue-lg':     '0 8px 48px rgba(99,102,241,0.35)',
+        'blue-glow':   '0 0 24px rgba(99,102,241,0.6)',
+        'red-sm':      '0 2px 12px rgba(239,68,68,0.18)',
+        'red-glow':    '0 0 24px rgba(239,68,68,0.6)',
+        'lilac-sm':    '0 2px 12px rgba(139,92,246,0.18)',
+        'lilac-md':    '0 4px 24px rgba(139,92,246,0.28)',
+        'lilac-lg':    '0 8px 48px rgba(139,92,246,0.35)',
+        'lilac-glow':  '0 0 24px rgba(139,92,246,0.6)',
       },
       keyframes: {
         'accordion-down': {
@@ -120,12 +142,12 @@ module.exports = {
           '50%':      { boxShadow: '0 0 28px rgba(239,68,68,0.95), 0 0 50px rgba(239,68,68,0.4)' },
         },
         'glow-pulse-blue': {
-          '0%, 100%': { boxShadow: '0 0 8px rgba(59,130,246,0.5)' },
-          '50%':      { boxShadow: '0 0 28px rgba(59,130,246,0.95), 0 0 50px rgba(59,130,246,0.4)' },
+          '0%, 100%': { boxShadow: '0 0 8px rgba(99,102,241,0.5)' },
+          '50%':      { boxShadow: '0 0 28px rgba(99,102,241,0.95), 0 0 50px rgba(99,102,241,0.4)' },
         },
         'network-flow': {
           '0%':   { backgroundPosition: '0 0' },
-          '100%': { backgroundPosition: '52px 52px' },
+          '100%': { backgroundPosition: '56px 56px' },
         },
         'float-particle': {
           '0%':   { transform: 'translateY(0) scale(1)', opacity: '0.6' },
@@ -145,13 +167,26 @@ module.exports = {
   },
   plugins: [require("tailwindcss-animate")],
   safelist: [
+    // Legacy color classes
     'bg-lilac', 'text-lilac', 'border-lilac',
     'bg-violet', 'text-violet', 'border-violet',
+    // Brand
+    'bg-brand-violet', 'text-brand-violet',
+    'bg-brand-indigo', 'text-brand-indigo',
+    'bg-brand-cyan',   'text-brand-cyan',
+    'bg-brand-emerald','text-brand-emerald',
+    'bg-brand-amber',  'text-brand-amber',
+    'bg-brand-rose',   'text-brand-rose',
+    'bg-brand-pink',   'text-brand-pink',
+    // Legacy aliases
     'bg-brand-purple', 'text-brand-purple',
-    'bg-brand-blue', 'text-brand-blue',
-    'bg-brand-red', 'text-brand-red',
-    'bg-brand-cyan', 'text-brand-cyan',
-    'shadow-purple-glow', 'shadow-blue-glow', 'shadow-red-glow',
-    'glow-pulse', 'glow-pulse-red', 'glow-pulse-blue',
+    'bg-brand-blue',   'text-brand-blue',
+    'bg-brand-red',    'text-brand-red',
+    // Shadow glows
+    'shadow-violet-glow', 'shadow-indigo-glow', 'shadow-cyan-glow',
+    'shadow-emerald-glow','shadow-rose-glow',
+    'shadow-purple-glow', 'shadow-blue-glow',  'shadow-red-glow',
+    // Animations
+    'glow-pulse', 'glow-pulse-red', 'glow-pulse-blue', 'glow-pulse-green',
   ],
 };
