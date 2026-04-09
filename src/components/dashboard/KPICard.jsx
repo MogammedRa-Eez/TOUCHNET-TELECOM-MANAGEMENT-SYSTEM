@@ -17,19 +17,19 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
     <div
       className="rounded-2xl p-5 relative overflow-hidden cursor-default transition-all duration-300"
       style={{
-        background: "#ffffff",
-        border: "1px solid rgba(99,102,241,0.1)",
-        boxShadow: "0 2px 16px rgba(99,102,241,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
+        background: "rgba(12, 8, 28, 0.95)",
+        border: `1px solid ${c.accent}25`,
+        boxShadow: `0 4px 24px ${c.glow}, 0 1px 0 rgba(139,92,246,0.08) inset`,
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = `0 8px 32px ${c.glow}, 0 2px 8px rgba(99,102,241,0.06)`;
+        e.currentTarget.style.boxShadow = `0 8px 40px ${c.glow}, 0 2px 8px rgba(139,92,246,0.1)`;
         e.currentTarget.style.transform = "translateY(-3px)";
-        e.currentTarget.style.borderColor = `${c.accent}30`;
+        e.currentTarget.style.borderColor = `${c.accent}50`;
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = "0 2px 16px rgba(99,102,241,0.06), inset 0 1px 0 rgba(255,255,255,0.9)";
+        e.currentTarget.style.boxShadow = `0 4px 24px ${c.glow}, 0 1px 0 rgba(139,92,246,0.08) inset`;
         e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.borderColor = "rgba(99,102,241,0.1)";
+        e.currentTarget.style.borderColor = `${c.accent}25`;
       }}
     >
       {/* Accent top bar */}
@@ -59,9 +59,9 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
         )}
       </div>
 
-      <p className="text-[30px] font-black leading-none tracking-tight mono" style={{ color: "#1e293b" }}>{value}</p>
-      <p className="text-[12px] font-semibold mt-2" style={{ color: "#64748b" }}>{title}</p>
-      {subtitle && <p className="text-[10px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>{subtitle}</p>}
+      <p className="text-[30px] font-black leading-none tracking-tight mono" style={{ color: c.accent }}>{value}</p>
+      <p className="text-[12px] font-semibold mt-2" style={{ color: "#c4b5fd" }}>{title}</p>
+      {subtitle && <p className="text-[10px] mt-0.5 mono" style={{ color: "rgba(196,181,253,0.5)" }}>{subtitle}</p>}
     </div>
   );
 }
