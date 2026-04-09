@@ -961,7 +961,7 @@ export default function CoverageCheck() {
               </button>
             ))}
           </div>
-          <a href="/CustomerPortalMain"
+          <a href="/"
             className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
             style={{ background: "rgba(56,189,248,0.12)", border: "1px solid rgba(56,189,248,0.28)", color: "#7dd3fc" }}>
             Portal <ArrowRight className="w-3.5 h-3.5" />
