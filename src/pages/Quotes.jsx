@@ -238,7 +238,7 @@ export default function Quotes() {
         ].map(k => (
           <div key={k.label} className="rounded-xl p-4 border" style={{ background: k.bg, borderColor: k.color + "30" }}>
             <p className="text-2xl font-bold font-mono" style={{ color: k.color }}>{k.value}</p>
-            <p className="text-xs text-slate-500 mt-1">{k.label}</p>
+            <p className="text-xs font-semibold text-slate-700 mt-1">{k.label}</p>
           </div>
         ))}
       </div>
@@ -260,13 +260,13 @@ export default function Quotes() {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Quote #</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Title</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Client</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-              <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Total</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Valid Until</th>
-              <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Quote #</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Title</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Client</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Status</th>
+              <th className="text-right px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Total</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Valid Until</th>
+              <th className="text-right px-4 py-3 text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -281,19 +281,19 @@ export default function Quotes() {
               const sc = STATUS_CONFIG[q.status] || STATUS_CONFIG.draft;
               return (
                 <tr key={q.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 font-mono text-xs text-indigo-600">{q.quote_number}</td>
+                  <td className="px-4 py-3 font-mono text-xs font-bold text-indigo-700">{q.quote_number}</td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-slate-800 truncate max-w-[200px]">{q.title}</p>
+                    <p className="font-semibold text-slate-900 truncate max-w-[200px]">{q.title}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-slate-700 font-medium">{q.customer_name}</p>
-                    {q.customer_email && <p className="text-xs text-slate-400">{q.customer_email}</p>}
+                    <p className="text-slate-900 font-semibold">{q.customer_name}</p>
+                    {q.customer_email && <p className="text-xs text-slate-500">{q.customer_email}</p>}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.color}40` }}>{sc.label}</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-md" style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.color}40` }}>{sc.label}</span>
                   </td>
-                  <td className="px-4 py-3 text-right font-mono font-semibold text-slate-800">R{(q.total || 0).toFixed(2)}</td>
-                  <td className="px-4 py-3 text-xs text-slate-500">{q.valid_until ? format(new Date(q.valid_until), "d MMM yyyy") : "—"}</td>
+                  <td className="px-4 py-3 text-right font-mono font-bold text-slate-900">R{(q.total || 0).toFixed(2)}</td>
+                  <td className="px-4 py-3 text-xs font-medium text-slate-700">{q.valid_until ? format(new Date(q.valid_until), "d MMM yyyy") : "—"}</td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
                       <Button variant="ghost" size="icon" className="h-7 w-7 relative" onClick={() => setNotesQuote(q)} title="Internal Notes">
