@@ -85,7 +85,7 @@ export default function QuoteDocument({ quote, docRef }) {
   const status = STATUS_CONFIG[quote.status] || STATUS_CONFIG.draft;
 
   return (
-    <div ref={docRef} style={{ background: "#ffffff", fontFamily: "'Segoe UI', Arial, sans-serif", color: "#0f172a" }}>
+    <div ref={docRef} className="quote-doc" style={{ background: "#ffffff", fontFamily: "'Segoe UI', Arial, sans-serif", color: "#0f172a", maxWidth: "100%" }}>
 
       {/* ── Header ── */}
       <div style={{ padding: "32px 40px 24px", borderBottom: "2px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -183,7 +183,7 @@ export default function QuoteDocument({ quote, docRef }) {
             </thead>
             <tbody>
               {includedItems.map((item, idx) => (
-                <tr key={item.id} style={{ background: idx % 2 === 0 ? "#f8fafc" : "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
+                <tr key={item.id} style={{ background: idx % 2 === 0 ? "#f7f8fa" : "#ffffff", borderBottom: "1px solid #e2e8f0" }}>
                   <td style={{ padding: "14px 16px", verticalAlign: "top" }}>
                     <div style={{ fontWeight: 700, color: "#0f172a", fontSize: 14 }}>{item.description}</div>
                     {item.detail && <div style={{ fontSize: 12, color: "#64748b", marginTop: 4, lineHeight: 1.5 }}>{item.detail}</div>}
@@ -205,7 +205,7 @@ export default function QuoteDocument({ quote, docRef }) {
                   <td style={{ padding: "10px 16px", textAlign: "right", color: "#16a34a", fontSize: 14, fontWeight: 700, width: 160 }}>- R {(quote.discount_amount || 0).toFixed(2)}</td>
                 </tr>
               )}
-              <tr style={{ background: "#f1f5f9", borderBottom: "1px solid #e2e8f0" }}>
+              <tr style={{ background: "#f0f4f8", borderBottom: "1px solid #e2e8f0" }}>
                 <td style={{ padding: "12px 16px", textAlign: "right", color: "#0f172a", fontSize: 14, fontWeight: 700 }}>Total ZAR excluding VAT</td>
                 <td style={{ padding: "12px 16px", textAlign: "right", width: 160 }}>
                   <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>R {(quote.subtotal || quote.total || 0).toFixed(2)}</div>
@@ -218,9 +218,9 @@ export default function QuoteDocument({ quote, docRef }) {
       )}
 
       {/* ── Rich Sections ── */}
-      <div style={{ padding: "0 40px 24px" }}>
+      {(quote.sections || []).length > 0 && <div style={{ padding: "0 40px 24px", borderTop: includedItems.length > 0 ? "1px solid #e2e8f0" : "none" }}>
         {(quote.sections || []).map(s => <RichSection key={s.id} section={s} />)}
-      </div>
+      </div>}
 
       {/* ── Optional Add-ons ── */}
       {optionalItems.length > 0 && (
@@ -278,11 +278,11 @@ export default function QuoteDocument({ quote, docRef }) {
 }
 
 function RichSection({ section }) {
-  if (section.type === "divider") return <hr style={{ border: "none", borderTop: "1px solid #e2e8f0", margin: "16px 0" }} />;
+  if (section.type === "divider") return <hr style={{ border: "none", borderTop: "2px solid #e2e8f0", margin: "20px 0" }} />;
   return (
-    <div style={{ marginBottom: 20 }}>
+    <div style={{ marginBottom: 24 }}>
       {section.heading && (
-        <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>{section.heading}</div>
+        <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.1em", borderBottom: "2px solid #e11d48", paddingBottom: 6, display: "inline-block" }}>{section.heading}</div>
       )}
       {section.type === "text" && section.content && (
         <div style={{ fontSize: 14, color: "#334155", lineHeight: 1.7, whiteSpace: "pre-line" }}>{section.content}</div>

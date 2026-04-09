@@ -284,6 +284,44 @@
 /* ─── Nav item ───────────────────────────────────────────── */
 .nav-item-wrap { position: relative; }
 
+/* ─── Quote Document isolation ─────────────────────────────── */
+/* Prevent global dark-theme overrides from bleeding into the printed quote */
+.quote-doc,
+.quote-doc * {
+  color: revert !important;
+  background: revert !important;
+  border-color: revert !important;
+  font-family: revert !important;
+}
+.quote-doc h1, .quote-doc h2, .quote-doc h3,
+.quote-doc h4, .quote-doc h5, .quote-doc h6 {
+  color: #0f172a !important;
+}
+.quote-doc p, .quote-doc span, .quote-doc td, .quote-doc th,
+.quote-doc div, .quote-doc label, .quote-doc li {
+  color: inherit !important;
+  background: transparent !important;
+}
+.quote-doc table thead tr {
+  background: #1e293b !important;
+}
+.quote-doc table thead th {
+  color: #f8fafc !important;
+  background: transparent !important;
+}
+.quote-doc table tbody tr {
+  background: inherit !important;
+}
+.quote-doc table tbody td {
+  color: inherit !important;
+  background: inherit !important;
+}
+.quote-doc input, .quote-doc textarea, .quote-doc select {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
 /* ─── Legacy compat ──────────────────────────────────────── */
 .op-scroll::-webkit-scrollbar       { width: 4px; }
 .op-scroll::-webkit-scrollbar-track { background: transparent; }
