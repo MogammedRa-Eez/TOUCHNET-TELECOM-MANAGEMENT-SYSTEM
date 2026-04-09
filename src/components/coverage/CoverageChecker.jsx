@@ -2,15 +2,10 @@ import React from "react";
 import { X } from "lucide-react";
 import CoverageCheck from "@/pages/CoverageCheck";
 
-/**
- * Modal wrapper around the full CoverageCheck page.
- * Used by CustomerPortalMain to show coverage check as an overlay.
- */
 export default function CoverageChecker({ onClose }) {
   return (
     <div className="fixed inset-0 z-[9999] overflow-hidden" style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}>
       <div className="absolute inset-4 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-50 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110"
