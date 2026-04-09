@@ -82,11 +82,7 @@ Respond with a JSON object.`,
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(196,181,253,0.4)" }} />
               <input
                 className="w-full pl-10 pr-4 py-3 rounded-xl text-[13px] outline-none transition-all"
-                style={{
-                  background: "rgba(139,92,246,0.08)",
-                  border: "1px solid rgba(139,92,246,0.25)",
-                  color: "#e8d5ff",
-                }}
+                style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.25)", color: "#e8d5ff" }}
                 placeholder="Enter suburb, city or address…"
                 value={query}
                 onChange={e => setQuery(e.target.value)}

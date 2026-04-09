@@ -3,8 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock,
-  CheckCircle2, ChevronDown, ChevronUp, RefreshCw, Filter,
-  ArrowUpRight, User, Building2, Tag, Calendar, MessageSquare, Zap,
+  CheckCircle2, ChevronDown, ChevronUp, RefreshCw,
+  User, Building2, Tag, Calendar, MessageSquare, Zap,
   Smartphone, ExternalLink
 } from "lucide-react";
 import SLAWorkflowPanel from "@/components/tickets/SLAWorkflowPanel";
@@ -15,19 +15,19 @@ import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
 const STATUS_CFG = {
-  open:             { color: "#f59e0b", bg: "rgba(245,158,11,0.08)",   border: "rgba(245,158,11,0.22)",   label: "Open",             dot: "#fbbf24" },
-  in_progress:      { color: "#3b82f6", bg: "rgba(59,130,246,0.08)",   border: "rgba(59,130,246,0.22)",   label: "In Progress",      dot: "#60a5fa" },
-  waiting_customer: { color: "#8b5cf6", bg: "rgba(139,92,246,0.08)",   border: "rgba(139,92,246,0.22)",   label: "Waiting",          dot: "#a78bfa" },
-  escalated:        { color: "#ef4444", bg: "rgba(239,68,68,0.08)",    border: "rgba(239,68,68,0.22)",    label: "Escalated",        dot: "#f87171" },
-  resolved:         { color: "#10b981", bg: "rgba(16,185,129,0.08)",   border: "rgba(16,185,129,0.22)",   label: "Resolved",         dot: "#34d399" },
-  closed:           { color: "#64748b", bg: "rgba(100,116,139,0.06)",  border: "rgba(100,116,139,0.18)",  label: "Closed",           dot: "#94a3b8" },
+  open:             { color: "#f59e0b", bg: "rgba(245,158,11,0.1)",   border: "rgba(245,158,11,0.25)",   label: "Open",        dot: "#fbbf24" },
+  in_progress:      { color: "#3b82f6", bg: "rgba(59,130,246,0.1)",   border: "rgba(59,130,246,0.25)",   label: "In Progress", dot: "#60a5fa" },
+  waiting_customer: { color: "#8b5cf6", bg: "rgba(139,92,246,0.1)",   border: "rgba(139,92,246,0.25)",   label: "Waiting",     dot: "#a78bfa" },
+  escalated:        { color: "#ef4444", bg: "rgba(239,68,68,0.1)",    border: "rgba(239,68,68,0.25)",    label: "Escalated",   dot: "#f87171" },
+  resolved:         { color: "#10b981", bg: "rgba(16,185,129,0.1)",   border: "rgba(16,185,129,0.25)",   label: "Resolved",    dot: "#34d399" },
+  closed:           { color: "#64748b", bg: "rgba(100,116,139,0.07)", border: "rgba(100,116,139,0.2)",   label: "Closed",      dot: "#94a3b8" },
 };
 
 const PRIORITY_CFG = {
-  low:      { color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.2)", label: "Low",      ring: "#94a3b8" },
-  medium:   { color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)",  label: "Medium",   ring: "#60a5fa" },
-  high:     { color: "#f97316", bg: "rgba(249,115,22,0.08)", border: "rgba(249,115,22,0.2)",  label: "High",     ring: "#fb923c" },
-  critical: { color: "#ef4444", bg: "rgba(239,68,68,0.1)",   border: "rgba(239,68,68,0.25)",  label: "Critical", ring: "#f87171" },
+  low:      { color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.22)", label: "Low" },
+  medium:   { color: "#3b82f6", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.22)",  label: "Medium" },
+  high:     { color: "#f97316", bg: "rgba(249,115,22,0.08)", border: "rgba(249,115,22,0.22)",  label: "High" },
+  critical: { color: "#ef4444", bg: "rgba(239,68,68,0.1)",  border: "rgba(239,68,68,0.28)",   label: "Critical" },
 };
 
 const STATUS_FILTERS   = ["all", "open", "in_progress", "escalated", "resolved", "closed"];
@@ -39,21 +39,21 @@ function KPICard({ label, count, color, icon: Icon, onClick, active }) {
     <button onClick={onClick}
       className="relative overflow-hidden rounded-2xl px-4 py-4 text-left w-full transition-all hover:scale-[1.02] active:scale-[0.98]"
       style={{
-        background: active ? `${color}0f` : "#ffffff",
-        border: `1px solid ${active ? color + "40" : color + "18"}`,
-        boxShadow: active ? `0 4px 20px ${color}18, 0 0 0 2px ${color}20` : "0 1px 8px rgba(99,102,241,0.06)",
+        background: active ? `${color}12` : "rgba(12, 8, 28, 0.95)",
+        border: `1px solid ${active ? color + "45" : color + "25"}`,
+        boxShadow: active ? `0 4px 20px ${color}25, 0 0 0 1px ${color}20` : `0 2px 12px ${color}10`,
       }}>
       <div className="absolute top-0 left-0 right-0 h-[2px]"
         style={{ background: `linear-gradient(90deg, ${color}, transparent)` }} />
       <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full pointer-events-none"
-        style={{ background: `radial-gradient(circle, ${color}12, transparent 70%)` }} />
+        style={{ background: `radial-gradient(circle, ${color}15, transparent 70%)` }} />
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(100,116,139,0.5)" }}>{label}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(196,181,253,0.55)" }}>{label}</p>
           <p className="text-3xl font-black mono" style={{ color }}>{count}</p>
         </div>
         <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-          style={{ background: `${color}12`, border: `1px solid ${color}25` }}>
+          style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
           <Icon className="w-4 h-4" style={{ color }} />
         </div>
       </div>
@@ -69,35 +69,38 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
   const isCritical = ticket.priority === "critical";
 
   return (
-    <div style={{ borderBottom: "1px solid rgba(99,102,241,0.05)" }}>
+    <div style={{ borderBottom: "1px solid rgba(139,92,246,0.07)" }}>
       {/* Main row */}
       <div
         className="flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-all group"
         onClick={() => setOpen(v => !v)}
-        style={{ background: open ? `${sc.color}04` : "transparent" }}
-        onMouseEnter={e => { if (!open) e.currentTarget.style.background = `${sc.color}04`; }}
+        style={{ background: open ? `${sc.color}06` : "transparent" }}
+        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "rgba(139,92,246,0.05)"; }}
         onMouseLeave={e => { if (!open) e.currentTarget.style.background = "transparent"; }}
       >
         {/* Priority ring indicator */}
         <div className="relative flex-shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[10px] font-black"
-            style={{ background: `${pc.color}10`, border: `2px solid ${pc.color}30`, color: pc.color }}>
+            style={{ background: `${pc.color}12`, border: `2px solid ${pc.color}35`, color: pc.color }}>
             {isCritical ? "🔴" : ticket.priority?.[0]?.toUpperCase()}
           </div>
           {isCritical && (
-            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 animate-pulse border-2 border-white" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 animate-pulse border-2"
+              style={{ borderColor: "#080b18" }} />
           )}
         </div>
 
         {/* Ticket # */}
-        <p className="hidden sm:block w-24 text-[11px] mono font-semibold flex-shrink-0" style={{ color: "#818cf8" }}>
+        <p className="hidden sm:block w-24 text-[11px] mono font-semibold flex-shrink-0" style={{ color: "#a78bfa" }}>
           {ticket.ticket_number || "—"}
         </p>
 
         {/* Subject + customer */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold text-slate-800 truncate">{ticket.subject}</p>
-          <p className="text-[10px] text-slate-400 truncate">{ticket.customer_name || "No customer"} · {ticket.category?.replace(/_/g," ")}</p>
+          <p className="text-[13px] font-bold truncate" style={{ color: "#e8d5ff" }}>{ticket.subject}</p>
+          <p className="text-[10px] truncate" style={{ color: "rgba(196,181,253,0.5)" }}>
+            {ticket.customer_name || "No customer"} · {ticket.category?.replace(/_/g," ")}
+          </p>
         </div>
 
         {/* Priority */}
@@ -114,7 +117,7 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
         </span>
 
         {/* Dept */}
-        <p className="hidden lg:block w-24 text-[11px] text-slate-400 capitalize flex-shrink-0">
+        <p className="hidden lg:block w-24 text-[11px] capitalize flex-shrink-0" style={{ color: "rgba(196,181,253,0.45)" }}>
           {ticket.department?.replace(/_/g," ") || "—"}
         </p>
 
@@ -123,68 +126,70 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
           {isAdmin && (
             <>
               <button onClick={() => onEdit(ticket)}
-                className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-indigo-50 transition-colors">
-                <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)" }}>
+                <Pencil className="w-3.5 h-3.5" style={{ color: "#a78bfa" }} />
               </button>
               <button onClick={() => onDelete(ticket.id)}
-                className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-red-50 transition-colors">
-                <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                <Trash2 className="w-3.5 h-3.5" style={{ color: "#f87171" }} />
               </button>
             </>
           )}
         </div>
 
         {open
-          ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: "#94a3b8" }} />
-          : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: "#cbd5e1" }} />}
+          ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: sc.color }} />
+          : <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: "rgba(196,181,253,0.3)" }} />}
       </div>
 
       {/* Expanded detail */}
       {open && (
         <div className="px-5 pb-4 pt-2 space-y-3"
-          style={{ background: `${sc.color}03`, borderTop: `1px solid ${sc.color}10` }}>
+          style={{ background: `${sc.color}04`, borderTop: `1px solid ${sc.color}12` }}>
           {/* Details grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Assigned To",    value: ticket.assigned_to || "Unassigned", icon: User },
-              { label: "Department",     value: ticket.department?.replace(/_/g," ") || "—", icon: Building2 },
-              { label: "Category",       value: ticket.category?.replace(/_/g," ") || "—", icon: Tag },
-              { label: "SLA Deadline",   value: ticket.sla_deadline ? format(new Date(ticket.sla_deadline), "dd MMM yyyy HH:mm") : "None set", icon: Calendar },
+              { label: "Assigned To",  value: ticket.assigned_to || "Unassigned",                                          icon: User },
+              { label: "Department",   value: ticket.department?.replace(/_/g," ") || "—",                                 icon: Building2 },
+              { label: "Category",     value: ticket.category?.replace(/_/g," ") || "—",                                   icon: Tag },
+              { label: "SLA Deadline", value: ticket.sla_deadline ? format(new Date(ticket.sla_deadline), "dd MMM yyyy HH:mm") : "None set", icon: Calendar },
             ].map(item => (
               <div key={item.label} className="rounded-xl px-3 py-2.5"
-                style={{ background: "rgba(255,255,255,0.8)", border: "1px solid rgba(99,102,241,0.08)" }}>
+                style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.15)" }}>
                 <div className="flex items-center gap-1.5 mb-0.5">
                   <item.icon className="w-3 h-3" style={{ color: sc.color }} />
-                  <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: "rgba(100,116,139,0.5)" }}>{item.label}</p>
+                  <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: "rgba(196,181,253,0.5)" }}>{item.label}</p>
                 </div>
-                <p className="text-[12px] font-bold text-slate-700 capitalize">{item.value}</p>
+                <p className="text-[12px] font-bold capitalize" style={{ color: "#e2d9f3" }}>{item.value}</p>
               </div>
             ))}
           </div>
 
           {ticket.description && (
             <div className="rounded-xl px-4 py-3"
-              style={{ background: "rgba(255,255,255,0.8)", border: "1px solid rgba(99,102,241,0.08)" }}>
+              style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.14)" }}>
               <div className="flex items-center gap-1.5 mb-1">
                 <MessageSquare className="w-3 h-3" style={{ color: sc.color }} />
-                <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: "rgba(100,116,139,0.5)" }}>Description</p>
+                <p className="text-[9px] uppercase tracking-wider font-bold" style={{ color: "rgba(196,181,253,0.5)" }}>Description</p>
               </div>
-              <p className="text-[12px] text-slate-600 leading-relaxed">{ticket.description}</p>
+              <p className="text-[12px] leading-relaxed" style={{ color: "#c4b5fd" }}>{ticket.description}</p>
             </div>
           )}
 
           {ticket.resolution_notes && (
             <div className="rounded-xl px-4 py-3"
-              style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.2)" }}>
+              style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.22)" }}>
               <p className="text-[9px] uppercase tracking-wider font-bold mb-1" style={{ color: "#10b981" }}>Resolution Notes</p>
-              <p className="text-[12px] text-slate-600">{ticket.resolution_notes}</p>
+              <p className="text-[12px]" style={{ color: "#6ee7b7" }}>{ticket.resolution_notes}</p>
             </div>
           )}
 
           {/* Quick status actions for admins */}
           {isAdmin && (
             <div className="flex flex-wrap gap-2 pt-1">
-              <p className="w-full text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(100,116,139,0.45)" }}>Quick Status</p>
+              <p className="w-full text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,181,253,0.4)" }}>Quick Status</p>
               {Object.entries(STATUS_CFG).filter(([k]) => k !== ticket.status).map(([k, cfg]) => (
                 <button key={k} onClick={() => onStatusChange(ticket.id, k)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
@@ -266,16 +271,16 @@ export default function Tickets() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f172a" }}>Support Tickets</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0e8ff", fontFamily: "'Space Grotesk', sans-serif" }}>Support Tickets</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(196,181,253,0.5)" }}>
             {visibleTickets.length} tickets · {visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length} open
-            {criticalCount > 0 && <span className="ml-1 text-red-500 font-bold">· {criticalCount} critical</span>}
+            {criticalCount > 0 && <span className="ml-1 font-bold" style={{ color: "#ef4444" }}>· {criticalCount} critical</span>}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => refetch()}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.15)", color: "#6366f1" }}>
+            style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.2)", color: "#a78bfa" }}>
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </button>
           {isAdmin && (
@@ -290,14 +295,14 @@ export default function Tickets() {
 
       {/* ── WhatsApp Support Banner ── */}
       <div className="flex items-center gap-4 px-5 py-4 rounded-2xl"
-        style={{ background: "linear-gradient(135deg,rgba(37,211,102,0.08),rgba(18,140,126,0.06))", border: "1px solid rgba(37,211,102,0.2)" }}>
+        style={{ background: "linear-gradient(135deg,rgba(37,211,102,0.07),rgba(18,140,126,0.05))", border: "1px solid rgba(37,211,102,0.2)" }}>
         <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{ background: "linear-gradient(135deg,#25D366,#128C7E)", boxShadow: "0 4px 14px rgba(37,211,102,0.3)" }}>
           <Smartphone className="w-5 h-5 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-black" style={{ color: "#1e293b" }}>WhatsApp Support — Two-Way Ticket Integration</p>
-          <p className="text-[11px] mt-0.5" style={{ color: "#64748b" }}>
+          <p className="text-[13px] font-black" style={{ color: "#e8d5ff" }}>WhatsApp Support — Two-Way Ticket Integration</p>
+          <p className="text-[11px] mt-0.5" style={{ color: "rgba(196,181,253,0.55)" }}>
             Customers can raise &amp; track tickets directly via WhatsApp. Tickets sync automatically into this dashboard.
           </p>
         </div>
@@ -314,30 +319,32 @@ export default function Tickets() {
       {/* ── KPI Strip (clickable filters) ── */}
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-20 rounded-2xl" />)}
+          {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <KPICard label="Open"        count={visibleTickets.filter(t=>t.status==="open").length}        color="#f59e0b" icon={Clock}         onClick={() => setStatusFilter(s => s === "open" ? "all" : "open")}         active={statusFilter === "open"} />
+          <KPICard label="Open"        count={visibleTickets.filter(t=>t.status==="open").length}        color="#f59e0b" icon={Clock}         onClick={() => setStatusFilter(s => s === "open" ? "all" : "open")}               active={statusFilter === "open"} />
           <KPICard label="In Progress" count={visibleTickets.filter(t=>t.status==="in_progress").length} color="#3b82f6" icon={TicketCheck}   onClick={() => setStatusFilter(s => s === "in_progress" ? "all" : "in_progress")} active={statusFilter === "in_progress"} />
-          <KPICard label="Escalated"   count={visibleTickets.filter(t=>t.status==="escalated").length}   color="#ef4444" icon={AlertTriangle} onClick={() => setStatusFilter(s => s === "escalated" ? "all" : "escalated")}   active={statusFilter === "escalated"} />
-          <KPICard label="Resolved"    count={visibleTickets.filter(t=>t.status==="resolved").length}    color="#10b981" icon={CheckCircle2}  onClick={() => setStatusFilter(s => s === "resolved" ? "all" : "resolved")}    active={statusFilter === "resolved"} />
+          <KPICard label="Escalated"   count={visibleTickets.filter(t=>t.status==="escalated").length}   color="#ef4444" icon={AlertTriangle} onClick={() => setStatusFilter(s => s === "escalated" ? "all" : "escalated")}     active={statusFilter === "escalated"} />
+          <KPICard label="Resolved"    count={visibleTickets.filter(t=>t.status==="resolved").length}    color="#10b981" icon={CheckCircle2}  onClick={() => setStatusFilter(s => s === "resolved" ? "all" : "resolved")}       active={statusFilter === "resolved"} />
         </div>
       )}
 
       {/* ── Toolbar ── */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(196,181,253,0.4)" }} />
           <input
-            className="w-full pl-10 pr-8 py-2.5 text-[13px] outline-none rounded-xl"
-            style={{ background: "rgba(255,255,255,0.95)", border: "1px solid rgba(99,102,241,0.15)", color: "#1e293b" }}
+            className="w-full pl-10 pr-8 py-2.5 text-[13px] outline-none rounded-xl transition-all"
+            style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.25)", color: "#e8d5ff" }}
             placeholder="Search by subject, customer, ticket number…"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">✕</button>
+            <button onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-black"
+              style={{ color: "rgba(196,181,253,0.5)" }}>✕</button>
           )}
         </div>
 
@@ -351,11 +358,11 @@ export default function Tickets() {
               <button key={p} onClick={() => setPriorityFilter(p)}
                 className="px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all hover:scale-105"
                 style={{
-                  background: active ? (cfg ? cfg.bg : "rgba(99,102,241,0.1)") : "rgba(255,255,255,0.9)",
-                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(99,102,241,0.3)"}` : "1px solid rgba(99,102,241,0.1)",
-                  color: active ? (cfg ? cfg.color : "#6366f1") : "#94a3b8",
+                  background: active ? (cfg ? cfg.bg : "rgba(139,92,246,0.15)") : "rgba(139,92,246,0.06)",
+                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(139,92,246,0.45)"}` : "1px solid rgba(139,92,246,0.14)",
+                  color: active ? (cfg ? cfg.color : "#a78bfa") : "rgba(196,181,253,0.55)",
                 }}>
-                {p === "all" ? "All Priority" : p}
+                {p === "all" ? "All" : p}
                 <span className="ml-1 opacity-50 font-normal">({cnt})</span>
               </button>
             );
@@ -366,22 +373,22 @@ export default function Tickets() {
       {/* ── Ticket List ── */}
       <div className="rounded-2xl overflow-hidden"
         style={{
-          background: "#ffffff",
-          border: "1px solid rgba(99,102,241,0.1)",
-          boxShadow: "0 4px 24px rgba(99,102,241,0.07)",
+          background: "rgba(10, 6, 24, 0.97)",
+          border: "1px solid rgba(139,92,246,0.22)",
+          boxShadow: "0 8px 40px rgba(139,92,246,0.12)",
         }}>
         {/* Accent bar */}
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#f59e0b,#ef4444,#3b82f6,#10b981,transparent)" }} />
 
         {/* Column headers */}
         <div className="flex items-center gap-3 px-4 py-2.5"
-          style={{ background: "linear-gradient(180deg,#f8f9ff,#f1f5ff)", borderBottom: "1px solid rgba(99,102,241,0.08)" }}>
+          style={{ background: "rgba(139,92,246,0.08)", borderBottom: "1px solid rgba(139,92,246,0.15)" }}>
           <div className="w-9 flex-shrink-0" />
-          <p className="hidden sm:block w-24 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Ticket #</p>
-          <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">Subject</p>
-          <p className="hidden md:block text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Priority</p>
-          <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Status</p>
-          <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 flex-shrink-0">Dept</p>
+          <p className="hidden sm:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#9d8ec7" }}>Ticket #</p>
+          <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "#9d8ec7" }}>Subject</p>
+          <p className="hidden md:block text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#9d8ec7" }}>Priority</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#9d8ec7" }}>Status</p>
+          <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "#9d8ec7" }}>Dept</p>
           <div className="w-20 flex-shrink-0" />
         </div>
 
@@ -392,11 +399,11 @@ export default function Tickets() {
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3"
-              style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.12)" }}>
-              <TicketCheck className="w-6 h-6" style={{ color: "#6366f1" }} />
+              style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.18)" }}>
+              <TicketCheck className="w-6 h-6" style={{ color: "#a78bfa" }} />
             </div>
-            <p className="font-bold text-slate-500 text-[13px]">No tickets found</p>
-            <p className="text-[11px] text-slate-400 mt-1">Try adjusting your filters</p>
+            <p className="font-bold text-[13px]" style={{ color: "#c4b5fd" }}>No tickets found</p>
+            <p className="text-[11px] mt-1" style={{ color: "rgba(196,181,253,0.45)" }}>Try adjusting your filters</p>
           </div>
         ) : (
           filtered.map(t => (
@@ -413,15 +420,15 @@ export default function Tickets() {
 
         {!isLoading && filtered.length > 0 && (
           <div className="px-4 py-2.5 flex items-center justify-between"
-            style={{ background: "linear-gradient(180deg,#f8f9ff,#f1f5ff)", borderTop: "1px solid rgba(99,102,241,0.07)" }}>
-            <p className="text-[11px] mono" style={{ color: "rgba(100,116,139,0.55)" }}>
+            style={{ background: "rgba(139,92,246,0.06)", borderTop: "1px solid rgba(139,92,246,0.12)" }}>
+            <p className="text-[11px] mono" style={{ color: "rgba(196,181,253,0.45)" }}>
               {filtered.length} of {visibleTickets.length} tickets
             </p>
             <div className="flex gap-3">
               {statusFilter !== "all" && (
                 <button onClick={() => setStatusFilter("all")}
                   className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
-                  style={{ color: "#6366f1", background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.15)" }}>
+                  style={{ color: "#a78bfa", background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)" }}>
                   Clear filter
                 </button>
               )}

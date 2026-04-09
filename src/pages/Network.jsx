@@ -170,15 +170,19 @@ export default function Network() {
   });
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
+    <div className="p-5 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: "#1e293b" }}>Network Infrastructure</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>Monitor and manage network nodes</p>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0e8ff", fontFamily: "'Space Grotesk', sans-serif" }}>Network Infrastructure</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(196,181,253,0.5)" }}>
+            {nodes.length} nodes · {nodes.filter(n=>n.status==="online").length} online
+          </p>
         </div>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }} className="text-white text-sm" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
-          <Plus className="w-4 h-4 mr-2" /> Add Node
-        </Button>
+        <button onClick={() => { setEditing(null); setShowForm(true); }}
+          className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 20px rgba(99,102,241,0.35)" }}>
+          <Plus className="w-4 h-4" /> Add Node
+        </button>
       </div>
 
       {/* Tabs */}
