@@ -15,7 +15,7 @@ export default function CoverageChecker({ onClose }) {
       const res = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a coverage assistant for TouchNet, a South African fibre and wireless ISP operating mainly in Gauteng, Western Cape, and KwaZulu-Natal.
 The user is asking about internet coverage at: "${query}".
-Based on general knowledge of South African suburbs and typical ISP coverage patterns for TouchNet, Openserve, Vumatel and Frogfoot, determine coverage.
+Based on general knowledge of South African suburbs and typical ISP coverage patterns for TouchNet, Openserve, Vumatel, Frogfoot, MFN, DFA, Link Africa, Liquid Home and Herotel, determine coverage.
 Respond strictly with the JSON schema provided.`,
         response_json_schema: {
           type: "object",
@@ -57,7 +57,6 @@ Respond strictly with the JSON schema provided.`,
 
         <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#6366f1,#06b6d4,#10b981,transparent)" }} />
 
-        {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4"
           style={{ borderBottom: "1px solid rgba(139,92,246,0.12)" }}>
           <div className="flex items-center gap-3">
@@ -77,7 +76,6 @@ Respond strictly with the JSON schema provided.`,
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-6 py-5 space-y-4">
           <div className="flex gap-2">
             <div className="relative flex-1">
