@@ -6,7 +6,7 @@ import {
   Wifi, Zap, ChevronRight, Send, Phone, Mail, User,
   Building2, ArrowRight, Star, RefreshCw, Layers, X,
   BarChart3, Shield, Clock, TrendingUp, ArrowUpRight, Eye,
-  Filter, Activity, Radio, Globe, Map
+  Filter, Activity, Radio, Globe, Map, ExternalLink
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import "leaflet/dist/leaflet.css";
@@ -203,63 +203,212 @@ function Stars({ rating }) {
   );
 }
 
-// ── Provider comparison table ─────────────────────────────────────────────────
-function ComparisonModal({ providerResults, onClose, onSignUp }) {
-  const [selectedPlans, setSelectedPlans] = useState({});
-  const available = providerResults.filter(r => r.covered);
+// ── Speed/Price scatter chart ─────────────────────────────────────────────────
+function SpeedPriceChart({ available }) {
+  const allPlans = available.flatMap(({ provider }) =>
+    provider.plans.map(pl => ({
+      ...pl,
+      providerName: provider.name,
+      color: provider.color,
+      logo: provider.logo,
+      speedNum: parseInt(pl.speed) || 0,
+    }))
+  );
+  const maxPrice = Math.max(...allPlans.map(p => p.price), 1);
+  const maxSpeed = Math.max(...allPlans.map(p => p.speedNum), 1);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-      style={{ background: "rgba(5,3,14,0.92)", backdropFilter: "blur(16px)" }}>
-      <div className="relative w-full max-w-5xl max-h-[92vh] flex flex-col rounded-3xl overflow-hidden"
-        style={{ background: "linear-gradient(160deg,#0f0a1e 0%,#12103a 100%)", border: "1px solid rgba(155,143,239,0.25)", boxShadow: "0 32px 80px rgba(124,111,224,0.25)" }}>
+    <div className="relative rounded-2xl p-5 overflow-hidden"
+      style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(155,143,239,0.15)", height: 260 }}>
+      <p className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: "rgba(196,188,247,0.5)" }}>
+        Speed vs Price — Bubble = Value Score
+      </p>
+      {/* Grid */}
+      <div className="absolute inset-0 pointer-events-none" style={{ top: 40, bottom: 24, left: 40, right: 12 }}>
+        {[0,25,50,75,100].map(pct => (
+          <div key={pct} className="absolute w-full" style={{ bottom: `${pct}%`, borderBottom: "1px solid rgba(255,255,255,0.04)" }} />
+        ))}
+        {[0,25,50,75,100].map(pct => (
+          <div key={pct} className="absolute h-full" style={{ left: `${pct}%`, borderLeft: "1px solid rgba(255,255,255,0.04)" }} />
+        ))}
+      </div>
+      {/* Axis labels */}
+      <div className="absolute bottom-2 left-10 right-2 flex justify-between">
+        {[0, 1000, 2000, 3000].map(p => (
+          <span key={p} className="text-[9px]" style={{ color: "rgba(196,188,247,0.3)" }}>R{p}</span>
+        ))}
+      </div>
+      <div className="absolute top-10 bottom-6 left-0 flex flex-col justify-between items-center" style={{ width: 36 }}>
+        {[1000, 500, 100, 10].map(s => (
+          <span key={s} className="text-[8px] text-right" style={{ color: "rgba(196,188,247,0.3)" }}>{s >= 1000 ? "1G" : `${s}M`}</span>
+        ))}
+      </div>
+      {/* Dots */}
+      <div className="absolute" style={{ top: 40, bottom: 24, left: 40, right: 12 }}>
+        {allPlans.map((pl, i) => {
+          const xPct = (pl.price / (maxPrice * 1.05)) * 100;
+          const yPct = (Math.log(pl.speedNum + 1) / Math.log(maxSpeed * 1.1)) * 100;
+          const valueScore = Math.round((pl.speedNum / pl.price) * 100);
+          const size = 10 + Math.min(valueScore / 5, 22);
+          return (
+            <div key={i} className="absolute group"
+              style={{ left: `${xPct}%`, bottom: `${yPct}%`, transform: "translate(-50%,50%)" }}>
+              <div className="rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-125"
+                style={{
+                  width: size, height: size,
+                  background: pl.color,
+                  opacity: 0.85,
+                  boxShadow: `0 0 ${size/2}px ${pl.color}55`,
+                }}>
+                <span style={{ fontSize: size * 0.45 }}>{pl.logo}</span>
+              </div>
+              {/* Tooltip on hover */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50"
+                style={{ whiteSpace: "nowrap" }}>
+                <div className="rounded-xl px-2.5 py-1.5 text-[10px]"
+                  style={{ background: "rgba(12,8,28,0.98)", border: `1px solid ${pl.color}40`, boxShadow: `0 4px 16px ${pl.color}30` }}>
+                  <p className="font-black" style={{ color: pl.color }}>{pl.providerName} · {pl.label}</p>
+                  <p style={{ color: "#c4b5fd" }}>{pl.speed} · R{pl.price}/mo</p>
+                  <p style={{ color: valueScore > 40 ? "#10b981" : "#f59e0b" }}>Value: {valueScore > 40 ? "Excellent" : valueScore > 20 ? "Good" : "Fair"}</p>
+                </div>
+                <div className="w-2 h-2 mx-auto rotate-45 -mt-1" style={{ background: "rgba(12,8,28,0.98)" }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Best-value recommendations ────────────────────────────────────────────────
+function BestValuePicks({ available }) {
+  const allPlans = available.flatMap(({ provider }) =>
+    provider.plans.map(pl => ({ ...pl, provider, valueScore: Math.round((parseInt(pl.speed) / pl.price) * 100) }))
+  ).sort((a, b) => b.valueScore - a.valueScore);
+
+  const picks = [
+    { label: "Best Value",   emoji: "🏆", plan: allPlans[0] },
+    { label: "Best Speed",   emoji: "⚡", plan: allPlans.sort((a,b) => parseInt(b.speed) - parseInt(a.speed))[0] },
+    { label: "Lowest Price", emoji: "💰", plan: [...allPlans].sort((a,b) => a.price - b.price)[0] },
+  ].filter(p => p.plan);
+
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      {picks.map(({ label, emoji, plan }) => (
+        <div key={label} className="rounded-2xl p-3 relative overflow-hidden"
+          style={{ background: `${plan.provider.color}08`, border: `1px solid ${plan.provider.color}25` }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{ background: `linear-gradient(90deg,${plan.provider.color},transparent)` }} />
+          <p className="text-lg mb-1">{emoji}</p>
+          <p className="text-[9px] font-black uppercase tracking-wider mb-1" style={{ color: "rgba(196,188,247,0.5)" }}>{label}</p>
+          <p className="text-[12px] font-black" style={{ color: plan.provider.color }}>{plan.provider.name}</p>
+          <p className="text-[11px] font-bold mono" style={{ color: "#e8d5ff" }}>{plan.speed}</p>
+          <p className="text-[11px]" style={{ color: "rgba(196,188,247,0.6)" }}>R{plan.price}/mo · {plan.label}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Provider comparison table ─────────────────────────────────────────────────
+function ComparisonModal({ providerResults, onClose, onSignUp }) {
+  const available = providerResults.filter(r => r.covered);
+  const [activeTab, setActiveTab] = useState("table"); // table | chart | features
+  const [filterProvider, setFilterProvider] = useState("all");
+  const [sortBy, setSortBy] = useState("value"); // value | speed | price
+
+  const allPlans = available.flatMap(({ provider }) =>
+    provider.plans.map(pl => ({
+      ...pl,
+      provider,
+      valueScore: Math.round((parseInt(pl.speed) / pl.price) * 100),
+    }))
+  );
+
+  const sorted = [...allPlans]
+    .filter(pl => filterProvider === "all" || pl.provider.id === filterProvider)
+    .sort((a, b) => {
+      if (sortBy === "speed") return parseInt(b.speed) - parseInt(a.speed);
+      if (sortBy === "price") return a.price - b.price;
+      return b.valueScore - a.valueScore;
+    });
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3"
+      style={{ background: "rgba(5,3,14,0.94)", backdropFilter: "blur(18px)" }}>
+      <div className="relative w-full max-w-5xl max-h-[95vh] flex flex-col rounded-3xl overflow-hidden"
+        style={{ background: "linear-gradient(160deg,#0b0818 0%,#0f0a22 100%)", border: "1px solid rgba(155,143,239,0.25)", boxShadow: "0 40px 100px rgba(124,111,224,0.3)" }}>
+
+        <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#6366f1,#9b8fef,#06b6d4,#10b981,transparent)" }} />
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-          style={{ borderBottom: "1px solid rgba(155,143,239,0.12)", background: "rgba(155,143,239,0.05)" }}>
+          style={{ borderBottom: "1px solid rgba(155,143,239,0.12)", background: "rgba(155,143,239,0.04)" }}>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg,#7c6fe0,#9b8fef)", boxShadow: "0 4px 16px rgba(124,111,224,0.4)" }}>
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg,#6366f1,#9b8fef)", boxShadow: "0 4px 20px rgba(99,102,241,0.45)" }}>
               <BarChart3 className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-[16px] font-black" style={{ color: "#c4bcf7" }}>Provider Comparison</h2>
-              <p className="text-[11px]" style={{ color: "rgba(196,188,247,0.4)" }}>
-                {available.length} provider{available.length !== 1 ? "s" : ""} available at your address
+              <h2 className="text-[17px] font-black" style={{ color: "#e8d5ff" }}>Provider Intelligence</h2>
+              <p className="text-[11px]" style={{ color: "rgba(196,188,247,0.45)" }}>
+                {available.length} provider{available.length !== 1 ? "s" : ""} available · {allPlans.length} plans compared
               </p>
             </div>
           </div>
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all">
-            <X className="w-4 h-4" style={{ color: "#9b8fef" }} />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Tabs */}
+            {[
+              { id: "table",    label: "Table",   icon: "📋" },
+              { id: "chart",    label: "Chart",   icon: "📊" },
+              { id: "features", label: "Features", icon: "✨" },
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all"
+                style={{
+                  background: activeTab === tab.id ? "rgba(155,143,239,0.2)" : "transparent",
+                  border: `1px solid ${activeTab === tab.id ? "rgba(155,143,239,0.4)" : "rgba(255,255,255,0.06)"}`,
+                  color: activeTab === tab.id ? "#c4bcf7" : "#475569",
+                }}>
+                <span>{tab.icon}</span> {tab.label}
+              </button>
+            ))}
+            <button onClick={onClose}
+              className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all ml-2">
+              <X className="w-4 h-4" style={{ color: "#9b8fef" }} />
+            </button>
+          </div>
         </div>
 
-        <div className="overflow-y-auto flex-1 p-6">
+        <div className="overflow-y-auto flex-1 p-5 space-y-5">
+
           {/* Provider cards */}
-          <div className={`grid gap-4 mb-6 ${available.length === 1 ? "grid-cols-1 max-w-sm" : available.length === 2 ? "grid-cols-2" : available.length === 3 ? "grid-cols-3" : "grid-cols-2 lg:grid-cols-4"}`}>
+          <div className={`grid gap-3 ${available.length <= 2 ? "grid-cols-2" : available.length === 3 ? "grid-cols-3" : "grid-cols-2 lg:grid-cols-4"}`}>
             {available.map(({ provider }) => (
-              <div key={provider.id} className="rounded-2xl overflow-hidden relative"
-                style={{ background: `${provider.color}08`, border: `1px solid ${provider.color}25` }}>
-                <div className="h-1" style={{ background: `linear-gradient(90deg,${provider.color},transparent)` }} />
-                <div className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-2xl">{provider.logo}</span>
-                    <div>
-                      <p className="text-[14px] font-black" style={{ color: "#e2e8f0" }}>{provider.name}</p>
+              <div key={provider.id} className="rounded-2xl overflow-hidden relative cursor-pointer transition-all hover:scale-[1.02]"
+                style={{ background: `${provider.color}08`, border: `1px solid ${filterProvider === provider.id ? provider.color + "60" : provider.color + "22"}` }}
+                onClick={() => setFilterProvider(f => f === provider.id ? "all" : provider.id)}>
+                <div className="h-0.5" style={{ background: `linear-gradient(90deg,${provider.color},transparent)` }} />
+                <div className="p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xl">{provider.logo}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-black truncate" style={{ color: "#e2e8f0" }}>{provider.name}</p>
                       <Stars rating={provider.rating} />
                     </div>
                   </div>
-                  <p className="text-[10px] mb-3" style={{ color: "rgba(196,188,247,0.5)" }}>{provider.tagline}</p>
-                  <div className="space-y-1">
+                  <div className="grid grid-cols-2 gap-1">
                     {[
-                      { label: "Customers", value: provider.customers },
-                      { label: "Uptime SLA", value: provider.uptime },
-                      { label: "Since", value: provider.founded },
+                      { label: "Plans",    value: provider.plans.length },
+                      { label: "Uptime",   value: provider.uptime },
+                      { label: "Customers",value: provider.customers },
+                      { label: "Since",    value: provider.founded },
                     ].map(d => (
-                      <div key={d.label} className="flex justify-between">
-                        <span className="text-[10px]" style={{ color: "rgba(196,188,247,0.4)" }}>{d.label}</span>
-                        <span className="text-[10px] font-bold" style={{ color: "#c4bcf7" }}>{d.value}</span>
+                      <div key={d.label} className="text-center rounded-lg py-1 px-1.5"
+                        style={{ background: "rgba(255,255,255,0.03)" }}>
+                        <p className="text-[11px] font-black mono" style={{ color: provider.color }}>{d.value}</p>
+                        <p className="text-[9px]" style={{ color: "rgba(196,188,247,0.35)" }}>{d.label}</p>
                       </div>
                     ))}
                   </div>
@@ -268,91 +417,251 @@ function ComparisonModal({ providerResults, onClose, onSignUp }) {
             ))}
           </div>
 
-          {/* Plan comparison table */}
-          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(155,143,239,0.15)" }}>
-            <div className="px-4 py-3 flex items-center gap-2"
-              style={{ background: "rgba(155,143,239,0.06)", borderBottom: "1px solid rgba(155,143,239,0.12)" }}>
-              <Layers className="w-4 h-4" style={{ color: "#9b8fef" }} />
-              <p className="text-[12px] font-black" style={{ color: "#c4bcf7" }}>Plan Comparison by Price</p>
-            </div>
+          {/* Best value picks */}
+          <BestValuePicks available={available} />
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left" style={{ borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ background: "rgba(255,255,255,0.02)" }}>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)", width: 120 }}>Provider</th>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)" }}>Plan</th>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)" }}>Download</th>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)" }}>Upload</th>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)" }}>Price / mo</th>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)" }}>Contract</th>
-                    <th className="px-4 py-3 text-[10px] font-black uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.5)" }}>Value</th>
-                    <th className="px-4 py-3"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {available.flatMap(({ provider }) =>
-                    provider.plans.map((plan, pi) => {
-                      const valueScore = Math.round((parseInt(plan.speed) / plan.price) * 100);
-                      const isHighlight = provider.id === "touchnet";
-                      return (
-                        <tr key={`${provider.id}-${pi}`}
-                          className="transition-all hover:bg-white/[0.03]"
-                          style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">{provider.logo}</span>
-                              <span className="text-[11px] font-bold" style={{ color: provider.color }}>{provider.name}</span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="text-[12px] font-bold" style={{ color: isHighlight ? "#c4bcf7" : "#94a3b8" }}>{plan.label}</span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="text-[13px] font-black mono" style={{ color: "#e2e8f0" }}>{plan.speed}</span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="text-[12px] font-semibold" style={{ color: "#64748b" }}>{plan.upload}</span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="text-[14px] font-black" style={{ color: provider.color }}>R{plan.price}</span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="text-[11px] px-2 py-0.5 rounded-lg font-bold"
-                              style={{ background: "rgba(255,255,255,0.05)", color: "#64748b" }}>
-                              {plan.contract} mo
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-1.5">
-                              <div className="w-16 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                                <div className="h-1.5 rounded-full" style={{
-                                  width: `${Math.min(100, valueScore / 5)}%`,
-                                  background: valueScore > 40 ? "#10b981" : valueScore > 20 ? "#f59e0b" : "#ef4444"
-                                }} />
+          {/* ── TABLE TAB ── */}
+          {activeTab === "table" && (
+            <div className="space-y-3">
+              {/* Controls */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.4)" }}>Sort:</span>
+                  {[
+                    { id: "value", label: "Best Value" },
+                    { id: "speed", label: "Fastest" },
+                    { id: "price", label: "Cheapest" },
+                  ].map(s => (
+                    <button key={s.id} onClick={() => setSortBy(s.id)}
+                      className="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+                      style={{
+                        background: sortBy === s.id ? "rgba(155,143,239,0.15)" : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${sortBy === s.id ? "rgba(155,143,239,0.4)" : "rgba(255,255,255,0.07)"}`,
+                        color: sortBy === s.id ? "#c4bcf7" : "#475569",
+                      }}>
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-1.5 ml-auto">
+                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "rgba(196,188,247,0.4)" }}>Filter:</span>
+                  <button onClick={() => setFilterProvider("all")}
+                    className="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+                    style={{
+                      background: filterProvider === "all" ? "rgba(155,143,239,0.15)" : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${filterProvider === "all" ? "rgba(155,143,239,0.4)" : "rgba(255,255,255,0.07)"}`,
+                      color: filterProvider === "all" ? "#c4bcf7" : "#475569",
+                    }}>All</button>
+                  {available.map(({ provider }) => (
+                    <button key={provider.id} onClick={() => setFilterProvider(f => f === provider.id ? "all" : provider.id)}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+                      style={{
+                        background: filterProvider === provider.id ? `${provider.color}15` : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${filterProvider === provider.id ? provider.color + "40" : "rgba(255,255,255,0.07)"}`,
+                        color: filterProvider === provider.id ? provider.color : "#475569",
+                      }}>
+                      {provider.logo} {provider.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(155,143,239,0.14)" }}>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left" style={{ borderCollapse: "collapse" }}>
+                    <thead>
+                      <tr style={{ background: "rgba(155,143,239,0.07)", borderBottom: "1px solid rgba(155,143,239,0.12)" }}>
+                        {["Provider","Plan","⬇ Download","⬆ Upload","R / month","Contract","Value Score",""].map(h => (
+                          <th key={h} className="px-4 py-3 text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: "rgba(196,188,247,0.5)" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sorted.map((pl, i) => {
+                        const isTopValue = i === 0 && sortBy === "value";
+                        return (
+                          <tr key={i} className="transition-all"
+                            style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: isTopValue ? `${pl.provider.color}06` : "transparent" }}
+                            onMouseEnter={e => e.currentTarget.style.background = "rgba(155,143,239,0.04)"}
+                            onMouseLeave={e => e.currentTarget.style.background = isTopValue ? `${pl.provider.color}06` : "transparent"}>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">{pl.provider.logo}</span>
+                                <span className="text-[11px] font-bold" style={{ color: pl.provider.color }}>{pl.provider.name}</span>
+                                {isTopValue && <span className="text-[8px] px-1.5 py-0.5 rounded-full font-black" style={{ background: "#f59e0b20", color: "#f59e0b", border: "1px solid #f59e0b30" }}>BEST VALUE</span>}
                               </div>
-                              <span className="text-[9px] font-black" style={{ color: valueScore > 40 ? "#10b981" : valueScore > 20 ? "#f59e0b" : "#ef4444" }}>
-                                {valueScore > 40 ? "★★★" : valueScore > 20 ? "★★" : "★"}
+                            </td>
+                            <td className="px-4 py-3 text-[12px] font-bold" style={{ color: "#c4bcf7" }}>{pl.label}</td>
+                            <td className="px-4 py-3">
+                              <span className="text-[14px] font-black mono" style={{ color: "#e8d5ff" }}>{pl.speed}</span>
+                            </td>
+                            <td className="px-4 py-3 text-[12px] font-semibold mono" style={{ color: "rgba(196,188,247,0.5)" }}>{pl.upload}</td>
+                            <td className="px-4 py-3">
+                              <span className="text-[15px] font-black" style={{ color: pl.provider.color }}>R{pl.price}</span>
+                              <span className="text-[10px] ml-1" style={{ color: "rgba(196,188,247,0.4)" }}>/mo</span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="text-[11px] px-2 py-1 rounded-lg font-bold"
+                                style={{ background: "rgba(255,255,255,0.05)", color: "#64748b", border: "1px solid rgba(255,255,255,0.06)" }}>
+                                {pl.contract} mo
                               </span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            {provider.id === "touchnet" && (
-                              <button onClick={() => onSignUp(plan)}
-                                className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-black text-white transition-all hover:scale-105"
-                                style={{ background: "linear-gradient(135deg,#7c6fe0,#9b8fef)", boxShadow: "0 3px 10px rgba(124,111,224,0.4)" }}>
-                                Sign Up <ArrowUpRight className="w-3 h-3" />
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <div className="w-20 h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                                  <div className="h-2 rounded-full transition-all"
+                                    style={{ width: `${Math.min(100, pl.valueScore / 5)}%`, background: pl.valueScore > 40 ? "linear-gradient(90deg,#10b981,#06b6d4)" : pl.valueScore > 20 ? "linear-gradient(90deg,#f59e0b,#f97316)" : "#ef4444" }} />
+                                </div>
+                                <span className="text-[10px] font-black"
+                                  style={{ color: pl.valueScore > 40 ? "#10b981" : pl.valueScore > 20 ? "#f59e0b" : "#ef4444" }}>
+                                  {pl.valueScore > 40 ? "★★★" : pl.valueScore > 20 ? "★★" : "★"}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              {pl.provider.id === "touchnet" && (
+                                <button onClick={() => onSignUp(pl)}
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-black text-white transition-all hover:scale-105"
+                                  style={{ background: "linear-gradient(135deg,#6366f1,#9b8fef)", boxShadow: "0 3px 12px rgba(99,102,241,0.4)" }}>
+                                  Sign Up <ArrowUpRight className="w-3 h-3" />
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* ── CHART TAB ── */}
+          {activeTab === "chart" && (
+            <div className="space-y-4">
+              <SpeedPriceChart available={available} />
+
+              {/* Per-provider speed bar */}
+              <div className="rounded-2xl p-4 space-y-3"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(155,143,239,0.15)" }}>
+                <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "rgba(196,188,247,0.5)" }}>Max Available Speed per Provider</p>
+                {available.map(({ provider }) => {
+                  const maxSpeed = Math.max(...provider.plans.map(p => parseInt(p.speed) || 0));
+                  const pct = (maxSpeed / 1000) * 100;
+                  return (
+                    <div key={provider.id}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span>{provider.logo}</span>
+                          <span className="text-[12px] font-bold" style={{ color: provider.color }}>{provider.name}</span>
+                        </div>
+                        <span className="text-[12px] font-black mono" style={{ color: "#e8d5ff" }}>
+                          {maxSpeed >= 1000 ? "1 Gbps" : `${maxSpeed} Mbps`}
+                        </span>
+                      </div>
+                      <div className="h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+                        <div className="h-3 rounded-full transition-all duration-700"
+                          style={{ width: `${Math.min(pct, 100)}%`, background: `linear-gradient(90deg,${provider.color},${provider.color}88)`, boxShadow: `0 0 10px ${provider.color}55` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Price range comparison */}
+              <div className="rounded-2xl p-4 space-y-3"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(155,143,239,0.15)" }}>
+                <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "rgba(196,188,247,0.5)" }}>Price Range (entry → top tier)</p>
+                {available.map(({ provider }) => {
+                  const prices = provider.plans.map(p => p.price);
+                  const minP = Math.min(...prices), maxP = Math.max(...prices);
+                  const xMin = (minP / 3500) * 100, xMax = (maxP / 3500) * 100;
+                  return (
+                    <div key={provider.id}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span>{provider.logo}</span>
+                          <span className="text-[12px] font-bold" style={{ color: provider.color }}>{provider.name}</span>
+                        </div>
+                        <span className="text-[11px] mono" style={{ color: "rgba(196,188,247,0.6)" }}>R{minP} – R{maxP}</span>
+                      </div>
+                      <div className="relative h-3 rounded-full" style={{ background: "rgba(255,255,255,0.05)" }}>
+                        <div className="absolute h-3 rounded-full transition-all duration-700"
+                          style={{ left: `${xMin}%`, width: `${xMax - xMin}%`, background: `linear-gradient(90deg,${provider.color}aa,${provider.color})`, boxShadow: `0 0 8px ${provider.color}44` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ── FEATURES TAB ── */}
+          {activeTab === "features" && (
+            <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(155,143,239,0.15)" }}>
+              <div className="overflow-x-auto">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ background: "rgba(155,143,239,0.07)", borderBottom: "1px solid rgba(155,143,239,0.12)" }}>
+                      <th className="px-4 py-3 text-left text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: "rgba(196,188,247,0.5)", width: 160 }}>Feature</th>
+                      {available.map(({ provider }) => (
+                        <th key={provider.id} className="px-4 py-3 text-center text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: provider.color }}>
+                          {provider.logo} {provider.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { feature: "Uncapped Data",       key: "uncapped" },
+                      { feature: "Static IP",           key: "static_ip" },
+                      { feature: "24/7 Support",        key: "support_24" },
+                      { feature: "Priority Support",    key: "priority" },
+                      { feature: "SLA Guarantee",       key: "sla" },
+                      { feature: "Free Router",         key: "router" },
+                      { feature: "WiFi 6",              key: "wifi6" },
+                      { feature: "Gigabit Available",   key: "gigabit" },
+                      { feature: "12-month Contract",   key: "short_contract" },
+                    ].map((row, ri) => (
+                      <tr key={row.key} style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: ri % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)" }}>
+                        <td className="px-4 py-3 text-[12px] font-semibold" style={{ color: "#c4b5fd" }}>{row.feature}</td>
+                        {available.map(({ provider }) => {
+                          const allFeatures = provider.plans.flatMap(p => p.features?.map(f => f.toLowerCase()) || []);
+                          const maxSpeed = Math.max(...provider.plans.map(p => parseInt(p.speed) || 0));
+                          const minContract = Math.min(...provider.plans.map(p => p.contract || 24));
+
+                          const checks = {
+                            uncapped:       allFeatures.some(f => f.includes("uncapped")),
+                            static_ip:      allFeatures.some(f => f.includes("static ip") || f.includes("static")),
+                            support_24:     allFeatures.some(f => f.includes("24/7") || f.includes("support")),
+                            priority:       allFeatures.some(f => f.includes("priority")),
+                            sla:            allFeatures.some(f => f.includes("sla") || f.includes("99.9")),
+                            router:         allFeatures.some(f => f.includes("router")),
+                            wifi6:          allFeatures.some(f => f.includes("wifi 6")),
+                            gigabit:        maxSpeed >= 1000,
+                            short_contract: minContract <= 12,
+                          };
+
+                          const has = checks[row.key];
+                          return (
+                            <td key={provider.id} className="px-4 py-3 text-center">
+                              {has
+                                ? <span className="inline-flex w-6 h-6 items-center justify-center rounded-full text-[12px]"
+                                    style={{ background: `${provider.color}20`, border: `1px solid ${provider.color}35` }}>✓</span>
+                                : <span className="inline-block w-6 h-6 rounded-full text-[12px] text-center leading-6"
+                                    style={{ background: "rgba(255,255,255,0.04)", color: "#334155" }}>–</span>
+                              }
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
