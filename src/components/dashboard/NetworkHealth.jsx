@@ -23,14 +23,14 @@ export default function NetworkHealth({ nodes }) {
 
   return (
     <div className="rounded-2xl p-5 relative overflow-hidden"
-      style={{ background: "#ffffff", border: "1px solid rgba(99,102,241,0.1)", boxShadow: "0 2px 16px rgba(99,102,241,0.06)" }}>
+      style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", boxShadow: "0 4px 24px rgba(0,0,0,0.25)" }}>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-[13px] font-bold flex items-center gap-2" style={{ color: "#1e293b" }}>
+          <h3 className="text-[13px] font-bold flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
             <Activity className="w-3.5 h-3.5" style={{ color: "#06b6d4" }} />
             Network Health
           </h3>
-          <p className="text-[10px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.5)" }}>{nodes.length} nodes total</p>
+          <p className="text-[10px] mt-0.5 mono" style={{ color: "var(--text-muted)" }}>{nodes.length} nodes total</p>
         </div>
         <div className="px-3 py-1.5 rounded-lg text-[12px] font-bold mono"
           style={{ background: `${uptimeColor}12`, border: `1px solid ${uptimeColor}30`, color: uptimeColor }}>
@@ -48,10 +48,10 @@ export default function NetworkHealth({ nodes }) {
               </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-semibold" style={{ color: "#94a3b8" }}>{config.label}</span>
+                  <span className="text-[10px] font-semibold" style={{ color: "var(--text-muted)" }}>{config.label}</span>
                   <span className="text-[11px] font-bold mono" style={{ color: config.color }}>{counts[key]}</span>
                 </div>
-                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(99,102,241,0.07)" }}>
+                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
                   <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: config.grad }} />
                 </div>
               </div>
