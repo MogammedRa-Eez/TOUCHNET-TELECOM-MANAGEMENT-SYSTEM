@@ -17,7 +17,7 @@ export default function CoverageChecker({ onClose }) {
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110 ripple-btn"
+          className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110"
           style={{
             background: "rgba(255,255,255,0.95)",
             border: "1px solid rgba(30,45,110,0.2)",
