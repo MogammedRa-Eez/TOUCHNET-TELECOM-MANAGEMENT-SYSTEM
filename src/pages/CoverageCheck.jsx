@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   MapPin, Search, CheckCircle2, XCircle, AlertCircle, Loader2,
   Zap, Send, Phone, Mail, User, ArrowRight, RefreshCw,
-  Layers, X, BarChart3, Shield, Clock, TrendingUp, ArrowUpRight,
-  Activity, Globe, FileText, Download
+  Layers, X, Shield, Clock, TrendingUp,
+  Activity, FileText, Download
 } from "lucide-react";
+import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { base44 } from "@/api/base44Client";
 import jsPDF from "jspdf";
 
@@ -267,21 +270,30 @@ const checkAllProviders = (lat, lng) =>
     return a.provider.name.localeCompare(b.provider.name);
   });
 
-function useGoogleMaps() {
-  const [loaded, setLoaded] = useState(false);
+// Fix default Leaflet marker icon (broken with bundlers)
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
+
+// Helper component: fly map to new position
+function MapFlyTo({ center, zoom }) {
+  const map = useMap();
   useEffect(() => {
-    if (window.google?.maps) { setLoaded(true); return; }
-    base44.functions.invoke("googleMapsKey", {}).then(res => {
-      const apiKey = res.data?.apiKey;
-      if (!apiKey) return;
-      const s = document.createElement("script");
-      s.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-      s.async = true;
-      s.onload = () => setLoaded(true);
-      document.head.appendChild(s);
-    }).catch(() => {});
-  }, []);
-  return loaded;
+    if (center) map.flyTo(center, zoom || 14, { duration: 1.2 });
+  }, [center, zoom]);
+  return null;
+}
+
+// Nominatim free geocoding
+async function geocodeAddress(query) {
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ", South Africa")}&format=json&limit=1&countrycodes=za`;
+  const res = await fetch(url, { headers: { "Accept-Language": "en" } });
+  const data = await res.json();
+  if (!data || data.length === 0) throw new Error("Address not found");
+  return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), displayName: data[0].display_name };
 }
 
 function FeasibilityReport({ address, providerResults, onClose, onSignUp, result }) {
@@ -387,28 +399,15 @@ function FeasibilityReport({ address, providerResults, onClose, onSignUp, result
         y += 28;
       }
 
-      // ── Static map image via Google Static Maps ──
+      // ── Static map note (coordinates) ──
       if (result?.lat && result?.lng) {
-        try {
-          const mapRes = await base44.functions.invoke("googleMapsKey", {});
-          const apiKey = mapRes.data?.apiKey;
-          if (apiKey) {
-            const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${result.lat},${result.lng}&zoom=14&size=560x200&scale=2&maptype=roadmap&markers=color:red%7C${result.lat},${result.lng}&key=${apiKey}`;
-            const resp = await fetch(mapUrl);
-            if (resp.ok) {
-              const blob = await resp.blob();
-              const reader = new FileReader();
-              const imgData = await new Promise(res => { reader.onload = () => res(reader.result); reader.readAsDataURL(blob); });
-              doc.setFontSize(8);
-              doc.setFont("helvetica", "bold");
-              doc.setTextColor(100, 116, 139);
-              doc.text("SITE LOCATION MAP", M, y + 4);
-              y += 6;
-              doc.addImage(imgData, "PNG", M, y, contentW, 50);
-              y += 55;
-            }
-          }
-        } catch (_) { /* skip map if fails */ }
+        doc.setFillColor(240, 242, 248);
+        doc.roundedRect(M, y, contentW, 12, 2, 2, "F");
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 116, 139);
+        doc.text(`📍 Coordinates: ${result.lat.toFixed(5)}, ${result.lng.toFixed(5)}`, M + 4, y + 8);
+        y += 16;
       }
 
       // ── Provider comparison table ──
@@ -681,14 +680,7 @@ function FeasibilityReport({ address, providerResults, onClose, onSignUp, result
 }
 
 export default function CoverageCheck() {
-  const mapRef = useRef(null);
-  const googleMapRef = useRef(null);
-  const circlesRef = useRef([]);
-  const markerRef = useRef(null);
-  const infoWindowRef = useRef(null);
-  const autocompleteRef = useRef(null);
   const searchInputRef = useRef(null);
-  const activeProvidersRef = useRef(Object.keys(PROVIDERS));
 
   const [address, setAddress] = useState("");
   const [searching, setSearching] = useState(false);
@@ -701,106 +693,10 @@ export default function CoverageCheck() {
   const [showReport, setShowReport] = useState(false);
   const [sidebarTab, setSidebarTab] = useState("check");
   const [scanAnim, setScanAnim] = useState(false);
-  const [mapStyle, setMapStyle] = useState("roadmap");
   const [filterType, setFilterType] = useState("all");
-
-  const mapsLoaded = useGoogleMaps();
-
-  useEffect(() => { activeProvidersRef.current = activeProviders; }, [activeProviders]);
-
-  const drawCoverageCircles = useCallback((map, providerIds) => {
-    circlesRef.current.forEach(c => c.setMap(null));
-    circlesRef.current = [];
-    const ids = providerIds || activeProvidersRef.current;
-    Object.values(PROVIDERS).forEach(provider => {
-      if (!ids.includes(provider.id)) return;
-      provider.zones.forEach(zone => {
-        const circle = new window.google.maps.Circle({
-          map,
-          center: { lat: zone.lat, lng: zone.lng },
-          radius: zone.radius,
-          fillColor: provider.color,
-          fillOpacity: provider.id === "touchnet" ? 0.18 : 0.11,
-          strokeColor: provider.color,
-          strokeOpacity: provider.id === "touchnet" ? 0.7 : 0.45,
-          strokeWeight: provider.id === "touchnet" ? 2.5 : 1.5,
-          clickable: true,
-          zIndex: provider.id === "touchnet" ? 2 : 1,
-        });
-        circle.addListener("click", () => {
-          if (!infoWindowRef.current) return;
-          const cheapest = [...provider.plans].sort((a,b) => a.price-b.price)[0];
-          const fastest  = [...provider.plans].sort((a,b) => parseInt(b.speed)-parseInt(a.speed))[0];
-          infoWindowRef.current.setContent(`
-            <div style="font-family:'Inter',sans-serif;padding:6px;min-width:200px">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                <span style="font-size:22px">${provider.logo}</span>
-                <div>
-                  <p style="font-weight:900;font-size:14px;color:${provider.color};margin:0">${provider.name}</p>
-                  <p style="font-size:10px;color:#64748b;margin:0">${zone.label} · ${provider.type === "fibre" ? "FTTH Fibre" : "Fixed Wireless"}</p>
-                </div>
-              </div>
-              <div style="background:${provider.color}10;border-radius:8px;padding:8px;margin-bottom:6px">
-                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
-                  <span style="color:#64748b">Fastest plan</span>
-                  <span style="font-weight:800;color:${provider.color}">${fastest.speed}</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:11px">
-                  <span style="color:#64748b">Starting from</span>
-                  <span style="font-weight:800;color:#059669">R${cheapest.price}/mo</span>
-                </div>
-              </div>
-              <p style="font-size:10px;color:#94a3b8;margin:0">${provider.plans.length} plans · ${provider.uptime} uptime</p>
-            </div>
-          `);
-          infoWindowRef.current.setPosition({ lat: zone.lat, lng: zone.lng });
-          infoWindowRef.current.open(map);
-        });
-        circlesRef.current.push(circle);
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!mapsLoaded || !mapRef.current || googleMapRef.current) return;
-    const map = new window.google.maps.Map(mapRef.current, {
-      center: { lat: -29.0, lng: 26.0 },
-      zoom: 6,
-      mapTypeId: mapStyle,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_BOTTOM },
-      styles: [
-        { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
-      ],
-    });
-    googleMapRef.current = map;
-    infoWindowRef.current = new window.google.maps.InfoWindow();
-    drawCoverageCircles(map, Object.keys(PROVIDERS));
-  }, [mapsLoaded]);
-
-  useEffect(() => {
-    if (!mapsLoaded || !searchInputRef.current || autocompleteRef.current) return;
-    const ac = new window.google.maps.places.Autocomplete(searchInputRef.current, {
-      componentRestrictions: { country: "za" }, types: ["geocode"],
-    });
-    ac.addListener("place_changed", () => {
-      const place = ac.getPlace();
-      if (place.formatted_address) setAddress(place.formatted_address);
-      if (place.geometry?.location)
-        doSearch(place.geometry.location.lat(), place.geometry.location.lng(), place.formatted_address || "");
-    });
-    autocompleteRef.current = ac;
-  }, [mapsLoaded]);
-
-  useEffect(() => {
-    if (googleMapRef.current) drawCoverageCircles(googleMapRef.current, activeProviders);
-  }, [activeProviders, drawCoverageCircles]);
-
-  useEffect(() => {
-    if (googleMapRef.current) googleMapRef.current.setMapTypeId(mapStyle);
-  }, [mapStyle]);
+  const [mapCenter, setMapCenter] = useState([-29.0, 26.0]);
+  const [mapZoom, setMapZoom] = useState(6);
+  const [flyTarget, setFlyTarget] = useState(null);
 
   const doSearch = (lat, lng, displayName) => {
     setSearching(false); setScanAnim(true);
@@ -809,49 +705,24 @@ export default function CoverageCheck() {
     setResult({ covered: touchnet?.covered, zone: touchnet?.zone, lat, lng, displayName });
     setProviderResults(allResults);
     setStep("result"); setSidebarTab("results"); setShowReport(true);
-
-    const map = googleMapRef.current;
-    if (map) {
-      map.panTo({ lat, lng }); map.setZoom(14);
-      if (markerRef.current) markerRef.current.setMap(null);
-      const available = allResults.filter(r => r.covered);
-      markerRef.current = new window.google.maps.Marker({
-        map, position: { lat, lng }, title: displayName,
-        animation: window.google.maps.Animation.DROP,
-        icon: { path: window.google.maps.SymbolPath.CIRCLE, scale: 12, fillColor: available.length > 0 ? "#059669" : "#c41e3a", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 3 },
-      });
-      if (infoWindowRef.current) {
-        infoWindowRef.current.setContent(`
-          <div style="font-family:'Inter',sans-serif;padding:6px;min-width:200px">
-            <p style="font-weight:900;font-size:13px;margin-bottom:6px;color:#0f1a3d">📍 ${displayName?.split(",").slice(0,2).join(",") || "Location"}</p>
-            ${available.length > 0
-              ? `<p style="font-size:11px;color:#059669;font-weight:700;margin-bottom:5px">✅ ${available.length} provider${available.length > 1 ? "s" : ""} available</p>
-                 ${available.slice(0,5).map(({ provider }) => `<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><span>${provider.logo}</span><span style="font-size:11px;color:#334155;font-weight:600">${provider.name}</span><span style="font-size:9px;color:${provider.color};margin-left:auto">${provider.type === "fibre" ? "FTTH" : "FWA"}</span></div>`).join("")}`
-              : `<p style="font-size:11px;color:#c41e3a;font-weight:700">❌ No coverage at this location</p>`}
-          </div>
-        `);
-        infoWindowRef.current.open(map, markerRef.current);
-      }
-    }
+    setFlyTarget({ center: [lat, lng], zoom: 14 });
     base44.entities.CoverageSearch.create({ query: address || displayName, display_name: displayName, lat, lng, covered: touchnet?.covered, nearest_zone: touchnet?.zone?.label || "" }).catch(() => {});
     setTimeout(() => setScanAnim(false), 2000);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e?.preventDefault();
-    if (!address.trim() || !mapsLoaded) return;
+    if (!address.trim()) return;
     setSearching(true); setScanAnim(true); setResult(null); setProviderResults([]);
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: address + ", South Africa", componentRestrictions: { country: "ZA" } }, (results, status) => {
+    try {
+      const geo = await geocodeAddress(address);
+      doSearch(geo.lat, geo.lng, geo.displayName);
+    } catch {
+      setResult({ error: "Address not found. Try a suburb, street, or city name." });
+      setScanAnim(false);
+    } finally {
       setSearching(false);
-      if (status === "OK" && results[0]) {
-        const loc = results[0].geometry.location;
-        doSearch(loc.lat(), loc.lng(), results[0].formatted_address);
-      } else {
-        setResult({ error: "Address not found. Try a suburb, street, or city." });
-        setScanAnim(false);
-      }
-    });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -872,10 +743,8 @@ export default function CoverageCheck() {
   const reset = () => {
     setStep("search"); setResult(null); setProviderResults([]); setAddress("");
     setSidebarTab("check"); setShowReport(false);
+    setFlyTarget({ center: [-29.0, 26.0], zoom: 6 });
     setForm({ name: "", email: "", phone: "", plan: "standard_50mbps" });
-    if (markerRef.current) { markerRef.current.setMap(null); markerRef.current = null; }
-    if (infoWindowRef.current) infoWindowRef.current.close();
-    if (googleMapRef.current) { googleMapRef.current.panTo({ lat: -29.0, lng: 26.0 }); googleMapRef.current.setZoom(6); }
   };
 
   const toggleProvider = (id) => setActiveProviders(prev =>
@@ -891,7 +760,8 @@ export default function CoverageCheck() {
         @keyframes ping { 0%{transform:scale(1);opacity:0.8}100%{transform:scale(2.8);opacity:0} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)} }
         .fade-up { animation: fadeUp 0.3s ease forwards; }
-        .pac-container { z-index:9999!important;border-radius:12px!important;box-shadow:0 12px 40px rgba(30,45,110,0.15)!important;border:1px solid rgba(30,45,110,0.15)!important; }
+        .leaflet-container { font-family: 'Inter', sans-serif !important; }
+        .leaflet-popup-content-wrapper { border-radius: 12px !important; box-shadow: 0 8px 30px rgba(30,45,110,0.15) !important; }
       `}</style>
 
       <header className="relative flex items-center justify-between px-5 py-3 flex-shrink-0 z-30"
@@ -947,11 +817,11 @@ export default function CoverageCheck() {
                       className="w-full pl-10 pr-4 py-3 rounded-2xl text-[13px] outline-none transition-all"
                       style={{ background: "#f8f9fd", border: "1px solid rgba(30,45,110,0.2)", color: "#0f1a3d" }} />
                   </div>
-                  <button type="submit" disabled={searching || !address.trim() || !mapsLoaded}
+                  <button type="submit" disabled={searching || !address.trim()}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-black text-[13px] text-white transition-all hover:scale-[1.02] disabled:opacity-50"
                     style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 6px 24px rgba(30,45,110,0.35)" }}>
                     {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                    {!mapsLoaded ? "Loading Maps…" : searching ? "Checking coverage…" : "Run Feasibility Check"}
+                    {searching ? "Checking coverage…" : "Run Feasibility Check"}
                   </button>
                 </form>
                 {result?.error && (
@@ -1156,20 +1026,98 @@ export default function CoverageCheck() {
           </div>
         </div>
 
-        {/* MAP */}
+        {/* MAP — Leaflet (free, no billing required) */}
         <div className="flex-1 relative">
-          {!mapsLoaded && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center" style={{ background: "#eef0f7" }}>
-              <div className="text-center">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3" style={{ color: "#1e2d6e" }} />
-                <p className="text-[12px] font-bold" style={{ color: "rgba(30,45,110,0.5)" }}>Loading Google Maps…</p>
-              </div>
-            </div>
-          )}
-          <div ref={mapRef} className="w-full h-full" />
+          <MapContainer
+            center={mapCenter}
+            zoom={mapZoom}
+            style={{ width: "100%", height: "100%" }}
+            zoomControl={true}
+            attributionControl={true}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+
+            {/* Coverage circles */}
+            {Object.values(PROVIDERS).map(provider =>
+              activeProviders.includes(provider.id)
+                ? provider.zones.map((zone, zi) => {
+                    const cheapest = [...provider.plans].sort((a,b) => a.price-b.price)[0];
+                    const fastest  = [...provider.plans].sort((a,b) => parseInt(b.speed)-parseInt(a.speed))[0];
+                    return (
+                      <Circle
+                        key={`${provider.id}-${zi}`}
+                        center={[zone.lat, zone.lng]}
+                        radius={zone.radius}
+                        pathOptions={{
+                          color: provider.color,
+                          fillColor: provider.color,
+                          fillOpacity: provider.id === "touchnet" ? 0.18 : 0.10,
+                          weight: provider.id === "touchnet" ? 2.5 : 1.5,
+                          opacity: provider.id === "touchnet" ? 0.7 : 0.45,
+                        }}
+                      >
+                        <Popup>
+                          <div style={{ fontFamily: "'Inter',sans-serif", minWidth: 200 }}>
+                            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
+                              <span style={{ fontSize:22 }}>{provider.logo}</span>
+                              <div>
+                                <p style={{ fontWeight:900, fontSize:14, color:provider.color, margin:0 }}>{provider.name}</p>
+                                <p style={{ fontSize:10, color:"#64748b", margin:0 }}>{zone.label} · {provider.type === "fibre" ? "FTTH Fibre" : "Fixed Wireless"}</p>
+                              </div>
+                            </div>
+                            <div style={{ background:`${provider.color}10`, borderRadius:8, padding:8, marginBottom:6 }}>
+                              <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, marginBottom:4 }}>
+                                <span style={{ color:"#64748b" }}>Fastest plan</span>
+                                <span style={{ fontWeight:800, color:provider.color }}>{fastest.speed}</span>
+                              </div>
+                              <div style={{ display:"flex", justifyContent:"space-between", fontSize:11 }}>
+                                <span style={{ color:"#64748b" }}>Starting from</span>
+                                <span style={{ fontWeight:800, color:"#059669" }}>R{cheapest.price}/mo</span>
+                              </div>
+                            </div>
+                            <p style={{ fontSize:10, color:"#94a3b8", margin:0 }}>{provider.plans.length} plans · {provider.uptime} uptime</p>
+                          </div>
+                        </Popup>
+                      </Circle>
+                    );
+                  })
+                : null
+            )}
+
+            {/* Result marker */}
+            {result && !result.error && (
+              <Marker position={[result.lat, result.lng]}
+                icon={L.divIcon({
+                  className: "",
+                  html: `<div style="width:22px;height:22px;border-radius:50%;background:${availableProviders.length > 0 ? "#059669" : "#c41e3a"};border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4)"></div>`,
+                  iconSize: [22, 22], iconAnchor: [11, 11],
+                })}>
+                <Popup>
+                  <div style={{ fontFamily:"'Inter',sans-serif", minWidth:200 }}>
+                    <p style={{ fontWeight:900, fontSize:13, marginBottom:6, color:"#0f1a3d" }}>📍 {result.displayName?.split(",").slice(0,2).join(",")}</p>
+                    {availableProviders.length > 0
+                      ? <><p style={{ fontSize:11, color:"#059669", fontWeight:700, marginBottom:5 }}>✅ {availableProviders.length} provider{availableProviders.length > 1 ? "s" : ""} available</p>
+                          {availableProviders.slice(0,5).map(({ provider }) => (
+                            <div key={provider.id} style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2 }}>
+                              <span>{provider.logo}</span>
+                              <span style={{ fontSize:11, color:"#334155", fontWeight:600 }}>{provider.name}</span>
+                              <span style={{ fontSize:9, color:provider.color, marginLeft:"auto" }}>{provider.type === "fibre" ? "FTTH" : "FWA"}</span>
+                            </div>
+                          ))}</>
+                      : <p style={{ fontSize:11, color:"#c41e3a", fontWeight:700 }}>❌ No coverage at this location</p>}
+                  </div>
+                </Popup>
+              </Marker>
+            )}
+
+            {flyTarget && <MapFlyTo center={flyTarget.center} zoom={flyTarget.zoom} />}
+          </MapContainer>
 
           {scanAnim && (
-            <div className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
+            <div className="absolute inset-0 pointer-events-none z-[500] flex items-center justify-center">
               <div className="relative">
                 {[80,140,200,260].map((size, i) => (
                   <div key={i} className="absolute rounded-full border-2"
@@ -1180,23 +1128,8 @@ export default function CoverageCheck() {
             </div>
           )}
 
-          {/* Map style switcher */}
-          <div className="absolute top-3 left-3 z-10 rounded-2xl overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(30,45,110,0.15)", boxShadow: "0 4px 20px rgba(30,45,110,0.12)", backdropFilter: "blur(12px)" }}>
-            <p className="text-[8px] font-black uppercase tracking-[0.2em] px-3 pt-2.5 pb-1" style={{ color: "rgba(30,45,110,0.4)" }}>MAP TYPE</p>
-            {[{ id: "roadmap", icon: "🗺️", label: "Road" }, { id: "satellite", icon: "🛰️", label: "Satellite" }, { id: "hybrid", icon: "🌍", label: "Hybrid" }, { id: "terrain", icon: "⛰️", label: "Terrain" }].map(s => (
-              <button key={s.id} onClick={() => setMapStyle(s.id)}
-                className="flex items-center gap-2 px-3 py-2 w-full transition-all hover:bg-slate-50 text-left"
-                style={{ background: mapStyle === s.id ? "rgba(30,45,110,0.07)" : "transparent", borderLeft: mapStyle === s.id ? "2px solid #1e2d6e" : "2px solid transparent" }}>
-                <span className="text-sm">{s.icon}</span>
-                <span className="text-[11px] font-bold" style={{ color: mapStyle === s.id ? "#1e2d6e" : "rgba(30,45,110,0.45)" }}>{s.label}</span>
-              </button>
-            ))}
-            <div className="h-2" />
-          </div>
-
           {/* Legend */}
-          <div className="absolute top-3 right-3 z-10 rounded-2xl overflow-hidden"
+          <div className="absolute top-3 right-3 z-[400] rounded-2xl overflow-hidden"
             style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(30,45,110,0.15)", boxShadow: "0 4px 20px rgba(30,45,110,0.1)", backdropFilter: "blur(12px)", maxHeight: "calc(100vh - 120px)", overflowY: "auto" }}>
             <p className="text-[8px] font-black uppercase tracking-[0.2em] px-3 pt-2.5 pb-1" style={{ color: "rgba(30,45,110,0.4)" }}>COVERAGE LAYERS</p>
             {Object.values(PROVIDERS).map(p => (
@@ -1212,7 +1145,7 @@ export default function CoverageCheck() {
           </div>
 
           {/* Bottom bar */}
-          <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center gap-2 flex-wrap">
+          <div className="absolute bottom-3 left-3 right-3 z-[400] flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl"
               style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(30,45,110,0.15)", backdropFilter: "blur(10px)" }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#1e2d6e" }} />
