@@ -160,12 +160,13 @@
 .page-bg {
   background-color: var(--bg-page);
   background-image:
-    radial-gradient(ellipse 80% 50% at 5% 0%, rgba(30,45,110,0.07) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 95% 100%, rgba(196,30,58,0.05) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 50% at 50% 50%, rgba(14,165,233,0.03) 0%, transparent 60%),
-    linear-gradient(rgba(30,45,110,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(30,45,110,0.015) 1px, transparent 1px);
-  background-size: auto, auto, auto, 60px 60px, 60px 60px;
+    radial-gradient(ellipse 80% 50% at 5% 0%, rgba(30,45,110,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 95% 100%, rgba(196,30,58,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(14,165,233,0.04) 0%, transparent 55%),
+    radial-gradient(circle at 1px 1px, rgba(30,45,110,0.06) 1px, transparent 0),
+    linear-gradient(rgba(30,45,110,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,45,110,0.012) 1px, transparent 1px);
+  background-size: auto, auto, auto, 24px 24px, 72px 72px, 72px 72px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -563,6 +564,206 @@ progress, [role="progressbar"] > div {
     linear-gradient(rgba(30,45,110,0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(30,45,110,0.05) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUTURISTIC ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Holographic shimmer on card hover */
+.holo-card {
+  position: relative;
+  overflow: hidden;
+}
+.holo-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255,255,255,0.06) 50%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.holo-card:hover::after {
+  transform: translateX(100%);
+}
+
+/* Scan line overlay */
+.scan-lines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(30,45,110,0.018) 3px,
+    rgba(30,45,110,0.018) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Neon border pulse */
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(30,45,110,0.3), 0 0 12px rgba(30,45,110,0.1); }
+  50%       { box-shadow: 0 0 8px rgba(30,45,110,0.5), 0 0 24px rgba(30,45,110,0.2); }
+}
+.neon-border { animation: neon-pulse 3s ease-in-out infinite; }
+
+@keyframes neon-pulse-crimson {
+  0%, 100% { box-shadow: 0 0 4px rgba(196,30,58,0.3), 0 0 12px rgba(196,30,58,0.1); }
+  50%       { box-shadow: 0 0 8px rgba(196,30,58,0.5), 0 0 24px rgba(196,30,58,0.2); }
+}
+.neon-border-crimson { animation: neon-pulse-crimson 3s ease-in-out infinite; }
+
+/* Data ticker animation */
+@keyframes ticker-slide {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track { animation: ticker-slide 30s linear infinite; }
+.ticker-track:hover { animation-play-state: paused; }
+
+/* Corner accent brackets */
+.bracket-card {
+  position: relative;
+}
+.bracket-card::before,
+.bracket-card::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.bracket-card::before {
+  top: 6px; left: 6px;
+  border-top: 2px solid rgba(30,45,110,0.4);
+  border-left: 2px solid rgba(30,45,110,0.4);
+}
+.bracket-card::after {
+  bottom: 6px; right: 6px;
+  border-bottom: 2px solid rgba(196,30,58,0.35);
+  border-right: 2px solid rgba(196,30,58,0.35);
+}
+
+/* Dot matrix data indicator */
+.data-indicator {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+.data-indicator span {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--navy);
+  opacity: 0.3;
+  animation: dot-blink 1.5s ease-in-out infinite;
+}
+.data-indicator span:nth-child(2) { animation-delay: 0.3s; }
+.data-indicator span:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes dot-blink {
+  0%, 100% { opacity: 0.2; transform: scale(0.9); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Glitch text effect (use sparingly) */
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  10%       { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 1px); }
+  30%       { clip-path: inset(70% 0 5% 0);  transform: translate(2px, -1px); }
+  60%       { clip-path: inset(30% 0 40% 0); transform: translate(-1px, 0); }
+}
+
+/* Hexagonal data node */
+.hex-node {
+  clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+}
+
+/* Premium table row */
+tbody tr.premium-row {
+  position: relative;
+}
+tbody tr.premium-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background 0.2s;
+}
+tbody tr.premium-row:hover::before {
+  background: linear-gradient(180deg, #1e2d6e, #c41e3a);
+}
+
+/* Circuit trace decorative line */
+.circuit-line {
+  position: relative;
+}
+.circuit-line::after {
+  content: '';
+  position: absolute;
+  top: 50%; right: 0;
+  width: 30%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(30,45,110,0.2), transparent);
+}
+
+/* Status beacon */
+@keyframes beacon {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  70%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(1);   opacity: 0; }
+}
+.status-beacon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-beacon::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: inherit;
+  animation: beacon 2s ease-out infinite;
+  opacity: 0;
+}
+
+/* Frosted top-bar refinement */
+.top-bar-futuristic {
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+}
+
+/* Data matrix background for hero/kpi areas */
+.data-matrix-bg {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(30,45,110,0.08) 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+/* Liquid gradient border */
+@keyframes border-rotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.liquid-border {
+  background: linear-gradient(270deg, #1e2d6e, #4a5fa8, #c41e3a, #e02347, #4a5fa8, #1e2d6e);
+  background-size: 400% 400%;
+  animation: border-rotate 6s ease infinite;
 }
 
 /* Loading skeleton */

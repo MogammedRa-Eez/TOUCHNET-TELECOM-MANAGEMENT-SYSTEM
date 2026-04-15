@@ -334,8 +334,7 @@ function LayoutInner({ children, currentPageName }) {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* ── Top bar ── */}
         <header
-          className="top-bar h-[60px] flex items-center px-5 gap-4 flex-shrink-0 z-30"
-          style={{ background: "rgba(255,255,255,0.96)" }}
+          className="top-bar top-bar-futuristic h-[60px] flex items-center px-5 gap-4 flex-shrink-0 z-30"
         >
           <button
             onClick={() => setMobileOpen(true)}

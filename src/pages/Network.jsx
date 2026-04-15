@@ -298,7 +298,7 @@ export default function Network() {
             const sc = statusConfig[node.status] || statusConfig.online;
             const capacityPct = node.max_capacity ? Math.round((node.connected_customers || 0) / node.max_capacity * 100) : 0;
             return (
-              <div key={node.id} className="rounded-2xl p-5 transition-all duration-200 group hover:-translate-y-1"
+              <div key={node.id} className="rounded-2xl p-5 transition-all duration-200 group hover:-translate-y-1 holo-card bracket-card"
                 style={{ background: "#ffffff", border: `1px solid rgba(30,45,110,0.12)`, boxShadow: "0 2px 12px rgba(30,45,110,0.06)" }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = sc.border; e.currentTarget.style.boxShadow = `0 6px 24px ${sc.color}18`; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(30,45,110,0.12)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(30,45,110,0.06)"; }}

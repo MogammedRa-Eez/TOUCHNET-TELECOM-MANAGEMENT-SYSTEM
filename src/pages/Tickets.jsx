@@ -391,7 +391,7 @@ export default function Tickets() {
       </div>
 
       {/* ── Ticket List ── */}
-      <div className="rounded-2xl overflow-hidden"
+      <div className="rounded-2xl overflow-hidden bracket-card"
         style={{
           background: "#ffffff",
           border: "1px solid rgba(30,45,110,0.12)",
