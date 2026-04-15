@@ -19,9 +19,9 @@ export default function CoverageChecker({ onClose }) {
           onClick={onClose}
           className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110"
           style={{
-            background: "rgba(15,26,61,0.85)",
-            border: "1px solid rgba(255,255,255,0.15)",
-            color: "#ffffff",
+            background: "rgba(255,255,255,0.95)",
+            border: "1px solid rgba(30,45,110,0.2)",
+            color: "#1e2d6e",
           }}
         >
           <X className="w-4 h-4" />
