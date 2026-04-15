@@ -38,9 +38,9 @@ export default function QuickActionButton() {
         onClick={() => setOpen(v => !v)}
         className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold text-white transition-all hover:scale-105 active:scale-95"
         style={{
-          background: open ? "linear-gradient(135deg,#7c3aed,#8b5cf6)" : "linear-gradient(135deg,#6366f1,#8b5cf6)",
-          boxShadow: open ? "0 0 18px rgba(139,92,246,0.6)" : "0 4px 14px rgba(99,102,241,0.35)",
-          border: "1px solid rgba(139,92,246,0.4)",
+          background: open ? "linear-gradient(135deg,#1e2d6e,#c41e3a)" : "linear-gradient(135deg,#1e2d6e,#2a3d8f)",
+          boxShadow: open ? "0 0 18px rgba(30,45,110,0.4)" : "0 4px 14px rgba(30,45,110,0.25)",
+          border: "1px solid rgba(30,45,110,0.3)",
         }}
         title="Quick Actions (N)"
       >
@@ -52,12 +52,12 @@ export default function QuickActionButton() {
         <div
           className="absolute right-0 top-full mt-2 w-48 rounded-2xl overflow-hidden z-50"
           style={{
-            background: "rgba(10,6,24,0.99)",
-            border: "1px solid rgba(139,92,246,0.3)",
-            boxShadow: "0 16px 48px rgba(139,92,246,0.3)",
+            background: "#ffffff",
+            border: "1px solid rgba(30,45,110,0.15)",
+            boxShadow: "0 12px 40px rgba(30,45,110,0.15)",
           }}
         >
-          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#6366f1,#8b5cf6,#06b6d4,transparent)" }} />
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
           <div className="p-1.5 space-y-0.5">
             {ACTIONS.map(a => {
               const Icon = a.icon;
@@ -67,7 +67,7 @@ export default function QuickActionButton() {
                   to={a.href}
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-[1.02]"
-                  style={{ color: "#e8d5ff" }}
+                  style={{ color: "#1e2d6e" }}
                   onMouseEnter={e => { e.currentTarget.style.background = `${a.color}14`; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                 >
@@ -81,7 +81,7 @@ export default function QuickActionButton() {
             })}
           </div>
           <div className="px-3 pb-2 pt-1" style={{ borderTop: "1px solid rgba(139,92,246,0.1)" }}>
-            <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "rgba(196,181,253,0.3)" }}>
+            <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "rgba(30,45,110,0.35)" }}>
               <Zap className="w-2.5 h-2.5 inline mr-1" />N · ? for shortcuts
             </p>
           </div>

@@ -5,7 +5,7 @@ import { base44 } from "@/api/base44Client";
 import {
   LayoutDashboard, Users, Receipt, TicketCheck, Network, UserCog,
   Bot, Shield, Package, Settings, Mail, HeartHandshake,
-  Home, Play, FileText, Bell, X, Menu, Activity, Cpu, Zap,
+  Home, Play, FileText, Bell, X, Menu, Activity, Zap,
 } from "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
@@ -16,26 +16,14 @@ import EmployeeChat from "@/components/chat/EmployeeChat";
 import QuickActionButton from "@/components/layout/QuickActionButton";
 import KeyboardShortcutGuide from "@/components/layout/KeyboardShortcutGuide";
 
-/* ── Palette constants ─────────────────────────────────── */
-const C = {
-  primary:    "#b197fc",
-  primaryDim: "#9b6dff",
-  soft:       "#e9d5ff",
-  violet:     "#cbb5fd",
-  glow:       "rgba(177,151,252,0.65)",
-  glowSoft:   "rgba(177,151,252,0.28)",
-  border:     "rgba(177,151,252,0.3)",
-  borderMd:   "rgba(177,151,252,0.55)",
-  sidebarBg:  "#07081a",
-  sidebarMid: "#0b0d22",
-  red:        "#ff7b7b",
-  redSoft:    "#ffd0d0",
-  redGlow:    "rgba(255,123,123,0.55)",
-  blue:       "#74b9ff",
-  blueSoft:   "#c2e0ff",
-  blueGlow:   "rgba(116,185,255,0.55)",
-  cyan:       "#00e5ff",
-};
+/* ── Brand constants ──────────────────────────────────── */
+const NAVY    = "#1e2d6e";
+const NAVY_L  = "#2a3d8f";
+const NAVY_P  = "#4a5fa8";
+const CRIMSN  = "#c41e3a";
+const CRIMSN_L = "#e02347";
+const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
+const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/68499f2d4_tnet2-removebg-preview.png";
 
 const NAV_GROUPS = [
   {
@@ -66,8 +54,8 @@ const NAV_GROUPS = [
   {
     label: "Team",
     items: [
-      { name: "Employees",     page: "Employees",           icon: UserCog,        perm: "employees" },
-      { name: "HR Dashboard",  page: "HRDashboard",         icon: HeartHandshake, perm: "employees" },
+      { name: "Employees",     page: "Employees",           icon: UserCog,         perm: "employees" },
+      { name: "HR Dashboard",  page: "HRDashboard",         icon: HeartHandshake,  perm: "employees" },
       { name: "My Department", page: "DepartmentDashboard", icon: LayoutDashboard, perm: null },
     ],
   },
@@ -83,42 +71,21 @@ const NAV_GROUPS = [
   {
     label: "Admin",
     items: [
-      { name: "Roles",          page: "RolesManagement",     icon: Shield,   perm: "roles_management" },
-      { name: "Notifications",  page: "NotificationSettings", icon: Bell,    perm: "roles_management" },
+      { name: "Roles",          page: "RolesManagement",      icon: Shield,   perm: "roles_management" },
+      { name: "Notifications",  page: "NotificationSettings", icon: Bell,     perm: "roles_management" },
       { name: "Settings",       page: "UserSettings",         icon: Settings, perm: null },
     ],
   },
 ];
 
-const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
-
-/* ── Subtle shimmer scan line ──────────────────────────── */
-function ScanLine() {
-  const [pos, setPos] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setPos(p => (p + 1) % 100), 35);
-    return () => clearInterval(id);
-  }, []);
-  return (
-    <div style={{
-      position: "absolute", left: 0, right: 0, top: `${pos}%`,
-      height: 1,
-      background: `linear-gradient(90deg, transparent, rgba(139,92,246,0.35), rgba(59,130,246,0.25), transparent)`,
-      pointerEvents: "none",
-      transition: "top 0.035s linear",
-      zIndex: 1,
-    }} />
-  );
-}
-
-/* ── Sidebar ───────────────────────────────────────────── */
+/* ── Sidebar ──────────────────────────────────────────── */
 function Sidebar({ currentPageName, open, onClose, can, loading }) {
   return (
     <>
       {open && (
         <div
           className="fixed inset-0 z-40 lg:hidden"
-          style={{ background: "rgba(4,8,26,0.85)", backdropFilter: "blur(10px)" }}
+          style={{ background: "rgba(10,15,40,0.6)", backdropFilter: "blur(8px)" }}
           onClick={onClose}
         />
       )}
@@ -127,64 +94,74 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         className={`fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{
           width: 256,
-          background: `linear-gradient(180deg, ${C.sidebarBg} 0%, #0d0e28 50%, ${C.sidebarMid} 100%)`,
-          borderRight: `1px solid ${C.border}`,
+          background: `linear-gradient(180deg, ${NAVY} 0%, #162050 55%, #1a2560 100%)`,
+          borderRight: "1px solid rgba(255,255,255,0.08)",
           flexShrink: 0,
           overflow: "hidden",
           position: "relative",
         }}
       >
-        {/* Dot grid overlay */}
+        {/* Subtle dot grid overlay */}
         <div style={{
           position: "absolute", inset: 0,
-          backgroundImage: `radial-gradient(circle, rgba(139,92,246,0.18) 1px, transparent 1px)`,
-          backgroundSize: "28px 28px",
+          backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)`,
+          backgroundSize: "24px 24px",
           pointerEvents: "none",
-          opacity: 0.7,
+          opacity: 0.5,
         }} />
 
-        {/* Ambient orbs */}
+        {/* Ambient glow top */}
         <div style={{
-          position: "absolute", top: -80, left: -60, width: 280, height: 280,
-          background: `radial-gradient(circle, rgba(139,92,246,0.28) 0%, transparent 68%)`,
+          position: "absolute", top: -60, left: -40, width: 240, height: 240,
+          background: `radial-gradient(circle, rgba(74,95,168,0.35) 0%, transparent 68%)`,
           pointerEvents: "none",
-        }} />
-        <div style={{
-          position: "absolute", bottom: 60, right: -80, width: 220, height: 220,
-          background: `radial-gradient(circle, rgba(239,68,68,0.16) 0%, transparent 68%)`,
-          pointerEvents: "none",
-        }} />
-        <div style={{
-          position: "absolute", top: "45%", left: "50%", width: 180, height: 180,
-          background: `radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 68%)`,
-          pointerEvents: "none", transform: "translate(-50%,-50%)",
         }} />
 
-        <ScanLine />
+        {/* Ambient glow bottom — crimson accent */}
+        <div style={{
+          position: "absolute", bottom: 40, right: -60, width: 200, height: 200,
+          background: `radial-gradient(circle, rgba(196,30,58,0.2) 0%, transparent 68%)`,
+          pointerEvents: "none",
+        }} />
 
         {/* ── Logo header ── */}
         <div
-          className="flex items-center justify-between px-4 h-[64px] flex-shrink-0"
+          className="flex items-center justify-between px-4 h-[68px] flex-shrink-0"
           style={{
-            borderBottom: `1px solid ${C.border}`,
-            background: "rgba(139,92,246,0.08)",
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(255,255,255,0.04)",
             position: "relative", zIndex: 2,
-            }}
-            >
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-              style={{ border: `1px solid ${C.borderMd}`, boxShadow: `0 0 22px ${C.glow}`, background: "rgba(4,8,26,0.85)" }}>
-              <img src="https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/9158e4b04_tnet2-removebg-preview.png" alt="Logo" className="w-13 h-13 object-contain" style={{ filter: "drop-shadow(0 0 6px rgba(37,99,235,0.7))" }} />
+          }}
+        >
+          <div className="flex items-center gap-3">
+            {/* Badge icon */}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.18)" }}>
+              <img
+                src={LOGO_BADGE}
+                alt="TouchNet Badge"
+                className="w-9 h-9 object-contain"
+                style={{ filter: "brightness(0) invert(1)", opacity: 0.9 }}
+              />
             </div>
             <div>
-              <img src={LOGO_URL} alt="TouchNet" className="h-8 object-contain" style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 8px rgba(147,197,253,0.7))", opacity: 1 }} />
-              <p className="text-[8px] font-bold tracking-[0.22em] uppercase mt-0.5" style={{ color: "rgba(147,197,253,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>MANAGEMENT SYSTEM</p>
+              {/* Wordmark */}
+              <img
+                src={LOGO_WORDMARK}
+                alt="TouchNet"
+                className="h-6 object-contain"
+                style={{ filter: "brightness(0) invert(1)", opacity: 0.95 }}
+              />
+              <p className="text-[8px] font-bold tracking-[0.28em] uppercase mt-0.5"
+                style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>
+                MANAGEMENT SYSTEM
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="lg:hidden w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
-            style={{ color: C.soft, border: `1px solid ${C.border}`, background: "rgba(37,99,235,0.07)" }}
+            style={{ color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.06)" }}
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -199,11 +176,12 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
               <div key={group.label}>
                 {/* Section label */}
                 <div className="flex items-center gap-2 px-2 mb-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.primaryDim, boxShadow: `0 0 8px ${C.primary}`, flexShrink: 0 }} />
-                  <p className="text-[9px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(196,181,253,0.5)", fontFamily: "'Space Grotesk', sans-serif" }}>
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: "rgba(196,30,58,0.8)", flexShrink: 0 }} />
+                  <p className="text-[9px] font-black uppercase tracking-[0.22em]"
+                    style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'Space Grotesk', sans-serif" }}>
                     {group.label}
                   </p>
-                  <div className="flex-1 h-px" style={{ background: "rgba(37,99,235,0.12)" }} />
+                  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
                 </div>
 
                 <div className="space-y-0.5">
@@ -219,35 +197,36 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                         style={{
                           borderRadius: 10,
                           ...(isActive ? {
-                            background: "linear-gradient(135deg, rgba(37,99,235,0.16), rgba(29,78,216,0.09))",
-                            color: C.soft,
-                            border: `1px solid rgba(37,99,235,0.32)`,
-                            boxShadow: `0 2px 16px rgba(37,99,235,0.14), inset 0 0 12px rgba(37,99,235,0.05)`,
+                            background: "rgba(255,255,255,0.12)",
+                            color: "#ffffff",
+                            border: "1px solid rgba(255,255,255,0.18)",
+                            boxShadow: "0 2px 12px rgba(30,45,110,0.3)",
                           } : {
-                            color: "rgba(196,181,253,0.45)",
+                            color: "rgba(255,255,255,0.5)",
                             border: "1px solid transparent",
                           }),
                         }}
+                        onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.85)"; } }}
+                        onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; } }}
                       >
                         {/* Active left bar */}
                         {isActive && (
                           <span style={{
                             position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
                             width: 3, height: "60%",
-                            background: `linear-gradient(180deg, ${C.soft}, ${C.primary})`,
+                            background: `linear-gradient(180deg, #ffffff, rgba(255,255,255,0.5))`,
                             borderRadius: "0 3px 3px 0",
-                            boxShadow: `0 0 10px ${C.glow}`,
                           }} />
                         )}
 
                         <div
-                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
                           style={{
-                            background: isActive ? "rgba(139,92,246,0.2)" : "rgba(139,92,246,0.07)",
-                            border: isActive ? `1px solid rgba(139,92,246,0.35)` : "1px solid transparent",
+                            background: isActive ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.07)",
+                            border: isActive ? "1px solid rgba(255,255,255,0.25)" : "1px solid transparent",
                           }}
                         >
-                          <Icon className="w-3.5 h-3.5" style={{ color: isActive ? C.soft : "rgba(167,139,250,0.5)" }} />
+                          <Icon className="w-3.5 h-3.5" style={{ color: isActive ? "#ffffff" : "rgba(255,255,255,0.45)" }} />
                         </div>
 
                         <span className="flex-1 truncate" style={{ fontFamily: "'Inter', sans-serif", fontWeight: isActive ? 600 : 500, fontSize: 13 }}>
@@ -257,8 +236,8 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                         {isActive && (
                           <span style={{
                             width: 5, height: 5, borderRadius: "50%",
-                            background: C.soft,
-                            boxShadow: `0 0 8px ${C.glow}`,
+                            background: CRIMSN,
+                            boxShadow: `0 0 8px ${CRIMSN}`,
                             flexShrink: 0,
                           }} />
                         )}
@@ -272,32 +251,42 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         </nav>
 
         {/* ── Footer status ── */}
-        <div className="px-3 pb-4 flex-shrink-0" style={{ borderTop: `1px solid ${C.border}`, paddingTop: 12, position: "relative", zIndex: 2 }}>
+        <div className="px-3 pb-4 flex-shrink-0"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12, position: "relative", zIndex: 2 }}>
           <div style={{
-            background: "rgba(139,92,246,0.07)",
-            border: `1px solid ${C.border}`,
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.1)",
             borderRadius: 12,
             padding: "10px 12px",
           }}>
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
-                <Zap className="w-3 h-3" style={{ color: C.soft }} />
-                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(196,181,253,0.5)" }}>System Status</span>
+                <Zap className="w-3 h-3" style={{ color: "rgba(255,255,255,0.6)" }} />
+                <span className="text-[9px] font-black uppercase tracking-wider"
+                  style={{ color: "rgba(255,255,255,0.35)" }}>System Status</span>
               </div>
-              <span className="text-[9px] font-black tracking-wider" style={{ color: C.soft }}>ONLINE</span>
+              <span className="text-[9px] font-black tracking-wider" style={{ color: "#34d399" }}>ONLINE</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#10b981", boxShadow: "0 0 8px rgba(16,185,129,0.9)" }} />
-              <span className="text-[10px]" style={{ color: "rgba(167,139,250,0.65)", fontFamily: "'JetBrains Mono', monospace" }}>ALL SYSTEMS NOMINAL</span>
+              <span className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ background: "#34d399", boxShadow: "0 0 6px rgba(52,211,153,0.8)" }} />
+              <span className="text-[10px]"
+                style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>
+                ALL SYSTEMS NOMINAL
+              </span>
             </div>
           </div>
+          <p className="text-center text-[9px] mt-2"
+            style={{ color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace" }}>
+            CONNECTING YOU · BUILD · PROTECT
+          </p>
         </div>
       </aside>
     </>
   );
 }
 
-/* ── Main Layout ───────────────────────────────────────── */
+/* ── Main Layout ──────────────────────────────────────── */
 function LayoutInner({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [tick, setTick] = useState(0);
@@ -333,7 +322,7 @@ function LayoutInner({ children, currentPageName }) {
   const timeStr = now.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#080b18" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#eef0f7" }}>
       <Sidebar
         currentPageName={currentPageName}
         open={mobileOpen}
@@ -344,11 +333,14 @@ function LayoutInner({ children, currentPageName }) {
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* ── Top bar ── */}
-        <header className="top-bar h-[60px] flex items-center px-5 gap-4 flex-shrink-0 z-30" style={{ background: "rgba(6,4,18,0.97)" }}>
+        <header
+          className="top-bar h-[60px] flex items-center px-5 gap-4 flex-shrink-0 z-30"
+          style={{ background: "rgba(255,255,255,0.96)" }}
+        >
           <button
             onClick={() => setMobileOpen(true)}
             className="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
-            style={{ color: C.soft, background: "rgba(139,92,246,0.1)", border: `1px solid ${C.border}` }}
+            style={{ color: NAVY, background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.12)" }}
           >
             <Menu className="w-4 h-4" />
           </button>
@@ -356,15 +348,16 @@ function LayoutInner({ children, currentPageName }) {
           {/* Breadcrumb */}
           <div className="hidden sm:flex items-center gap-2.5">
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.soft, boxShadow: `0 0 10px ${C.glow}` }} />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: C.soft, opacity: 0.85, fontFamily: "'JetBrains Mono', monospace" }}>TOUCHNET TMS</span>
+              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.85 }} />
             </div>
             {currentItem && (
               <>
-                <span style={{ color: "rgba(37,99,235,0.35)", fontSize: 14 }}>›</span>
-                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: `1px solid ${C.border}` }}>
-                  {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: C.soft }} />}
-                  <span className="text-[13px] font-bold tracking-tight" style={{ color: "#e8d5ff", fontFamily: "'Space Grotesk', sans-serif" }}>
+                <span style={{ color: "rgba(30,45,110,0.25)", fontSize: 14 }}>›</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+                  style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.1)" }}>
+                  {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: NAVY }} />}
+                  <span className="text-[13px] font-bold"
+                    style={{ color: NAVY, fontFamily: "'Space Grotesk', sans-serif" }}>
                     {currentItem.name}
                   </span>
                 </div>
@@ -376,9 +369,10 @@ function LayoutInner({ children, currentPageName }) {
 
           {/* Live clock */}
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg"
-            style={{ background: "rgba(139,92,246,0.07)", border: `1px solid ${C.border}` }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#10b981", boxShadow: "0 0 7px rgba(16,185,129,0.9)" }} />
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: C.soft, letterSpacing: "0.05em" }}>
+            style={{ background: "rgba(30,45,110,0.05)", border: "1px solid rgba(30,45,110,0.1)" }}>
+            <span className="w-1.5 h-1.5 rounded-full"
+              style={{ background: "#059669", boxShadow: "0 0 5px rgba(5,150,105,0.7)" }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: NAVY, letterSpacing: "0.05em" }}>
               {timeStr}
             </span>
           </div>
@@ -388,7 +382,7 @@ function LayoutInner({ children, currentPageName }) {
             <GlobalSearch />
             <DemoUserSwitcher />
             <NotificationBell />
-            <div className="w-px h-5" style={{ background: `rgba(37,99,235,0.2)` }} />
+            <div className="w-px h-5" style={{ background: "rgba(30,45,110,0.12)" }} />
             <UserMenu />
           </div>
         </header>
