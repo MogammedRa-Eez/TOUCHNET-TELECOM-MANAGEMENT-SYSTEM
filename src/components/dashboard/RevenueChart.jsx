@@ -103,9 +103,9 @@ export default function RevenueChart({ invoices = [] }) {
             onClick={() => setShowPrediction(p => !p)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all"
             style={{
-              background: showPrediction ? "rgba(167,139,250,0.15)" : "rgba(148,163,184,0.1)",
-              border: `1px solid ${showPrediction ? "rgba(167,139,250,0.4)" : "rgba(148,163,184,0.2)"}`,
-              color: showPrediction ? "#a78bfa" : "#94a3b8",
+              background: showPrediction ? "rgba(30,45,110,0.12)" : "rgba(148,163,184,0.1)",
+              border: `1px solid ${showPrediction ? "rgba(30,45,110,0.35)" : "rgba(148,163,184,0.2)"}`,
+              color: showPrediction ? "#1e2d6e" : "#94a3b8",
             }}
           >
             <Brain className="w-3 h-3" />
@@ -152,11 +152,11 @@ export default function RevenueChart({ invoices = [] }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
 
             {/* Forecast zone divider */}
-            <ReferenceLine yAxisId="left" x={historical[historical.length - 1].month} stroke="rgba(167,139,250,0.35)" strokeDasharray="4 3" label={{ value: "Forecast →", position: "insideTopRight", fontSize: 9, fill: "#a78bfa", fontFamily: "JetBrains Mono" }} />
+            <ReferenceLine yAxisId="left" x={historical[historical.length - 1].month} stroke="rgba(30,45,110,0.3)" strokeDasharray="4 3" label={{ value: "Forecast →", position: "insideTopRight", fontSize: 9, fill: "#4a5fa8", fontFamily: "JetBrains Mono" }} />
 
             <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} />
             <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontFamily: 'JetBrains Mono' }} tickFormatter={v => `R${v / 1000}k`} width={52} />
-            <YAxis yAxisId="right" orientation="right" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#a78bfa', fontFamily: 'JetBrains Mono' }} tickFormatter={v => `${v}%`} width={36} />
+            <YAxis yAxisId="right" orientation="right" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#4a5fa8', fontFamily: 'JetBrains Mono' }} tickFormatter={v => `${v}%`} width={36} />
 
             <Tooltip content={<CustomTooltip />} />
 
@@ -171,8 +171,8 @@ export default function RevenueChart({ invoices = [] }) {
               <Line yAxisId="right" type="monotone" dataKey="predictedHealth" stroke="#4a5fa8" strokeWidth={2.5} strokeDasharray="6 3" dot={(props) => {
                 const { cx, cy, payload } = props;
                 if (!payload.isForecast) return <g key={`dot-${cx}`} />;
-                return <circle key={`dot-${cx}`} cx={cx} cy={cy} r={4} fill="#a78bfa" stroke="#fff" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px #a78bfa)" }} />;
-              }} connectNulls activeDot={{ r: 5, fill: "#a78bfa", stroke: "#fff", strokeWidth: 2 }} />
+                return <circle key={`dot-${cx}`} cx={cx} cy={cy} r={4} fill="#4a5fa8" stroke="#fff" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px rgba(74,95,168,0.6))" }} />;
+              }} connectNulls activeDot={{ r: 5, fill: "#4a5fa8", stroke: "#fff", strokeWidth: 2 }} />
             )}
           </ComposedChart>
         </ResponsiveContainer>
