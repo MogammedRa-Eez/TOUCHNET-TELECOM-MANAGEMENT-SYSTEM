@@ -43,12 +43,12 @@ function buildChartData(invoices) {
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl px-4 py-3 shadow-2xl" style={{ background: "rgba(10,15,35,0.95)", border: "1px solid rgba(99,102,241,0.35)", backdropFilter: "blur(12px)", minWidth: 160 }}>
-      <p className="text-[11px] font-bold text-slate-400 mb-2.5 border-b border-white/10 pb-1.5" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{label}</p>
+    <div className="rounded-xl px-4 py-3 shadow-xl" style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.15)", minWidth: 160 }}>
+      <p className="text-[11px] font-bold mb-2.5 border-b pb-1.5" style={{ color: "#1e2d6e", borderColor: "rgba(30,45,110,0.1)", fontFamily: "'JetBrains Mono', monospace" }}>{label}</p>
       {payload.map((p, i) => {
         if (p.value == null) return null;
         const labels = { revenue: "Revenue", overdue: "Overdue", health: "Health Score", predictedHealth: "Predicted Health" };
-        const colors = { revenue: "#06b6d4", overdue: "#f43f5e", health: "#10b981", predictedHealth: "#a78bfa" };
+        const colors = { revenue: "#06b6d4", overdue: "#f43f5e", health: "#10b981", predictedHealth: "#4a5fa8" };
         const isRand = p.dataKey === "revenue" || p.dataKey === "overdue";
         return (
           <p key={i} className="text-[11px] font-semibold mb-0.5" style={{ color: colors[p.dataKey] || "#f1f5f9", fontFamily: "'JetBrains Mono', monospace" }}>
@@ -88,14 +88,14 @@ export default function RevenueChart({ invoices = [] }) {
   const trendColor = slope >= 0 ? "#10b981" : "#f59e0b";
 
   return (
-    <div className="rounded-2xl p-6 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.9)", boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)" }}>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6,182,212,0.04) 0%, transparent 70%)" }} />
+    <div className="rounded-2xl p-6 relative overflow-hidden" style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.1)", boxShadow: "0 4px 24px rgba(30,45,110,0.07)" }}>
+      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
 
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3 mb-5 relative">
         <div>
-          <h3 className="text-[14px] font-bold text-slate-800">Revenue & Network Health</h3>
-          <p className="text-[11px] mt-0.5 text-slate-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>8-month history · 3-month AI forecast</p>
+          <h3 className="text-[14px] font-bold" style={{ color: "#1e2d6e" }}>Revenue & Network Health</h3>
+          <p className="text-[11px] mt-0.5" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono', monospace" }}>8-month history · 3-month AI forecast</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {/* Predicted health toggle */}
@@ -124,13 +124,13 @@ export default function RevenueChart({ invoices = [] }) {
           { color: "#06b6d4", label: "Revenue", dashed: false },
           { color: "#f43f5e", label: "Overdue",  dashed: false },
           { color: "#10b981", label: "Health Score", dashed: false },
-          ...(showPrediction ? [{ color: "#a78bfa", label: "Predicted Health", dashed: true }] : []),
+          ...(showPrediction ? [{ color: "#4a5fa8", label: "Predicted Health", dashed: true }] : []),
         ].map(({ color, label, dashed }) => (
           <div key={label} className="flex items-center gap-1.5">
             <svg width="18" height="8">
               <line x1="0" y1="4" x2="18" y2="4" stroke={color} strokeWidth="2" strokeDasharray={dashed ? "4 2" : "0"} />
             </svg>
-            <span className="text-slate-500">{label}</span>
+            <span style={{ color: "rgba(30,45,110,0.55)" }}>{label}</span>
           </div>
         ))}
       </div>
@@ -168,7 +168,7 @@ export default function RevenueChart({ invoices = [] }) {
 
             {/* Predicted health */}
             {showPrediction && (
-              <Line yAxisId="right" type="monotone" dataKey="predictedHealth" stroke="#a78bfa" strokeWidth={2.5} strokeDasharray="6 3" dot={(props) => {
+              <Line yAxisId="right" type="monotone" dataKey="predictedHealth" stroke="#4a5fa8" strokeWidth={2.5} strokeDasharray="6 3" dot={(props) => {
                 const { cx, cy, payload } = props;
                 if (!payload.isForecast) return <g key={`dot-${cx}`} />;
                 return <circle key={`dot-${cx}`} cx={cx} cy={cy} r={4} fill="#a78bfa" stroke="#fff" strokeWidth={2} style={{ filter: "drop-shadow(0 0 4px #a78bfa)" }} />;
@@ -181,7 +181,7 @@ export default function RevenueChart({ invoices = [] }) {
       {/* Health insight pill */}
       <div className="mt-3 flex items-center gap-2 text-[11px]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
         <Brain className="w-3.5 h-3.5" style={{ color: trendColor }} />
-        <span className="text-slate-500">Network health is <span className="font-bold" style={{ color: trendColor }}>{trend}</span> at <span className="font-bold" style={{ color: trendColor }}>{lastHealth}%</span> — projected to {slope >= 0 ? "hold steady" : `drop ~${Math.abs(Math.round(slope * 3))}% over next 3 months`}</span>
+        <span style={{ color: "rgba(30,45,110,0.5)" }}>Network health is <span className="font-bold" style={{ color: trendColor }}>{trend}</span> at <span className="font-bold" style={{ color: trendColor }}>{lastHealth}%</span> — projected to {slope >= 0 ? "hold steady" : `drop ~${Math.abs(Math.round(slope * 3))}% over next 3 months`}</span>
       </div>
     </div>
   );
