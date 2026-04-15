@@ -17,10 +17,10 @@ import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
 const STATUS_CFG = {
-  active:     { color: "#10b981", bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.3)",  dot: "#10b981", label: "Active" },
-  pending:    { color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)",  dot: "#f59e0b", label: "Pending" },
-  suspended:  { color: "#ef4444", bg: "rgba(239,68,68,0.12)",  border: "rgba(239,68,68,0.3)",   dot: "#ef4444", label: "Suspended" },
-  terminated: { color: "#64748b", bg: "rgba(100,116,139,0.1)", border: "rgba(100,116,139,0.25)",dot: "#64748b", label: "Terminated" },
+  active:     { color: "#059669", bg: "rgba(5,150,105,0.08)",   border: "rgba(5,150,105,0.25)",    dot: "#34d399", label: "Active" },
+  pending:    { color: "#d97706", bg: "rgba(217,119,6,0.08)",   border: "rgba(217,119,6,0.25)",    dot: "#fbbf24", label: "Pending" },
+  suspended:  { color: "#c41e3a", bg: "rgba(196,30,58,0.08)",   border: "rgba(196,30,58,0.25)",    dot: "#e02347", label: "Suspended" },
+  terminated: { color: "#64748b", bg: "rgba(100,116,139,0.07)", border: "rgba(100,116,139,0.2)",   dot: "#94a3b8", label: "Terminated" },
 };
 
 const PLAN_SHORT = {
@@ -50,18 +50,16 @@ function KPIStrip({ customers }) {
         { label: "Suspended",       value: suspended,                          icon: AlertTriangle,color: "#ef4444" },
         { label: "Monthly Revenue", value: `R${(mrr/1000).toFixed(1)}k`,      icon: DollarSign,  color: "#06b6d4" },
       ].map(k => (
-        <div key={k.label} className="relative overflow-hidden rounded-2xl px-5 py-4"
-          style={{ background: "rgba(12, 8, 28, 0.95)", border: `1px solid ${k.color}30`, boxShadow: `0 2px 16px ${k.color}18` }}>
-          {/* top accent */}
-          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${k.color}, transparent)` }} />
-          {/* ambient glow */}
-          <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${k.color}15, transparent 70%)` }} />
-          <div className="flex items-start justify-between">
+        <div key={k.label} className="relative overflow-hidden rounded-2xl px-5 py-4 group transition-all hover:-translate-y-0.5 holo-card bracket-card"
+          style={{ background: "#ffffff", border: `1px solid ${k.color}25`, boxShadow: `0 2px 12px ${k.color}10` }}>
+          <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${k.color}, transparent)` }} />
+          <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 opacity-60" style={{ background: `radial-gradient(circle, ${k.color}12, transparent 70%)` }} />
+          <div className="flex items-start justify-between relative">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(196,181,253,0.55)" }}>{k.label}</p>
-              <p className="text-3xl font-black mono" style={{ color: k.color }}>{k.value}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(30,45,110,0.45)" }}>{k.label}</p>
+              <p className="text-3xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
             </div>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${k.color}12`, border: `1px solid ${k.color}25` }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110" style={{ background: `${k.color}10`, border: `1px solid ${k.color}22` }}>
               <k.icon className="w-4 h-4" style={{ color: k.color }} />
             </div>
           </div>
@@ -101,14 +99,14 @@ function CustomerCard({ customer, onClick }) {
   return (
     <div
       onClick={() => onClick(customer)}
-      className="rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group"
+      className="rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-1 group holo-card bracket-card"
       style={{
-        background: "rgba(12, 8, 28, 0.95)",
-        border: `1px solid ${sc.color}28`,
-        boxShadow: `0 2px 12px ${sc.color}14`,
+        background: "#ffffff",
+        border: `1px solid ${sc.color}22`,
+        boxShadow: `0 2px 10px rgba(30,45,110,0.06)`,
       }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}28, 0 2px 12px rgba(139,92,246,0.14)`; e.currentTarget.style.borderColor = `${sc.color}55`; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = `0 2px 12px ${sc.color}14`; e.currentTarget.style.borderColor = `${sc.color}28`; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 28px ${sc.color}18`; e.currentTarget.style.borderColor = `${sc.color}40`; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = `0 2px 10px rgba(30,45,110,0.06)`; e.currentTarget.style.borderColor = `${sc.color}22`; }}
     >
       {/* Status top bar */}
       <div className="h-[2px] rounded-full mb-3" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
@@ -120,8 +118,8 @@ function CustomerCard({ customer, onClick }) {
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-bold text-[13px] truncate" style={{ color: "#e8d5ff" }}>{customer.full_name}</p>
-          <p className="text-[10px] mono truncate" style={{ color: "rgba(196,181,253,0.5)" }}>{customer.email}</p>
+          <p className="font-bold text-[13px] truncate" style={{ color: "#0f1a3d" }}>{customer.full_name}</p>
+          <p className="text-[10px] mono truncate" style={{ color: "rgba(30,45,110,0.5)" }}>{customer.email}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color, boxShadow: `0 0 4px ${sc.color}` }} />
             <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
@@ -130,26 +128,26 @@ function CustomerCard({ customer, onClick }) {
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(139,92,246,0.12)" }}>
-        <div className="text-center">
-          <p className="text-[11px] font-black mono" style={{ color: "#a78bfa" }}>{PLAN_SHORT[customer.service_plan] || "—"}</p>
-          <p className="text-[9px] mt-0.5" style={{ color: "rgba(196,181,253,0.4)" }}>Speed</p>
-        </div>
-        <div className="text-center">
-          <p className="text-[11px] font-black mono" style={{ color: "#06b6d4" }}>R{customer.monthly_rate?.toFixed(0) || "—"}</p>
-          <p className="text-[9px] mt-0.5" style={{ color: "rgba(196,181,253,0.4)" }}>/ month</p>
-        </div>
-        <div className="text-center">
-          <p className="text-[11px] font-black">{CONN_ICON[customer.connection_type] || "—"}</p>
-          <p className="text-[9px] mt-0.5 capitalize" style={{ color: "rgba(196,181,253,0.4)" }}>{customer.connection_type || "—"}</p>
-        </div>
+      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(30,45,110,0.08)" }}>
+      <div className="text-center">
+        <p className="text-[11px] font-black mono" style={{ color: "#1e2d6e", fontFamily: "'JetBrains Mono',monospace" }}>{PLAN_SHORT[customer.service_plan] || "—"}</p>
+        <p className="text-[9px] mt-0.5" style={{ color: "rgba(30,45,110,0.4)" }}>Speed</p>
+      </div>
+      <div className="text-center">
+        <p className="text-[11px] font-black mono" style={{ color: "#0ea5e9", fontFamily: "'JetBrains Mono',monospace" }}>R{customer.monthly_rate?.toFixed(0) || "—"}</p>
+        <p className="text-[9px] mt-0.5" style={{ color: "rgba(30,45,110,0.4)" }}>/ month</p>
+      </div>
+      <div className="text-center">
+        <p className="text-[11px] font-black">{CONN_ICON[customer.connection_type] || "—"}</p>
+        <p className="text-[9px] mt-0.5 capitalize" style={{ color: "rgba(30,45,110,0.4)" }}>{customer.connection_type || "—"}</p>
+      </div>
       </div>
 
-      <div className="mt-3 pt-2" style={{ borderTop: "1px solid rgba(139,92,246,0.1)" }}>
-        <HealthScore customer={customer} />
+      <div className="mt-3 pt-2" style={{ borderTop: "1px solid rgba(30,45,110,0.07)" }}>
+      <HealthScore customer={customer} />
       </div>
       {customer.account_number && (
-        <p className="text-[9px] mono mt-1.5 text-right" style={{ color: "rgba(196,181,253,0.3)" }}>{customer.account_number}</p>
+      <p className="text-[9px] mono mt-1.5 text-right" style={{ color: "rgba(30,45,110,0.3)", fontFamily: "'JetBrains Mono',monospace" }}>{customer.account_number}</p>
       )}
     </div>
   );
@@ -162,9 +160,9 @@ function CustomerRow({ customer, onClick }) {
   return (
     <div
       onClick={() => onClick(customer)}
-      className="flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all group"
-      style={{ borderBottom: "1px solid rgba(99,102,241,0.06)" }}
-      onMouseEnter={e => { e.currentTarget.style.background = `${sc.color}06`; }}
+      className="flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all group premium-row"
+      style={{ borderBottom: "1px solid rgba(30,45,110,0.06)" }}
+      onMouseEnter={e => { e.currentTarget.style.background = `rgba(30,45,110,0.04)`; }}
       onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
     >
       {/* Avatar */}
@@ -175,26 +173,26 @@ function CustomerRow({ customer, onClick }) {
 
       {/* Name + email */}
       <div className="min-w-0 flex-1">
-        <p className="font-bold text-[13px] truncate" style={{ color: "#e8d5ff" }}>{customer.full_name}</p>
-        <p className="text-[11px] mono truncate" style={{ color: "rgba(196,181,253,0.5)" }}>{customer.email}</p>
+        <p className="font-bold text-[13px] truncate" style={{ color: "#0f1a3d" }}>{customer.full_name}</p>
+        <p className="text-[11px] mono truncate" style={{ color: "rgba(30,45,110,0.5)" }}>{customer.email}</p>
       </div>
 
       {/* Account */}
-      <p className="hidden md:block text-[11px] mono w-24 truncate flex-shrink-0" style={{ color: "rgba(196,181,253,0.45)" }}>{customer.account_number || "—"}</p>
+      <p className="hidden md:block text-[11px] mono w-24 truncate flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>{customer.account_number || "—"}</p>
 
       {/* Plan */}
       <div className="hidden lg:flex items-center gap-1.5 w-32 flex-shrink-0">
-        <Wifi className="w-3 h-3 flex-shrink-0" style={{ color: "#a78bfa" }} />
-        <span className="text-[11px] truncate" style={{ color: "#c4b5fd" }}>{PLAN_SHORT[customer.service_plan] || "—"}</span>
+        <Wifi className="w-3 h-3 flex-shrink-0" style={{ color: "#1e2d6e" }} />
+        <span className="text-[11px] truncate" style={{ color: "#1e2d6e" }}>{PLAN_SHORT[customer.service_plan] || "—"}</span>
       </div>
 
       {/* Connection */}
       <div className="hidden xl:block w-24 flex-shrink-0">
-        <span className="text-[12px]">{CONN_ICON[customer.connection_type] || ""} <span className="capitalize text-[11px]" style={{ color: "rgba(196,181,253,0.55)" }}>{customer.connection_type || "—"}</span></span>
+        <span className="text-[12px]">{CONN_ICON[customer.connection_type] || ""} <span className="capitalize text-[11px]" style={{ color: "rgba(30,45,110,0.55)" }}>{customer.connection_type || "—"}</span></span>
       </div>
 
       {/* Rate */}
-      <p className="hidden sm:block text-[13px] font-black mono w-20 text-right flex-shrink-0" style={{ color: "#06b6d4" }}>
+      <p className="hidden sm:block text-[13px] font-black mono w-20 text-right flex-shrink-0" style={{ color: "#0ea5e9", fontFamily: "'JetBrains Mono',monospace" }}>
         R{customer.monthly_rate?.toFixed(0) || "0"}
       </p>
 
@@ -297,8 +295,8 @@ export default function Customers() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0e8ff" }}>Customer Management</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(100,116,139,0.55)" }}>
+          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
+          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(30,45,110,0.5)" }}>
             {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active
           </p>
         </div>
@@ -306,13 +304,13 @@ export default function Customers() {
           <button
             onClick={() => refetch()}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.18)", color: "#6366f1" }}>
+            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </button>
           <button
             onClick={handleExportCsv}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
+            style={{ background: "rgba(5,150,105,0.07)", border: "1px solid rgba(5,150,105,0.2)", color: "#059669" }}>
             <Download className="w-3.5 h-3.5" /> Export CSV
           </button>
           {isAdmin && (
@@ -320,7 +318,7 @@ export default function Customers() {
               <button
                 onClick={() => setShowImport(true)}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-                style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", color: "#6366f1" }}>
+                style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
                 <Upload className="w-3.5 h-3.5" /> Import
               </button>
               <button
@@ -332,7 +330,7 @@ export default function Customers() {
               <button
                 onClick={() => { setEditing(null); setShowForm(true); }}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-[12px] font-bold text-white transition-all hover:scale-105"
-                style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 16px rgba(99,102,241,0.35)" }}>
+                style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
                 <Plus className="w-4 h-4" /> Add Customer
               </button>
             </>
@@ -356,7 +354,7 @@ export default function Customers() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             className="w-full pl-10 pr-4 py-2.5 text-[13px] outline-none transition-all rounded-xl"
-            style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.25)", color: "#e8d5ff" }}
+            style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.2)", color: "#0f1a3d" }}
             placeholder="Search by name, email, account number…"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -391,13 +389,13 @@ export default function Customers() {
         </div>
 
         {/* View toggle */}
-        <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(99,102,241,0.15)" }}>
+        <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(30,45,110,0.15)" }}>
           {[{ mode: "list", Icon: List }, { mode: "grid", Icon: LayoutGrid }].map(({ mode, Icon }) => (
             <button key={mode} onClick={() => setViewMode(mode)}
               className="px-3 py-2 transition-all"
               style={{
-                background: viewMode === mode ? "rgba(139,92,246,0.18)" : "rgba(139,92,246,0.05)",
-                color: viewMode === mode ? "#a78bfa" : "rgba(196,181,253,0.45)",
+                background: viewMode === mode ? "rgba(30,45,110,0.12)" : "rgba(30,45,110,0.04)",
+                color: viewMode === mode ? "#1e2d6e" : "rgba(30,45,110,0.45)",
               }}>
               <Icon className="w-4 h-4" />
             </button>
@@ -412,17 +410,17 @@ export default function Customers() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 rounded-2xl"
-          style={{ background: "rgba(10,6,24,0.95)", border: "1px solid rgba(139,92,246,0.18)" }}>
+          style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)" }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-            style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)" }}>
-            <Users className="w-7 h-7" style={{ color: "#a78bfa" }} />
+            style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
+            <Users className="w-7 h-7" style={{ color: "#1e2d6e" }} />
           </div>
-          <p className="font-semibold text-sm" style={{ color: "#c4b5fd" }}>No customers found</p>
-          <p className="text-xs mt-1" style={{ color: "rgba(196,181,253,0.45)" }}>Try adjusting your search or filter</p>
+          <p className="font-semibold text-sm" style={{ color: "#1e2d6e" }}>No customers found</p>
+          <p className="text-xs mt-1" style={{ color: "rgba(30,45,110,0.45)" }}>Try adjusting your search or filter</p>
           {isAdmin && (
             <button onClick={() => setShowOnboarding(true)}
               className="mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
-              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", boxShadow: "0 4px 16px rgba(99,102,241,0.3)" }}>
+              style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 16px rgba(30,45,110,0.25)" }}>
               <Plus className="w-4 h-4" /> Onboard First Customer
             </button>
           )}
@@ -434,23 +432,24 @@ export default function Customers() {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(10, 6, 24, 0.97)", border: "1px solid rgba(139,92,246,0.22)", boxShadow: "0 4px 24px rgba(139,92,246,0.14)" }}>
+        <div className="rounded-2xl overflow-hidden bracket-card" style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
+          <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
           {/* List header */}
-          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(139,92,246,0.09)", borderBottom: "1px solid rgba(139,92,246,0.15)" }}>
+          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(30,45,110,0.04)", borderBottom: "1px solid rgba(30,45,110,0.08)" }}>
             <div className="w-9 flex-shrink-0" />
-            <p className="flex-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Customer</p>
-            <p className="hidden md:block w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Account</p>
-            <p className="hidden lg:block w-32 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Plan</p>
-            <p className="hidden xl:block w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Connect.</p>
-            <p className="hidden sm:block w-20 text-right text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Rate</p>
-            <p className="w-24 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#9d8ec7" }}>Status</p>
+            <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Customer</p>
+            <p className="hidden md:block w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Account</p>
+            <p className="hidden lg:block w-32 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Plan</p>
+            <p className="hidden xl:block w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Connect.</p>
+            <p className="hidden sm:block w-20 text-right text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Rate</p>
+            <p className="w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Status</p>
             <div className="w-4" />
           </div>
           {filtered.map(c => (
             <CustomerRow key={c.id} customer={c} onClick={setSelected} />
           ))}
-          <div className="px-5 py-2.5" style={{ background: "rgba(139,92,246,0.07)", borderTop: "1px solid rgba(139,92,246,0.12)" }}>
-            <p className="text-[11px] mono" style={{ color: "rgba(100,116,139,0.5)" }}>
+          <div className="px-5 py-2.5" style={{ background: "rgba(30,45,110,0.03)", borderTop: "1px solid rgba(30,45,110,0.08)" }}>
+            <p className="text-[11px] mono" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>
               {filtered.length} of {customers.length} customers
             </p>
           </div>
