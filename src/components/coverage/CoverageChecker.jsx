@@ -1,10 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
 
-/**
- * CoverageChecker — modal overlay wrapper around the /CoverageCheck page.
- * Rendered as an iframe so the full map/leaflet experience works inside a modal.
- */
 export default function CoverageChecker({ onClose }) {
   return (
     <div
@@ -19,7 +15,6 @@ export default function CoverageChecker({ onClose }) {
           boxShadow: "0 24px 80px rgba(30,45,110,0.3)",
         }}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110"
@@ -31,8 +26,6 @@ export default function CoverageChecker({ onClose }) {
         >
           <X className="w-4 h-4" />
         </button>
-
-        {/* Embed the coverage check page */}
         <iframe
           src="/CoverageCheck"
           title="Coverage Check"

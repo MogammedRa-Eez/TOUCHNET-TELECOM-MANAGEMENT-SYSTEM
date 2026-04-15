@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus, Search, Eye, Pencil, Trash2, FileText, BarChart2, List,
   Mail, Download, Loader2, MessageSquare, RefreshCw,
-  CheckCircle2, Clock, TrendingUp, X, Copy, ChevronDown
+  CheckCircle2, Clock, TrendingUp, X, Copy, ChevronDown, Zap
 } from "lucide-react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -21,28 +21,36 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 const STATUS_CONFIG = {
-  draft:    { color: "#94a3b8", bg: "rgba(148,163,184,0.12)", border: "rgba(148,163,184,0.3)",  label: "Draft",    dot: "#94a3b8" },
-  sent:     { color: "#74b9ff", bg: "rgba(116,185,255,0.12)", border: "rgba(116,185,255,0.3)",  label: "Sent",     dot: "#74b9ff" },
-  viewed:   { color: "#d988fa", bg: "rgba(217,136,250,0.12)", border: "rgba(217,136,250,0.3)",  label: "Viewed",   dot: "#d988fa" },
-  accepted: { color: "#57f287", bg: "rgba(87,242,135,0.12)",  border: "rgba(87,242,135,0.3)",   label: "Accepted", dot: "#57f287" },
-  declined: { color: "#ff7b7b", bg: "rgba(255,123,123,0.12)", border: "rgba(255,123,123,0.3)",  label: "Declined", dot: "#ff7b7b" },
-  expired:  { color: "#ffd460", bg: "rgba(255,212,96,0.12)",  border: "rgba(255,212,96,0.3)",   label: "Expired",  dot: "#ffd460" },
+  draft:    { color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.22)",  label: "Draft",    dot: "#94a3b8" },
+  sent:     { color: "#0ea5e9", bg: "rgba(14,165,233,0.08)",  border: "rgba(14,165,233,0.22)",   label: "Sent",     dot: "#38bdf8" },
+  viewed:   { color: "#8b5cf6", bg: "rgba(139,92,246,0.08)",  border: "rgba(139,92,246,0.22)",   label: "Viewed",   dot: "#a78bfa" },
+  accepted: { color: "#059669", bg: "rgba(5,150,105,0.08)",   border: "rgba(5,150,105,0.22)",    label: "Accepted", dot: "#34d399" },
+  declined: { color: "#c41e3a", bg: "rgba(196,30,58,0.08)",   border: "rgba(196,30,58,0.22)",    label: "Declined", dot: "#e02347" },
+  expired:  { color: "#d97706", bg: "rgba(217,119,6,0.08)",   border: "rgba(217,119,6,0.22)",    label: "Expired",  dot: "#fbbf24" },
 };
 
+/* ── Particle Burst effect on KPI hover ───── */
 function KPICard({ label, value, sub, color, icon: Icon }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl p-5 transition-all hover:scale-[1.02]"
-      style={{ background: "rgba(18,14,42,0.97)", border: `1px solid ${color}30`, boxShadow: `0 4px 24px ${color}14` }}>
-      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${color},transparent)` }} />
-      <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle,${color}16,transparent 70%)` }} />
-      <div className="flex items-start justify-between">
+    <div className="relative overflow-hidden rounded-2xl p-5 group cursor-default transition-all duration-300 hover:-translate-y-1 holo-card bracket-card"
+      style={{
+        background: "#ffffff",
+        border: `1px solid ${color}28`,
+        boxShadow: `0 4px 20px ${color}10`,
+      }}>
+      <div className="absolute top-0 left-0 right-0 h-[3px]"
+        style={{ background: `linear-gradient(90deg, ${color}, ${color}55, transparent)` }} />
+      {/* Ambient glow blob */}
+      <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 group-hover:opacity-100 opacity-60"
+        style={{ background: `radial-gradient(circle, ${color}14, transparent 70%)` }} />
+      <div className="flex items-start justify-between relative">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-2" style={{ color: "rgba(203,181,253,0.55)" }}>{label}</p>
-          <p className="text-3xl font-black" style={{ color, fontFamily: "'JetBrains Mono',monospace" }}>{value}</p>
-          {sub && <p className="text-[11px] mt-1.5" style={{ color: "rgba(220,232,255,0.55)" }}>{sub}</p>}
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: "rgba(30,45,110,0.45)" }}>{label}</p>
+          <p className="text-3xl font-black mono leading-none" style={{ color, fontFamily: "'JetBrains Mono',monospace" }}>{value}</p>
+          {sub && <p className="text-[11px] mt-1.5" style={{ color: "rgba(30,45,110,0.5)" }}>{sub}</p>}
         </div>
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `${color}16`, border: `1px solid ${color}30` }}>
+        <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
+          style={{ background: `${color}12`, border: `1px solid ${color}25`, boxShadow: `0 4px 14px ${color}18` }}>
           <Icon className="w-5 h-5" style={{ color }} />
         </div>
       </div>
@@ -54,7 +62,7 @@ function ActionBtn({ icon: Icon, color, title, onClick, spin = false }) {
   return (
     <button onClick={onClick} title={title}
       className="w-7 h-7 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-      style={{ background: `${color}12`, border: `1px solid ${color}25` }}>
+      style={{ background: `${color}10`, border: `1px solid ${color}22` }}>
       <Icon className={`w-3.5 h-3.5 ${spin ? "animate-spin" : ""}`} style={{ color }} />
     </button>
   );
@@ -64,7 +72,7 @@ function ActionPill({ icon: Icon, color, label, onClick }) {
   return (
     <button onClick={onClick}
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
-      style={{ background: `${color}12`, border: `1px solid ${color}25`, color }}>
+      style={{ background: `${color}10`, border: `1px solid ${color}22`, color }}>
       <Icon className="w-3 h-3" /> {label}
     </button>
   );
@@ -76,29 +84,37 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
   const sc = STATUS_CONFIG[quote.status] || STATUS_CONFIG.draft;
 
   return (
-    <div style={{ borderBottom: "1px solid rgba(177,151,252,0.08)" }}>
+    <div className="group premium-row" style={{ borderBottom: "1px solid rgba(30,45,110,0.06)" }}>
       <div
-        className="flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-all group"
+        className="flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-all duration-150"
         onClick={() => setExpanded(v => !v)}
-        onMouseEnter={e => { if (!expanded) e.currentTarget.style.background = "rgba(177,151,252,0.05)"; }}
+        onMouseEnter={e => { if (!expanded) e.currentTarget.style.background = "rgba(30,45,110,0.04)"; }}
         onMouseLeave={e => { if (!expanded) e.currentTarget.style.background = "transparent"; }}
-        style={{ background: expanded ? "rgba(177,151,252,0.06)" : "transparent" }}
+        style={{ background: expanded ? `${sc.color}06` : "transparent" }}
       >
-        <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: sc.dot, boxShadow: `0 0 8px ${sc.dot}` }} />
+        {/* Status beacon */}
+        <div className="status-beacon flex-shrink-0">
+          <span className="w-2.5 h-2.5 rounded-full block"
+            style={{ background: sc.dot, boxShadow: `0 0 7px ${sc.dot}` }} />
+        </div>
 
-        <p className="hidden sm:block w-28 text-[11px] font-bold flex-shrink-0" style={{ color: "#b197fc", fontFamily: "'JetBrains Mono',monospace" }}>
+        {/* Quote # */}
+        <p className="hidden sm:block w-28 text-[11px] font-bold flex-shrink-0 mono"
+          style={{ color: "#1e2d6e", fontFamily: "'JetBrains Mono',monospace" }}>
           {quote.quote_number || "—"}
         </p>
 
+        {/* Title / client */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold truncate" style={{ color: "#f8f4ff" }}>{quote.title}</p>
-          <p className="text-[10px] truncate" style={{ color: "rgba(203,181,253,0.55)" }}>
+          <p className="text-[13px] font-bold truncate" style={{ color: "#0f1a3d" }}>{quote.title}</p>
+          <p className="text-[10px] truncate" style={{ color: "rgba(30,45,110,0.5)" }}>
             {quote.customer_name || "No client"}{quote.customer_email ? ` · ${quote.customer_email}` : ""}
           </p>
         </div>
 
+        {/* Status pill (clickable dropdown) */}
         <div className="relative flex-shrink-0" onClick={e => { e.stopPropagation(); setShowStatusMenu(v => !v); }}>
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider cursor-pointer hover:opacity-80 transition-opacity"
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1.5 rounded-lg uppercase tracking-wider cursor-pointer hover:opacity-80 transition-opacity"
             style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}` }}>
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.dot }} />
             {sc.label}
@@ -106,10 +122,10 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
           </span>
           {showStatusMenu && (
             <div className="absolute right-0 top-full mt-1 z-50 rounded-xl overflow-hidden w-36"
-              style={{ background: "rgba(16,12,36,0.99)", border: "1px solid rgba(177,151,252,0.3)", boxShadow: "0 12px 40px rgba(177,151,252,0.25)" }}>
+              style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.18)", boxShadow: "0 12px 40px rgba(30,45,110,0.15)" }}>
               {Object.entries(STATUS_CONFIG).map(([k, cfg]) => (
                 <button key={k} onClick={e => { e.stopPropagation(); onStatusChange(quote.id, k); setShowStatusMenu(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-[11px] font-bold text-left transition-colors hover:bg-white/5"
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-[11px] font-bold text-left transition-colors hover:bg-slate-50"
                   style={{ color: cfg.color }}>
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: cfg.dot }} />
                   {cfg.label}
@@ -119,51 +135,56 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
           )}
         </div>
 
-        <p className="hidden md:block w-28 text-right text-[13px] font-black flex-shrink-0" style={{ color: "#f0ecff", fontFamily: "'JetBrains Mono',monospace" }}>
+        {/* Total */}
+        <p className="hidden md:block w-28 text-right text-[14px] font-black flex-shrink-0 mono"
+          style={{ color: "#0f1a3d", fontFamily: "'JetBrains Mono',monospace" }}>
           R{(quote.total || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
         </p>
 
-        <p className="hidden lg:block w-24 text-[11px] flex-shrink-0" style={{ color: "rgba(203,181,253,0.45)" }}>
+        {/* Valid until */}
+        <p className="hidden lg:block w-24 text-[11px] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>
           {quote.valid_until ? format(new Date(quote.valid_until), "d MMM yy") : "—"}
         </p>
 
+        {/* Action buttons */}
         <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
-          <ActionBtn icon={Eye}           color="#74b9ff" title="Preview"      onClick={() => onPreview(quote)} />
-          <ActionBtn icon={Pencil}        color="#b197fc" title="Edit"         onClick={() => onEdit(quote)} />
-          <ActionBtn icon={MessageSquare} color="#d988fa" title="Notes"        onClick={() => onNotes(quote)} />
+          <ActionBtn icon={Eye}           color="#1e2d6e" title="Preview"      onClick={() => onPreview(quote)} />
+          <ActionBtn icon={Pencil}        color="#4a5fa8" title="Edit"         onClick={() => onEdit(quote)} />
+          <ActionBtn icon={MessageSquare} color="#8b5cf6" title="Notes"        onClick={() => onNotes(quote)} />
           {quote.customer_email && (
-            <ActionBtn icon={emailing ? Loader2 : Mail} color="#57f287" title="Email" onClick={() => onEmail(quote)} spin={emailing} />
+            <ActionBtn icon={emailing ? Loader2 : Mail} color="#059669" title="Email" onClick={() => onEmail(quote)} spin={emailing} />
           )}
-          <ActionBtn icon={downloading ? Loader2 : Download} color="#00e5ff" title="PDF" onClick={() => onDownload(quote)} spin={downloading} />
-          <ActionBtn icon={Copy}          color="#ffd460" title="Duplicate"    onClick={() => onDuplicate(quote)} />
-          <ActionBtn icon={Trash2}        color="#ff7b7b" title="Delete"       onClick={() => onDelete(quote.id)} />
+          <ActionBtn icon={downloading ? Loader2 : Download} color="#0ea5e9" title="PDF" onClick={() => onDownload(quote)} spin={downloading} />
+          <ActionBtn icon={Copy}          color="#d97706" title="Duplicate"    onClick={() => onDuplicate(quote)} />
+          <ActionBtn icon={Trash2}        color="#c41e3a" title="Delete"       onClick={() => onDelete(quote.id)} />
         </div>
 
         <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform ${expanded ? "rotate-180" : ""}`}
-          style={{ color: "rgba(177,151,252,0.4)" }} />
+          style={{ color: "rgba(30,45,110,0.35)" }} />
       </div>
 
+      {/* Expanded detail */}
       {expanded && (
         <div className="px-5 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 gap-3"
-          style={{ background: "rgba(177,151,252,0.03)", borderTop: `1px solid ${sc.color}14` }}>
+          style={{ background: "rgba(30,45,110,0.03)", borderTop: `1px solid ${sc.color}15` }}>
           {[
             { label: "Salesperson", value: quote.salesperson_name || "—" },
             { label: "Contract",    value: quote.contract_months ? `${quote.contract_months} months` : "—" },
             { label: "Subtotal",    value: `R${(quote.subtotal || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2 })}` },
             { label: "Created",     value: quote.created_date ? format(new Date(quote.created_date), "d MMM yyyy") : "—" },
           ].map(d => (
-            <div key={d.label} className="rounded-xl px-3 py-2.5"
-              style={{ background: "rgba(177,151,252,0.07)", border: "1px solid rgba(177,151,252,0.15)" }}>
-              <p className="text-[9px] uppercase tracking-wider font-bold mb-0.5" style={{ color: "rgba(203,181,253,0.5)" }}>{d.label}</p>
-              <p className="text-[12px] font-bold" style={{ color: "#f0ecff" }}>{d.value}</p>
+            <div key={d.label} className="rounded-xl px-3 py-2.5 transition-all hover:scale-[1.02]"
+              style={{ background: "rgba(30,45,110,0.05)", border: "1px solid rgba(30,45,110,0.1)" }}>
+              <p className="text-[9px] uppercase tracking-wider font-bold mb-0.5" style={{ color: "rgba(30,45,110,0.45)" }}>{d.label}</p>
+              <p className="text-[12px] font-bold" style={{ color: "#0f1a3d" }}>{d.value}</p>
             </div>
           ))}
           <div className="col-span-2 sm:col-span-4 flex gap-2 flex-wrap pt-1">
-            <ActionPill icon={Eye}      color="#74b9ff" label="Preview"       onClick={() => onPreview(quote)} />
-            <ActionPill icon={Pencil}   color="#b197fc" label="Edit"          onClick={() => onEdit(quote)} />
-            {quote.customer_email && <ActionPill icon={Mail} color="#57f287" label="Email Client" onClick={() => onEmail(quote)} />}
-            <ActionPill icon={Download} color="#00e5ff" label="Download PDF"  onClick={() => onDownload(quote)} />
-            <ActionPill icon={Copy}     color="#ffd460" label="Duplicate"     onClick={() => onDuplicate(quote)} />
+            <ActionPill icon={Eye}      color="#1e2d6e" label="Preview"       onClick={() => onPreview(quote)} />
+            <ActionPill icon={Pencil}   color="#4a5fa8" label="Edit"          onClick={() => onEdit(quote)} />
+            {quote.customer_email && <ActionPill icon={Mail} color="#059669" label="Email Client" onClick={() => onEmail(quote)} />}
+            <ActionPill icon={Download} color="#0ea5e9" label="Download PDF"  onClick={() => onDownload(quote)} />
+            <ActionPill icon={Copy}     color="#d97706" label="Duplicate"     onClick={() => onDuplicate(quote)} />
           </div>
         </div>
       )}
@@ -318,56 +339,36 @@ export default function Quotes() {
 <body style="margin:0;padding:0;background:#f1f5f9;font-family:'Helvetica Neue',Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 12px;">
 <table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-
-  <!-- Header -->
-  <tr><td style="background:#0f172a;padding:28px 36px;text-align:center;">
-    <img src="${LOGO_URL}" alt="TouchNet" style="height:44px;object-fit:contain;display:block;margin:0 auto 16px;" />
+  <tr><td style="background:#1e2d6e;padding:28px 36px;text-align:center;">
+    <img src="${LOGO_URL}" alt="TouchNet" style="height:44px;object-fit:contain;display:block;margin:0 auto 16px;filter:brightness(0) invert(1);" />
     <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 4px;">${quote.title}</h1>
     <p style="color:rgba(255,255,255,0.45);font-size:12px;margin:0;">Ref: ${quote.quote_number || '—'} &nbsp;·&nbsp; ${contractMonths}-month contract</p>
   </td></tr>
-
-  <!-- Info strip -->
-  <tr><td>
-    <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #e2e8f0;">
-      <tr>
-        <td style="padding:18px 24px;width:50%;border-right:1px solid #e2e8f0;vertical-align:top;">
-          <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">Prepared For</p>
-          <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.customer_company || quote.customer_name}</p>
-          ${quote.customer_company ? `<p style="font-size:12px;color:#475569;margin:2px 0 0;">${quote.customer_name}</p>` : ''}
-          ${quote.customer_email ? `<p style="font-size:12px;color:#e11d48;margin:4px 0 0;">${quote.customer_email}</p>` : ''}
-        </td>
-        <td style="padding:18px 24px;width:50%;vertical-align:top;">
-          <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">From</p>
-          <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.salesperson_name || 'TouchNet Sales'}</p>
-          <p style="font-size:12px;color:#e11d48;margin:2px 0 0;">Touchnet · www.touchnet.co.za</p>
-          <p style="font-size:12px;color:#475569;margin:2px 0 0;">010 060 0400</p>
-          ${quote.valid_until ? `<p style="font-size:11px;color:#b91c1c;margin:6px 0 0;font-weight:600;">Valid until: ${quote.valid_until}</p>` : ''}
-        </td>
-      </tr>
-    </table>
-  </td></tr>
-
-  <!-- Cover message -->
+  <tr><td><table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #e2e8f0;">
+    <tr>
+      <td style="padding:18px 24px;width:50%;border-right:1px solid #e2e8f0;vertical-align:top;">
+        <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">Prepared For</p>
+        <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.customer_company || quote.customer_name}</p>
+        ${quote.customer_email ? `<p style="font-size:12px;color:#c41e3a;margin:4px 0 0;">${quote.customer_email}</p>` : ''}
+      </td>
+      <td style="padding:18px 24px;width:50%;vertical-align:top;">
+        <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">From</p>
+        <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.salesperson_name || 'TouchNet Sales'}</p>
+        <p style="font-size:12px;color:#c41e3a;margin:2px 0 0;">Touchnet · www.touchnet.co.za</p>
+        ${quote.valid_until ? `<p style="font-size:11px;color:#b91c1c;margin:6px 0 0;font-weight:600;">Valid until: ${quote.valid_until}</p>` : ''}
+      </td>
+    </tr>
+  </table></td></tr>
   <tr><td style="padding:24px 36px 16px;">
     <p style="font-size:14px;color:#374151;line-height:1.7;margin:0;">Dear <strong>${quote.customer_name}</strong>,</p>
     <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:12px 0 0;">${quote.cover_message || 'Please find your quotation below. We look forward to doing business with you.'}</p>
   </td></tr>
-
-  <!-- Line items -->
   ${includedItems.length > 0 ? `<tr><td style="padding:0 36px 24px;">${lineItemsHtml}</td></tr>` : ''}
-
-  <!-- Content sections -->
   ${sectionsHtml ? `<tr><td style="padding:0 36px 8px;">${sectionsHtml}</td></tr>` : ''}
-
-  <!-- CTA button -->
   <tr><td style="padding:16px 36px 24px;text-align:center;">
-    <a href="${quoteLink}" style="display:inline-block;padding:14px 36px;background:#e11d48;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;">
-      View &amp; Accept Quote →
-    </a>
-    <p style="font-size:11px;color:#9ca3af;margin:10px 0 0;">Or open: <a href="${quoteLink}" style="color:#6366f1;">${quoteLink}</a></p>
+    <a href="${quoteLink}" style="display:inline-block;padding:14px 36px;background:#1e2d6e;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;">View &amp; Accept Quote →</a>
+    <p style="font-size:11px;color:#9ca3af;margin:10px 0 0;">Or open: <a href="${quoteLink}" style="color:#1e2d6e;">${quoteLink}</a></p>
   </td></tr>
-
-  <!-- Banking details -->
   <tr><td style="padding:0 36px 24px;">
     <table width="100%" cellpadding="12" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
       <tr><td>
@@ -378,18 +379,13 @@ export default function Quotes() {
       </td></tr>
     </table>
   </td></tr>
-
-  <!-- Terms -->
   ${quote.terms ? `<tr><td style="padding:0 36px 28px;border-top:1px solid #e2e8f0;">
     <p style="font-size:11px;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 8px;">Terms &amp; Conditions</p>
     <p style="font-size:11px;color:#475569;line-height:1.7;white-space:pre-line;">${quote.terms}</p>
   </td></tr>` : ''}
-
-  <!-- Footer -->
   <tr><td style="background:#f8fafc;padding:16px 36px;text-align:center;border-top:1px solid #e2e8f0;">
     <p style="font-size:11px;color:#94a3b8;margin:0;">© TouchNet Telecommunications · 151 Katherine Street, Sandton, Johannesburg</p>
   </td></tr>
-
 </table>
 </td></tr></table>
 </body></html>`;
@@ -429,27 +425,63 @@ export default function Quotes() {
   return (
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
 
-      {/* Header */}
+      {/* ── Futuristic data ticker ── */}
+      <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
+        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(90deg, rgba(240,242,248,0.95), transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(270deg, rgba(240,242,248,0.95), transparent)" }} />
+        <div className="ticker-track flex items-center gap-8 px-4 whitespace-nowrap">
+          {[
+            "QUOTES & PROPOSALS", "DIGITAL SIGNATURE READY", "PDF GENERATION", "EMAIL DELIVERY",
+            "PIPELINE TRACKING", "CONVERSION ANALYTICS", "TOUCHNET SALES ENGINE",
+            "QUOTES & PROPOSALS", "DIGITAL SIGNATURE READY", "PDF GENERATION", "EMAIL DELIVERY",
+            "PIPELINE TRACKING", "CONVERSION ANALYTICS", "TOUCHNET SALES ENGINE",
+          ].map((t, i) => (
+            <span key={i} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.18em] mono"
+              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.4)" : "#c41e3a" }}>
+              {i % 4 === 0 && <span className="w-1 h-1 rounded-full" style={{ background: "#c41e3a", boxShadow: "0 0 4px #c41e3a" }} />}
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f8f4ff", fontFamily: "'Space Grotesk',sans-serif" }}>
-            Quotes & Proposals
-          </h1>
-          <p className="text-[11px] mt-0.5" style={{ color: "rgba(203,181,253,0.5)", fontFamily: "'JetBrains Mono',monospace" }}>
-            {quotes.length} quotes · {quotes.filter(q => q.status === "accepted").length} accepted · {convRate}% conversion
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{ background: "rgba(30,45,110,0.08)", border: "1px solid rgba(30,45,110,0.15)", boxShadow: "0 4px 16px rgba(30,45,110,0.1)" }}>
+              <FileText className="w-4.5 h-4.5" style={{ color: "#1e2d6e" }} />
+            </div>
+            <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk',sans-serif" }}>
+              Quotes & Proposals
+            </h1>
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+              style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-black mono" style={{ color: "#059669" }}>LIVE</span>
+            </div>
+          </div>
+          <p className="text-[11px] mt-0.5 mono pl-12" style={{ color: "rgba(30,45,110,0.5)", fontFamily: "'JetBrains Mono',monospace" }}>
+            {quotes.length} quotes · {quotes.filter(q => q.status === "accepted").length} accepted · <span style={{ color: "#059669", fontWeight: 700 }}>{convRate}%</span> conversion
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(177,151,252,0.25)" }}>
+          {/* View toggle */}
+          <div className="flex rounded-xl overflow-hidden p-1"
+            style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
             {[
               { key: "list",      label: "List",      icon: List },
               { key: "dashboard", label: "Analytics", icon: BarChart2 },
             ].map(({ key, label, icon: Icon }) => (
               <button key={key} onClick={() => setView(key)}
-                className="flex items-center gap-1.5 px-3.5 py-2 text-[11px] font-bold transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold transition-all"
                 style={{
-                  background: view === key ? "linear-gradient(135deg,#9b6dff,#b197fc)" : "rgba(177,151,252,0.06)",
-                  color: view === key ? "#fff" : "rgba(203,181,253,0.6)",
+                  background: view === key ? "linear-gradient(135deg,#1e2d6e,#2a3d8f)" : "transparent",
+                  color: view === key ? "#ffffff" : "rgba(30,45,110,0.55)",
                 }}>
                 <Icon className="w-3.5 h-3.5" /> {label}
               </button>
@@ -457,12 +489,12 @@ export default function Quotes() {
           </div>
           <button onClick={() => refetch()}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(177,151,252,0.08)", border: "1px solid rgba(177,151,252,0.22)", color: "#b197fc" }}>
+            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </button>
           <button onClick={() => { setEditing(null); setShowBuilder(true); }}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-            style={{ background: "linear-gradient(135deg,#9b6dff,#b197fc)", boxShadow: "0 4px 20px rgba(177,151,252,0.45)" }}>
+            style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
             <Plus className="w-4 h-4" /> New Quote
           </button>
         </div>
@@ -481,17 +513,17 @@ export default function Quotes() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <KPICard label="Total Quotes"   value={quotes.length}  icon={FileText}    color="#b197fc" sub={`${filtered.length} shown`} />
-              <KPICard label="In Pipeline"    value={quotes.filter(q=>["sent","viewed","draft"].includes(q.status)).length} icon={Clock} color="#74b9ff" sub="Awaiting response" />
-              <KPICard label="Accepted Value" value={`R${(totalAccepted/1000).toFixed(1)}k`} icon={CheckCircle2} color="#57f287" sub="Monthly recurring" />
-              <KPICard label="Pipeline Value" value={`R${(totalPending/1000).toFixed(1)}k`}  icon={TrendingUp}   color="#ffd460" sub="Potential MRR" />
+              <KPICard label="Total Quotes"   value={quotes.length}  icon={FileText}    color="#1e2d6e" sub={`${filtered.length} shown`} />
+              <KPICard label="In Pipeline"    value={quotes.filter(q=>["sent","viewed","draft"].includes(q.status)).length} icon={Clock} color="#0ea5e9" sub="Awaiting response" />
+              <KPICard label="Accepted Value" value={`R${(totalAccepted/1000).toFixed(1)}k`} icon={CheckCircle2} color="#059669" sub="Monthly recurring" />
+              <KPICard label="Pipeline Value" value={`R${(totalPending/1000).toFixed(1)}k`}  icon={TrendingUp}   color="#d97706" sub="Potential MRR" />
             </div>
           )}
 
           {/* Status filter pills */}
           <div className="flex flex-wrap gap-2 items-center">
             {[
-              { key: "all", label: `All (${quotes.length})`, color: "#b197fc" },
+              { key: "all", label: `All (${quotes.length})`, color: "#1e2d6e" },
               ...Object.entries(STATUS_CONFIG).map(([k, c]) => ({
                 key: k, label: `${c.label} (${quotes.filter(q => q.status === k).length})`, color: c.color,
               })),
@@ -499,9 +531,10 @@ export default function Quotes() {
               <button key={f.key} onClick={() => setStatusFilter(f.key)}
                 className="px-3.5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all hover:scale-105"
                 style={{
-                  background: statusFilter === f.key ? `${f.color}18` : "rgba(177,151,252,0.06)",
-                  border: `1px solid ${statusFilter === f.key ? f.color + "45" : "rgba(177,151,252,0.14)"}`,
-                  color: statusFilter === f.key ? f.color : "rgba(203,181,253,0.55)",
+                  background: statusFilter === f.key ? `${f.color}10` : "rgba(30,45,110,0.04)",
+                  border: `1px solid ${statusFilter === f.key ? f.color + "40" : "rgba(30,45,110,0.1)"}`,
+                  color: statusFilter === f.key ? f.color : "rgba(30,45,110,0.5)",
+                  boxShadow: statusFilter === f.key ? `0 2px 8px ${f.color}18` : "none",
                 }}>
                 {f.label}
               </button>
@@ -510,35 +543,35 @@ export default function Quotes() {
 
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(177,151,252,0.45)" }} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#94a3b8" }} />
             <input
               className="w-full pl-11 pr-10 py-3 text-[13px] outline-none rounded-xl transition-all"
-              style={{ background: "rgba(177,151,252,0.07)", border: "1px solid rgba(177,151,252,0.26)", color: "#f0ecff" }}
+              style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.2)", color: "#0f1a3d", boxShadow: "0 2px 8px rgba(30,45,110,0.06)" }}
               placeholder="Search by title, client, quote number…"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
-                <X className="w-4 h-4" style={{ color: "rgba(177,151,252,0.5)" }} />
+                <X className="w-4 h-4" style={{ color: "#94a3b8" }} />
               </button>
             )}
           </div>
 
           {/* Quote table */}
-          <div className="rounded-2xl overflow-hidden"
-            style={{ background: "rgba(12,8,30,0.97)", border: "1px solid rgba(177,151,252,0.22)", boxShadow: "0 8px 40px rgba(177,151,252,0.1)" }}>
-            <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#b197fc,#74b9ff,#00e5ff,transparent)" }} />
+          <div className="rounded-2xl overflow-hidden bracket-card"
+            style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
+            <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
 
             {/* Column headers */}
             <div className="flex items-center gap-3 px-4 py-2.5"
-              style={{ background: "rgba(177,151,252,0.08)", borderBottom: "1px solid rgba(177,151,252,0.14)" }}>
-              <div className="w-2 flex-shrink-0" />
-              <p className="hidden sm:block w-28 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(203,181,253,0.55)" }}>Quote #</p>
-              <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(203,181,253,0.55)" }}>Title / Client</p>
-              <p className="text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0 w-24" style={{ color: "rgba(203,181,253,0.55)" }}>Status</p>
-              <p className="hidden md:block w-28 text-right text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(203,181,253,0.55)" }}>Total</p>
-              <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(203,181,253,0.55)" }}>Valid Until</p>
+              style={{ background: "rgba(30,45,110,0.04)", borderBottom: "1px solid rgba(30,45,110,0.08)" }}>
+              <div className="w-2.5 flex-shrink-0" />
+              <p className="hidden sm:block w-28 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>Quote #</p>
+              <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Title / Client</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0 w-24" style={{ color: "rgba(30,45,110,0.45)" }}>Status</p>
+              <p className="hidden md:block w-28 text-right text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>Total</p>
+              <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>Valid Until</p>
               <div className="w-52 flex-shrink-0" />
               <div className="w-4 flex-shrink-0" />
             </div>
@@ -550,14 +583,14 @@ export default function Quotes() {
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3"
-                  style={{ background: "rgba(177,151,252,0.08)", border: "1px solid rgba(177,151,252,0.2)" }}>
-                  <FileText className="w-6 h-6" style={{ color: "#b197fc" }} />
+                  style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
+                  <FileText className="w-6 h-6" style={{ color: "#1e2d6e" }} />
                 </div>
-                <p className="font-bold text-[13px]" style={{ color: "#cbb5fd" }}>No quotes found</p>
-                <p className="text-[11px] mt-1" style={{ color: "rgba(203,181,253,0.45)" }}>Try adjusting your filters or create a new quote</p>
+                <p className="font-bold text-[13px]" style={{ color: "#1e2d6e" }}>No quotes found</p>
+                <p className="text-[11px] mt-1" style={{ color: "rgba(30,45,110,0.45)" }}>Try adjusting your filters or create a new quote</p>
                 <button onClick={() => { setEditing(null); setShowBuilder(true); }}
                   className="mt-4 flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-                  style={{ background: "linear-gradient(135deg,#9b6dff,#b197fc)", boxShadow: "0 4px 14px rgba(177,151,252,0.4)" }}>
+                  style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 14px rgba(30,45,110,0.25)" }}>
                   <Plus className="w-4 h-4" /> Create Quote
                 </button>
               </div>
@@ -582,11 +615,11 @@ export default function Quotes() {
 
             {!isLoading && filtered.length > 0 && (
               <div className="px-4 py-2.5 flex items-center justify-between"
-                style={{ background: "rgba(177,151,252,0.05)", borderTop: "1px solid rgba(177,151,252,0.1)" }}>
-                <p className="text-[11px]" style={{ color: "rgba(203,181,253,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>
+                style={{ background: "rgba(30,45,110,0.03)", borderTop: "1px solid rgba(30,45,110,0.08)" }}>
+                <p className="text-[11px] mono" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>
                   {filtered.length} of {quotes.length} quotes
                 </p>
-                <p className="text-[11px] font-bold" style={{ color: "#57f287", fontFamily: "'JetBrains Mono',monospace" }}>
+                <p className="text-[11px] font-bold mono" style={{ color: "#059669", fontFamily: "'JetBrains Mono',monospace" }}>
                   {convRate}% conversion rate
                 </p>
               </div>
