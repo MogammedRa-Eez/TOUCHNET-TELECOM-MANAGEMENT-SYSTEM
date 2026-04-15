@@ -3,9 +3,10 @@ import {
   MapPin, Search, CheckCircle2, XCircle, AlertCircle, Loader2,
   Zap, Send, Phone, Mail, User, ArrowRight, RefreshCw,
   Layers, X, BarChart3, Shield, Clock, TrendingUp, ArrowUpRight,
-  Activity, Globe, FileText
+  Activity, Globe, FileText, Download
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import jsPDF from "jspdf";
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
 
@@ -283,7 +284,8 @@ function useGoogleMaps() {
   return loaded;
 }
 
-function FeasibilityReport({ address, providerResults, onClose, onSignUp }) {
+function FeasibilityReport({ address, providerResults, onClose, onSignUp, result }) {
+  const [exporting, setExporting] = useState(false);
   const available = providerResults.filter(r => r.covered);
   const unavailable = providerResults.filter(r => !r.covered);
   const fibreProviders = available.filter(r => r.provider.type === "fibre");
@@ -294,6 +296,231 @@ function FeasibilityReport({ address, providerResults, onClose, onSignUp }) {
   const fastest = available.length > 0 ? available.reduce((best, r) => {
     return Math.max(...r.provider.plans.map(p=>parseInt(p.speed))) > Math.max(...best.provider.plans.map(p=>parseInt(p.speed))) ? r : best;
   }) : null;
+
+  const exportPDF = async () => {
+    setExporting(true);
+    try {
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const W = 210, M = 14;
+      const contentW = W - M * 2;
+      let y = 0;
+
+      // ── Navy header banner ──
+      doc.setFillColor(30, 45, 110);
+      doc.rect(0, 0, W, 38, "F");
+      doc.setFillColor(196, 30, 58);
+      doc.rect(0, 36, W, 2, "F");
+
+      // Logo text (fallback since we can't embed the PNG cross-origin easily)
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("TOUCHNET TELECOMMUNICATIONS", M, 16);
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(180, 195, 240);
+      doc.text("FIBRE FEASIBILITY REPORT", M, 23);
+      doc.text(`Generated: ${new Date().toLocaleDateString("en-ZA", { day: "2-digit", month: "long", year: "numeric" })}`, M, 29);
+      doc.text("www.touchnet.co.za  |  support@touchnet.co.za  |  +27 11 000 0000", W - M, 29, { align: "right" });
+
+      y = 46;
+
+      // ── Address section ──
+      doc.setFillColor(240, 242, 248);
+      doc.roundedRect(M, y, contentW, 18, 3, 3, "F");
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(100, 116, 139);
+      doc.text("SITE ADDRESS", M + 4, y + 6);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(15, 26, 61);
+      doc.text(address || "—", M + 4, y + 13);
+      y += 24;
+
+      // ── Coverage verdict ──
+      const covered = available.length > 0;
+      doc.setFillColor(covered ? 5 : 196, covered ? 150 : 30, covered ? 105 : 58, 0.1);
+      doc.setFillColor(covered ? 236 : 254, covered ? 253 : 232, covered ? 245 : 232);
+      doc.roundedRect(M, y, contentW, 20, 3, 3, "F");
+      doc.setDrawColor(covered ? 5 : 196, covered ? 150 : 30, covered ? 105 : 58);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(M, y, contentW, 20, 3, 3, "S");
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(covered ? 5 : 196, covered ? 150 : 30, covered ? 105 : 58);
+      doc.text(covered ? `\u2713  ${available.length} Provider${available.length !== 1 ? "s" : ""} Available at This Address` : "\u2717  No Fibre Coverage Found at This Address", M + 5, y + 8);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100, 116, 139);
+      doc.text(`${fibreProviders.length} FTTH fibre  \u00B7  ${wirelessProviders.length} fixed wireless  \u00B7  ${unavailable.length} not yet available`, M + 5, y + 15);
+      y += 26;
+
+      // ── Key highlights ──
+      if (available.length > 0) {
+        const highlights = [
+          { label: "LOWEST PRICE", value: cheapest ? `R${Math.min(...cheapest.provider.plans.map(p => p.price))}/mo` : "—", sub: cheapest?.provider.name || "" },
+          { label: "FASTEST SPEED", value: fastest ? `${Math.max(...fastest.provider.plans.map(p => parseInt(p.speed)))} Mbps` : "—", sub: fastest?.provider.name || "" },
+          { label: "PROVIDERS", value: String(available.length), sub: `${fibreProviders.length} FTTH · ${wirelessProviders.length} wireless` },
+        ];
+        const boxW = (contentW - 8) / 3;
+        highlights.forEach((h, i) => {
+          const bx = M + i * (boxW + 4);
+          doc.setFillColor(248, 249, 253);
+          doc.roundedRect(bx, y, boxW, 22, 2, 2, "F");
+          doc.setDrawColor(220, 225, 240);
+          doc.setLineWidth(0.3);
+          doc.roundedRect(bx, y, boxW, 22, 2, 2, "S");
+          doc.setFontSize(7);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(100, 116, 139);
+          doc.text(h.label, bx + boxW / 2, y + 6, { align: "center" });
+          doc.setFontSize(13);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(30, 45, 110);
+          doc.text(h.value, bx + boxW / 2, y + 14, { align: "center" });
+          doc.setFontSize(7);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(150, 160, 190);
+          doc.text(h.sub, bx + boxW / 2, y + 19, { align: "center" });
+        });
+        y += 28;
+      }
+
+      // ── Static map image via Google Static Maps ──
+      if (result?.lat && result?.lng) {
+        try {
+          const mapRes = await base44.functions.invoke("googleMapsKey", {});
+          const apiKey = mapRes.data?.apiKey;
+          if (apiKey) {
+            const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${result.lat},${result.lng}&zoom=14&size=560x200&scale=2&maptype=roadmap&markers=color:red%7C${result.lat},${result.lng}&key=${apiKey}`;
+            const resp = await fetch(mapUrl);
+            if (resp.ok) {
+              const blob = await resp.blob();
+              const reader = new FileReader();
+              const imgData = await new Promise(res => { reader.onload = () => res(reader.result); reader.readAsDataURL(blob); });
+              doc.setFontSize(8);
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(100, 116, 139);
+              doc.text("SITE LOCATION MAP", M, y + 4);
+              y += 6;
+              doc.addImage(imgData, "PNG", M, y, contentW, 50);
+              y += 55;
+            }
+          }
+        } catch (_) { /* skip map if fails */ }
+      }
+
+      // ── Provider comparison table ──
+      if (available.length > 0) {
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(30, 45, 110);
+        doc.text("AVAILABLE PROVIDERS & PLANS", M, y);
+        y += 5;
+
+        // Table header
+        const cols = [50, 18, 22, 30, 30, 22, 20];
+        const headers = ["Provider", "Type", "Top Plan", "Download", "Upload", "From", "Contract"];
+        doc.setFillColor(30, 45, 110);
+        doc.rect(M, y, contentW, 7, "F");
+        doc.setFontSize(7);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 255, 255);
+        let cx = M + 2;
+        headers.forEach((h, i) => {
+          doc.text(h, cx, y + 5);
+          cx += cols[i];
+        });
+        y += 7;
+
+        // Table rows
+        available.forEach((r, idx) => {
+          const { provider } = r;
+          const top = [...provider.plans].sort((a, b) => parseInt(b.speed) - parseInt(a.speed))[0];
+          const cheap = [...provider.plans].sort((a, b) => a.price - b.price)[0];
+          const rowH = 8;
+          doc.setFillColor(idx % 2 === 0 ? 248 : 255, idx % 2 === 0 ? 249 : 255, idx % 2 === 0 ? 253 : 255);
+          doc.rect(M, y, contentW, rowH, "F");
+          doc.setDrawColor(220, 225, 240);
+          doc.setLineWidth(0.2);
+          doc.line(M, y + rowH, M + contentW, y + rowH);
+
+          doc.setFontSize(8);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(15, 26, 61);
+          cx = M + 2;
+          doc.text(provider.name, cx, y + 5.5); cx += cols[0];
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(provider.type === "fibre" ? 5 : 14, provider.type === "fibre" ? 150 : 165, provider.type === "fibre" ? 105 : 233);
+          doc.text(provider.type === "fibre" ? "FTTH" : "FWA", cx, y + 5.5); cx += cols[1];
+          doc.setTextColor(30, 45, 110);
+          doc.text(top.label, cx, y + 5.5); cx += cols[2];
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(15, 26, 61);
+          doc.text(top.speed, cx, y + 5.5); cx += cols[3];
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(100, 116, 139);
+          doc.text(top.upload, cx, y + 5.5); cx += cols[4];
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(5, 150, 105);
+          doc.text(`R${cheap.price}/mo`, cx, y + 5.5); cx += cols[5];
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(100, 116, 139);
+          doc.text(`${cheap.contract} mo`, cx, y + 5.5);
+          y += rowH;
+        });
+        y += 6;
+      }
+
+      // ── Unavailable providers ──
+      if (unavailable.length > 0) {
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(150, 160, 180);
+        doc.text(`NOT YET AVAILABLE (${unavailable.length}): ${unavailable.map(r => r.provider.name).join(", ")}`, M, y);
+        y += 8;
+      }
+
+      // ── TouchNet CTA box ──
+      const touchnetAvail = available.some(r => r.provider.id === "touchnet");
+      doc.setFillColor(touchnetAvail ? 240 : 248, touchnetAvail ? 242 : 249, touchnetAvail ? 255 : 253);
+      doc.roundedRect(M, y, contentW, 28, 3, 3, "F");
+      doc.setDrawColor(30, 45, 110);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(M, y, contentW, 28, 3, 3, "S");
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(30, 45, 110);
+      doc.text(touchnetAvail ? "TouchNet is available at this address!" : "Get Notified When TouchNet is Available", M + 5, y + 9);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(60, 80, 130);
+      doc.text(touchnetAvail ? "Contact us today to get connected with South Africa's premium fibre provider." : "Register your interest and we'll notify you as soon as coverage is available.", M + 5, y + 16);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(30, 45, 110);
+      doc.text("Phone: +27 11 000 0000", M + 5, y + 23);
+      doc.text("Email: sales@touchnet.co.za", M + 65, y + 23);
+      doc.text("Web: www.touchnet.co.za", M + 130, y + 23);
+      y += 34;
+
+      // ── Footer ──
+      const pageH = 297;
+      doc.setFillColor(30, 45, 110);
+      doc.rect(0, pageH - 14, W, 14, "F");
+      doc.setFontSize(7);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(180, 195, 240);
+      doc.text("This report is generated by TouchNet's automated feasibility system. Coverage data is indicative only.", M, pageH - 8);
+      doc.text(`Ref: TN-FSB-${Date.now().toString(36).toUpperCase()}`, W - M, pageH - 8, { align: "right" });
+
+      const filename = `TouchNet_Feasibility_${(address || "Report").replace(/[^a-z0-9]/gi, "_").slice(0, 30)}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      doc.save(filename);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3"
@@ -315,9 +542,17 @@ function FeasibilityReport({ address, providerResults, onClose, onSignUp }) {
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-slate-100">
-            <X className="w-4 h-4" style={{ color: "#1e2d6e" }} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={exportPDF} disabled={exporting}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 disabled:opacity-60"
+              style={{ background: "linear-gradient(135deg,#c41e3a,#e02347)", boxShadow: "0 4px 14px rgba(196,30,58,0.3)" }}>
+              {exporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              {exporting ? "Generating…" : "Export PDF"}
+            </button>
+            <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-slate-100">
+              <X className="w-4 h-4" style={{ color: "#1e2d6e" }} />
+            </button>
+          </div>
         </div>
         <div className="overflow-y-auto flex-1 p-5 space-y-5">
           <div className="rounded-2xl p-4"
@@ -1008,6 +1243,7 @@ export default function CoverageCheck() {
         <FeasibilityReport
           address={result?.displayName}
           providerResults={providerResults}
+          result={result}
           onClose={() => setShowReport(false)}
           onSignUp={() => { setShowReport(false); setStep("form"); setSidebarTab("results"); }}
         />
