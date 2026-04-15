@@ -253,32 +253,36 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         {/* ── Footer status ── */}
         <div className="px-3 pb-4 flex-shrink-0"
           style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12, position: "relative", zIndex: 2 }}>
-          <div style={{
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 12,
-            padding: "10px 12px",
-          }}>
-            <div className="flex items-center justify-between mb-1.5">
+
+          {/* System health bar */}
+          <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "10px 12px", marginBottom: 8, position: "relative", overflow: "hidden" }}>
+            {/* Scan line */}
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,rgba(52,211,153,0.4),transparent)", animation: "shimmer 2.5s infinite" }} />
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <Zap className="w-3 h-3" style={{ color: "rgba(255,255,255,0.6)" }} />
-                <span className="text-[9px] font-black uppercase tracking-wider"
-                  style={{ color: "rgba(255,255,255,0.35)" }}>System Status</span>
+                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)" }}>System Status</span>
               </div>
-              <span className="text-[9px] font-black tracking-wider" style={{ color: "#34d399" }}>ONLINE</span>
+              <span className="text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded-md" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>NOMINAL</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ background: "#34d399", boxShadow: "0 0 6px rgba(52,211,153,0.8)" }} />
-              <span className="text-[10px]"
-                style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'JetBrains Mono', monospace" }}>
-                ALL SYSTEMS NOMINAL
-              </span>
-            </div>
+            {/* Mini health bars */}
+            {[
+              { label: "Network", pct: 99, color: "#34d399" },
+              { label: "Billing",  pct: 100, color: "#38bdf8" },
+              { label: "Tickets", pct: 87,  color: "#fbbf24" },
+            ].map(s => (
+              <div key={s.label} className="flex items-center gap-2 mb-1.5 last:mb-0">
+                <span className="text-[8px] font-bold w-12 flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "monospace" }}>{s.label}</span>
+                <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
+                  <div className="h-full rounded-full" style={{ width: `${s.pct}%`, background: `linear-gradient(90deg,${s.color},${s.color}88)` }} />
+                </div>
+                <span className="text-[8px] font-black w-7 text-right" style={{ color: s.color, fontFamily: "monospace" }}>{s.pct}%</span>
+              </div>
+            ))}
           </div>
-          <p className="text-center text-[9px] mt-2"
-            style={{ color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono', monospace" }}>
-            CONNECTING YOU · BUILD · PROTECT
+
+          <p className="text-center text-[9px]" style={{ color: "rgba(255,255,255,0.18)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.15em" }}>
+            TOUCHNET · TMS v3.0
           </p>
         </div>
       </aside>
@@ -334,7 +338,7 @@ function LayoutInner({ children, currentPageName }) {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* ── Top bar ── */}
         <header
-          className="top-bar top-bar-futuristic h-[60px] flex items-center px-5 gap-4 flex-shrink-0 z-30"
+          className="top-bar top-bar-futuristic h-[64px] flex items-center px-5 gap-4 flex-shrink-0 z-30"
         >
           <button
             onClick={() => setMobileOpen(true)}
@@ -367,13 +371,20 @@ function LayoutInner({ children, currentPageName }) {
           <div className="flex-1" />
 
           {/* Live clock */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg"
-            style={{ background: "rgba(30,45,110,0.05)", border: "1px solid rgba(30,45,110,0.1)" }}>
-            <span className="w-1.5 h-1.5 rounded-full"
-              style={{ background: "#059669", boxShadow: "0 0 5px rgba(5,150,105,0.7)" }} />
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: NAVY, letterSpacing: "0.05em" }}>
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl"
+            style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8)" }}>
+            <span className="w-2 h-2 rounded-full status-breathe"
+              style={{ background: "#059669", color: "#059669", boxShadow: "0 0 7px rgba(5,150,105,0.8)" }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: NAVY, letterSpacing: "0.07em" }}>
               {timeStr}
             </span>
+          </div>
+
+          {/* Network status pill */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+            style={{ background: "rgba(5,150,105,0.06)", border: "1px solid rgba(5,150,105,0.18)" }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#059669" }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 800, color: "#059669", letterSpacing: "0.12em" }}>ONLINE</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -388,7 +399,9 @@ function LayoutInner({ children, currentPageName }) {
 
         {/* ── Page content ── */}
         <main className="flex-1 overflow-y-auto content-scroll page-bg">
-          {children}
+          <div className="section-reveal">
+            {children}
+          </div>
         </main>
       </div>
 

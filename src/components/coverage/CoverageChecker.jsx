@@ -4,8 +4,8 @@ import { X } from "lucide-react";
 export default function CoverageChecker({ onClose }) {
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-      style={{ background: "rgba(10,15,40,0.75)", backdropFilter: "blur(16px)" }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-backdrop"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
         className="relative w-full max-w-6xl rounded-2xl overflow-hidden"
@@ -17,7 +17,7 @@ export default function CoverageChecker({ onClose }) {
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110"
+          className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-xl transition-all hover:scale-110 ripple-btn"
           style={{
             background: "rgba(255,255,255,0.95)",
             border: "1px solid rgba(30,45,110,0.2)",

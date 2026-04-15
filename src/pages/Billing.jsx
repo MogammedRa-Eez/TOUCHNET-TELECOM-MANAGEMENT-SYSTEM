@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import PageHeader from "@/components/ui/PageHeader";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -521,83 +522,44 @@ export default function Billing() {
 
       <div className="relative z-10 p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
 
-        {/* ── Futuristic data ticker ── */}
-        <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
-          style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
-          <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(90deg, rgba(240,242,248,0.95), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(270deg, rgba(240,242,248,0.95), transparent)" }} />
-          <div className="ticker-track flex items-center gap-8 px-4 whitespace-nowrap">
-            {[
-              `TOUCHNET TMS v3`, `BILLING MODULE`, `SECURE · ENCRYPTED`, `ISO 27001`,
-              `REAL-TIME SYNC`, `SAGE INTEGRATED`, `AUTO-INVOICING ACTIVE`,
-              `TOUCHNET TMS v3`, `BILLING MODULE`, `SECURE · ENCRYPTED`, `ISO 27001`,
-              `REAL-TIME SYNC`, `SAGE INTEGRATED`, `AUTO-INVOICING ACTIVE`,
-            ].map((t, i) => (
-              <span key={i} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.18em] mono"
-                style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.4)" : "#c41e3a" }}>
-                {i % 4 === 0 && <span className="w-1 h-1 rounded-full" style={{ background: "#c41e3a", boxShadow: "0 0 4px #c41e3a" }} />}
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Page Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: "rgba(30,45,110,0.08)", border: "1px solid rgba(30,45,110,0.15)", boxShadow: "0 4px 16px rgba(30,45,110,0.1)" }}>
-                <CircleDollarSign className="w-4.5 h-4.5" style={{ color: "#1e2d6e" }} />
-              </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk', sans-serif" }}>
-                Billing & Invoices
-              </h1>
-              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-black mono" style={{ color: "#059669" }}>LIVE</span>
-              </div>
-            </div>
-            <p className="text-[11px] mono pl-12" style={{ color: "rgba(30,45,110,0.5)" }}>
-              {invoices.length} invoices · {paidCount} paid · <span style={{ color: "#059669", fontWeight: 700 }}>R{totalPaid.toLocaleString()}</span> collected
-            </p>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <button onClick={() => refetch()}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
-              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+        {/* ── Page Header with ticker ── */}
+        <PageHeader
+          title="Billing & Invoices"
+          subtitle={`${invoices.length} invoices · ${paidCount} paid · R${totalPaid.toLocaleString()} collected`}
+          icon={CircleDollarSign}
+          tickerItems={["BILLING MODULE","SECURE · ENCRYPTED","SAGE INTEGRATED","AUTO-INVOICING","ZAR · VAT COMPLIANT","ISO 27001"]}
+        >
+          <button onClick={() => refetch()}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 ripple-btn"
+            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
+            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          </button>
+          <button onClick={handleExportCsv}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 ripple-btn"
+            style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)", color: "#059669" }}>
+            <Download className="w-3.5 h-3.5" /> Export CSV
+          </button>
+          <button onClick={handleExportPdf}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 ripple-btn"
+            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
+            <FileText className="w-3.5 h-3.5" /> Export PDF
+          </button>
+          {isAdmin && (
+            <button onClick={() => { setEditing(null); setShowForm(true); }}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"
+              style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
+              <Plus className="w-4 h-4" /> New Invoice
             </button>
-            <button onClick={handleExportCsv}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)", color: "#059669" }}>
-              <Download className="w-3.5 h-3.5" /> Export CSV
-            </button>
-            <button onClick={handleExportPdf}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
-              <FileText className="w-3.5 h-3.5" /> Export PDF
-            </button>
-            {isAdmin && (
-              <button onClick={() => { setEditing(null); setShowForm(true); }}
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95"
-                style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
-                <Plus className="w-4 h-4" /> New Invoice
-              </button>
-            )}
-          </div>
-        </div>
+          )}
+        </PageHeader>
 
         {/* ── KPI Cards ── */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 section-reveal section-reveal-delay-1">
             {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-36 rounded-2xl" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 section-reveal section-reveal-delay-1">
             <KPICard rank="01"
               label="Total Collected" value={`R${totalPaid.toLocaleString()}`}
               sub={`${paidCount} paid invoices`}
@@ -674,11 +636,11 @@ export default function Billing() {
         </div>
 
         {/* ── Invoice Table ── */}
-        <div className="rounded-2xl overflow-hidden bracket-card"
+        <div className="rounded-2xl overflow-hidden bracket-card section-reveal section-reveal-delay-2"
           style={{
             background: "#ffffff",
             border: "1px solid rgba(30,45,110,0.12)",
-            boxShadow: "0 4px 24px rgba(30,45,110,0.08)",
+            boxShadow: "0 4px 28px rgba(30,45,110,0.09)",
           }}>
 
           {/* Header accent */}

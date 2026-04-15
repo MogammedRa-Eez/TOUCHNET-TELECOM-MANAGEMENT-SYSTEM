@@ -290,8 +290,8 @@ export default function Dashboard() {
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto" onClick={() => setActiveKPI(null)}>
 
       {/* ── Header ── */}
-      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card"
-        style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card holo-card section-reveal"
+        style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
         {/* Top accent */}
         <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,#e02347,transparent)" }} />
         {/* Corner glow */}
@@ -332,7 +332,7 @@ export default function Dashboard() {
               <span className="mono">Updated {timeLabel}</span>
             </div>
             <button onClick={handleRefresh} disabled={refreshing}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-60"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-60 ripple-btn"
               style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", color: "white", boxShadow: "0 4px 14px rgba(30,45,110,0.3)" }}>
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
               {refreshing ? "Refreshing…" : "Refresh"}
@@ -360,7 +360,7 @@ export default function Dashboard() {
       <SystemHealthStrip customers={customers} invoices={invoices} tickets={tickets} nodes={nodes} />
 
       {/* ── KPI Row ── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 section-reveal section-reveal-delay-1">
         {[
           { key: "customers", card: <KPICard title="Active Customers" value={activeCustomers.toLocaleString()} subtitle={`${customers.length} total accounts`} icon={Users} color="blue" trend="up" trendValue="+12%" /> },
           { key: "revenue",   card: <KPICard title="Monthly Revenue"  value={`R${(totalRevenue/1000).toFixed(1)}k`} subtitle="From paid invoices" icon={DollarSign} color="emerald" trend="up" trendValue="+8.5%" /> },
@@ -384,7 +384,7 @@ export default function Dashboard() {
       </div>
 
       {/* ── Globe + Sidebar ── */}
-      <Section title="Network Coverage" icon={Globe} badge={`${onlineNodes}/${nodes.length} online`} color="#1e2d6e">
+      <Section title="Network Coverage" icon={Globe} badge={`${onlineNodes}/${nodes.length} online`} color="#1e2d6e" className="section-reveal section-reveal-delay-2">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
           <div className="lg:col-span-3 rounded-3xl overflow-hidden relative scan-lines"
             style={{ background: "linear-gradient(135deg, #0d1535 0%, #1a2258 50%, #0f1a42 100%)", border: "1px solid rgba(30,45,110,0.35)", boxShadow: "0 8px 48px rgba(30,45,110,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", minHeight: 600 }}>
