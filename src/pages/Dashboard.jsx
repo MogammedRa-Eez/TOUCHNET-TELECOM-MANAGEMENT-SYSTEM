@@ -289,6 +289,21 @@ export default function Dashboard() {
   return (
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto" onClick={() => setActiveKPI(null)}>
 
+      {/* ── Ticker ── */}
+      <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
+        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,rgba(240,242,248,0.98),transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,rgba(240,242,248,0.98),transparent)" }} />
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
+          {["OPERATIONS OVERVIEW", "NETWORK MONITORING", "REAL-TIME BILLING", "TICKET MANAGEMENT", "FIBRE DEPLOYMENT", "CUSTOMER ANALYTICS", "SLA COMPLIANCE", "COVERAGE MAPPING",
+            "OPERATIONS OVERVIEW", "NETWORK MONITORING", "REAL-TIME BILLING", "TICKET MANAGEMENT", "FIBRE DEPLOYMENT", "CUSTOMER ANALYTICS", "SLA COMPLIANCE", "COVERAGE MAPPING"
+          ].map((t, i) => (
+            <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
+              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.35)" : "#c41e3a" }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
       {/* ── Header ── */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card holo-card section-reveal"
         style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
