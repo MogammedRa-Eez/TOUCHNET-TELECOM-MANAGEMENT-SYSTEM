@@ -4,7 +4,8 @@ import { X } from "lucide-react";
 export default function CoverageChecker({ onClose }) {
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-backdrop"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      style={{ background: "rgba(10,15,40,0.8)", backdropFilter: "blur(18px)" }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
