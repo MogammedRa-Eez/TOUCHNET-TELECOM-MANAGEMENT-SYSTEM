@@ -274,7 +274,7 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearColor(0x0a1230, 0);
     mount.appendChild(renderer.domElement);
     sceneRef.current = { renderer, scene };
 
@@ -695,16 +695,16 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
   return (
     <div className="relative w-full h-full flex overflow-hidden" style={{ minHeight: 520 }}>
 
-      {/* ── Deep space background — blends with navy brand ── */}
+      {/* ── Background — blends with light system interface ── */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 40% 45%, #0d1535 0%, #080e25 50%, #040a1a 100%)" }}>
-        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-80" />
-        {/* Brand-aligned navy/crimson nebula accents */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 10% 15%, rgba(30,45,110,0.18) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 82%, rgba(196,30,58,0.1) 0%, transparent 60%), radial-gradient(ellipse 40% 35% at 75% 15%, rgba(74,95,168,0.08) 0%, transparent 55%)" }} />
-        {/* Subtle grid — matches page-bg */}
-        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(rgba(74,95,168,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(74,95,168,0.04) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
-        {/* Bottom fade to blend with dashboard bg */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none" style={{ background: "linear-gradient(transparent, rgba(15,22,55,0.3))" }} />
+        style={{ background: "radial-gradient(ellipse at 40% 45%, #111a42 0%, #0d1535 45%, #080e25 100%)" }}>
+        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-50" />
+        {/* Brand nebula accents */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 10% 15%, rgba(30,45,110,0.35) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 82%, rgba(196,30,58,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 35% at 75% 15%, rgba(74,95,168,0.15) 0%, transparent 55%)" }} />
+        {/* Grid matching page-bg */}
+        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(rgba(74,95,168,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(74,95,168,0.06) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+        {/* Edge vignette fades to match surrounding card border */}
+        <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: "inset 0 0 60px rgba(10,16,42,0.6)" }} />
       </div>
 
       {/* Three.js mount */}
