@@ -693,18 +693,15 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
   }, []);
 
   return (
-    <div className="relative w-full h-full flex overflow-hidden" style={{ minHeight: 520 }}>
+    <div className="relative w-full h-full flex overflow-hidden" style={{ minHeight: 520, background: "linear-gradient(135deg, #0d1535 0%, #1a2258 50%, #0f1a42 100%)" }}>
 
-      {/* ── Background — blends with light system interface ── */}
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 40% 45%, #111a42 0%, #0d1535 45%, #080e25 100%)" }}>
-        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-50" />
+      {/* ── Background — matches the surrounding dark navy card ── */}
+      <div className="absolute inset-0 pointer-events-none">
+        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-40" />
         {/* Brand nebula accents */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 10% 15%, rgba(30,45,110,0.35) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 82%, rgba(196,30,58,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 35% at 75% 15%, rgba(74,95,168,0.15) 0%, transparent 55%)" }} />
-        {/* Grid matching page-bg */}
-        <div className="absolute inset-0" style={{ backgroundImage: "linear-gradient(rgba(74,95,168,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(74,95,168,0.06) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
-        {/* Edge vignette fades to match surrounding card border */}
-        <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: "inset 0 0 60px rgba(10,16,42,0.6)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 10% 15%, rgba(74,95,168,0.2) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 82%, rgba(196,30,58,0.12) 0%, transparent 60%)" }} />
+        {/* Subtle dot grid */}
+        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, rgba(74,95,168,0.15) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
       </div>
 
       {/* Three.js mount */}
@@ -827,10 +824,8 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
         </div>
       )}
 
-      {/* ── Scan line overlay effect ── */}
-      <div className="absolute inset-0 pointer-events-none z-10" style={{
-        background: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(30,45,110,0.012) 3px, rgba(30,45,110,0.012) 4px)"
-      }} />
+      {/* ── Subtle vignette edge blend ── */}
+      <div className="absolute inset-0 pointer-events-none z-10" style={{ boxShadow: "inset 0 0 80px rgba(8,14,37,0.5)" }} />
 
       {/* ── Weather Panel — blended with brand ── */}
       {showWeather && (
