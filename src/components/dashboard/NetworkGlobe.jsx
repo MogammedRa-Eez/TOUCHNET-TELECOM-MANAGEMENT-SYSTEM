@@ -198,7 +198,7 @@ async function fetchWeatherAll() {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export default function NetworkGlobe({ nodes = [] }) {
+export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
   const mountRef        = useRef(null);
   const sceneRef        = useRef(null);
   const heatmapRef      = useRef(null);
@@ -489,9 +489,9 @@ export default function NetworkGlobe({ nodes = [] }) {
        -((e.clientY - rect.top)  / rect.height) * 2 + 1
       );
       raycaster.setFromCamera(mv, camera);
-      const worldDots = dotMeshes.map(d => { const c = d.clone(); c.position.copy(d.position).applyMatrix4(dotGroup.matrixWorld); return c; });
-      const hits = raycaster.intersectObjects(worldDots);
+      const hits = raycaster.intersectObjects(dotMeshes.map(d => { const c = d.clone(); c.position.copy(d.position).applyMatrix4(dotGroup.matrixWorld); return c; }));
       if (hits.length > 0) {
+        const worldDots = dotMeshes.map(d => { const c = d.clone(); c.position.copy(d.position).applyMatrix4(dotGroup.matrixWorld); return c; });
         const idx  = worldDots.indexOf(hits[0].object);
         const data = dotMeshes[idx]?.userData;
         if (data) {
@@ -895,14 +895,6 @@ export default function NetworkGlobe({ nodes = [] }) {
               </div>
             </>
           )}
-        </div>
-      )}
-
-      {/* ── Drill-down sidebar (rendered inside the flex container, slides in from right) ── */}
-      {selectedNode && (
-        <div className="absolute top-0 right-0 bottom-0 z-40 flex" style={{ width: 340 }}>
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(270deg, rgba(10,16,42,0.6), transparent)", width: 40, right: 340, left: "auto" }} />
-          <RegionDrilldownSidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
         </div>
       )}
 

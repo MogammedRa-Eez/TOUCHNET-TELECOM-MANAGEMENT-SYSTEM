@@ -3,7 +3,7 @@ import {
   AreaChart, Area, BarChart, Bar, RadarChart, Radar, PolarGrid,
   PolarAngleAxis, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid
 } from "recharts";
-import { X, Wifi, Activity, Clock, Signal, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { X, Wifi, Activity, Clock, Radio, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 const STATUS_CSS = { online: "#34d399", offline: "#ef4444", degraded: "#fbbf24", maintenance: "#818cf8" };
 
@@ -117,7 +117,7 @@ export default function RegionDrilldownSidebar({ node, onClose }) {
       <div className="flex-shrink-0 grid grid-cols-3 gap-0" style={{ borderBottom: "1px solid rgba(74,95,168,0.15)" }}>
         {[
           { label: "LATENCY",    value: node.latency >= 999 ? "DEAD" : `${node.latency}ms`, color: node.latency >= 500 ? "#ef4444" : node.latency > 80 ? "#fbbf24" : "#34d399", Ico: Clock },
-          { label: "SIGNAL",     value: node.signal === 0 ? "—" : `${node.signal}%`,        color: node.signal < 50 ? "#ef4444" : node.signal < 75 ? "#fbbf24" : "#34d399",     Ico: Signal },
+          { label: "SIGNAL",     value: node.signal === 0 ? "—" : `${node.signal}%`,        color: node.signal < 50 ? "#ef4444" : node.signal < 75 ? "#fbbf24" : "#34d399",     Ico: Radio },
           { label: "HEALTH",     value: `${healthScore}`,                                    color: healthScore < 40 ? "#ef4444" : healthScore < 70 ? "#fbbf24" : "#34d399",     Ico: Activity },
         ].map(({ label, value, color, Ico }, i) => (
           <div key={label} className="flex flex-col items-center justify-center py-3 relative"

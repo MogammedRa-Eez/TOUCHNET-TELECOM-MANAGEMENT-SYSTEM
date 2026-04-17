@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { Plus, Search, Pencil, Trash2, Wifi, WifiOff, AlertTriangle, Wrench, Server, X, BarChart2, Activity, TrendingUp, GitFork } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Wifi, WifiOff, AlertTriangle, Wrench, Server, X, Activity, TrendingUp, GitFork, RefreshCw, Zap, Shield, Clock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 import NetworkMetricsChart from "@/components/network/NetworkMetricsChart";
@@ -144,8 +142,13 @@ export default function Network() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("nodes");
-  const [monitoringNode, setMonitoringNode] = useState(null);
+  const [tick, setTick] = useState(0);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 3000);
+    return () => clearInterval(id);
+  }, []);
 
   const { data: nodes = [], isLoading } = useQuery({
     queryKey: ["network-nodes"],
@@ -171,9 +174,15 @@ export default function Network() {
   if (!rbacLoading && !can("network")) return <AccessDenied />;
 
   const handleSubmit = (data) => {
-    if (editing) updateMut.mutate({ id: editing.id, data });
-    else createMut.mutate(data);
+    if (editing) { updateMut.mutate({ id: editing.id, data }); toast.success("Node updated"); }
+    else { createMut.mutate(data); toast.success("Node added"); }
   };
+
+  const onlineCount  = nodes.filter(n => n.status === "online").length;
+  const offlineCount = nodes.filter(n => n.status === "offline").length;
+  const degraded     = nodes.filter(n => n.status === "degraded").length;
+  const avgUptime    = nodes.length ? (nodes.reduce((a,n) => a + (n.uptime_percent||0), 0) / nodes.length).toFixed(1) : "—";
+  const avgBw        = nodes.length ? Math.round(nodes.reduce((a,n) => a + (n.bandwidth_utilization||0), 0) / nodes.length) : 0;
 
   const filtered = nodes.filter(n => {
     const matchSearch = !search || n.name?.toLowerCase().includes(search.toLowerCase()) || n.ip_address?.includes(search) || n.location?.toLowerCase().includes(search.toLowerCase());
@@ -183,21 +192,89 @@ export default function Network() {
 
   return (
     <div className="p-5 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk', sans-serif" }}>Network Infrastructure</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(30,45,110,0.5)" }}>
-            {nodes.length} nodes · {nodes.filter(n=>n.status==="online").length} online
-          </p>
+
+      {/* ── Futuristic Header ── */}
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card"
+        style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)" }}>
+                <Activity className="w-4 h-4" style={{ color: "#1e2d6e" }} />
+              </div>
+              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk', sans-serif" }}>Network Infrastructure</h1>
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: offlineCount > 0 ? "rgba(196,30,58,0.08)" : "rgba(5,150,105,0.08)", border: `1px solid ${offlineCount > 0 ? "rgba(196,30,58,0.25)" : "rgba(5,150,105,0.25)"}` }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: offlineCount > 0 ? "#c41e3a" : "#059669" }} />
+                <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: offlineCount > 0 ? "#c41e3a" : "#059669" }}>
+                  {offlineCount > 0 ? `${offlineCount} OFFLINE` : "ALL SYSTEMS"}
+                </span>
+              </div>
+            </div>
+            <p className="text-[11px] mono pl-10" style={{ color: "rgba(30,45,110,0.5)" }}>
+              {nodes.length} nodes · {onlineCount} online · {degraded} degraded · avg {avgUptime}% uptime
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => queryClient.invalidateQueries({ queryKey: ["network-nodes"] })}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
+            <button onClick={() => { setEditing(null); setShowForm(true); }}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
+              <Plus className="w-4 h-4" /> Add Node
+            </button>
+          </div>
         </div>
-        <button onClick={() => { setEditing(null); setShowForm(true); }}
-          className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-          style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
-          <Plus className="w-4 h-4" /> Add Node
-        </button>
       </div>
 
-      {/* Tabs */}
+      {/* ── KPI Strip ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        {[
+          { label: "Total Nodes",  value: nodes.length,  color: "#1e2d6e", icon: Server },
+          { label: "Online",       value: onlineCount,   color: "#34d399", icon: Wifi },
+          { label: "Degraded",     value: degraded,      color: "#fbbf24", icon: AlertTriangle },
+          { label: "Offline",      value: offlineCount,  color: "#ef4444", icon: WifiOff },
+          { label: "Avg Uptime",   value: `${avgUptime}%`, color: "#818cf8", icon: TrendingUp },
+        ].map(k => (
+          <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3.5 holo-card group transition-all hover:-translate-y-0.5"
+            style={{ background: "#ffffff", border: `1px solid ${k.color}25`, boxShadow: `0 2px 10px ${k.color}10` }}>
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg,${k.color},transparent)` }} />
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.18em] mb-0.5" style={{ color: "rgba(30,45,110,0.4)" }}>{k.label}</p>
+                <p className="text-2xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
+              </div>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${k.color}12`, border: `1px solid ${k.color}22` }}>
+                <k.icon className="w-4 h-4" style={{ color: k.color }} />
+              </div>
+            </div>
+            {/* live bar */}
+            <div className="mt-2 h-1 rounded-full overflow-hidden" style={{ background: `${k.color}15` }}>
+              <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, k.value || 0)}%`, background: `linear-gradient(90deg,${k.color},${k.color}88)` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Avg Bandwidth live indicator ── */}
+      {nodes.length > 0 && (
+        <div className="rounded-2xl px-5 py-3 flex items-center gap-4 relative overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.97)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 2px 10px rgba(30,45,110,0.06)" }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#4a5fa8,#c41e3a,transparent)" }} />
+          <Zap className="w-4 h-4 flex-shrink-0" style={{ color: "#1e2d6e" }} />
+          <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: "rgba(30,45,110,0.55)" }}>Avg Bandwidth Utilization</span>
+          <div className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(30,45,110,0.08)" }}>
+            <div className="h-full rounded-full transition-all duration-700" style={{ width: `${avgBw}%`, background: avgBw > 80 ? "linear-gradient(90deg,#c41e3a,#e02347)" : "linear-gradient(90deg,#1e2d6e,#4a5fa8)" }} />
+          </div>
+          <span className="text-[13px] font-black mono flex-shrink-0" style={{ color: avgBw > 80 ? "#c41e3a" : "#1e2d6e", fontFamily: "'JetBrains Mono',monospace" }}>{avgBw}%</span>
+        </div>
+      )}
+
+
+      {/* ── Tabs ── */}
       <div className="flex gap-1 rounded-xl p-1 w-fit" style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
         {[
           { id: "nodes", label: "Nodes", icon: Server },
@@ -349,7 +426,21 @@ export default function Network() {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-1 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Quick status selector */}
+                <div className="mt-3 pt-3 flex gap-1.5 flex-wrap" style={{ borderTop: "1px solid rgba(30,45,110,0.07)" }}>
+                  {["online","degraded","maintenance","offline"].filter(s => s !== node.status).map(s => {
+                    const colors = { online: "#34d399", degraded: "#fbbf24", offline: "#ef4444", maintenance: "#818cf8" };
+                    return (
+                      <button key={s} onClick={() => updateMut.mutate({ id: node.id, data: { status: s } })}
+                        className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg transition-all hover:scale-105"
+                        style={{ background: `${colors[s]}12`, border: `1px solid ${colors[s]}30`, color: colors[s] }}>
+                        → {s}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex justify-end gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)" }}
                     title="Live Metrics" onClick={() => setActiveTab("metrics")}>
                     <Activity className="w-3.5 h-3.5" style={{ color: "#1e2d6e" }} />
@@ -359,7 +450,7 @@ export default function Network() {
                     <Pencil className="w-3.5 h-3.5" style={{ color: "#64748b" }} />
                   </button>
                   <button className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.18)" }}
-                    onClick={() => { if (confirm("Delete this node?")) deleteMut.mutate(node.id); }}>
+                    onClick={() => { if (window.confirm("Delete this node?")) { deleteMut.mutate(node.id); toast.success("Node deleted"); } }}>
                     <Trash2 className="w-3.5 h-3.5" style={{ color: "#ef4444" }} />
                   </button>
                 </div>

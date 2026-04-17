@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -185,6 +185,12 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
 export default function Tickets() {
   const { can, loading: rbacLoading, department, isAdmin } = useRBAC();
   const [showForm,       setShowForm]       = useState(false);
+  const [tick,           setTick]           = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 4000);
+    return () => clearInterval(id);
+  }, []);
   const [editing,        setEditing]        = useState(null);
   const [search,         setSearch]         = useState("");
   const [statusFilter,   setStatusFilter]   = useState("all");
@@ -258,33 +264,65 @@ export default function Tickets() {
   return (
     <div className="p-5 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
 
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk', sans-serif" }}>Support Tickets</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(30,45,110,0.5)" }}>
-            {visibleTickets.length} tickets · {visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length} open
-            {criticalCount > 0 && <span className="ml-1 font-bold" style={{ color: "#c41e3a" }}>· {criticalCount} critical</span>}
-          </p>
+      {/* ── Ticker ── */}
+      <div className="relative overflow-hidden rounded-xl h-8 flex items-center section-reveal"
+        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,rgba(240,242,248,0.98),transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,rgba(240,242,248,0.98),transparent)" }} />
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
+          {["SUPPORT TICKETING", "SLA MONITORING", "PRIORITY ROUTING", "ESCALATION ENGINE", "WHATSAPP INTEGRATION", "REAL-TIME SYNC",
+            "SUPPORT TICKETING", "SLA MONITORING", "PRIORITY ROUTING", "ESCALATION ENGINE", "WHATSAPP INTEGRATION", "REAL-TIME SYNC"
+          ].map((t, i) => (
+            <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
+              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.35)" : "#c41e3a" }}>{t}</span>
+          ))}
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => refetch()}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
-          </button>
-          <button onClick={handleExportCsv}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)", color: "#059669" }}>
-            <Download className="w-3.5 h-3.5" /> Export CSV
-          </button>
-          {isAdmin && (
-            <button onClick={() => { setEditing(null); setShowForm(true); }}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-              style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
-              <Plus className="w-4 h-4" /> New Ticket
+      </div>
+
+      {/* ── Header ── */}
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card"
+        style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
+        {criticalCount > 0 && (
+          <div className="absolute top-0 right-0 bottom-0 w-1" style={{ background: "rgba(196,30,58,0.6)", animation: "pulse 1.5s ease-in-out infinite" }} />
+        )}
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)" }}>
+                <TicketCheck className="w-4 h-4" style={{ color: "#1e2d6e" }} />
+              </div>
+              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk', sans-serif" }}>Support Tickets</h1>
+              {criticalCount > 0 && (
+                <span className="flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-lg animate-pulse"
+                  style={{ background: "rgba(196,30,58,0.1)", border: "1px solid rgba(196,30,58,0.3)", color: "#c41e3a" }}>
+                  🔴 {criticalCount} CRITICAL
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] mono pl-10" style={{ color: "rgba(30,45,110,0.5)" }}>
+              {visibleTickets.length} tickets · {visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length} open
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => refetch()}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
             </button>
-          )}
+            <button onClick={handleExportCsv}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)", color: "#059669" }}>
+              <Download className="w-3.5 h-3.5" /> Export CSV
+            </button>
+            {isAdmin && (
+              <button onClick={() => { setEditing(null); setShowForm(true); }}
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+                style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
+                <Plus className="w-4 h-4" /> New Ticket
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

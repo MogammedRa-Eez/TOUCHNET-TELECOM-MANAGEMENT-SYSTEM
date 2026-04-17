@@ -292,12 +292,39 @@ export default function Customers() {
   return (
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
 
+      {/* ── Ticker ── */}
+      <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
+        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,rgba(240,242,248,0.98),transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,rgba(240,242,248,0.98),transparent)" }} />
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
+          {["CUSTOMER MANAGEMENT", "CONTRACT TRACKING", "SLA COMPLIANCE", "REVENUE ANALYTICS", "FIBRE DEPLOYMENT", "REAL-TIME BILLING",
+            "CUSTOMER MANAGEMENT", "CONTRACT TRACKING", "SLA COMPLIANCE", "REVENUE ANALYTICS", "FIBRE DEPLOYMENT", "REAL-TIME BILLING"
+          ].map((t, i) => (
+            <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
+              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.35)" : "#c41e3a" }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card"
+        style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
-          <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(30,45,110,0.5)" }}>
-            {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)" }}>
+              <Users className="w-4 h-4" style={{ color: "#1e2d6e" }} />
+            </div>
+            <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.25)" }}>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#059669" }} />
+              <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: "#059669" }}>LIVE</span>
+            </div>
+          </div>
+          <p className="text-[11px] mono pl-10" style={{ color: "rgba(30,45,110,0.5)" }}>
+            {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active · {customers.filter(c=>c.status==="suspended").length} suspended
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -335,6 +362,7 @@ export default function Customers() {
               </button>
             </>
           )}
+        </div>
         </div>
       </div>
 
@@ -390,14 +418,14 @@ export default function Customers() {
 
         {/* View toggle */}
         <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(30,45,110,0.15)" }}>
-          {[{ mode: "list", Icon: List }, { mode: "grid", Icon: LayoutGrid }].map(({ mode, Icon }) => (
+          {[{ mode: "list", Ic: List }, { mode: "grid", Ic: LayoutGrid }].map(({ mode, Ic }) => (
             <button key={mode} onClick={() => setViewMode(mode)}
               className="px-3 py-2 transition-all"
               style={{
                 background: viewMode === mode ? "rgba(30,45,110,0.12)" : "rgba(30,45,110,0.04)",
                 color: viewMode === mode ? "#1e2d6e" : "rgba(30,45,110,0.45)",
               }}>
-              <Icon className="w-4 h-4" />
+              <Ic className="w-4 h-4" />
             </button>
           ))}
         </div>
