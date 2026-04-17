@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
+import RegionDrilldownSidebar from "./RegionDrilldownSidebar";
 
 // ── Weather city definitions ──────────────────────────────────────────────────
 const WEATHER_CITIES = [
@@ -208,6 +209,7 @@ export default function NetworkGlobe({ nodes = [] }) {
   const scanRingRef     = useRef(null);
 
   const [tooltip,          setTooltip]          = useState(null);
+  const [selectedNode,     setSelectedNode]     = useState(null);
   const [showHeatmap,      setShowHeatmap]      = useState(false);
   const [showWeather,      setShowWeather]      = useState(false);
   const [weatherPanelOpen, setWeatherPanelOpen] = useState(true);
@@ -476,8 +478,28 @@ export default function NetworkGlobe({ nodes = [] }) {
     let rotVel       = { x: 0, y: 0.0008 };
     let camZ         = 2.9;
 
-    const onMouseDown  = e => { isDragging = true; prevMouse = { x: e.clientX, y: e.clientY }; mount.style.cursor = "grabbing"; };
+    let didDrag = false;
+    const onMouseDown  = e => { isDragging = true; didDrag = false; prevMouse = { x: e.clientX, y: e.clientY }; mount.style.cursor = "grabbing"; };
     const onMouseUp    = () => { isDragging = false; mount.style.cursor = "grab"; };
+    const onClick = e => {
+      if (didDrag) return;
+      const rect = mount.getBoundingClientRect();
+      const mv = new THREE.Vector2(
+        ((e.clientX - rect.left) / rect.width)  * 2 - 1,
+       -((e.clientY - rect.top)  / rect.height) * 2 + 1
+      );
+      raycaster.setFromCamera(mv, camera);
+      const worldDots = dotMeshes.map(d => { const c = d.clone(); c.position.copy(d.position).applyMatrix4(dotGroup.matrixWorld); return c; });
+      const hits = raycaster.intersectObjects(worldDots);
+      if (hits.length > 0) {
+        const idx  = worldDots.indexOf(hits[0].object);
+        const data = dotMeshes[idx]?.userData;
+        if (data) {
+          const nodePt = NODE_PTS.find(n => n.label === data.label);
+          setSelectedNode(nodePt || data);
+        }
+      }
+    };
     const onMouseMove  = e => {
       const rect = mount.getBoundingClientRect();
       mouseVec.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1;
@@ -493,6 +515,7 @@ export default function NetworkGlobe({ nodes = [] }) {
       if (!isDragging) return;
       rotVel.y = (e.clientX - prevMouse.x) * 0.006;
       rotVel.x = (e.clientY - prevMouse.y) * 0.006;
+      if (Math.abs(e.clientX - prevMouse.x) > 3 || Math.abs(e.clientY - prevMouse.y) > 3) didDrag = true;
       prevMouse = { x: e.clientX, y: e.clientY };
     };
     const onWheel = e => {
@@ -524,6 +547,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     const onTouchEnd = () => { isDragging = false; lastTouchDist = null; };
 
     mount.addEventListener("mousedown",   onMouseDown);
+    mount.addEventListener("click",       onClick);
     mount.addEventListener("mouseleave",  onMouseLeave);
     mount.addEventListener("wheel",       onWheel, { passive: false });
     mount.addEventListener("touchstart",  onTouchStart, { passive: true });
@@ -616,6 +640,7 @@ export default function NetworkGlobe({ nodes = [] }) {
     return () => {
       cancelAnimationFrame(frameId);
       mount.removeEventListener("mousedown",  onMouseDown);
+      mount.removeEventListener("click",      onClick);
       mount.removeEventListener("mouseleave", onMouseLeave);
       mount.removeEventListener("wheel",      onWheel);
       mount.removeEventListener("touchstart", onTouchStart);
@@ -668,7 +693,7 @@ export default function NetworkGlobe({ nodes = [] }) {
   }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden" style={{ minHeight: 520 }}>
+    <div className="relative w-full h-full flex overflow-hidden" style={{ minHeight: 520 }}>
 
       {/* ── Deep space background — blends with navy brand ── */}
       <div className="absolute inset-0 pointer-events-none"
@@ -747,7 +772,7 @@ export default function NetworkGlobe({ nodes = [] }) {
         {/* Hint */}
         <div className="px-2.5 py-1.5 rounded-xl flex items-center gap-1.5"
           style={{ background: "rgba(15,26,61,0.7)", border: "1px solid rgba(74,95,168,0.15)", backdropFilter: "blur(8px)" }}>
-          <span className="text-[8px]" style={{ color: "rgba(164,181,255,0.35)", fontFamily: "monospace" }}>⟳ drag · ⊕ scroll-zoom · ◎ hover</span>
+          <span className="text-[8px]" style={{ color: "rgba(164,181,255,0.35)", fontFamily: "monospace" }}>⟳ drag · ⊕ zoom · ◎ hover · ✦ click node</span>
         </div>
       </div>
 
@@ -870,6 +895,14 @@ export default function NetworkGlobe({ nodes = [] }) {
               </div>
             </>
           )}
+        </div>
+      )}
+
+      {/* ── Drill-down sidebar (rendered inside the flex container, slides in from right) ── */}
+      {selectedNode && (
+        <div className="absolute top-0 right-0 bottom-0 z-40 flex" style={{ width: 340 }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(270deg, rgba(10,16,42,0.6), transparent)", width: 40, right: 340, left: "auto" }} />
+          <RegionDrilldownSidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
         </div>
       )}
 
