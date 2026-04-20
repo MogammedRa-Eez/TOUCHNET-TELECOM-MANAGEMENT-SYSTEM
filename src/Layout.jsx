@@ -351,7 +351,7 @@ function LayoutInner({ children, currentPageName }) {
           {/* Breadcrumb */}
           <div className="hidden sm:flex items-center gap-2.5">
             <div className="flex items-center gap-1.5">
-              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.9, filter: "brightness(0) invert(1)" }} />
+              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.95, filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)" }} />
             </div>
             {currentItem && (
               <>
