@@ -150,7 +150,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                 src={LOGO_WORDMARK}
                 alt="TouchNet"
                 className="h-6 object-contain"
-                style={{ filter: "brightness(0) invert(1)", opacity: 0.95 }}
+                style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)", opacity: 0.95 }}
               />
               <p className="text-[8px] font-bold tracking-[0.28em] uppercase mt-0.5"
                 style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>
