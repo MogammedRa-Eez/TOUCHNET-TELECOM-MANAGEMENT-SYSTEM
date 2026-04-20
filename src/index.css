@@ -1006,3 +1006,124 @@ tbody tr.premium-row:hover::before {
   font-size: 11px;
   font-weight: 700;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUTURISTIC EXTRAS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Glowing number text */
+.glow-text-teal {
+  text-shadow: 0 0 20px rgba(0,212,212,0.7), 0 0 40px rgba(0,180,180,0.3);
+}
+.glow-text-red {
+  text-shadow: 0 0 20px rgba(224,35,71,0.7), 0 0 40px rgba(224,35,71,0.3);
+}
+.glow-text-green {
+  text-shadow: 0 0 20px rgba(16,185,129,0.7), 0 0 40px rgba(16,185,129,0.3);
+}
+
+/* Cyber scanline overlay */
+.cyber-scanlines {
+  position: relative;
+}
+.cyber-scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,180,180,0.015) 2px,
+    rgba(0,180,180,0.015) 3px
+  );
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* Animated teal border sweep */
+@keyframes border-sweep {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.border-sweep {
+  background: linear-gradient(270deg, #00b4b4, #00d4d4, rgba(255,255,255,0.5), #e02347, #00b4b4);
+  background-size: 400% 400%;
+  animation: border-sweep 5s ease infinite;
+}
+
+/* Hexagonal grid background */
+.hex-grid-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V17L28 1l28 16v33z' fill='none' stroke='rgba(0,180,180,0.06)' stroke-width='1'/%3E%3Cpath d='M28 100L0 84V51l28-16 28 16v33z' fill='none' stroke='rgba(0,180,180,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* Holographic shimmer on cards */
+@keyframes holo-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.holo-shimmer {
+  background: linear-gradient(115deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(0,212,212,0.04) 40%,
+    rgba(255,255,255,0.06) 50%,
+    rgba(0,212,212,0.04) 60%,
+    transparent 75%,
+    transparent 100%
+  );
+  background-size: 300% 300%;
+  animation: holo-shift 4s ease infinite;
+}
+
+/* Cyber progress bar */
+.cyber-progress {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.cyber-progress::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,212,0.8), transparent);
+  animation: shimmer 1.8s infinite;
+}
+
+/* Data readout tag */
+.data-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: rgba(0,180,180,0.08);
+  color: rgba(0,212,212,0.7);
+  border: 1px solid rgba(0,212,212,0.18);
+}
+
+/* Futuristic section divider */
+.fx-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,212,0.3), rgba(255,255,255,0.1), rgba(0,212,212,0.3), transparent);
+  margin: 8px 0;
+}
+
+/* Glowing status ring */
+.status-ring-teal {
+  box-shadow: 0 0 0 2px rgba(0,212,212,0.2), 0 0 0 4px rgba(0,212,212,0.1), 0 0 12px rgba(0,180,180,0.3);
+}
+.status-ring-red {
+  box-shadow: 0 0 0 2px rgba(224,35,71,0.25), 0 0 0 4px rgba(224,35,71,0.1), 0 0 12px rgba(224,35,71,0.3);
+}
