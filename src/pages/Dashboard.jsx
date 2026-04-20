@@ -303,11 +303,13 @@ export default function Dashboard() {
       </div>
 
       {/* ── Header ── */}
-      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card holo-card section-reveal"
-        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,180,180,0.05)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
-        <div className="absolute top-0 right-0 w-64 h-32 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(0,180,180,0.08) 0%, transparent 65%)" }} />
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card section-reveal"
+        style={{ background: "linear-gradient(135deg,#181818,#1a1a1a)", border: "1px solid rgba(0,212,212,0.22)", boxShadow: "0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,212,0.06), 0 0 40px rgba(0,180,180,0.04)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#e02347,transparent)" }} />
+        <div className="absolute top-0 right-0 w-80 h-40 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(0,212,212,0.12) 0%, rgba(255,255,255,0.02) 40%, transparent 70%)" }} />
+        <div className="absolute bottom-0 left-0 w-60 h-24 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at 0% 100%, rgba(0,180,180,0.06) 0%, transparent 70%)" }} />
 
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>

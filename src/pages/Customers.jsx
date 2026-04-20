@@ -100,9 +100,9 @@ function CustomerCard({ customer, onClick }) {
     <div
       onClick={() => onClick(customer)}
       className="rounded-2xl p-4 cursor-pointer transition-all duration-200 group holo-card"
-      style={{ background: "#181818", border: `1px solid ${sc.color}25`, boxShadow: "0 2px 16px rgba(0,0,0,0.4)" }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 28px ${sc.color}22`; e.currentTarget.style.borderColor = `${sc.color}50`; e.currentTarget.style.transform = "translateY(-3px)"; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.borderColor = `${sc.color}25`; e.currentTarget.style.transform = "translateY(0)"; }}
+      style={{ background: "linear-gradient(135deg,#181818,#1a1a1a)", border: `1px solid ${sc.color}28`, boxShadow: "0 2px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)" }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 28px ${sc.color}20, 0 0 20px rgba(0,212,212,0.06)`; e.currentTarget.style.borderColor = `${sc.color}55`; e.currentTarget.style.transform = "translateY(-3px)"; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.borderColor = `${sc.color}28`; e.currentTarget.style.transform = "translateY(0)"; }}
     >
       <div className="h-[2px] rounded-full mb-3" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
       <div className="flex items-start gap-3">
@@ -420,8 +420,8 @@ export default function Customers() {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.5)" }}>
-          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(0,212,212,0.15)", boxShadow: "0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,212,0.04)" }}>
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.4),#00b4b4,#e02347,transparent)" }} />
           <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
             <div className="w-9 flex-shrink-0" />
             <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Customer</p>

@@ -130,9 +130,24 @@ export default function Network() {
   return (
     <div className="p-5 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
 
+      {/* ── Ticker ── */}
+      <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
+        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
+          {["NETWORK INFRASTRUCTURE","LIVE NODE MONITORING","BANDWIDTH ANALYTICS","UPTIME TRACKING","TOPOLOGY MAPPING","ALERT ENGINE",
+            "NETWORK INFRASTRUCTURE","LIVE NODE MONITORING","BANDWIDTH ANALYTICS","UPTIME TRACKING","TOPOLOGY MAPPING","ALERT ENGINE"
+          ].map((t, i) => (
+            <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
+              style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
-        style={{ background: "#181818", border: `1px solid ${offlineCount > 0 ? "rgba(224,35,71,0.3)" : "rgba(0,180,180,0.2)"}`, boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
+        style={{ background: "#181818", border: `1px solid ${offlineCount > 0 ? "rgba(224,35,71,0.3)" : "rgba(0,212,212,0.2)"}`, boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
         <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -303,9 +318,9 @@ export default function Network() {
                 const capacityPct = node.max_capacity ? Math.round((node.connected_customers || 0) / node.max_capacity * 100) : 0;
                 return (
                   <div key={node.id} className="rounded-2xl p-5 transition-all duration-200 group holo-card"
-                    style={{ background: "#181818", border: `1px solid ${sc.color}25`, boxShadow: "0 2px 16px rgba(0,0,0,0.4)" }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = sc.color + "60"; e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}20`; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = `${sc.color}25`; e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                    style={{ background: "linear-gradient(135deg,#181818,#1a1a1a)", border: `1px solid ${sc.color}28`, boxShadow: "0 2px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = sc.color + "55"; e.currentTarget.style.boxShadow = `0 8px 32px ${sc.color}18, 0 0 20px rgba(0,212,212,0.05)`; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = `${sc.color}28`; e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.transform = "translateY(0)"; }}>
                     <div className="h-[2px] rounded-t-2xl -mt-5 -mx-5 mb-4" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">

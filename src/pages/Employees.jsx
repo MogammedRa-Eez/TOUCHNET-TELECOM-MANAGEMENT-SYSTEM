@@ -131,6 +131,21 @@ export default function Employees() {
   return (
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
 
+      {/* ── Ticker ── */}
+      <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
+        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
+          {["EMPLOYEE DIRECTORY","HR MANAGEMENT","DEPARTMENT ANALYTICS","TEAM PERFORMANCE","ROLE MANAGEMENT","PAYROLL TRACKING",
+            "EMPLOYEE DIRECTORY","HR MANAGEMENT","DEPARTMENT ANALYTICS","TEAM PERFORMANCE","ROLE MANAGEMENT","PAYROLL TRACKING"
+          ].map((t, i) => (
+            <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
+              style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
         style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
@@ -156,6 +171,25 @@ export default function Employees() {
           )}
         </div>
       </div>
+
+      {/* ── KPI Strip ── */}
+      {!isLoading && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: "Total Staff", value: visibleEmployees.length, color: "#00b4b4" },
+            { label: "Active", value: visibleEmployees.filter(e => e.status === "active").length, color: "#10b981" },
+            { label: "On Leave", value: visibleEmployees.filter(e => e.status === "on_leave").length, color: "#f59e0b" },
+            { label: "Departments", value: Object.keys(deptCounts).length, color: "#a855f7" },
+          ].map(k => (
+            <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3.5 holo-card group transition-all hover:-translate-y-0.5"
+              style={{ background: "#181818", border: `1px solid ${k.color}25` }}>
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${k.color},transparent)` }} />
+              <p className="text-[9px] font-black uppercase tracking-[0.18em] mb-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{k.label}</p>
+              <p className="text-2xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Department summary */}
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
@@ -211,9 +245,9 @@ export default function Employees() {
             return (
               <div key={emp.id}
                 className="relative overflow-hidden rounded-2xl p-5 transition-all duration-200 group holo-card"
-                style={{ background: "#181818", border: `1px solid ${dc.color}20`, boxShadow: "0 2px 16px rgba(0,0,0,0.4)" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = dc.color + "50"; e.currentTarget.style.boxShadow = `0 8px 32px ${dc.color}18`; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = `${dc.color}20`; e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                style={{ background: "linear-gradient(135deg,#181818,#1a1a1a)", border: `1px solid ${dc.color}22`, boxShadow: "0 2px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = dc.color + "55"; e.currentTarget.style.boxShadow = `0 8px 32px ${dc.color}18, 0 0 20px rgba(0,212,212,0.05)`; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = `${dc.color}22`; e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.transform = "translateY(0)"; }}>
                 <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${dc.color}, transparent)` }} />
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">

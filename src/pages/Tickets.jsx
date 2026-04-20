@@ -43,11 +43,11 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
   const isCritical = ticket.priority === "critical";
 
   return (
-    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+    <div className="fx-data-row" style={{ borderBottom: "1px solid rgba(0,212,212,0.04)" }}>
       <div className="flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-all group"
         onClick={() => setOpen(v => !v)}
         style={{ background: open ? `${sc.color}06` : "transparent" }}
-        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "rgba(0,180,180,0.04)"; }}
+        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "linear-gradient(90deg,rgba(0,212,212,0.05),transparent)"; }}
         onMouseLeave={e => { if (!open) e.currentTarget.style.background = open ? `${sc.color}06` : "transparent"; }}>
         <div className="relative flex-shrink-0">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[10px] font-black"
@@ -341,8 +341,8 @@ export default function Tickets() {
       </div>
 
       {/* Ticket List */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.4)" }}>
-        <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+      <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(0,212,212,0.15)", boxShadow: "0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,212,0.04)" }}>
+        <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.4),#00b4b4,#e02347,transparent)" }} />
         <div className="flex items-center gap-3 px-4 py-2.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="w-9 flex-shrink-0" />
           <p className="hidden sm:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>Ticket #</p>

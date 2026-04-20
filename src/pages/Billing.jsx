@@ -161,11 +161,11 @@ function InvoiceRow({ inv, isAdmin, onPdf, onEdit, onDelete, onStatusChange, ind
   const isOver = inv.status === "overdue";
 
   return (
-    <div className="group" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+    <div className="group fx-data-row" style={{ borderBottom: "1px solid rgba(0,212,212,0.04)" }}>
       <div className="flex items-center gap-3 px-5 py-3.5 cursor-pointer transition-all duration-150"
         onClick={() => setOpen(v => !v)}
         style={{ background: open ? `${sc.color}08` : "transparent" }}
-        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "rgba(0,180,180,0.04)"; }}
+        onMouseEnter={e => { if (!open) e.currentTarget.style.background = "linear-gradient(90deg,rgba(0,212,212,0.05),transparent)"; }}
         onMouseLeave={e => { if (!open) e.currentTarget.style.background = open ? `${sc.color}08` : "transparent"; }}>
         <div className="flex items-center gap-2.5 flex-shrink-0">
           <span className="hidden lg:block w-6 text-[10px] font-black mono text-center" style={{ color: "rgba(255,255,255,0.2)" }}>{String(index + 1).padStart(2, "0")}</span>
@@ -454,8 +454,8 @@ export default function Billing() {
       </div>
 
       {/* Invoice Table */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 28px rgba(0,0,0,0.4)" }}>
-        <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+      <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(0,212,212,0.15)", boxShadow: "0 4px 28px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,212,212,0.04)" }}>
+        <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.4),#00b4b4,#e02347,transparent)" }} />
         <div className="flex items-center gap-3 px-5 py-3" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="hidden lg:block w-6 flex-shrink-0" />
           <div className="flex-shrink-0 w-9" />

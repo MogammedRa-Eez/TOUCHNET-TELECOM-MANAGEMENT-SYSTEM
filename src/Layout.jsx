@@ -94,8 +94,8 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         className={`fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{
           width: 256,
-          background: `linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 55%, #111111 100%)`,
-          borderRight: "1px solid rgba(255,255,255,0.07)",
+          background: `linear-gradient(180deg, #080d0d 0%, #0a0f0f 35%, #0f0f0f 65%, #111111 100%)`,
+          borderRight: "1px solid rgba(0,212,212,0.1)",
           flexShrink: 0,
           overflow: "hidden",
           position: "relative",
@@ -110,10 +110,10 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           opacity: 0.5,
         }} />
 
-        {/* Ambient glow top — teal */}
+        {/* Ambient glow top — whitish-teal */}
         <div style={{
-          position: "absolute", top: -60, left: -40, width: 240, height: 240,
-          background: `radial-gradient(circle, rgba(0,180,180,0.15) 0%, transparent 68%)`,
+          position: "absolute", top: -60, left: -40, width: 260, height: 260,
+          background: `radial-gradient(circle, rgba(0,212,212,0.2) 0%, rgba(255,255,255,0.03) 40%, transparent 70%)`,
           pointerEvents: "none",
         }} />
 
