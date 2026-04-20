@@ -693,43 +693,43 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
   }, []);
 
   return (
-    <div className="relative w-full h-full flex overflow-hidden" style={{ minHeight: 520, background: "linear-gradient(135deg, #0d1535 0%, #1a2258 50%, #0f1a42 100%)" }}>
+    <div className="relative w-full h-full flex overflow-hidden" style={{ minHeight: 520, background: "linear-gradient(135deg, #0f0f0f 0%, #161616 50%, #111111 100%)" }}>
 
-      {/* ── Background — matches the surrounding dark navy card ── */}
+      {/* ── Background — matches system dark theme ── */}
       <div className="absolute inset-0 pointer-events-none">
-        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-40" />
-        {/* Brand nebula accents */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 10% 15%, rgba(74,95,168,0.2) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 82%, rgba(196,30,58,0.12) 0%, transparent 60%)" }} />
+        <canvas ref={starsCanvasRef} className="absolute inset-0 w-full h-full opacity-20" />
+        {/* Teal nebula accents matching system palette */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 55% 45% at 10% 15%, rgba(0,180,180,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 82%, rgba(224,35,71,0.05) 0%, transparent 60%)" }} />
         {/* Subtle dot grid */}
-        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, rgba(74,95,168,0.15) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(circle, rgba(0,180,180,0.08) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
       </div>
 
       {/* Three.js mount */}
       <div ref={mountRef} className="absolute inset-0" style={{ cursor: "grab" }} />
 
-      {/* ── Corner bracket accents (brand aesthetic) ── */}
-      <div className="absolute top-2 left-2 w-5 h-5 pointer-events-none z-10" style={{ borderTop: "2px solid rgba(74,95,168,0.5)", borderLeft: "2px solid rgba(74,95,168,0.5)" }} />
-      <div className="absolute top-2 right-2 w-5 h-5 pointer-events-none z-10" style={{ borderTop: "2px solid rgba(196,30,58,0.4)", borderRight: "2px solid rgba(196,30,58,0.4)" }} />
-      <div className="absolute bottom-2 left-2 w-5 h-5 pointer-events-none z-10" style={{ borderBottom: "2px solid rgba(74,95,168,0.3)", borderLeft: "2px solid rgba(74,95,168,0.3)" }} />
-      <div className="absolute bottom-2 right-2 w-5 h-5 pointer-events-none z-10" style={{ borderBottom: "2px solid rgba(196,30,58,0.3)", borderRight: "2px solid rgba(196,30,58,0.3)" }} />
+      {/* ── Corner bracket accents ── */}
+      <div className="absolute top-2 left-2 w-5 h-5 pointer-events-none z-10" style={{ borderTop: "2px solid rgba(0,180,180,0.4)", borderLeft: "2px solid rgba(0,180,180,0.4)" }} />
+      <div className="absolute top-2 right-2 w-5 h-5 pointer-events-none z-10" style={{ borderTop: "2px solid rgba(224,35,71,0.35)", borderRight: "2px solid rgba(224,35,71,0.35)" }} />
+      <div className="absolute bottom-2 left-2 w-5 h-5 pointer-events-none z-10" style={{ borderBottom: "2px solid rgba(0,180,180,0.25)", borderLeft: "2px solid rgba(0,180,180,0.25)" }} />
+      <div className="absolute bottom-2 right-2 w-5 h-5 pointer-events-none z-10" style={{ borderBottom: "2px solid rgba(224,35,71,0.25)", borderRight: "2px solid rgba(224,35,71,0.25)" }} />
 
       {/* ── HUD: Left side — node telemetry ── */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
         {/* Title chip */}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
-          style={{ background: "rgba(15,26,61,0.88)", border: "1px solid rgba(74,95,168,0.35)", backdropFilter: "blur(12px)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
+          style={{ background: "rgba(15,15,15,0.92)", border: "1px solid rgba(0,180,180,0.3)", backdropFilter: "blur(12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0" style={{ background: "#34d399", boxShadow: "0 0 8px #34d399" }} />
           <div>
-            <p className="text-[8px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(164,181,255,0.55)", fontFamily: "'JetBrains Mono',monospace" }}>TOUCHNET GLOBAL</p>
-            <p className="text-[11px] font-black" style={{ color: "#a4b5ff", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.06em" }}>LIVE TELEMETRY</p>
+            <p className="text-[8px] font-black uppercase tracking-[0.22em]" style={{ color: "rgba(0,180,180,0.6)", fontFamily: "'JetBrains Mono',monospace" }}>TOUCHNET GLOBAL</p>
+            <p className="text-[11px] font-black" style={{ color: "#00d4d4", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.06em" }}>LIVE TELEMETRY</p>
           </div>
         </div>
 
         {/* Status counts */}
         <div className="px-3 py-2.5 rounded-xl flex flex-col gap-1.5"
-          style={{ background: "rgba(15,26,61,0.85)", border: "1px solid rgba(74,95,168,0.25)", backdropFilter: "blur(12px)", boxShadow: "0 4px 16px rgba(30,45,110,0.25)" }}>
+          style={{ background: "rgba(15,15,15,0.90)", border: "1px solid rgba(0,180,180,0.18)", backdropFilter: "blur(12px)", boxShadow: "0 4px 16px rgba(0,0,0,0.5)" }}>
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: "rgba(164,181,255,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>Node Status</p>
+            <p className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: "rgba(0,180,180,0.5)", fontFamily: "'JetBrains Mono',monospace" }}>Node Status</p>
             <span className="text-[8px] font-black px-1.5 py-0.5 rounded-md" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
               {NODE_PTS.length} NODES
             </span>
@@ -747,19 +747,19 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${glow}` }} />
-                    <span className="text-[10px]" style={{ color: "rgba(200,210,255,0.65)" }}>{label}</span>
+                    <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.5)" }}>{label}</span>
                   </div>
                   <span className="text-[11px] font-black" style={{ color, fontFamily: "'JetBrains Mono',monospace" }}>{count}</span>
                 </div>
                 {/* Mini progress bar */}
-                <div className="h-[2px] rounded-full overflow-hidden" style={{ background: "rgba(74,95,168,0.15)" }}>
+                <div className="h-[2px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
                   <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}, ${color}88)` }} />
                 </div>
               </div>
             );
           })}
-          <div className="mt-1.5 pt-2 flex items-center justify-between" style={{ borderTop: "1px solid rgba(74,95,168,0.18)" }}>
-            <span className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(164,181,255,0.4)", fontFamily: "monospace" }}>Avg Latency</span>
+          <div className="mt-1.5 pt-2 flex items-center justify-between" style={{ borderTop: "1px solid rgba(0,180,180,0.15)" }}>
+            <span className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "monospace" }}>Avg Latency</span>
             <span className="text-[12px] font-black" style={{ fontFamily: "'JetBrains Mono',monospace", color: networkStats.avgLatency < 50 ? "#34d399" : networkStats.avgLatency < 150 ? "#fbbf24" : "#f97316" }}>
               {networkStats.avgLatency}<span className="text-[9px] ml-0.5" style={{ color: "rgba(164,181,255,0.4)" }}>ms</span>
             </span>
@@ -768,8 +768,8 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
 
         {/* Hint */}
         <div className="px-2.5 py-1.5 rounded-xl flex items-center gap-1.5"
-          style={{ background: "rgba(15,26,61,0.7)", border: "1px solid rgba(74,95,168,0.15)", backdropFilter: "blur(8px)" }}>
-          <span className="text-[8px]" style={{ color: "rgba(164,181,255,0.35)", fontFamily: "monospace" }}>⟳ drag · ⊕ zoom · ◎ hover · ✦ click node</span>
+          style={{ background: "rgba(15,15,15,0.80)", border: "1px solid rgba(255,255,255,0.07)", backdropFilter: "blur(8px)" }}>
+          <span className="text-[8px]" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "monospace" }}>⟳ drag · ⊕ zoom · ◎ hover · ✦ click node</span>
         </div>
       </div>
 
@@ -778,25 +778,25 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
         <button onClick={() => setShowHeatmap(v => !v)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105"
           style={{
-            background: showHeatmap ? "rgba(196,30,58,0.18)" : "rgba(15,26,61,0.85)",
-            border: `1px solid ${showHeatmap ? "rgba(196,30,58,0.5)" : "rgba(74,95,168,0.35)"}`,
-            color: showHeatmap ? "#e87088" : "#a4b5ff",
+            background: showHeatmap ? "rgba(224,35,71,0.15)" : "rgba(15,15,15,0.90)",
+            border: `1px solid ${showHeatmap ? "rgba(224,35,71,0.45)" : "rgba(0,180,180,0.25)"}`,
+            color: showHeatmap ? "#e02347" : "#00d4d4",
             backdropFilter: "blur(12px)",
-            boxShadow: showHeatmap ? "0 4px 16px rgba(196,30,58,0.2)" : "0 4px 16px rgba(30,45,110,0.2)",
+            boxShadow: showHeatmap ? "0 4px 16px rgba(224,35,71,0.2)" : "0 4px 16px rgba(0,0,0,0.4)",
             fontFamily: "'JetBrains Mono',monospace",
             letterSpacing: "0.12em",
           }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: showHeatmap ? "#e87088" : "#a4b5ff", boxShadow: showHeatmap ? "0 0 6px #e87088" : "0 0 6px #a4b5ff" }} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: showHeatmap ? "#e02347" : "#00d4d4", boxShadow: showHeatmap ? "0 0 6px #e02347" : "0 0 6px #00d4d4" }} />
           {showHeatmap ? "HEAT ON" : "HEATMAP"}
         </button>
         <button onClick={() => setShowWeather(v => !v)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105"
           style={{
-            background: showWeather ? "rgba(30,45,110,0.3)" : "rgba(15,26,61,0.85)",
-            border: `1px solid ${showWeather ? "rgba(74,95,168,0.6)" : "rgba(74,95,168,0.25)"}`,
-            color: "#a4b5ff",
+            background: showWeather ? "rgba(0,180,180,0.12)" : "rgba(15,15,15,0.90)",
+            border: `1px solid ${showWeather ? "rgba(0,180,180,0.5)" : "rgba(0,180,180,0.2)"}`,
+            color: "#00d4d4",
             backdropFilter: "blur(12px)",
-            boxShadow: showWeather ? "0 4px 16px rgba(30,45,110,0.3)" : "none",
+            boxShadow: showWeather ? "0 4px 16px rgba(0,180,180,0.15)" : "0 4px 16px rgba(0,0,0,0.4)",
             fontFamily: "'JetBrains Mono',monospace",
             letterSpacing: "0.12em",
           }}>
@@ -808,8 +808,8 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
       {/* ── Heatmap Legend ── */}
       {showHeatmap && !showWeather && (
         <div className="absolute bottom-4 left-4 z-20 px-3 py-2.5 rounded-xl flex flex-col gap-1.5"
-          style={{ background: "rgba(15,26,61,0.88)", border: "1px solid rgba(74,95,168,0.25)", backdropFilter: "blur(12px)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
-          <p className="text-[8px] font-black uppercase tracking-[0.2em] mb-0.5" style={{ color: "rgba(164,181,255,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>Latency · Signal</p>
+          style={{ background: "rgba(15,15,15,0.92)", border: "1px solid rgba(0,180,180,0.2)", backdropFilter: "blur(12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
+          <p className="text-[8px] font-black uppercase tracking-[0.2em] mb-0.5" style={{ color: "rgba(0,180,180,0.5)", fontFamily: "'JetBrains Mono',monospace" }}>Latency · Signal</p>
           {[
             { color: "#34d399", label: "Excellent ≤30ms / ≥85%" },
             { color: "#fbbf24", label: "Fair ≤80ms / ≥65%"      },
@@ -818,7 +818,7 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}88` }} />
-              <span className="text-[10px]" style={{ color: "rgba(200,210,255,0.6)" }}>{label}</span>
+              <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
             </div>
           ))}
         </div>
@@ -830,15 +830,15 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
       {/* ── Weather Panel — blended with brand ── */}
       {showWeather && (
         <div className="absolute bottom-0 left-0 right-0 z-20"
-          style={{ background: "rgba(10,16,42,0.96)", borderTop: "1px solid rgba(74,95,168,0.3)", backdropFilter: "blur(16px)" }}>
+          style={{ background: "rgba(13,13,13,0.97)", borderTop: "1px solid rgba(0,180,180,0.2)", backdropFilter: "blur(16px)" }}>
           {/* Accent top line */}
-          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
           <div className="flex items-center justify-between px-4 py-2 cursor-pointer select-none"
-            style={{ borderBottom: weatherPanelOpen ? "1px solid rgba(74,95,168,0.15)" : "none" }}
+            style={{ borderBottom: weatherPanelOpen ? "1px solid rgba(0,180,180,0.1)" : "none" }}
             onClick={() => setWeatherPanelOpen(v => !v)}>
             <div className="flex items-center gap-2">
               <span className="text-sm">🌍</span>
-              <span className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: "#a4b5ff", fontFamily: "'JetBrains Mono',monospace" }}>Live Global Weather</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: "#00d4d4", fontFamily: "'JetBrains Mono',monospace" }}>Live Global Weather</span>
               {weatherLoading && <span className="text-[10px] animate-pulse" style={{ color: "rgba(164,181,255,0.5)" }}>Loading…</span>}
               {!weatherLoading && weatherData.length > 0 && (
                 <span className="text-[8px] px-1.5 py-0.5 rounded-md font-black" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)", fontFamily: "monospace", letterSpacing: "0.1em" }}>LIVE</span>
@@ -848,11 +848,11 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
               {!weatherLoading && weatherPanelOpen && (
                 <button onClick={e => { e.stopPropagation(); setWeatherData([]); loadWeather(); }}
                   className="text-[10px] px-2 py-0.5 rounded-lg font-bold transition-all hover:scale-105"
-                  style={{ color: "#a4b5ff", border: "1px solid rgba(74,95,168,0.3)", background: "rgba(30,45,110,0.15)", fontFamily: "monospace" }}>
+                  style={{ color: "#00d4d4", border: "1px solid rgba(0,180,180,0.25)", background: "rgba(0,180,180,0.08)", fontFamily: "monospace" }}>
                   ↻
                 </button>
               )}
-              <span className="text-[12px]" style={{ color: "#a4b5ff" }}>{weatherPanelOpen ? "▼" : "▲"}</span>
+              <span className="text-[12px]" style={{ color: "#00d4d4" }}>{weatherPanelOpen ? "▼" : "▲"}</span>
             </div>
           </div>
 
@@ -871,17 +871,17 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
                       const hum  = city.humidity  !== null ? `${Math.round(city.humidity)}%`  : null;
                       return (
                         <div key={i} className="flex-shrink-0 rounded-xl px-3 py-2.5 flex flex-col gap-1 min-w-[110px] relative overflow-hidden"
-                          style={{ background: "rgba(30,45,110,0.12)", border: "1px solid rgba(74,95,168,0.22)", boxShadow: "0 2px 12px rgba(30,45,110,0.2)" }}>
-                          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, rgba(74,95,168,0.6), transparent)` }} />
+                          style={{ background: "rgba(20,20,20,0.85)", border: "1px solid rgba(0,180,180,0.18)", boxShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>
+                          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, rgba(0,180,180,0.6), transparent)` }} />
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-bold truncate max-w-[70px]" style={{ color: "rgba(220,230,255,0.85)" }}>{city.label}</span>
+                            <span className="text-[10px] font-bold truncate max-w-[70px]" style={{ color: "rgba(255,255,255,0.8)" }}>{city.label}</span>
                             <span className="text-base leading-none">{info.icon}</span>
                           </div>
-                          <div className="text-[18px] font-black leading-none" style={{ color: "#a4b5ff", fontFamily: "'JetBrains Mono',monospace" }}>{temp}</div>
-                          <div className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(164,181,255,0.45)", fontFamily: "monospace" }}>{info.label}</div>
+                          <div className="text-[18px] font-black leading-none" style={{ color: "#00d4d4", fontFamily: "'JetBrains Mono',monospace" }}>{temp}</div>
+                          <div className="text-[9px] uppercase tracking-wider" style={{ color: "rgba(0,180,180,0.5)", fontFamily: "monospace" }}>{info.label}</div>
                           <div className="flex flex-col gap-0.5 mt-0.5">
-                            {wind && <div className="text-[9px]" style={{ color: "rgba(164,181,255,0.45)" }}>💨 {wind}</div>}
-                            {hum  && <div className="text-[9px]" style={{ color: "rgba(164,181,255,0.45)" }}>💧 {hum}</div>}
+                            {wind && <div className="text-[9px]" style={{ color: "rgba(255,255,255,0.35)" }}>💨 {wind}</div>}
+                            {hum  && <div className="text-[9px]" style={{ color: "rgba(255,255,255,0.35)" }}>💧 {hum}</div>}
                           </div>
                         </div>
                       );
@@ -898,11 +898,11 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
         <div className="absolute pointer-events-none z-30 rounded-2xl text-xs"
           style={{
             left: tooltip.x + 18, top: tooltip.y - 16,
-            background: "rgba(10,16,42,0.97)",
-            border: `1px solid ${STATUS_CSS[tooltip.status] || "#4a5fa8"}55`,
+            background: "rgba(20,20,20,0.97)",
+            border: `1px solid ${STATUS_CSS[tooltip.status] || "#00b4b4"}55`,
             backdropFilter: "blur(16px)",
             minWidth: 175,
-            boxShadow: `0 0 28px ${STATUS_CSS[tooltip.status] || "#4a5fa8"}28, 0 12px 40px rgba(10,16,42,0.6)`,
+            boxShadow: `0 0 28px ${STATUS_CSS[tooltip.status] || "#00b4b4"}28, 0 12px 40px rgba(0,0,0,0.6)`,
           }}>
           {/* Brand accent bar */}
           <div className="h-[2px] rounded-t-2xl" style={{ background: `linear-gradient(90deg, ${STATUS_CSS[tooltip.status] || "#4a5fa8"}, rgba(196,30,58,0.6), transparent)` }} />
@@ -910,7 +910,7 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
             <div className="flex items-center gap-2 mb-1.5">
               <span className="w-2 h-2 rounded-full flex-shrink-0"
                 style={{ background: STATUS_CSS[tooltip.status], boxShadow: `0 0 10px ${STATUS_CSS[tooltip.status]}` }} />
-              <span className="font-black text-[13px]" style={{ color: "#e8ecf8", fontFamily: "'Space Grotesk',sans-serif" }}>{tooltip.label}</span>
+              <span className="font-black text-[13px]" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>{tooltip.label}</span>
             </div>
             <div className="text-[9px] font-black uppercase tracking-[0.18em] mb-2.5 px-1.5 py-0.5 rounded-md inline-block"
               style={{ background: `${STATUS_CSS[tooltip.status]}18`, color: STATUS_CSS[tooltip.status], border: `1px solid ${STATUS_CSS[tooltip.status]}30`, fontFamily: "monospace" }}>
@@ -921,20 +921,20 @@ export default function NetworkGlobe({ nodes = [], onNodeSelect }) {
               if (!city || city.temp === null) return null;
               const info = weatherInfo(city.code);
               return (
-                <div className="flex items-center gap-2 mb-2.5 pb-2.5" style={{ borderBottom: "1px solid rgba(74,95,168,0.2)" }}>
+                <div className="flex items-center gap-2 mb-2.5 pb-2.5" style={{ borderBottom: "1px solid rgba(0,180,180,0.15)" }}>
                   <span className="text-base">{info.icon}</span>
-                  <span className="text-[12px] font-black" style={{ color: "#a4b5ff", fontFamily: "'JetBrains Mono',monospace" }}>{Math.round(city.temp)}°C</span>
-                  <span className="text-[9px]" style={{ color: "rgba(164,181,255,0.45)" }}>{info.label}</span>
+                  <span className="text-[12px] font-black" style={{ color: "#00d4d4", fontFamily: "'JetBrains Mono',monospace" }}>{Math.round(city.temp)}°C</span>
+                  <span className="text-[9px]" style={{ color: "rgba(255,255,255,0.35)" }}>{info.label}</span>
                 </div>
               );
             })()}
-            <div className="space-y-1.5" style={{ borderTop: "1px solid rgba(74,95,168,0.12)", paddingTop: 8 }}>
+            <div className="space-y-1.5" style={{ borderTop: "1px solid rgba(0,180,180,0.12)", paddingTop: 8 }}>
               {[
                 { label: "Latency", value: tooltip.latency >= 999 ? "DEAD" : `${tooltip.latency} ms`, color: tooltip.latency >= 500 ? "#ef4444" : tooltip.latency > 80 ? "#f97316" : tooltip.latency > 30 ? "#fbbf24" : "#34d399" },
                 { label: "Signal",  value: tooltip.signal === 0 ? "—" : `${tooltip.signal}%`,         color: tooltip.signal === 0 ? "#ef4444" : tooltip.signal < 65 ? "#f97316" : "#34d399" },
               ].map(({ label, value, color }) => (
                 <div key={label} className="flex justify-between gap-4 items-center">
-                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(164,181,255,0.4)", fontFamily: "monospace" }}>{label}</span>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "monospace" }}>{label}</span>
                   <span className="text-[11px] font-black" style={{ color, fontFamily: "'JetBrains Mono',monospace" }}>{value}</span>
                 </div>
               ))}
