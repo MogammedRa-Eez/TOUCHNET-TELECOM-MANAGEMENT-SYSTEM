@@ -68,24 +68,29 @@ export default function GlobalSearch() {
   return (
     <div ref={containerRef} className="relative hidden md:block">
       <div
-        className="flex items-center gap-2 rounded-lg px-3.5 py-2 w-56 transition-all"
-        style={{ background: "#e8ecf5", border: `1px solid ${open ? "rgba(192,21,42,0.4)" : "rgba(30,45,107,0.12)"}` }}
+        className="flex items-center gap-2 rounded-xl px-3.5 py-2 w-64 transition-all"
+        style={{
+          background: open ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.08)",
+          border: `1px solid ${open ? "rgba(0,212,212,0.5)" : "rgba(255,255,255,0.15)"}`,
+          boxShadow: open ? "0 0 0 3px rgba(0,180,180,0.12)" : "none",
+        }}
       >
-        <Search className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+        <Search className="w-3.5 h-3.5 flex-shrink-0" style={{ color: open ? "#00d4d4" : "rgba(255,255,255,0.45)" }} />
         <input
           ref={inputRef}
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
           placeholder="Search..."
-          className="bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none w-full"
+          className="bg-transparent text-sm outline-none w-full"
+          style={{ color: "#f0f0f0", caretColor: "#00d4d4" }}
         />
         {query && (
-          <button onClick={() => { setQuery(""); setResults([]); }} className="text-slate-400 hover:text-slate-600">
+          <button onClick={() => { setQuery(""); setResults([]); }} style={{ color: "rgba(255,255,255,0.4)" }} className="hover:opacity-80">
             <X className="w-3.5 h-3.5" />
           </button>
         )}
-        {loading && <Loader2 className="w-3.5 h-3.5 text-slate-400 animate-spin flex-shrink-0" />}
+        {loading && <Loader2 className="w-3.5 h-3.5 animate-spin flex-shrink-0" style={{ color: "#00b4b4" }} />}
       </div>
 
       {open && query && (
