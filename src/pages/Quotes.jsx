@@ -22,36 +22,34 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 const STATUS_CONFIG = {
-  draft:    { color: "#64748b", bg: "rgba(100,116,139,0.08)", border: "rgba(100,116,139,0.22)",  label: "Draft",    dot: "#94a3b8" },
-  sent:     { color: "#0ea5e9", bg: "rgba(14,165,233,0.08)",  border: "rgba(14,165,233,0.22)",   label: "Sent",     dot: "#38bdf8" },
-  viewed:   { color: "#8b5cf6", bg: "rgba(139,92,246,0.08)",  border: "rgba(139,92,246,0.22)",   label: "Viewed",   dot: "#a78bfa" },
-  accepted: { color: "#059669", bg: "rgba(5,150,105,0.08)",   border: "rgba(5,150,105,0.22)",    label: "Accepted", dot: "#34d399" },
-  declined: { color: "#c41e3a", bg: "rgba(196,30,58,0.08)",   border: "rgba(196,30,58,0.22)",    label: "Declined", dot: "#e02347" },
-  expired:  { color: "#d97706", bg: "rgba(217,119,6,0.08)",   border: "rgba(217,119,6,0.22)",    label: "Expired",  dot: "#fbbf24" },
+  draft:    { color: "#94a3b8", bg: "rgba(148,163,184,0.12)", border: "rgba(148,163,184,0.3)",  label: "Draft",    dot: "#94a3b8" },
+  sent:     { color: "#22d3ee", bg: "rgba(34,211,238,0.12)",  border: "rgba(34,211,238,0.3)",   label: "Sent",     dot: "#22d3ee" },
+  viewed:   { color: "#a855f7", bg: "rgba(168,85,247,0.12)",  border: "rgba(168,85,247,0.3)",   label: "Viewed",   dot: "#c084fc" },
+  accepted: { color: "#10b981", bg: "rgba(16,185,129,0.12)",  border: "rgba(16,185,129,0.3)",   label: "Accepted", dot: "#34d399" },
+  declined: { color: "#e02347", bg: "rgba(224,35,71,0.12)",   border: "rgba(224,35,71,0.3)",    label: "Declined", dot: "#ff3358" },
+  expired:  { color: "#f59e0b", bg: "rgba(245,158,11,0.12)",  border: "rgba(245,158,11,0.3)",   label: "Expired",  dot: "#fbbf24" },
 };
 
-/* ── Particle Burst effect on KPI hover ───── */
 function KPICard({ label, value, sub, color, icon: Icon }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl p-5 group cursor-default transition-all duration-300 hover:-translate-y-1 holo-card bracket-card"
+    <div className="relative overflow-hidden rounded-2xl p-5 group cursor-default transition-all duration-300 hover:-translate-y-1 holo-card"
       style={{
-        background: "#ffffff",
-        border: `1px solid ${color}28`,
-        boxShadow: `0 4px 20px ${color}10`,
+        background: "#181818",
+        border: `1px solid ${color}30`,
+        boxShadow: `0 4px 20px rgba(0,0,0,0.5)`,
       }}>
-      <div className="absolute top-0 left-0 right-0 h-[3px]"
+      <div className="absolute top-0 left-0 right-0 h-[2px]"
         style={{ background: `linear-gradient(90deg, ${color}, ${color}55, transparent)` }} />
-      {/* Ambient glow blob */}
-      <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 group-hover:opacity-100 opacity-60"
-        style={{ background: `radial-gradient(circle, ${color}14, transparent 70%)` }} />
+      <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 opacity-60"
+        style={{ background: `radial-gradient(circle, ${color}18, transparent 70%)` }} />
       <div className="flex items-start justify-between relative">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: "rgba(30,45,110,0.45)" }}>{label}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: "rgba(255,255,255,0.35)" }}>{label}</p>
           <p className="text-3xl font-black mono leading-none" style={{ color, fontFamily: "'JetBrains Mono',monospace" }}>{value}</p>
-          {sub && <p className="text-[11px] mt-1.5" style={{ color: "rgba(30,45,110,0.5)" }}>{sub}</p>}
+          {sub && <p className="text-[11px] mt-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>{sub}</p>}
         </div>
         <div className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110"
-          style={{ background: `${color}12`, border: `1px solid ${color}25`, boxShadow: `0 4px 14px ${color}18` }}>
+          style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
           <Icon className="w-5 h-5" style={{ color }} />
         </div>
       </div>
@@ -85,12 +83,12 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
   const sc = STATUS_CONFIG[quote.status] || STATUS_CONFIG.draft;
 
   return (
-    <div className="group premium-row" style={{ borderBottom: "1px solid rgba(30,45,110,0.06)" }}>
+    <div className="group" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
       <div
         className="flex items-center gap-3 px-4 py-3.5 cursor-pointer transition-all duration-150"
         onClick={() => setExpanded(v => !v)}
-        onMouseEnter={e => { if (!expanded) e.currentTarget.style.background = "rgba(30,45,110,0.04)"; }}
-        onMouseLeave={e => { if (!expanded) e.currentTarget.style.background = "transparent"; }}
+        onMouseEnter={e => { if (!expanded) e.currentTarget.style.background = "rgba(0,180,180,0.04)"; }}
+        onMouseLeave={e => { if (!expanded) e.currentTarget.style.background = expanded ? `${sc.color}06` : "transparent"; }}
         style={{ background: expanded ? `${sc.color}06` : "transparent" }}
       >
         {/* Status beacon */}
@@ -101,14 +99,14 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
 
         {/* Quote # */}
         <p className="hidden sm:block w-28 text-[11px] font-bold flex-shrink-0 mono"
-          style={{ color: "#1e2d6e", fontFamily: "'JetBrains Mono',monospace" }}>
+          style={{ color: "#00b4b4", fontFamily: "'JetBrains Mono',monospace" }}>
           {quote.quote_number || "—"}
         </p>
 
         {/* Title / client */}
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold truncate" style={{ color: "#0f1a3d" }}>{quote.title}</p>
-          <p className="text-[10px] truncate" style={{ color: "rgba(30,45,110,0.5)" }}>
+          <p className="text-[13px] font-bold truncate" style={{ color: "#e0e0e0" }}>{quote.title}</p>
+          <p className="text-[10px] truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
             {quote.customer_name || "No client"}{quote.customer_email ? ` · ${quote.customer_email}` : ""}
           </p>
         </div>
@@ -123,11 +121,13 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
           </span>
           {showStatusMenu && (
             <div className="absolute right-0 top-full mt-1 z-50 rounded-xl overflow-hidden w-36"
-              style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.18)", boxShadow: "0 12px 40px rgba(30,45,110,0.15)" }}>
+              style={{ background: "#1e1e1e", border: "1px solid rgba(0,180,180,0.25)", boxShadow: "0 12px 40px rgba(0,0,0,0.6)" }}>
               {Object.entries(STATUS_CONFIG).map(([k, cfg]) => (
                 <button key={k} onClick={e => { e.stopPropagation(); onStatusChange(quote.id, k); setShowStatusMenu(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-[11px] font-bold text-left transition-colors hover:bg-slate-50"
-                  style={{ color: cfg.color }}>
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-[11px] font-bold text-left transition-all"
+                  style={{ color: cfg.color }}
+                  onMouseEnter={e => e.currentTarget.style.background = `${cfg.color}12`}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: cfg.dot }} />
                   {cfg.label}
                 </button>
@@ -138,12 +138,12 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
 
         {/* Total */}
         <p className="hidden md:block w-28 text-right text-[14px] font-black flex-shrink-0 mono"
-          style={{ color: "#0f1a3d", fontFamily: "'JetBrains Mono',monospace" }}>
+          style={{ color: "#10b981", fontFamily: "'JetBrains Mono',monospace" }}>
           R{(quote.total || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
         </p>
 
         {/* Valid until */}
-        <p className="hidden lg:block w-24 text-[11px] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>
+        <p className="hidden lg:block w-24 text-[11px] flex-shrink-0" style={{ color: "rgba(255,255,255,0.35)" }}>
           {quote.valid_until ? format(new Date(quote.valid_until), "d MMM yy") : "—"}
         </p>
 
@@ -167,17 +167,17 @@ function QuoteRow({ quote, onPreview, onEdit, onDelete, onEmail, onNotes, onDown
       {/* Expanded detail */}
       {expanded && (
         <div className="px-5 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 gap-3"
-          style={{ background: "rgba(30,45,110,0.03)", borderTop: `1px solid ${sc.color}15` }}>
+          style={{ background: "rgba(0,0,0,0.2)", borderTop: `1px solid ${sc.color}20` }}>
           {[
             { label: "Salesperson", value: quote.salesperson_name || "—" },
             { label: "Contract",    value: quote.contract_months ? `${quote.contract_months} months` : "—" },
             { label: "Subtotal",    value: `R${(quote.subtotal || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2 })}` },
             { label: "Created",     value: quote.created_date ? format(new Date(quote.created_date), "d MMM yyyy") : "—" },
           ].map(d => (
-            <div key={d.label} className="rounded-xl px-3 py-2.5 transition-all hover:scale-[1.02]"
-              style={{ background: "rgba(30,45,110,0.05)", border: "1px solid rgba(30,45,110,0.1)" }}>
-              <p className="text-[9px] uppercase tracking-wider font-bold mb-0.5" style={{ color: "rgba(30,45,110,0.45)" }}>{d.label}</p>
-              <p className="text-[12px] font-bold" style={{ color: "#0f1a3d" }}>{d.value}</p>
+            <div key={d.label} className="rounded-xl px-3 py-2.5"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <p className="text-[9px] uppercase tracking-wider font-bold mb-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{d.label}</p>
+              <p className="text-[12px] font-bold" style={{ color: "#e0e0e0" }}>{d.value}</p>
             </div>
           ))}
           <div className="col-span-2 sm:col-span-4 flex gap-2 flex-wrap pt-1">
@@ -426,78 +426,61 @@ export default function Quotes() {
   return (
     <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
 
-      {/* ── Futuristic data ticker ── */}
+      {/* ── Ticker ── */}
       <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
-        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
-        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(90deg, rgba(240,242,248,0.95), transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(270deg, rgba(240,242,248,0.95), transparent)" }} />
+        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
         <div className="ticker-track flex items-center gap-8 px-4 whitespace-nowrap">
-          {[
-            "QUOTES & PROPOSALS", "DIGITAL SIGNATURE READY", "PDF GENERATION", "EMAIL DELIVERY",
-            "PIPELINE TRACKING", "CONVERSION ANALYTICS", "TOUCHNET SALES ENGINE",
-            "QUOTES & PROPOSALS", "DIGITAL SIGNATURE READY", "PDF GENERATION", "EMAIL DELIVERY",
-            "PIPELINE TRACKING", "CONVERSION ANALYTICS", "TOUCHNET SALES ENGINE",
+          {["QUOTES & PROPOSALS","DIGITAL SIGNATURE","PDF GENERATION","EMAIL DELIVERY","PIPELINE TRACKING","CONVERSION ANALYTICS","TOUCHNET SALES",
+            "QUOTES & PROPOSALS","DIGITAL SIGNATURE","PDF GENERATION","EMAIL DELIVERY","PIPELINE TRACKING","CONVERSION ANALYTICS","TOUCHNET SALES",
           ].map((t, i) => (
-            <span key={i} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.18em] mono"
-              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.4)" : "#c41e3a" }}>
-              {i % 4 === 0 && <span className="w-1 h-1 rounded-full" style={{ background: "#c41e3a", boxShadow: "0 0 4px #c41e3a" }} />}
-              {t}
-            </span>
+            <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
+              style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
           ))}
         </div>
       </div>
 
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "rgba(30,45,110,0.08)", border: "1px solid rgba(30,45,110,0.15)", boxShadow: "0 4px 16px rgba(30,45,110,0.1)" }}>
-              <FileText className="w-4.5 h-4.5" style={{ color: "#1e2d6e" }} />
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5"
+        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
+                <FileText className="w-4 h-4" style={{ color: "#00b4b4" }} />
+              </div>
+              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Quotes & Proposals</h1>
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981" }} />
+                <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: "#10b981" }}>LIVE</span>
+              </div>
             </div>
-            <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk',sans-serif" }}>
-              Quotes & Proposals
-            </h1>
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-              style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.2)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black mono" style={{ color: "#059669" }}>LIVE</span>
+            <p className="text-[11px] mt-0.5 mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {quotes.length} quotes · {quotes.filter(q => q.status === "accepted").length} accepted · <span style={{ color: "#10b981", fontWeight: 700 }}>{convRate}%</span> conversion
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex rounded-xl overflow-hidden p-1" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              {[{ key: "list", label: "List", icon: List }, { key: "dashboard", label: "Analytics", icon: BarChart2 }].map(({ key, label, icon: Ic }) => (
+                <button key={key} onClick={() => setView(key)}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold transition-all"
+                  style={{ background: view === key ? "linear-gradient(135deg,#00b4b4,#007a7a)" : "transparent", color: view === key ? "#fff" : "rgba(255,255,255,0.4)" }}>
+                  <Ic className="w-3.5 h-3.5" /> {label}
+                </button>
+              ))}
             </div>
+            <button onClick={() => refetch()} className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
+            <button onClick={() => { setEditing(null); setShowBuilder(true); }}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.3)" }}>
+              <Plus className="w-4 h-4" /> New Quote
+            </button>
           </div>
-          <p className="text-[11px] mt-0.5 mono pl-12" style={{ color: "rgba(30,45,110,0.5)", fontFamily: "'JetBrains Mono',monospace" }}>
-            {quotes.length} quotes · {quotes.filter(q => q.status === "accepted").length} accepted · <span style={{ color: "#059669", fontWeight: 700 }}>{convRate}%</span> conversion
-          </p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* View toggle */}
-          <div className="flex rounded-xl overflow-hidden p-1"
-            style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
-            {[
-              { key: "list",      label: "List",      icon: List },
-              { key: "dashboard", label: "Analytics", icon: BarChart2 },
-            ].map(({ key, label, icon: Icon }) => (
-              <button key={key} onClick={() => setView(key)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[11px] font-bold transition-all"
-                style={{
-                  background: view === key ? "linear-gradient(135deg,#1e2d6e,#2a3d8f)" : "transparent",
-                  color: view === key ? "#ffffff" : "rgba(30,45,110,0.55)",
-                }}>
-                <Icon className="w-3.5 h-3.5" /> {label}
-              </button>
-            ))}
-          </div>
-          <button onClick={() => refetch()}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
-          </button>
-          <button onClick={() => { setEditing(null); setShowBuilder(true); }}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-            style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
-            <Plus className="w-4 h-4" /> New Quote
-          </button>
         </div>
       </div>
 
@@ -524,7 +507,7 @@ export default function Quotes() {
           {/* Status filter pills */}
           <div className="flex flex-wrap gap-2 items-center">
             {[
-              { key: "all", label: `All (${quotes.length})`, color: "#1e2d6e" },
+              { key: "all", label: `All (${quotes.length})`, color: "#00b4b4" },
               ...Object.entries(STATUS_CONFIG).map(([k, c]) => ({
                 key: k, label: `${c.label} (${quotes.filter(q => q.status === k).length})`, color: c.color,
               })),
@@ -532,10 +515,9 @@ export default function Quotes() {
               <button key={f.key} onClick={() => setStatusFilter(f.key)}
                 className="px-3.5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all hover:scale-105"
                 style={{
-                  background: statusFilter === f.key ? `${f.color}10` : "rgba(30,45,110,0.04)",
-                  border: `1px solid ${statusFilter === f.key ? f.color + "40" : "rgba(30,45,110,0.1)"}`,
-                  color: statusFilter === f.key ? f.color : "rgba(30,45,110,0.5)",
-                  boxShadow: statusFilter === f.key ? `0 2px 8px ${f.color}18` : "none",
+                  background: statusFilter === f.key ? `${f.color}15` : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${statusFilter === f.key ? f.color + "50" : "rgba(255,255,255,0.08)"}`,
+                  color: statusFilter === f.key ? f.color : "rgba(255,255,255,0.35)",
                 }}>
                 {f.label}
               </button>
@@ -544,35 +526,35 @@ export default function Quotes() {
 
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#94a3b8" }} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(255,255,255,0.25)" }} />
             <input
               className="w-full pl-11 pr-10 py-3 text-[13px] outline-none rounded-xl transition-all"
-              style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.2)", color: "#0f1a3d", boxShadow: "0 2px 8px rgba(30,45,110,0.06)" }}
+              style={{ background: "#1e1e1e", border: "1px solid rgba(255,255,255,0.1)", color: "#e0e0e0" }}
               placeholder="Search by title, client, quote number…"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-3.5 top-1/2 -translate-y-1/2">
-                <X className="w-4 h-4" style={{ color: "#94a3b8" }} />
+                <X className="w-4 h-4" style={{ color: "rgba(255,255,255,0.3)" }} />
               </button>
             )}
           </div>
 
           {/* Quote table */}
-          <div className="rounded-2xl overflow-hidden bracket-card"
-            style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
-            <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
+          <div className="rounded-2xl overflow-hidden"
+            style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.5)" }}>
+            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
 
             {/* Column headers */}
             <div className="flex items-center gap-3 px-4 py-2.5"
-              style={{ background: "rgba(30,45,110,0.04)", borderBottom: "1px solid rgba(30,45,110,0.08)" }}>
+              style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
               <div className="w-2.5 flex-shrink-0" />
-              <p className="hidden sm:block w-28 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>Quote #</p>
-              <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Title / Client</p>
-              <p className="text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0 w-24" style={{ color: "rgba(30,45,110,0.45)" }}>Status</p>
-              <p className="hidden md:block w-28 text-right text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>Total</p>
-              <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)" }}>Valid Until</p>
+              <p className="hidden sm:block w-28 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>Quote #</p>
+              <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Title / Client</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0 w-24" style={{ color: "rgba(255,255,255,0.3)" }}>Status</p>
+              <p className="hidden md:block w-28 text-right text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>Total</p>
+              <p className="hidden lg:block w-24 text-[9px] font-black uppercase tracking-[0.18em] flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)" }}>Valid Until</p>
               <div className="w-52 flex-shrink-0" />
               <div className="w-4 flex-shrink-0" />
             </div>
@@ -584,14 +566,14 @@ export default function Quotes() {
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3"
-                  style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
-                  <FileText className="w-6 h-6" style={{ color: "#1e2d6e" }} />
+                  style={{ background: "rgba(0,180,180,0.1)", border: "1px solid rgba(0,180,180,0.2)" }}>
+                  <FileText className="w-6 h-6" style={{ color: "#00b4b4" }} />
                 </div>
-                <p className="font-bold text-[13px]" style={{ color: "#1e2d6e" }}>No quotes found</p>
-                <p className="text-[11px] mt-1" style={{ color: "rgba(30,45,110,0.45)" }}>Try adjusting your filters or create a new quote</p>
+                <p className="font-bold text-[13px]" style={{ color: "#f0f0f0" }}>No quotes found</p>
+                <p className="text-[11px] mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>Try adjusting your filters or create a new quote</p>
                 <button onClick={() => { setEditing(null); setShowBuilder(true); }}
                   className="mt-4 flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-                  style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 14px rgba(30,45,110,0.25)" }}>
+                  style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 14px rgba(0,180,180,0.3)" }}>
                   <Plus className="w-4 h-4" /> Create Quote
                 </button>
               </div>
@@ -616,11 +598,11 @@ export default function Quotes() {
 
             {!isLoading && filtered.length > 0 && (
               <div className="px-4 py-2.5 flex items-center justify-between"
-                style={{ background: "rgba(30,45,110,0.03)", borderTop: "1px solid rgba(30,45,110,0.08)" }}>
-                <p className="text-[11px] mono" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>
+                style={{ background: "rgba(255,255,255,0.02)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                <p className="text-[11px] mono" style={{ color: "rgba(255,255,255,0.35)" }}>
                   {filtered.length} of {quotes.length} quotes
                 </p>
-                <p className="text-[11px] font-bold mono" style={{ color: "#059669", fontFamily: "'JetBrains Mono',monospace" }}>
+                <p className="text-[11px] font-bold mono" style={{ color: "#10b981" }}>
                   {convRate}% conversion rate
                 </p>
               </div>

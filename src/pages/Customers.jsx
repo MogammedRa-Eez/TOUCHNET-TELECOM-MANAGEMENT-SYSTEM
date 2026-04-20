@@ -17,10 +17,10 @@ import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
 const STATUS_CFG = {
-  active:     { color: "#059669", bg: "rgba(5,150,105,0.08)",   border: "rgba(5,150,105,0.25)",    dot: "#34d399", label: "Active" },
-  pending:    { color: "#d97706", bg: "rgba(217,119,6,0.08)",   border: "rgba(217,119,6,0.25)",    dot: "#fbbf24", label: "Pending" },
-  suspended:  { color: "#c41e3a", bg: "rgba(196,30,58,0.08)",   border: "rgba(196,30,58,0.25)",    dot: "#e02347", label: "Suspended" },
-  terminated: { color: "#64748b", bg: "rgba(100,116,139,0.07)", border: "rgba(100,116,139,0.2)",   dot: "#94a3b8", label: "Terminated" },
+  active:     { color: "#10b981", bg: "rgba(16,185,129,0.12)",  border: "rgba(16,185,129,0.3)",   dot: "#34d399", label: "Active" },
+  pending:    { color: "#f59e0b", bg: "rgba(245,158,11,0.12)",  border: "rgba(245,158,11,0.3)",   dot: "#fbbf24", label: "Pending" },
+  suspended:  { color: "#e02347", bg: "rgba(224,35,71,0.12)",   border: "rgba(224,35,71,0.3)",    dot: "#ff3358", label: "Suspended" },
+  terminated: { color: "#64748b", bg: "rgba(100,116,139,0.1)",  border: "rgba(100,116,139,0.25)", dot: "#94a3b8", label: "Terminated" },
 };
 
 const PLAN_SHORT = {
@@ -45,21 +45,21 @@ function KPIStrip({ customers }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {[
-        { label: "Total Customers", value: total,                              icon: Users,       color: "#6366f1" },
-        { label: "Active",          value: active,                             icon: Activity,    color: "#10b981" },
-        { label: "Suspended",       value: suspended,                          icon: AlertTriangle,color: "#ef4444" },
-        { label: "Monthly Revenue", value: `R${(mrr/1000).toFixed(1)}k`,      icon: DollarSign,  color: "#06b6d4" },
+        { label: "Total Customers", value: total,                         icon: Users,        color: "#00b4b4" },
+        { label: "Active",          value: active,                        icon: Activity,     color: "#10b981" },
+        { label: "Suspended",       value: suspended,                     icon: AlertTriangle,color: "#e02347" },
+        { label: "Monthly Revenue", value: `R${(mrr/1000).toFixed(1)}k`, icon: DollarSign,   color: "#f59e0b" },
       ].map(k => (
-        <div key={k.label} className="relative overflow-hidden rounded-2xl px-5 py-4 group transition-all hover:-translate-y-0.5 holo-card bracket-card"
-          style={{ background: "#ffffff", border: `1px solid ${k.color}25`, boxShadow: `0 2px 12px ${k.color}10` }}>
-          <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, ${k.color}, transparent)` }} />
-          <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 opacity-60" style={{ background: `radial-gradient(circle, ${k.color}12, transparent 70%)` }} />
+        <div key={k.label} className="relative overflow-hidden rounded-2xl px-5 py-4 group transition-all hover:-translate-y-1 holo-card"
+          style={{ background: "#181818", border: `1px solid ${k.color}30`, boxShadow: `0 4px 20px rgba(0,0,0,0.5)` }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${k.color}, transparent)` }} />
+          <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 opacity-60" style={{ background: `radial-gradient(circle, ${k.color}18, transparent 70%)` }} />
           <div className="flex items-start justify-between relative">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(30,45,110,0.45)" }}>{k.label}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(255,255,255,0.35)" }}>{k.label}</p>
               <p className="text-3xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
             </div>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110" style={{ background: `${k.color}10`, border: `1px solid ${k.color}22` }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110" style={{ background: `${k.color}18`, border: `1px solid ${k.color}30` }}>
               <k.icon className="w-4 h-4" style={{ color: k.color }} />
             </div>
           </div>
@@ -99,55 +99,45 @@ function CustomerCard({ customer, onClick }) {
   return (
     <div
       onClick={() => onClick(customer)}
-      className="rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-1 group holo-card bracket-card"
-      style={{
-        background: "#ffffff",
-        border: `1px solid ${sc.color}22`,
-        boxShadow: `0 2px 10px rgba(30,45,110,0.06)`,
-      }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 28px ${sc.color}18`; e.currentTarget.style.borderColor = `${sc.color}40`; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = `0 2px 10px rgba(30,45,110,0.06)`; e.currentTarget.style.borderColor = `${sc.color}22`; }}
+      className="rounded-2xl p-4 cursor-pointer transition-all duration-200 group holo-card"
+      style={{ background: "#181818", border: `1px solid ${sc.color}25`, boxShadow: "0 2px 16px rgba(0,0,0,0.4)" }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = `0 8px 28px ${sc.color}22`; e.currentTarget.style.borderColor = `${sc.color}50`; e.currentTarget.style.transform = "translateY(-3px)"; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 2px 16px rgba(0,0,0,0.4)"; e.currentTarget.style.borderColor = `${sc.color}25`; e.currentTarget.style.transform = "translateY(0)"; }}
     >
-      {/* Status top bar */}
       <div className="h-[2px] rounded-full mb-3" style={{ background: `linear-gradient(90deg, ${sc.color}, transparent)` }} />
-
       <div className="flex items-start gap-3">
-        {/* Avatar */}
         <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-sm flex-shrink-0"
-          style={{ background: `${sc.color}15`, border: `1px solid ${sc.color}30`, color: sc.color }}>
+          style={{ background: `${sc.color}18`, border: `1px solid ${sc.color}35`, color: sc.color }}>
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-bold text-[13px] truncate" style={{ color: "#0f1a3d" }}>{customer.full_name}</p>
-          <p className="text-[10px] mono truncate" style={{ color: "rgba(30,45,110,0.5)" }}>{customer.email}</p>
+          <p className="font-bold text-[13px] truncate" style={{ color: "#e0e0e0" }}>{customer.full_name}</p>
+          <p className="text-[10px] mono truncate" style={{ color: "rgba(255,255,255,0.35)" }}>{customer.email}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.color, boxShadow: `0 0 4px ${sc.color}` }} />
             <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: sc.color }}>{sc.label}</span>
           </div>
         </div>
       </div>
-
-      {/* Metrics row */}
-      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(30,45,110,0.08)" }}>
-      <div className="text-center">
-        <p className="text-[11px] font-black mono" style={{ color: "#1e2d6e", fontFamily: "'JetBrains Mono',monospace" }}>{PLAN_SHORT[customer.service_plan] || "—"}</p>
-        <p className="text-[9px] mt-0.5" style={{ color: "rgba(30,45,110,0.4)" }}>Speed</p>
+      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="text-center">
+          <p className="text-[11px] font-black mono" style={{ color: "#00b4b4", fontFamily: "'JetBrains Mono',monospace" }}>{PLAN_SHORT[customer.service_plan] || "—"}</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>Speed</p>
+        </div>
+        <div className="text-center">
+          <p className="text-[11px] font-black mono" style={{ color: "#10b981", fontFamily: "'JetBrains Mono',monospace" }}>R{customer.monthly_rate?.toFixed(0) || "—"}</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>/ month</p>
+        </div>
+        <div className="text-center">
+          <p className="text-[11px] font-black">{CONN_ICON[customer.connection_type] || "—"}</p>
+          <p className="text-[9px] mt-0.5 capitalize" style={{ color: "rgba(255,255,255,0.3)" }}>{customer.connection_type || "—"}</p>
+        </div>
       </div>
-      <div className="text-center">
-        <p className="text-[11px] font-black mono" style={{ color: "#0ea5e9", fontFamily: "'JetBrains Mono',monospace" }}>R{customer.monthly_rate?.toFixed(0) || "—"}</p>
-        <p className="text-[9px] mt-0.5" style={{ color: "rgba(30,45,110,0.4)" }}>/ month</p>
-      </div>
-      <div className="text-center">
-        <p className="text-[11px] font-black">{CONN_ICON[customer.connection_type] || "—"}</p>
-        <p className="text-[9px] mt-0.5 capitalize" style={{ color: "rgba(30,45,110,0.4)" }}>{customer.connection_type || "—"}</p>
-      </div>
-      </div>
-
-      <div className="mt-3 pt-2" style={{ borderTop: "1px solid rgba(30,45,110,0.07)" }}>
-      <HealthScore customer={customer} />
+      <div className="mt-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <HealthScore customer={customer} />
       </div>
       {customer.account_number && (
-      <p className="text-[9px] mono mt-1.5 text-right" style={{ color: "rgba(30,45,110,0.3)", fontFamily: "'JetBrains Mono',monospace" }}>{customer.account_number}</p>
+        <p className="text-[9px] mono mt-1.5 text-right" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono',monospace" }}>{customer.account_number}</p>
       )}
     </div>
   );
@@ -160,43 +150,30 @@ function CustomerRow({ customer, onClick }) {
   return (
     <div
       onClick={() => onClick(customer)}
-      className="flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all group premium-row"
-      style={{ borderBottom: "1px solid rgba(30,45,110,0.06)" }}
-      onMouseEnter={e => { e.currentTarget.style.background = `rgba(30,45,110,0.04)`; }}
+      className="flex items-center gap-4 px-5 py-3.5 cursor-pointer transition-all group"
+      style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+      onMouseEnter={e => { e.currentTarget.style.background = "rgba(0,180,180,0.04)"; }}
       onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
     >
-      {/* Avatar */}
       <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0"
-        style={{ background: `${sc.color}12`, border: `1px solid ${sc.color}25`, color: sc.color }}>
+        style={{ background: `${sc.color}18`, border: `1px solid ${sc.color}35`, color: sc.color }}>
         {initials}
       </div>
-
-      {/* Name + email */}
       <div className="min-w-0 flex-1">
-        <p className="font-bold text-[13px] truncate" style={{ color: "#0f1a3d" }}>{customer.full_name}</p>
-        <p className="text-[11px] mono truncate" style={{ color: "rgba(30,45,110,0.5)" }}>{customer.email}</p>
+        <p className="font-bold text-[13px] truncate" style={{ color: "#e0e0e0" }}>{customer.full_name}</p>
+        <p className="text-[11px] mono truncate" style={{ color: "rgba(255,255,255,0.35)" }}>{customer.email}</p>
       </div>
-
-      {/* Account */}
-      <p className="hidden md:block text-[11px] mono w-24 truncate flex-shrink-0" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>{customer.account_number || "—"}</p>
-
-      {/* Plan */}
+      <p className="hidden md:block text-[11px] mono w-24 truncate flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono',monospace" }}>{customer.account_number || "—"}</p>
       <div className="hidden lg:flex items-center gap-1.5 w-32 flex-shrink-0">
-        <Wifi className="w-3 h-3 flex-shrink-0" style={{ color: "#1e2d6e" }} />
-        <span className="text-[11px] truncate" style={{ color: "#1e2d6e" }}>{PLAN_SHORT[customer.service_plan] || "—"}</span>
+        <Wifi className="w-3 h-3 flex-shrink-0" style={{ color: "#00b4b4" }} />
+        <span className="text-[11px] truncate" style={{ color: "#00b4b4" }}>{PLAN_SHORT[customer.service_plan] || "—"}</span>
       </div>
-
-      {/* Connection */}
       <div className="hidden xl:block w-24 flex-shrink-0">
-        <span className="text-[12px]">{CONN_ICON[customer.connection_type] || ""} <span className="capitalize text-[11px]" style={{ color: "rgba(30,45,110,0.55)" }}>{customer.connection_type || "—"}</span></span>
+        <span className="text-[12px]">{CONN_ICON[customer.connection_type] || ""} <span className="capitalize text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>{customer.connection_type || "—"}</span></span>
       </div>
-
-      {/* Rate */}
-      <p className="hidden sm:block text-[13px] font-black mono w-20 text-right flex-shrink-0" style={{ color: "#0ea5e9", fontFamily: "'JetBrains Mono',monospace" }}>
+      <p className="hidden sm:block text-[13px] font-black mono w-20 text-right flex-shrink-0" style={{ color: "#10b981", fontFamily: "'JetBrains Mono',monospace" }}>
         R{customer.monthly_rate?.toFixed(0) || "0"}
       </p>
-
-      {/* Status */}
       <div className="flex-shrink-0">
         <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-lg uppercase tracking-wider"
           style={{ background: sc.bg, color: sc.color, border: `1px solid ${sc.border}` }}>
@@ -204,9 +181,7 @@ function CustomerRow({ customer, onClick }) {
           {sc.label}
         </span>
       </div>
-
-      {/* Arrow */}
-      <ChevronDown className="w-4 h-4 -rotate-90 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: "#94a3b8" }} />
+      <ChevronDown className="w-4 h-4 -rotate-90 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: "rgba(255,255,255,0.3)" }} />
     </div>
   );
 }
@@ -294,75 +269,66 @@ export default function Customers() {
 
       {/* ── Ticker ── */}
       <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
-        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
-        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,rgba(240,242,248,0.98),transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,rgba(240,242,248,0.98),transparent)" }} />
+        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
         <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
-          {["CUSTOMER MANAGEMENT", "CONTRACT TRACKING", "SLA COMPLIANCE", "REVENUE ANALYTICS", "FIBRE DEPLOYMENT", "REAL-TIME BILLING",
-            "CUSTOMER MANAGEMENT", "CONTRACT TRACKING", "SLA COMPLIANCE", "REVENUE ANALYTICS", "FIBRE DEPLOYMENT", "REAL-TIME BILLING"
+          {["CUSTOMER MANAGEMENT","CONTRACT TRACKING","SLA COMPLIANCE","REVENUE ANALYTICS","FIBRE DEPLOYMENT","REAL-TIME BILLING",
+            "CUSTOMER MANAGEMENT","CONTRACT TRACKING","SLA COMPLIANCE","REVENUE ANALYTICS","FIBRE DEPLOYMENT","REAL-TIME BILLING"
           ].map((t, i) => (
             <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
-              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.35)" : "#c41e3a" }}>{t}</span>
+              style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
           ))}
         </div>
       </div>
 
       {/* ── Header ── */}
-      <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card"
-        style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
+      <div className="relative overflow-hidden rounded-2xl px-6 py-5"
+        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)" }}>
-              <Users className="w-4 h-4" style={{ color: "#1e2d6e" }} />
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
+                <Users className="w-4 h-4" style={{ color: "#00b4b4" }} />
+              </div>
+              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981" }} />
+                <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: "#10b981" }}>LIVE</span>
+              </div>
             </div>
-            <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: "rgba(5,150,105,0.08)", border: "1px solid rgba(5,150,105,0.25)" }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#059669" }} />
-              <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: "#059669" }}>LIVE</span>
-            </div>
+            <p className="text-[11px] mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active · {customers.filter(c=>c.status==="suspended").length} suspended
+            </p>
           </div>
-          <p className="text-[11px] mono pl-10" style={{ color: "rgba(30,45,110,0.5)" }}>
-            {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active · {customers.filter(c=>c.status==="suspended").length} suspended
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => refetch()}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
-          </button>
-          <button
-            onClick={handleExportCsv}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-            style={{ background: "rgba(5,150,105,0.07)", border: "1px solid rgba(5,150,105,0.2)", color: "#059669" }}>
-            <Download className="w-3.5 h-3.5" /> Export CSV
-          </button>
-          {isAdmin && (
-            <>
-              <button
-                onClick={() => setShowImport(true)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-                style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)", color: "#1e2d6e" }}>
-                <Upload className="w-3.5 h-3.5" /> Import
-              </button>
-              <button
-                onClick={() => setShowOnboarding(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[11px] font-bold transition-all hover:scale-105"
-                style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.3)", color: "#06b6d4" }}>
-                <Zap className="w-3.5 h-3.5" /> Onboard Client
-              </button>
-              <button
-                onClick={() => { setEditing(null); setShowForm(true); }}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-[12px] font-bold text-white transition-all hover:scale-105"
-                style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 20px rgba(30,45,110,0.3)" }}>
-                <Plus className="w-4 h-4" /> Add Customer
-              </button>
-            </>
-          )}
-        </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={() => refetch()} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
+            <button onClick={handleExportCsv} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
+              <Download className="w-3.5 h-3.5" /> Export CSV
+            </button>
+            {isAdmin && (
+              <>
+                <button onClick={() => setShowImport(true)} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
+                  <Upload className="w-3.5 h-3.5" /> Import
+                </button>
+                <button onClick={() => setShowOnboarding(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+                  style={{ background: "rgba(0,180,180,0.1)", border: "1px solid rgba(0,180,180,0.25)", color: "#00b4b4" }}>
+                  <Zap className="w-3.5 h-3.5" /> Onboard Client
+                </button>
+                <button onClick={() => { setEditing(null); setShowForm(true); }}
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+                  style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.3)" }}>
+                  <Plus className="w-4 h-4" /> Add Customer
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -379,17 +345,15 @@ export default function Customers() {
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(255,255,255,0.25)" }} />
           <input
             className="w-full pl-10 pr-4 py-2.5 text-[13px] outline-none transition-all rounded-xl"
-            style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.2)", color: "#0f1a3d" }}
+            style={{ background: "#1e1e1e", border: "1px solid rgba(255,255,255,0.1)", color: "#e0e0e0" }}
             placeholder="Search by name, email, account number…"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
-          {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">✕</button>
-          )}
+          {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px]" style={{ color: "rgba(255,255,255,0.3)" }}>✕</button>}
         </div>
 
         {/* Status filter pills */}
@@ -399,31 +363,27 @@ export default function Customers() {
             const active = statusFilter === s;
             return (
               <button key={s} onClick={() => setStatusFilter(s)}
-                className="px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all"
+                className="px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all hover:scale-105"
                 style={{
-                  background: active ? (cfg ? cfg.bg : "rgba(139,92,246,0.15)") : "rgba(139,92,246,0.06)",
-                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(139,92,246,0.45)"}` : "1px solid rgba(139,92,246,0.14)",
-                  color: active ? (cfg ? cfg.color : "#a78bfa") : "rgba(196,181,253,0.55)",
-                  boxShadow: active ? `0 0 12px ${cfg ? cfg.color + "20" : "rgba(99,102,241,0.1)"}` : "none",
+                  background: active ? (cfg ? cfg.bg : "rgba(0,180,180,0.12)") : "rgba(255,255,255,0.04)",
+                  border: active ? `1px solid ${cfg ? cfg.border : "rgba(0,180,180,0.4)"}` : "1px solid rgba(255,255,255,0.08)",
+                  color: active ? (cfg ? cfg.color : "#00b4b4") : "rgba(255,255,255,0.35)",
                 }}>
-                {cfg && active && <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ background: cfg.color }} />}
                 {s === "all" ? "All" : s}
-                {s !== "all" && (
-                  <span className="ml-1 opacity-60">({customers.filter(c => c.status === s).length})</span>
-                )}
+                {s !== "all" && <span className="ml-1 opacity-50">({customers.filter(c => c.status === s).length})</span>}
               </button>
             );
           })}
         </div>
 
         {/* View toggle */}
-        <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(30,45,110,0.15)" }}>
+        <div className="flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
           {[{ mode: "list", Ic: List }, { mode: "grid", Ic: LayoutGrid }].map(({ mode, Ic }) => (
             <button key={mode} onClick={() => setViewMode(mode)}
               className="px-3 py-2 transition-all"
               style={{
-                background: viewMode === mode ? "rgba(30,45,110,0.12)" : "rgba(30,45,110,0.04)",
-                color: viewMode === mode ? "#1e2d6e" : "rgba(30,45,110,0.45)",
+                background: viewMode === mode ? "linear-gradient(135deg,#00b4b4,#007a7a)" : "rgba(255,255,255,0.04)",
+                color: viewMode === mode ? "#fff" : "rgba(255,255,255,0.35)",
               }}>
               <Ic className="w-4 h-4" />
             </button>
@@ -438,17 +398,17 @@ export default function Customers() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 rounded-2xl"
-          style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)" }}>
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-            style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.15)" }}>
-            <Users className="w-7 h-7" style={{ color: "#1e2d6e" }} />
+          style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-3"
+            style={{ background: "rgba(0,180,180,0.1)", border: "1px solid rgba(0,180,180,0.2)" }}>
+            <Users className="w-7 h-7" style={{ color: "#00b4b4" }} />
           </div>
-          <p className="font-semibold text-sm" style={{ color: "#1e2d6e" }}>No customers found</p>
-          <p className="text-xs mt-1" style={{ color: "rgba(30,45,110,0.45)" }}>Try adjusting your search or filter</p>
+          <p className="font-bold text-[13px]" style={{ color: "#f0f0f0" }}>No customers found</p>
+          <p className="text-[11px] mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>Try adjusting your search or filter</p>
           {isAdmin && (
             <button onClick={() => setShowOnboarding(true)}
-              className="mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white"
-              style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 16px rgba(30,45,110,0.25)" }}>
+              className="mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white"
+              style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 16px rgba(0,180,180,0.3)" }}>
               <Plus className="w-4 h-4" /> Onboard First Customer
             </button>
           )}
@@ -460,26 +420,21 @@ export default function Customers() {
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden bracket-card" style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
-          <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
-          {/* List header */}
-          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(30,45,110,0.04)", borderBottom: "1px solid rgba(30,45,110,0.08)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.5)" }}>
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+          <div className="flex items-center gap-4 px-5 py-2.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
             <div className="w-9 flex-shrink-0" />
-            <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Customer</p>
-            <p className="hidden md:block w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Account</p>
-            <p className="hidden lg:block w-32 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Plan</p>
-            <p className="hidden xl:block w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Connect.</p>
-            <p className="hidden sm:block w-20 text-right text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Rate</p>
-            <p className="w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(30,45,110,0.45)" }}>Status</p>
+            <p className="flex-1 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Customer</p>
+            <p className="hidden md:block w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Account</p>
+            <p className="hidden lg:block w-32 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Plan</p>
+            <p className="hidden xl:block w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Connect.</p>
+            <p className="hidden sm:block w-20 text-right text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Rate</p>
+            <p className="w-24 text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.3)" }}>Status</p>
             <div className="w-4" />
           </div>
-          {filtered.map(c => (
-            <CustomerRow key={c.id} customer={c} onClick={setSelected} />
-          ))}
-          <div className="px-5 py-2.5" style={{ background: "rgba(30,45,110,0.03)", borderTop: "1px solid rgba(30,45,110,0.08)" }}>
-            <p className="text-[11px] mono" style={{ color: "rgba(30,45,110,0.45)", fontFamily: "'JetBrains Mono',monospace" }}>
-              {filtered.length} of {customers.length} customers
-            </p>
+          {filtered.map(c => <CustomerRow key={c.id} customer={c} onClick={setSelected} />)}
+          <div className="px-5 py-2.5" style={{ background: "rgba(255,255,255,0.02)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+            <p className="text-[11px] mono" style={{ color: "rgba(255,255,255,0.35)" }}>{filtered.length} of {customers.length} customers</p>
           </div>
         </div>
       )}
