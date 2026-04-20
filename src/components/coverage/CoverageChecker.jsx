@@ -12,10 +12,8 @@ export default function CoverageChecker({ onClose }) {
     setLoading(true);
     setResult(null);
     try {
-      // Save the search
       await base44.entities.CoverageSearch.create({ address: address.trim() });
 
-      // Simple AI-based coverage check
       const res = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a coverage checker for a South African ISP called TouchNet. 
         A customer is asking if fibre or wireless internet is available at: "${address}".
@@ -33,7 +31,7 @@ export default function CoverageChecker({ onClose }) {
         }
       });
       setResult(res);
-    } catch (e) {
+    } catch {
       setResult({ covered: false, coverage_type: "none", strength: "none", message: "Unable to check coverage at this time. Please contact us directly." });
     } finally {
       setLoading(false);
@@ -64,10 +62,12 @@ export default function CoverageChecker({ onClose }) {
               <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>Check if we service your area</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors"
-            style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-            <X className="w-4 h-4" style={{ color: "rgba(255,255,255,0.5)" }} />
-          </button>
+          {onClose && (
+            <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors"
+              style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+              <X className="w-4 h-4" style={{ color: "rgba(255,255,255,0.5)" }} />
+            </button>
+          )}
         </div>
 
         <div className="p-6 space-y-4">
