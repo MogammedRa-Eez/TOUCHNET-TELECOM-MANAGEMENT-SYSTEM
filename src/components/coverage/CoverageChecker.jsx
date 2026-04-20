@@ -47,7 +47,8 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
         <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
         <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(224,35,71,0.15)", border: "1px solid rgba(224,35,71,0.3)" }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{ background: "rgba(224,35,71,0.15)", border: "1px solid rgba(224,35,71,0.3)" }}>
               <MapPin className="w-4 h-4" style={{ color: "#e02347" }} />
             </div>
             <div>
@@ -85,7 +86,10 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
           </button>
           {result && (
             <div className="rounded-xl p-4 space-y-3"
-              style={{ background: result.covered ? "rgba(0,180,180,0.07)" : "rgba(224,35,71,0.07)", border: `1px solid ${result.covered ? "rgba(0,180,180,0.3)" : "rgba(224,35,71,0.3)"}` }}>
+              style={{
+                background: result.covered ? "rgba(0,180,180,0.07)" : "rgba(224,35,71,0.07)",
+                border: `1px solid ${result.covered ? "rgba(0,180,180,0.3)" : "rgba(224,35,71,0.3)"}`
+              }}>
               <div className="flex items-center gap-3">
                 {result.covered
                   ? <CheckCircle2 className="w-6 h-6 flex-shrink-0" style={{ color: "#10b981" }} />
