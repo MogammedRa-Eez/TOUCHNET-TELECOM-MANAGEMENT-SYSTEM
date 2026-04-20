@@ -141,7 +141,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                 src={LOGO_BADGE}
                 alt="TouchNet Badge"
                 className="w-9 h-9 object-contain"
-                style={{ filter: "brightness(0) invert(1)", opacity: 0.9 }}
+                style={{ filter: "brightness(0) invert(1)", opacity: 1 }}
               />
             </div>
             <div>
