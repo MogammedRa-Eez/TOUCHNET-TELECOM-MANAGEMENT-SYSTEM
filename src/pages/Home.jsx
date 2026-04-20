@@ -80,7 +80,7 @@ export default function Home() {
           style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.6),#00b4b4,#e02347,transparent)" }} />
 
         <div className="flex items-center gap-3">
-          <img src={LOGO_URL} alt="TouchNet" className="h-9 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.95 }} />
+          <img src={LOGO_URL} alt="TouchNet" className="h-9 object-contain" style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)", opacity: 0.95 }} />
           <div className="hidden md:flex items-center gap-1 px-2 py-0.5 rounded-md"
             style={{ background: "rgba(0,212,212,0.08)", border: "1px solid rgba(0,212,212,0.15)" }}>
             <span className="text-[8px] font-black uppercase tracking-[0.2em] mono" style={{ color: "#00d4d4" }}>TMS v3.0</span>
