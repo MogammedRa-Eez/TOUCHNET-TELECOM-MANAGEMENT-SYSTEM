@@ -124,29 +124,27 @@ function KPIDrawer({ kpiKey, customers, invoices, tickets, nodes, onClose }) {
 
   return (
     <div className="absolute inset-x-0 top-full mt-2 z-50 rounded-2xl overflow-hidden bracket-card"
-      style={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(30,45,110,0.18)", boxShadow: "0 20px 60px rgba(30,45,110,0.18), 0 0 0 1px rgba(30,45,110,0.06)" }}>
-      <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,transparent)" }} />
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(30,45,110,0.08)" }}>
-        <p className="text-[12px] font-black uppercase tracking-[0.15em]" style={{ color: "#1e2d6e", fontFamily: "'Space Grotesk',sans-serif" }}>{item.title}</p>
-        <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded-lg transition-colors" style={{ color: "rgba(30,45,110,0.4)" }}
-          onMouseEnter={e=>e.currentTarget.style.background="rgba(30,45,110,0.07)"}
-          onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+      style={{ background: "#1a1a1a", border: "1px solid rgba(0,180,180,0.25)", boxShadow: "0 20px 60px rgba(0,0,0,0.7)" }}>
+      <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <p className="text-[12px] font-black uppercase tracking-[0.15em]" style={{ color: "#00b4b4", fontFamily: "'Space Grotesk',sans-serif" }}>{item.title}</p>
+        <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded-lg transition-colors" style={{ color: "rgba(255,255,255,0.4)" }}>
           <X className="w-3.5 h-3.5" />
         </button>
       </div>
       <div className="p-4 grid grid-cols-2 gap-2.5">
         {item.rows.map(row => (
           <div key={row.label} className="rounded-xl p-3 relative overflow-hidden holo-card"
-            style={{ background: `${row.color}08`, border: `1px solid ${row.color}20` }}>
+            style={{ background: `${row.color}10`, border: `1px solid ${row.color}25` }}>
             <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${row.color}, transparent)` }} />
             <p className="text-[22px] font-black mono" style={{ color: row.color }}>{row.value}</p>
-            <p className="text-[10px] mt-0.5 font-semibold uppercase tracking-wider" style={{ color: "rgba(30,45,110,0.45)" }}>{row.label}</p>
+            <p className="text-[10px] mt-0.5 font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>{row.label}</p>
           </div>
         ))}
       </div>
       <div className="px-4 pb-4">
-        <Link to={item.link} className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-[1.02] hover:opacity-95"
-          style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", boxShadow: "0 4px 14px rgba(30,45,110,0.3)" }}>
+        <Link to={item.link} className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-[1.02]"
+          style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 14px rgba(0,180,180,0.3)" }}>
           <Eye className="w-3.5 h-3.5" /> {item.linkLabel} <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
@@ -168,15 +166,15 @@ function Section({ title, icon: Icon, children, defaultOpen = true, badge, color
             <Icon className="w-4 h-4" style={{ color }} />
           </div>
           <span className="text-[13px] font-black uppercase tracking-[0.12em] transition-colors"
-            style={{ color: "#1e2d6e", fontFamily: "'Space Grotesk',sans-serif" }}>{title}</span>
+            style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>{title}</span>
           {badge != null && (
             <span className="px-2.5 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider"
               style={{ background: `${color}10`, color, border: `1px solid ${color}22` }}>{badge}</span>
           )}
         </div>
         <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-60 transition-all">
-          <span className="text-[9px] font-black uppercase tracking-wider mono" style={{ color: "rgba(30,45,110,0.5)" }}>{open ? "COLLAPSE" : "EXPAND"}</span>
-          {open ? <ChevronUp className="w-3.5 h-3.5" style={{ color: "rgba(30,45,110,0.4)" }} /> : <ChevronDown className="w-3.5 h-3.5" style={{ color: "rgba(30,45,110,0.4)" }} />}
+          <span className="text-[9px] font-black uppercase tracking-wider mono" style={{ color: "rgba(255,255,255,0.3)" }}>{open ? "COLLAPSE" : "EXPAND"}</span>
+          {open ? <ChevronUp className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.3)" }} /> : <ChevronDown className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.3)" }} />}
         </div>
       </button>
       {open && children}
@@ -221,7 +219,7 @@ function SystemHealthStrip({ customers, invoices, tickets, nodes }) {
           </div>
           <div className="min-w-0">
             <p className="text-[20px] font-black mono leading-none" style={{ color: item.color }}>{item.value}</p>
-            <p className="text-[10px] font-semibold mt-0.5 truncate uppercase tracking-wider" style={{ color: "rgba(30,45,110,0.45)" }}>{item.label}</p>
+            <p className="text-[10px] font-semibold mt-0.5 truncate uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>{item.label}</p>
           </div>
           <ArrowUpRight className="w-3.5 h-3.5 ml-auto flex-shrink-0 opacity-25" style={{ color: item.color }} />
         </Link>
@@ -291,75 +289,72 @@ export default function Dashboard() {
 
       {/* ── Ticker ── */}
       <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
-        style={{ background: "rgba(30,45,110,0.04)", border: "1px solid rgba(30,45,110,0.1)" }}>
-        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,rgba(240,242,248,0.98),transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,rgba(240,242,248,0.98),transparent)" }} />
+        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
         <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
           {["OPERATIONS OVERVIEW", "NETWORK MONITORING", "REAL-TIME BILLING", "TICKET MANAGEMENT", "FIBRE DEPLOYMENT", "CUSTOMER ANALYTICS", "SLA COMPLIANCE", "COVERAGE MAPPING",
             "OPERATIONS OVERVIEW", "NETWORK MONITORING", "REAL-TIME BILLING", "TICKET MANAGEMENT", "FIBRE DEPLOYMENT", "CUSTOMER ANALYTICS", "SLA COMPLIANCE", "COVERAGE MAPPING"
           ].map((t, i) => (
             <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
-              style={{ color: i % 3 === 0 ? "#1e2d6e" : i % 3 === 1 ? "rgba(30,45,110,0.35)" : "#c41e3a" }}>{t}</span>
+              style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
           ))}
         </div>
       </div>
 
       {/* ── Header ── */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5 bracket-card holo-card section-reveal"
-        style={{ background: "rgba(255,255,255,0.96)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
-        {/* Top accent */}
-        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#1e2d6e,#4a5fa8,#c41e3a,#e02347,transparent)" }} />
-        {/* Corner glow */}
+        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,180,180,0.05)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
         <div className="absolute top-0 right-0 w-64 h-32 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(30,45,110,0.07) 0%, transparent 65%)" }} />
+          style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(0,180,180,0.08) 0%, transparent 65%)" }} />
 
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[9px] font-black uppercase tracking-[0.25em] mono px-2 py-0.5 rounded"
-                style={{ background: "rgba(30,45,110,0.07)", color: "rgba(30,45,110,0.5)", border: "1px solid rgba(30,45,110,0.1)" }}>
+                style={{ background: "rgba(0,180,180,0.1)", color: "#00b4b4", border: "1px solid rgba(0,180,180,0.2)" }}>
                 TOUCHNET · TMS
               </span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight" style={{ color: "#0f1a3d", fontFamily: "'Space Grotesk', sans-serif" }}>Operations Overview</h1>
-            <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(30,45,110,0.45)" }}>
+            <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk', sans-serif" }}>Operations Overview</h1>
+            <p className="text-[11px] mt-0.5 mono" style={{ color: "rgba(255,255,255,0.35)" }}>
               {new Date().toLocaleDateString("en-ZA", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            {/* System health indicator */}
             {nodes.filter(n => n.status === "offline").length === 0 && tickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length === 0 ? (
-              <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-black status-beacon"
-                style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.25)", color: "#059669" }}>
-                <span className="w-2 h-2 rounded-full status-beacon" style={{ background: "#34d399", boxShadow: "0 0 6px #34d399" }} />
+              <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-black"
+                style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", color: "#10b981" }}>
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#34d399", boxShadow: "0 0 8px #34d399" }} />
                 <span className="mono uppercase tracking-wider">All Systems Operational</span>
               </div>
             ) : (
               <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[11px] font-black"
-                style={{ background: "rgba(196,30,58,0.07)", border: "1px solid rgba(196,30,58,0.2)", color: "#c41e3a" }}>
-                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#ef4444", boxShadow: "0 0 6px #ef4444" }} />
+                style={{ background: "rgba(224,35,71,0.1)", border: "1px solid rgba(224,35,71,0.3)", color: "#e02347" }}>
+                <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#e02347", boxShadow: "0 0 8px #e02347" }} />
                 <span className="mono uppercase tracking-wider">Issues Detected</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px]"
-              style={{ background: "rgba(30,45,110,0.05)", border: "1px solid rgba(30,45,110,0.12)", color: "rgba(30,45,110,0.55)" }}>
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.45)" }}>
               <Clock className="w-3 h-3" />
               <span className="mono">Updated {timeLabel}</span>
             </div>
             <button onClick={handleRefresh} disabled={refreshing}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-60 ripple-btn"
-              style={{ background: "linear-gradient(135deg,#1e2d6e,#2a3d8f)", color: "white", boxShadow: "0 4px 14px rgba(30,45,110,0.3)" }}>
+              style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", color: "white", boxShadow: "0 4px 16px rgba(0,180,180,0.3)" }}>
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
               {refreshing ? "Refreshing…" : "Refresh"}
             </button>
             <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-black neon-border"
-              style={{ background: "rgba(5,150,105,0.07)", border: "1px solid rgba(5,150,105,0.25)", color: "#059669" }}>
+              style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
               <Zap className="w-3.5 h-3.5" />
               <span className="mono uppercase tracking-wider">LIVE</span>
             </div>
             <button onClick={() => setShowCoverage(true)}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: "linear-gradient(135deg,#1e2d6e,#4a5fa8)", color: "white", boxShadow: "0 4px 14px rgba(30,45,110,0.28)" }}>
+              style={{ background: "linear-gradient(135deg,#e02347,#ff3358)", color: "white", boxShadow: "0 4px 14px rgba(224,35,71,0.3)" }}>
               <MapPin className="w-3.5 h-3.5" />
               Coverage Map
             </button>
@@ -384,10 +379,10 @@ export default function Dashboard() {
         ].map(({ key, card }) => (
           <div key={key} className="relative" onClick={e => { e.stopPropagation(); setActiveKPI(activeKPI === key ? null : key); }}>
             <div className={`cursor-pointer transition-all duration-200 rounded-2xl holo-card ${activeKPI === key ? "scale-[1.02]" : "hover:scale-[1.01]"}`}
-              style={ activeKPI === key ? { outline: "2px solid rgba(30,45,110,0.35)", outlineOffset: 2 } : {} }>
+              style={ activeKPI === key ? { outline: "2px solid rgba(0,180,180,0.5)", outlineOffset: 2 } : {} }>
               {card}
               <div className="absolute bottom-2 right-3 flex items-center gap-1 text-[9px] font-black uppercase tracking-wider"
-                style={{ color: "rgba(30,45,110,0.3)" }}>
+                style={{ color: "rgba(0,180,180,0.4)" }}>
                 <Eye className="w-2.5 h-2.5" /> Details
               </div>
             </div>
@@ -399,7 +394,7 @@ export default function Dashboard() {
       </div>
 
       {/* ── Globe + Sidebar ── */}
-      <Section title="Network Coverage" icon={Globe} badge={`${onlineNodes}/${nodes.length} online`} color="#1e2d6e" className="section-reveal section-reveal-delay-2">
+      <Section title="Network Coverage" icon={Globe} badge={`${onlineNodes}/${nodes.length} online`} color="#00b4b4" className="section-reveal section-reveal-delay-2">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
           <div className="lg:col-span-3 rounded-3xl overflow-hidden relative scan-lines"
             style={{ background: "linear-gradient(135deg, #0d1535 0%, #1a2258 50%, #0f1a42 100%)", border: "1px solid rgba(30,45,110,0.35)", boxShadow: "0 8px 48px rgba(30,45,110,0.25), inset 0 1px 0 rgba(255,255,255,0.06)", minHeight: 600 }}>
@@ -439,27 +434,27 @@ export default function Dashboard() {
           <div className="lg:col-span-2 flex flex-col gap-5">
             <NetworkHealth nodes={nodes} />
             <div className="rounded-2xl p-5 flex-1 relative overflow-hidden bracket-card"
-              style={{ background: "#ffffff", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "0 4px 24px rgba(30,45,110,0.08)" }}>
-              <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg,#4a5fa8,#1e2d6e,transparent)" }} />
+              style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 24px rgba(0,0,0,0.4)" }}>
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,transparent)" }} />
               <div className="flex items-center justify-between mb-4">
-                <p className="text-[11px] font-black flex items-center gap-2 uppercase tracking-[0.15em]" style={{ color: "#1e2d6e", fontFamily: "'Space Grotesk',sans-serif" }}>
-                  <Activity className="w-3.5 h-3.5" style={{ color: "#1e2d6e" }} /> Quick Stats
+                <p className="text-[11px] font-black flex items-center gap-2 uppercase tracking-[0.15em]" style={{ color: "#00b4b4", fontFamily: "'Space Grotesk',sans-serif" }}>
+                  <Activity className="w-3.5 h-3.5" style={{ color: "#00b4b4" }} /> Quick Stats
                 </p>
                 <span className="text-[9px] px-2 py-0.5 rounded-lg mono font-black uppercase tracking-wider neon-border"
-                  style={{ background: "rgba(5,150,105,0.08)", color: "#059669", border: "1px solid rgba(5,150,105,0.25)" }}>● Live</span>
+                  style={{ background: "rgba(16,185,129,0.1)", color: "#10b981", border: "1px solid rgba(16,185,129,0.25)" }}>● Live</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Avg Uptime",       value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", bg: "rgba(16,185,129,0.07)", link: "/Network" },
-                  { label: "Paid Invoices",    value: invoices.filter(i=>i.status==="paid").length, color: "#3b82f6", bg: "rgba(59,130,246,0.07)", link: "/Billing" },
-                  { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#ef4444", bg: "rgba(239,68,68,0.07)", link: "/Tickets" },
-                  { label: "Suspended",        value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", bg: "rgba(245,158,11,0.07)", link: "/Customers" },
+                  { label: "Avg Uptime",       value: nodes.length ? `${(nodes.reduce((a,n)=>a+(n.uptime_percent||0),0)/nodes.length).toFixed(1)}%` : "—", color: "#10b981", link: "/Network" },
+                  { label: "Paid Invoices",    value: invoices.filter(i=>i.status==="paid").length, color: "#00b4b4", link: "/Billing" },
+                  { label: "Critical Tickets", value: tickets.filter(t=>t.priority==="critical").length, color: "#e02347", link: "/Tickets" },
+                  { label: "Suspended",        value: customers.filter(c=>c.status==="suspended").length, color: "#f59e0b", link: "/Customers" },
                 ].map(stat => (
                   <Link to={stat.link} key={stat.label}
                     className="rounded-xl p-3 transition-all hover:scale-105"
-                    style={{ background: stat.bg, border: `1px solid ${stat.color}20` }}>
+                    style={{ background: `${stat.color}10`, border: `1px solid ${stat.color}22` }}>
                     <p className="text-[20px] font-black mono" style={{ color: stat.color }}>{stat.value}</p>
-                    <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "#94a3b8" }}>{stat.label}</p>
+                    <p className="text-[10px] mt-0.5 leading-tight" style={{ color: "rgba(255,255,255,0.4)" }}>{stat.label}</p>
                     <ArrowUpRight className="w-3 h-3 mt-1 opacity-40" style={{ color: stat.color }} />
                   </Link>
                 ))}
@@ -470,7 +465,7 @@ export default function Dashboard() {
       </Section>
 
       {/* ── Revenue + Tickets ── */}
-      <Section title="Financial & Tickets" icon={BarChart3} badge={`${invoices.filter(i=>i.status==="overdue").length} overdue`} color="#059669">
+      <Section title="Financial & Tickets" icon={BarChart3} badge={`${invoices.filter(i=>i.status==="overdue").length} overdue`} color="#10b981">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <div className="lg:col-span-2">
             <RevenueChart invoices={invoices} />
@@ -480,12 +475,12 @@ export default function Dashboard() {
       </Section>
 
       {/* ── Coverage Demand Analytics (admin only) ── */}
-      <Section title="Coverage Demand Analytics" icon={MapPin} color="#4a5fa8" defaultOpen={false}>
+      <Section title="Coverage Demand Analytics" icon={MapPin} color="#e02347" defaultOpen={false}>
         <CoverageSearchChart />
       </Section>
 
       {/* ── Activity ── */}
-      <Section title="Recent Activity" icon={Activity} color="#0ea5e9">
+      <Section title="Recent Activity" icon={Activity} color="#22d3ee">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <RecentActivity customers={customers} tickets={tickets} invoices={invoices} />
           <UserActivityPanel customers={customers} tickets={tickets} invoices={invoices} />
