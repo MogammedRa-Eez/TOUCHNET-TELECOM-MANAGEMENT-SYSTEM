@@ -47,7 +47,7 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
       <div className="absolute top-2.5 left-2.5 w-3.5 h-3.5 pointer-events-none" style={{ borderTop: `1.5px solid ${c.accent}50`, borderLeft: `1.5px solid ${c.accent}50` }} />
       <div className="absolute bottom-2.5 right-2.5 w-3.5 h-3.5 pointer-events-none" style={{ borderBottom: `1.5px solid ${c.accent}35`, borderRight: `1.5px solid ${c.accent}35` }} />
 
-      <div className="flex items-start justify-between mb-4 relative">
+      <div className="flex items-start justify-between mb-3 relative">
         <div className="relative">
           <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300"
             style={{
@@ -72,10 +72,10 @@ export default function KPICard({ title, value, subtitle, icon: Icon, trend, tre
         )}
       </div>
 
-      <p className="text-[34px] font-black leading-none tracking-tight mono"
+      <p className="text-[24px] sm:text-[34px] font-black leading-none tracking-tight mono"
         style={{ color: c.accent, fontFamily: "'JetBrains Mono', monospace", textShadow: hovered ? `0 0 24px ${c.accent}80` : `0 0 12px ${c.accent}30` }}>{value}</p>
-      <p className="text-[13px] font-bold mt-2" style={{ color: "#e8e8e8", fontFamily: "'Space Grotesk', sans-serif" }}>{title}</p>
-      {subtitle && <p className="text-[10px] mt-0.5 mono uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.3)" }}>{subtitle}</p>}
+      <p className="text-[12px] sm:text-[13px] font-bold mt-1.5" style={{ color: "#e8e8e8", fontFamily: "'Space Grotesk', sans-serif" }}>{title}</p>
+      {subtitle && <p className="text-[9px] sm:text-[10px] mt-0.5 mono uppercase tracking-wider hidden sm:block" style={{ color: "rgba(255,255,255,0.3)" }}>{subtitle}</p>}
 
       {/* Bottom progress bar */}
       <div className="absolute bottom-0 left-0 right-0 h-[3px] overflow-hidden rounded-b-2xl"

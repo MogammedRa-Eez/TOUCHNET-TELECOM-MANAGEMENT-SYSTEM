@@ -338,7 +338,7 @@ function LayoutInner({ children, currentPageName }) {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         {/* ── Top bar ── */}
         <header
-          className="top-bar top-bar-futuristic h-[64px] flex items-center px-5 gap-4 flex-shrink-0 z-30"
+          className="top-bar top-bar-futuristic h-[56px] sm:h-[64px] flex items-center px-3 sm:px-5 gap-2 sm:gap-4 flex-shrink-0 z-30"
         >
           <button
             onClick={() => setMobileOpen(true)}
@@ -371,7 +371,7 @@ function LayoutInner({ children, currentPageName }) {
           <div className="flex-1" />
 
           {/* Live clock */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl"
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
             <span className="w-2 h-2 rounded-full status-breathe"
               style={{ background: "#059669", color: "#059669", boxShadow: "0 0 7px rgba(5,150,105,0.8)" }} />
@@ -387,10 +387,10 @@ function LayoutInner({ children, currentPageName }) {
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 800, color: "#059669", letterSpacing: "0.12em" }}>ONLINE</span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <QuickActionButton />
-            <GlobalSearch />
-            <DemoUserSwitcher />
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden sm:block"><QuickActionButton /></div>
+            <div className="hidden md:block"><GlobalSearch /></div>
+            <div className="hidden sm:block"><DemoUserSwitcher /></div>
             <NotificationBell />
             <div className="w-px h-5" style={{ background: "rgba(255,255,255,0.08)" }} />
             <UserMenu />
