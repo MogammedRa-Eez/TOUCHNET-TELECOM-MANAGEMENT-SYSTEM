@@ -13,7 +13,7 @@ export default function CoverageChecker({ onClose }) {
         style={{
           height: "90vh",
           border: "1px solid rgba(0,180,180,0.25)",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,180,180,0.1)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.7)",
         }}
       >
         <button
