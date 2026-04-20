@@ -16,12 +16,12 @@ import EmployeeChat from "@/components/chat/EmployeeChat";
 import QuickActionButton from "@/components/layout/QuickActionButton";
 import KeyboardShortcutGuide from "@/components/layout/KeyboardShortcutGuide";
 
-/* ── Brand constants ──────────────────────────────────── */
-const NAVY    = "#1e2d6e";
-const NAVY_L  = "#2a3d8f";
-const NAVY_P  = "#4a5fa8";
-const CRIMSN  = "#c41e3a";
-const CRIMSN_L = "#e02347";
+/* ── Brand constants — Dark Teal+Red ─────────────────── */
+const NAVY    = "#00b4b4";
+const NAVY_L  = "#00d4d4";
+const NAVY_P  = "#00a0a0";
+const CRIMSN  = "#e02347";
+const CRIMSN_L = "#ff3358";
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
 const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/68499f2d4_tnet2-removebg-preview.png";
 
@@ -94,8 +94,8 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         className={`fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto ${open ? "translate-x-0" : "-translate-x-full"}`}
         style={{
           width: 256,
-          background: `linear-gradient(180deg, ${NAVY} 0%, #162050 55%, #1a2560 100%)`,
-          borderRight: "1px solid rgba(255,255,255,0.08)",
+          background: `linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 55%, #111111 100%)`,
+          borderRight: "1px solid rgba(255,255,255,0.07)",
           flexShrink: 0,
           overflow: "hidden",
           position: "relative",
@@ -110,17 +110,17 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           opacity: 0.5,
         }} />
 
-        {/* Ambient glow top */}
+        {/* Ambient glow top — teal */}
         <div style={{
           position: "absolute", top: -60, left: -40, width: 240, height: 240,
-          background: `radial-gradient(circle, rgba(74,95,168,0.35) 0%, transparent 68%)`,
+          background: `radial-gradient(circle, rgba(0,180,180,0.15) 0%, transparent 68%)`,
           pointerEvents: "none",
         }} />
 
-        {/* Ambient glow bottom — crimson accent */}
+        {/* Ambient glow bottom — red accent */}
         <div style={{
           position: "absolute", bottom: 40, right: -60, width: 200, height: 200,
-          background: `radial-gradient(circle, rgba(196,30,58,0.2) 0%, transparent 68%)`,
+          background: `radial-gradient(circle, rgba(224,35,71,0.12) 0%, transparent 68%)`,
           pointerEvents: "none",
         }} />
 
@@ -176,7 +176,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
               <div key={group.label}>
                 {/* Section label */}
                 <div className="flex items-center gap-2 px-2 mb-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: "rgba(196,30,58,0.8)", flexShrink: 0 }} />
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: "rgba(0,180,180,0.8)", flexShrink: 0 }} />
                   <p className="text-[9px] font-black uppercase tracking-[0.22em]"
                     style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'Space Grotesk', sans-serif" }}>
                     {group.label}
@@ -326,7 +326,7 @@ function LayoutInner({ children, currentPageName }) {
   const timeStr = now.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "#eef0f7" }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: "#111111" }}>
       <Sidebar
         currentPageName={currentPageName}
         open={mobileOpen}
@@ -343,7 +343,7 @@ function LayoutInner({ children, currentPageName }) {
           <button
             onClick={() => setMobileOpen(true)}
             className="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl transition-colors"
-            style={{ color: NAVY, background: "rgba(30,45,110,0.07)", border: "1px solid rgba(30,45,110,0.12)" }}
+            style={{ color: "#00b4b4", background: "rgba(0,180,180,0.06)", border: "1px solid rgba(0,180,180,0.15)" }}
           >
             <Menu className="w-4 h-4" />
           </button>
@@ -351,13 +351,13 @@ function LayoutInner({ children, currentPageName }) {
           {/* Breadcrumb */}
           <div className="hidden sm:flex items-center gap-2.5">
             <div className="flex items-center gap-1.5">
-              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.85 }} />
+              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.9, filter: "brightness(0) invert(1)" }} />
             </div>
             {currentItem && (
               <>
-                <span style={{ color: "rgba(30,45,110,0.25)", fontSize: 14 }}>›</span>
+                <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 14 }}>›</span>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
-                  style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.1)" }}>
+                  style={{ background: "rgba(0,180,180,0.08)", border: "1px solid rgba(0,180,180,0.2)" }}>
                   {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: NAVY }} />}
                   <span className="text-[13px] font-bold"
                     style={{ color: NAVY, fontFamily: "'Space Grotesk', sans-serif" }}>
@@ -372,10 +372,10 @@ function LayoutInner({ children, currentPageName }) {
 
           {/* Live clock */}
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl"
-            style={{ background: "rgba(30,45,110,0.06)", border: "1px solid rgba(30,45,110,0.12)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8)" }}>
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
             <span className="w-2 h-2 rounded-full status-breathe"
               style={{ background: "#059669", color: "#059669", boxShadow: "0 0 7px rgba(5,150,105,0.8)" }} />
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: NAVY, letterSpacing: "0.07em" }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: "#00d4d4", letterSpacing: "0.07em" }}>
               {timeStr}
             </span>
           </div>
@@ -392,7 +392,7 @@ function LayoutInner({ children, currentPageName }) {
             <GlobalSearch />
             <DemoUserSwitcher />
             <NotificationBell />
-            <div className="w-px h-5" style={{ background: "rgba(30,45,110,0.12)" }} />
+            <div className="w-px h-5" style={{ background: "rgba(255,255,255,0.08)" }} />
             <UserMenu />
           </div>
         </header>
