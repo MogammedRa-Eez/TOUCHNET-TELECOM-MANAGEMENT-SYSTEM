@@ -255,26 +255,34 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12, position: "relative", zIndex: 2 }}>
 
           {/* System health bar */}
-          <div style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "10px 12px", marginBottom: 8, position: "relative", overflow: "hidden" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(0,212,212,0.15)", borderRadius: 14, padding: "10px 12px", marginBottom: 8, position: "relative", overflow: "hidden" }}>
             {/* Scan line */}
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,rgba(52,211,153,0.4),transparent)", animation: "shimmer 2.5s infinite" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,rgba(0,212,212,0.5),transparent)", animation: "shimmer 2.5s infinite" }} />
+            {/* Corner brackets */}
+            <div style={{ position: "absolute", top: 5, left: 5, width: 8, height: 8, borderTop: "1px solid rgba(0,212,212,0.4)", borderLeft: "1px solid rgba(0,212,212,0.4)" }} />
+            <div style={{ position: "absolute", bottom: 5, right: 5, width: 8, height: 8, borderBottom: "1px solid rgba(224,35,71,0.35)", borderRight: "1px solid rgba(224,35,71,0.35)" }} />
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <Zap className="w-3 h-3" style={{ color: "rgba(255,255,255,0.6)" }} />
-                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)" }}>System Status</span>
+                <Zap className="w-3 h-3" style={{ color: "#00b4b4" }} />
+                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(0,212,212,0.5)" }}>System Status</span>
               </div>
-              <span className="text-[9px] font-black tracking-wider px-1.5 py-0.5 rounded-md" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>NOMINAL</span>
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#34d399", boxShadow: "0 0 6px #34d399" }} />
+                <span className="text-[9px] font-black tracking-wider" style={{ color: "#34d399" }}>NOMINAL</span>
+              </div>
             </div>
             {/* Mini health bars */}
             {[
-              { label: "Network", pct: 99, color: "#34d399" },
-              { label: "Billing",  pct: 100, color: "#38bdf8" },
+              { label: "Network", pct: 99,  color: "#34d399" },
+              { label: "Billing", pct: 100, color: "#00b4b4" },
               { label: "Tickets", pct: 87,  color: "#fbbf24" },
             ].map(s => (
               <div key={s.label} className="flex items-center gap-2 mb-1.5 last:mb-0">
                 <span className="text-[8px] font-bold w-12 flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "monospace" }}>{s.label}</span>
-                <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                  <div className="h-full rounded-full" style={{ width: `${s.pct}%`, background: `linear-gradient(90deg,${s.color},${s.color}88)` }} />
+                <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full relative overflow-hidden" style={{ width: `${s.pct}%`, background: `linear-gradient(90deg,${s.color},${s.color}88)`, boxShadow: `0 0 6px ${s.color}50` }}>
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)", backgroundSize: "200% 100%", animation: "shimmer 2s infinite" }} />
+                  </div>
                 </div>
                 <span className="text-[8px] font-black w-7 text-right" style={{ color: s.color, fontFamily: "monospace" }}>{s.pct}%</span>
               </div>

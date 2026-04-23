@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import LiveClock from "@/components/shared/LiveClock";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock,
@@ -192,58 +193,69 @@ export default function Tickets() {
   const criticalCount = visibleTickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length;
 
   return (
-    <div className="p-5 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
+    <div className="p-4 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
 
       {/* Ticker */}
       <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
-        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
-        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
-        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
-          {["SUPPORT TICKETING","SLA MONITORING","PRIORITY ROUTING","ESCALATION ENGINE","WHATSAPP INTEGRATION","REAL-TIME SYNC",
-            "SUPPORT TICKETING","SLA MONITORING","PRIORITY ROUTING","ESCALATION ENGINE","WHATSAPP INTEGRATION","REAL-TIME SYNC"
+        style={{ background: criticalCount > 0 ? "rgba(224,35,71,0.06)" : "rgba(0,180,180,0.05)", border: `1px solid ${criticalCount > 0 ? "rgba(224,35,71,0.2)" : "rgba(0,180,180,0.15)"}` }}>
+        <div className="absolute left-0 top-0 bottom-0 w-14 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-14 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
+        <div className="absolute left-0 top-0 bottom-0 z-20 flex items-center px-3" style={{ background: criticalCount > 0 ? "rgba(224,35,71,0.15)" : "rgba(0,180,180,0.15)", borderRight: `1px solid ${criticalCount > 0 ? "rgba(224,35,71,0.25)" : "rgba(0,180,180,0.25)"}` }}>
+          <span className="text-[8px] font-black uppercase tracking-[0.3em] mono" style={{ color: criticalCount > 0 ? "#e02347" : "#00d4d4" }}>SLA</span>
+        </div>
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap ml-12">
+          {["SUPPORT TICKETING","SLA MONITORING","PRIORITY ROUTING","ESCALATION ENGINE","WHATSAPP INTEGRATION","REAL-TIME SYNC","AI TRIAGE","DEPT ROUTING",
+            "SUPPORT TICKETING","SLA MONITORING","PRIORITY ROUTING","ESCALATION ENGINE","WHATSAPP INTEGRATION","REAL-TIME SYNC","AI TRIAGE","DEPT ROUTING"
           ].map((t, i) => (
             <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
-              style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
+              style={{ color: i % 3 === 0 ? (criticalCount > 0 ? "#e02347" : "#00b4b4") : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
           ))}
         </div>
       </div>
 
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
-        style={{ background: "#181818", border: `1px solid ${criticalCount > 0 ? "rgba(224,35,71,0.4)" : "rgba(0,180,180,0.2)"}`, boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${criticalCount > 0 ? "#e02347,#ff3358" : "#00b4b4,#00d4d4"},transparent)` }} />
+        style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: `1px solid ${criticalCount > 0 ? "rgba(224,35,71,0.4)" : "rgba(0,180,180,0.28)"}`, boxShadow: `0 4px 40px rgba(0,0,0,0.6), 0 0 40px ${criticalCount > 0 ? "rgba(224,35,71,0.06)" : "rgba(0,180,180,0.04)"}` }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: criticalCount > 0 ? "linear-gradient(90deg,#e02347,#ff3358,rgba(255,255,255,0.3),#e02347,transparent)" : "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#e02347,transparent)", animation: "border-rotate 5s ease infinite", backgroundSize: "300% auto" }} />
+        <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: `1.5px solid ${criticalCount > 0 ? "rgba(224,35,71,0.5)" : "rgba(0,212,212,0.5)"}`, borderLeft: `1.5px solid ${criticalCount > 0 ? "rgba(224,35,71,0.5)" : "rgba(0,212,212,0.5)"}` }} />
+        <div className="absolute top-3 right-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(224,35,71,0.4)", borderRight: "1.5px solid rgba(224,35,71,0.4)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.04) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
-                <TicketCheck className="w-4 h-4" style={{ color: "#00b4b4" }} />
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.4)", boxShadow: "0 0 14px rgba(0,180,180,0.2)" }}>
+                <TicketCheck className="w-4.5 h-4.5" style={{ color: "#00b4b4" }} />
               </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk', sans-serif" }}>Support Tickets</h1>
+              <h1 className="text-xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk', sans-serif" }}>Support Tickets</h1>
               {criticalCount > 0 && (
-                <span className="flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-lg animate-pulse"
-                  style={{ background: "rgba(224,35,71,0.15)", border: "1px solid rgba(224,35,71,0.4)", color: "#e02347" }}>
-                  🔴 {criticalCount} CRITICAL
+                <span className="flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-lg"
+                  style={{ background: "rgba(224,35,71,0.15)", border: "1px solid rgba(224,35,71,0.45)", color: "#e02347", animation: "neon-pulse-crimson 2s ease-in-out infinite" }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#e02347" }} /> {criticalCount} CRITICAL
                 </span>
               )}
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981", boxShadow: "0 0 5px #10b981" }} />
+                <LiveClock style={{ fontSize: 9, fontWeight: 800, color: "#10b981", letterSpacing: "0.1em" }} />
+              </div>
             </div>
-            <p className="text-[11px] mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
-              {visibleTickets.length} tickets · {visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length} open
+            <p className="text-[11px] mono pl-11" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {visibleTickets.length} tickets · <span style={{ color: "#f59e0b" }}>{visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length} open</span>
+              {criticalCount > 0 && <span style={{ color: "#e02347" }}> · {criticalCount} critical</span>}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => refetch()} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={() => refetch()} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
               <RefreshCw className="w-3.5 h-3.5" /> Refresh
             </button>
-            <button onClick={handleExportCsv} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+            <button onClick={handleExportCsv} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
               <Download className="w-3.5 h-3.5" /> Export CSV
             </button>
             {isAdmin && (
               <button onClick={() => { setEditing(null); setShowForm(true); }}
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-                style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.3)" }}>
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"
+                style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.35)", border: "1px solid rgba(0,212,212,0.3)" }}>
                 <Plus className="w-4 h-4" /> New Ticket
               </button>
             )}

@@ -160,14 +160,19 @@ export default function Home() {
         {/* Live metrics strip */}
         <div className="mt-12 flex flex-wrap gap-3 justify-center">
           {[
-            { val: "99.9%", lbl: "Uptime", color: "#10b981" },
-            { val: "< 2h", lbl: "Ticket SLA", color: "#00d4d4" },
-            { val: "500+", lbl: "Customers", color: "#a0f0f0" },
-            { val: "24/7", lbl: "Monitoring", color: "#f59e0b" },
+            { val: "99.9%", lbl: "Network Uptime", color: "#10b981", icon: "⚡" },
+            { val: "< 2h",  lbl: "Ticket SLA",     color: "#00d4d4", icon: "🎯" },
+            { val: "500+",  lbl: "Customers",       color: "#a0f0f0", icon: "👥" },
+            { val: "24/7",  lbl: "Monitoring",      color: "#f59e0b", icon: "🛡" },
+            { val: "R0",    lbl: "Revenue Leakage",  color: "#34d399", icon: "📊" },
           ].map(m => (
-            <div key={m.lbl} className="flex items-center gap-2 px-4 py-2 rounded-xl teal-glass">
-              <span className="text-lg font-black mono" style={{ color: m.color, fontFamily: "'JetBrains Mono',monospace" }}>{m.val}</span>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: "rgba(160,240,240,0.5)" }}>{m.lbl}</span>
+            <div key={m.lbl} className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl teal-glass cursor-default transition-all hover:scale-105"
+              style={{ border: `1px solid ${m.color}20` }}>
+              <span className="text-base">{m.icon}</span>
+              <div>
+                <span className="text-lg font-black mono block leading-none" style={{ color: m.color, fontFamily: "'JetBrains Mono',monospace", textShadow: `0 0 16px ${m.color}60` }}>{m.val}</span>
+                <span className="text-[9px] uppercase tracking-wider block mt-0.5" style={{ color: "rgba(160,240,240,0.5)" }}>{m.lbl}</span>
+              </div>
             </div>
           ))}
         </div>

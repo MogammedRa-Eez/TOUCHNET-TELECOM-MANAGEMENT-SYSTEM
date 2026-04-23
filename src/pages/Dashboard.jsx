@@ -153,22 +153,22 @@ function KPIDrawer({ kpiKey, customers, invoices, tickets, nodes, onClose }) {
 }
 
 // ── Section wrapper ───────────────────────────────────────────────────────────
-function Section({ title, icon: Icon, children, defaultOpen = true, badge, color = "#1e2d6e" }) {
+function Section({ title, icon: Icon, children, defaultOpen = true, badge, color = "#1e2d6e", className = "" }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div>
+    <div className={className}>
       <button className="w-full flex items-center justify-between mb-4 group" onClick={() => setOpen(v => !v)}>
         <div className="flex items-center gap-3">
           {/* Accent bar */}
-          <div className="w-1 h-7 rounded-full flex-shrink-0" style={{ background: `linear-gradient(180deg, ${color}, ${color}40, transparent)`, boxShadow: `0 0 8px ${color}60` }} />
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110"
+          <div className="w-1 h-7 rounded-full flex-shrink-0 transition-all group-hover:h-9" style={{ background: `linear-gradient(180deg, ${color}, ${color}40, transparent)`, boxShadow: `0 0 8px ${color}60` }} />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-3"
             style={{ background: `${color}12`, border: `1px solid ${color}30`, boxShadow: `0 0 16px ${color}20` }}>
             <Icon className="w-4 h-4" style={{ color }} />
           </div>
           <div className="flex flex-col">
             <span className="text-[12px] font-black uppercase tracking-[0.18em] transition-colors"
               style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif", letterSpacing: "0.18em" }}>{title}</span>
-            {open && <div className="h-px mt-1 w-full" style={{ background: `linear-gradient(90deg, ${color}50, transparent)`, maxWidth: 80 }} />}
+            <div className="h-px mt-1 w-0 group-hover:w-20 transition-all duration-300" style={{ background: `linear-gradient(90deg, ${color}50, transparent)` }} />
           </div>
           {badge != null && (
             <span className="px-2.5 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider mono"
@@ -180,7 +180,7 @@ function Section({ title, icon: Icon, children, defaultOpen = true, badge, color
           {open ? <ChevronUp className="w-3.5 h-3.5" style={{ color }} /> : <ChevronDown className="w-3.5 h-3.5" style={{ color }} />}
         </div>
       </button>
-      {open && children}
+      {open && <div className="section-reveal">{children}</div>}
     </div>
   );
 }

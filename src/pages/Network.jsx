@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import LiveClock from "@/components/shared/LiveClock";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search, Pencil, Trash2, Wifi, WifiOff, AlertTriangle, Wrench, Server, X, Activity, TrendingUp, GitFork, RefreshCw, Zap } from "lucide-react";
@@ -147,25 +148,31 @@ export default function Network() {
 
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
-        style={{ background: "#181818", border: `1px solid ${offlineCount > 0 ? "rgba(224,35,71,0.3)" : "rgba(0,212,212,0.2)"}`, boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: `1px solid ${offlineCount > 0 ? "rgba(224,35,71,0.4)" : "rgba(0,212,212,0.28)"}`, boxShadow: `0 4px 40px rgba(0,0,0,0.6), 0 0 40px ${offlineCount > 0 ? "rgba(224,35,71,0.05)" : "rgba(0,180,180,0.04)"}` }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#e02347,transparent)", animation: "border-rotate 5s ease infinite", backgroundSize: "300% auto" }} />
+        <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderLeft: "1.5px solid rgba(0,212,212,0.5)" }} />
+        <div className="absolute top-3 right-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(224,35,71,0.4)", borderRight: "1.5px solid rgba(224,35,71,0.4)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.04) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
-                <Activity className="w-4 h-4" style={{ color: "#00b4b4" }} />
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.4)", boxShadow: "0 0 14px rgba(0,180,180,0.2)" }}>
+                <Activity className="w-4.5 h-4.5" style={{ color: "#00b4b4" }} />
               </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk', sans-serif" }}>Network Infrastructure</h1>
+              <h1 className="text-xl font-black tracking-tight glow-text-navy" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Network Infrastructure</h1>
               <div className="flex items-center gap-1.5 px-2 py-1 rounded-full"
                 style={{ background: offlineCount > 0 ? "rgba(224,35,71,0.1)" : "rgba(16,185,129,0.1)", border: `1px solid ${offlineCount > 0 ? "rgba(224,35,71,0.3)" : "rgba(16,185,129,0.3)"}` }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: offlineCount > 0 ? "#e02347" : "#10b981" }} />
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: offlineCount > 0 ? "#e02347" : "#10b981", boxShadow: `0 0 6px ${offlineCount > 0 ? "#e02347" : "#10b981"}` }} />
                 <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: offlineCount > 0 ? "#e02347" : "#10b981" }}>
                   {offlineCount > 0 ? `${offlineCount} OFFLINE` : "ALL SYSTEMS"}
                 </span>
               </div>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <LiveClock style={{ fontSize: 9, fontWeight: 800, color: "#10b981", letterSpacing: "0.1em" }} />
+              </div>
             </div>
-            <p className="text-[11px] mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
-              {nodes.length} nodes · {onlineCount} online · {degraded} degraded · avg {avgUptime}% uptime
+            <p className="text-[11px] mono pl-11" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {nodes.length} nodes · <span style={{ color: "#10b981" }}>{onlineCount} online</span> · <span style={{ color: "#f59e0b" }}>{degraded} degraded</span> · avg <span style={{ color: "#00b4b4" }}>{avgUptime}%</span> uptime
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -186,21 +193,23 @@ export default function Network() {
       {/* KPI Strip */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         {[
-          { label: "Total Nodes", value: nodes.length,    color: "#00b4b4", icon: Server },
-          { label: "Online",      value: onlineCount,     color: "#10b981", icon: Wifi },
-          { label: "Degraded",    value: degraded,        color: "#f59e0b", icon: AlertTriangle },
-          { label: "Offline",     value: offlineCount,    color: "#e02347", icon: WifiOff },
-          { label: "Avg Uptime",  value: `${avgUptime}%`, color: "#a855f7", icon: TrendingUp },
+          { label: "Total Nodes", value: nodes.length,    color: "#00b4b4", icon: Server,        glow: "rgba(0,180,180,0.5)" },
+          { label: "Online",      value: onlineCount,     color: "#10b981", icon: Wifi,          glow: "rgba(16,185,129,0.5)" },
+          { label: "Degraded",    value: degraded,        color: "#f59e0b", icon: AlertTriangle, glow: "rgba(245,158,11,0.5)" },
+          { label: "Offline",     value: offlineCount,    color: "#e02347", icon: WifiOff,       glow: "rgba(224,35,71,0.5)" },
+          { label: "Avg Uptime",  value: `${avgUptime}%`, color: "#a855f7", icon: TrendingUp,    glow: "rgba(168,85,247,0.5)" },
         ].map(k => (
-          <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3.5 holo-card group transition-all hover:-translate-y-0.5"
-            style={{ background: "#181818", border: `1px solid ${k.color}25`, boxShadow: `0 2px 16px rgba(0,0,0,0.4)` }}>
-            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${k.color},transparent)` }} />
+          <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3.5 holo-card group transition-all hover:-translate-y-1 hover:scale-[1.02] cursor-default"
+            style={{ background: "linear-gradient(135deg,#181818,#1a1a1a)", border: `1px solid ${k.color}28`, boxShadow: `0 2px 16px rgba(0,0,0,0.5)` }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${k.color},${k.color}55,transparent)` }} />
+            <div className="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none transition-all duration-500 group-hover:scale-150 opacity-40" style={{ background: `radial-gradient(circle, ${k.color}20, transparent 70%)` }} />
+            <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full opacity-60" style={{ background: k.color, boxShadow: `0 0 6px ${k.color}` }} />
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[9px] font-black uppercase tracking-[0.18em] mb-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{k.label}</p>
-                <p className="text-2xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
+                <p className="text-2xl font-black mono group-hover:scale-110 transition-transform origin-left" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace", textShadow: `0 0 16px ${k.glow}` }}>{k.value}</p>
               </div>
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${k.color}18`, border: `1px solid ${k.color}30` }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:scale-110" style={{ background: `${k.color}18`, border: `1px solid ${k.color}30`, boxShadow: `0 0 12px ${k.color}20` }}>
                 <k.icon className="w-4 h-4" style={{ color: k.color }} />
               </div>
             </div>
@@ -210,16 +219,22 @@ export default function Network() {
 
       {/* Bandwidth bar */}
       {nodes.length > 0 && (
-        <div className="rounded-2xl px-5 py-3 flex items-center gap-4 relative overflow-hidden"
-          style={{ background: "#181818", border: "1px solid rgba(255,255,255,0.08)" }}>
-          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#e02347,transparent)" }} />
+        <div className="rounded-2xl px-5 py-4 flex items-center gap-4 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: "1px solid rgba(0,180,180,0.2)" }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.03) 1px, transparent 1px)", backgroundSize: "18px 18px" }} />
           <Zap className="w-4 h-4 flex-shrink-0" style={{ color: "#00b4b4" }} />
           <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>Avg Bandwidth Utilization</span>
-          <div className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-            <div className="h-full rounded-full transition-all duration-700"
-              style={{ width: `${avgBw}%`, background: avgBw > 80 ? "linear-gradient(90deg,#e02347,#ff3358)" : "linear-gradient(90deg,#00b4b4,#00d4d4)" }} />
+          <div className="flex-1 h-3 rounded-full overflow-hidden relative" style={{ background: "rgba(255,255,255,0.05)" }}>
+            <div className="h-full rounded-full transition-all duration-1000 relative"
+              style={{ width: `${avgBw}%`, background: avgBw > 80 ? "linear-gradient(90deg,#e02347,#ff3358)" : "linear-gradient(90deg,#00b4b4,#00d4d4)", boxShadow: avgBw > 80 ? "0 0 10px #e0234740" : "0 0 10px rgba(0,212,212,0.4)" }}>
+              <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)", backgroundSize: "200% 100%", animation: "shimmer 2s infinite" }} />
+            </div>
           </div>
-          <span className="text-[13px] font-black mono flex-shrink-0" style={{ color: avgBw > 80 ? "#e02347" : "#00b4b4", fontFamily: "'JetBrains Mono',monospace" }}>{avgBw}%</span>
+          <div className="flex flex-col items-end flex-shrink-0">
+            <span className="text-[16px] font-black mono" style={{ color: avgBw > 80 ? "#e02347" : "#00b4b4", fontFamily: "'JetBrains Mono',monospace", textShadow: `0 0 16px ${avgBw > 80 ? "rgba(224,35,71,0.6)" : "rgba(0,212,212,0.6)"}` }}>{avgBw}%</span>
+            <span className="text-[9px] mono" style={{ color: "rgba(255,255,255,0.25)" }}>{avgBw > 80 ? "⚠ HIGH LOAD" : "NOMINAL"}</span>
+          </div>
         </div>
       )}
 

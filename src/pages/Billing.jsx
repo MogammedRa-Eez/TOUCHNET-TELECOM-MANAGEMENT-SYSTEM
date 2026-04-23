@@ -6,8 +6,9 @@ import {
   Plus, Search, Pencil, Trash2, Receipt, DollarSign, AlertCircle,
   CheckCircle2, FileText, RefreshCw, ChevronDown, ChevronUp, Zap,
   BarChart3, Clock, CalendarDays, CreditCard, ArrowUpRight, Sparkles,
-  TrendingUp, Activity, Layers, CircleDollarSign, Download
+  TrendingUp, Activity, Layers, CircleDollarSign, Download, Cpu
 } from "lucide-react";
+import LiveClock from "@/components/shared/LiveClock";
 import { exportToCsv } from "@/utils/exportCsv";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -350,16 +351,19 @@ export default function Billing() {
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
-    <div className="p-5 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+    <div className="p-4 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
 
       {/* Ticker */}
       <div className="relative overflow-hidden rounded-xl h-8 flex items-center"
-        style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,180,180,0.12)" }}>
-        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
-        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap">
-          {["BILLING MODULE","SECURE · ENCRYPTED","SAGE INTEGRATED","AUTO-INVOICING","ZAR · VAT COMPLIANT","ISO 27001",
-            "BILLING MODULE","SECURE · ENCRYPTED","SAGE INTEGRATED","AUTO-INVOICING","ZAR · VAT COMPLIANT","ISO 27001"
+        style={{ background: "rgba(0,180,180,0.05)", border: "1px solid rgba(0,180,180,0.15)" }}>
+        <div className="absolute left-0 top-0 bottom-0 w-14 z-10 pointer-events-none" style={{ background: "linear-gradient(90deg,#111111,transparent)" }} />
+        <div className="absolute right-0 top-0 bottom-0 w-14 z-10 pointer-events-none" style={{ background: "linear-gradient(270deg,#111111,transparent)" }} />
+        <div className="absolute left-0 top-0 bottom-0 z-20 flex items-center px-3" style={{ background: "rgba(0,180,180,0.15)", borderRight: "1px solid rgba(0,180,180,0.25)" }}>
+          <span className="text-[8px] font-black uppercase tracking-[0.3em] mono" style={{ color: "#00d4d4" }}>FIN</span>
+        </div>
+        <div className="ticker-track flex items-center gap-10 px-6 whitespace-nowrap ml-12">
+          {["BILLING MODULE","SECURE · ENCRYPTED","SAGE INTEGRATED","AUTO-INVOICING","ZAR · VAT COMPLIANT","ISO 27001","REAL-TIME SYNC","15% VAT COMPLIANT",
+            "BILLING MODULE","SECURE · ENCRYPTED","SAGE INTEGRATED","AUTO-INVOICING","ZAR · VAT COMPLIANT","ISO 27001","REAL-TIME SYNC","15% VAT COMPLIANT"
           ].map((t, i) => (
             <span key={i} className="text-[9px] font-black uppercase tracking-[0.2em] mono"
               style={{ color: i % 3 === 0 ? "#00b4b4" : i % 3 === 1 ? "rgba(0,180,180,0.4)" : "#e02347" }}>{t}</span>
@@ -369,33 +373,42 @@ export default function Billing() {
 
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
-        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: "1px solid rgba(0,180,180,0.28)", boxShadow: "0 4px 40px rgba(0,0,0,0.6), 0 0 40px rgba(0,180,180,0.04)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#e02347,transparent)", animation: "border-rotate 5s ease infinite", backgroundSize: "300% auto" }} />
+        <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderLeft: "1.5px solid rgba(0,212,212,0.5)" }} />
+        <div className="absolute top-3 right-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(224,35,71,0.4)", borderRight: "1.5px solid rgba(224,35,71,0.4)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.05) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
+        <div className="absolute top-0 right-0 w-64 h-32 pointer-events-none" style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(0,180,180,0.1) 0%, transparent 60%)" }} />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
-                <CircleDollarSign className="w-4 h-4" style={{ color: "#00b4b4" }} />
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.4)", boxShadow: "0 0 14px rgba(0,180,180,0.2)" }}>
+                <CircleDollarSign className="w-4.5 h-4.5" style={{ color: "#00b4b4" }} />
               </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk', sans-serif" }}>Billing & Invoices</h1>
+              <h1 className="text-xl font-black tracking-tight glow-text-navy" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Billing & Invoices</h1>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981", boxShadow: "0 0 5px #10b981" }} />
+                <LiveClock style={{ fontSize: 9, fontWeight: 800, color: "#10b981", letterSpacing: "0.1em" }} />
+              </div>
             </div>
-            <p className="text-[11px] mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
-              {invoices.length} invoices · {paidCount} paid · R{totalPaid.toLocaleString()} collected
+            <p className="text-[11px] mono pl-11" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {invoices.length} invoices · <span style={{ color: "#10b981" }}>{paidCount} paid</span> · <span style={{ color: "#00b4b4" }}>R{totalPaid.toLocaleString()}</span> collected
+              {overdueCount > 0 && <span style={{ color: "#e02347" }}> · {overdueCount} overdue</span>}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={() => refetch()} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+            <button onClick={() => refetch()} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
               <RefreshCw className="w-3.5 h-3.5" /> Refresh
             </button>
-            <button onClick={handleExportCsv} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+            <button onClick={handleExportCsv} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
               style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
               <Download className="w-3.5 h-3.5" /> Export CSV
             </button>
             {isAdmin && (
               <button onClick={() => { setEditing(null); setShowForm(true); }}
-                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-                style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.3)" }}>
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"
+                style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.35)", border: "1px solid rgba(0,212,212,0.3)" }}>
                 <Plus className="w-4 h-4" /> New Invoice
               </button>
             )}

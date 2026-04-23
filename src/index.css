@@ -1008,6 +1008,96 @@ tbody tr.premium-row:hover::before {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   INTERACTIVE ENHANCEMENTS v4.1
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Clickable rows with teal left-bar on hover */
+.interactive-row {
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+.interactive-row:hover {
+  background: linear-gradient(90deg, rgba(0,180,180,0.06), transparent) !important;
+  border-left-color: rgba(0,212,212,0.5);
+}
+
+/* Pulsing teal number values (for KPIs) */
+.kpi-value-pulse {
+  transition: color 0.3s ease;
+}
+.kpi-value-pulse:hover {
+  text-shadow: 0 0 24px rgba(0,212,212,0.8), 0 0 48px rgba(0,180,180,0.4);
+}
+
+/* Cyber table with alternating rows */
+.cyber-table tbody tr:nth-child(even) {
+  background: rgba(0,180,180,0.015);
+}
+
+/* Animated gradient button */
+.btn-cyber {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #00b4b4, #007a7a);
+  transition: all 0.2s ease;
+}
+.btn-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.4s ease;
+}
+.btn-cyber:hover::before { left: 100%; }
+.btn-cyber:hover { box-shadow: 0 8px 28px rgba(0,180,180,0.5); transform: translateY(-2px); }
+.btn-cyber:active { transform: translateY(0) scale(0.98); }
+
+/* Status indicator with animated ring */
+.status-live {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-live::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0;
+  animation: ring-expand 2s ease-out infinite;
+}
+@keyframes ring-expand {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Enhanced card on hover */
+.card-interactive {
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-interactive:hover {
+  transform: translateY(-4px) scale(1.005);
+}
+
+/* Animated underline for nav-like links */
+.link-teal {
+  position: relative;
+  color: #00b4b4;
+}
+.link-teal::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 100%;
+  height: 1px;
+  background: #00d4d4;
+  transition: right 0.3s ease;
+}
+.link-teal:hover::after { right: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
    FUTURISTIC EXTRAS
    ═══════════════════════════════════════════════════════════════════════════ */
 

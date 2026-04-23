@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import LiveClock from "@/components/shared/LiveClock";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -284,22 +285,26 @@ export default function Customers() {
 
       {/* ── Header ── */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
-        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: "1px solid rgba(0,180,180,0.28)", boxShadow: "0 4px 40px rgba(0,0,0,0.6), 0 0 40px rgba(0,180,180,0.04)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#e02347,transparent)", animation: "border-rotate 5s ease infinite", backgroundSize: "300% auto" }} />
+        <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderLeft: "1.5px solid rgba(0,212,212,0.5)" }} />
+        <div className="absolute top-3 right-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(224,35,71,0.4)", borderRight: "1.5px solid rgba(224,35,71,0.4)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.04) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
+        <div className="absolute top-0 right-0 w-64 h-32 pointer-events-none" style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(0,180,180,0.1) 0%, transparent 60%)" }} />
         <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
-                <Users className="w-4 h-4" style={{ color: "#00b4b4" }} />
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.4)", boxShadow: "0 0 14px rgba(0,180,180,0.2)" }}>
+                <Users className="w-4.5 h-4.5" style={{ color: "#00b4b4" }} />
               </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
-              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)" }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981" }} />
-                <span className="text-[9px] font-black mono uppercase tracking-wider" style={{ color: "#10b981" }}>LIVE</span>
+              <h1 className="text-xl font-black tracking-tight glow-text-navy" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Customer Management</h1>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981", boxShadow: "0 0 5px #10b981" }} />
+                <LiveClock style={{ fontSize: 9, fontWeight: 800, color: "#10b981", letterSpacing: "0.1em" }} />
               </div>
             </div>
-            <p className="text-[11px] mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
-              {customers.length} subscribers · {customers.filter(c=>c.status==="active").length} active · {customers.filter(c=>c.status==="suspended").length} suspended
+            <p className="text-[11px] mono pl-11" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {customers.length} subscribers · <span style={{ color: "#10b981" }}>{customers.filter(c=>c.status==="active").length} active</span> · <span style={{ color: "#e02347" }}>{customers.filter(c=>c.status==="suspended").length} suspended</span>
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

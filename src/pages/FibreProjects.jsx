@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Search, FileText, TrendingUp, Play, LayoutGrid, Kanban, GanttChartSquare, DollarSign, Network, Activity } from "lucide-react";
+import { Plus, Search, FileText, TrendingUp, Play, LayoutGrid, Kanban, GanttChartSquare, DollarSign, Network, Activity, RefreshCw } from "lucide-react";
+import LiveClock from "@/components/shared/LiveClock";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
@@ -93,27 +94,41 @@ export default function FibreProjects() {
 
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl px-6 py-5"
-        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)", boxShadow: "0 4px 32px rgba(0,0,0,0.5)" }}>
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: "1px solid rgba(0,180,180,0.28)", boxShadow: "0 4px 40px rgba(0,0,0,0.6), 0 0 40px rgba(0,180,180,0.04)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#e02347,transparent)", animation: "border-rotate 5s ease infinite", backgroundSize: "300% auto" }} />
+        <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderLeft: "1.5px solid rgba(0,212,212,0.5)" }} />
+        <div className="absolute top-3 right-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(224,35,71,0.4)", borderRight: "1.5px solid rgba(224,35,71,0.4)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.04) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
         <div className="relative flex items-center justify-between flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
-                <Network className="w-4 h-4" style={{ color: "#00b4b4" }} />
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.4)", boxShadow: "0 0 14px rgba(0,180,180,0.2)" }}>
+                <Network className="w-4.5 h-4.5" style={{ color: "#00b4b4" }} />
               </div>
-              <h1 className="text-2xl font-black tracking-tight" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk', sans-serif" }}>Fibre Projects</h1>
+              <h1 className="text-xl font-black tracking-tight glow-text-navy" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Fibre Projects</h1>
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981", boxShadow: "0 0 5px #10b981" }} />
+                <LiveClock style={{ fontSize: 9, fontWeight: 800, color: "#10b981", letterSpacing: "0.1em" }} />
+              </div>
             </div>
-            <p className="text-[11px] mt-0.5 mono pl-10" style={{ color: "rgba(255,255,255,0.35)" }}>
-              {projects.length} projects · {projects.filter(p => p.status === "live").length} live
+            <p className="text-[11px] mt-0.5 mono pl-11" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {projects.length} projects · <span style={{ color: "#10b981" }}>{projects.filter(p => p.status === "live").length} live</span> · <span style={{ color: "#00b4b4" }}>{projects.filter(p => p.status === "in_progress").length} in progress</span>
             </p>
           </div>
-          {isAdmin && (
-            <button onClick={() => setShowForm(true)}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-              style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.3)" }}>
-              <Plus className="w-4 h-4" /> New Project
+          <div className="flex items-center gap-2">
+            <button onClick={() => qc.invalidateQueries({ queryKey: ["fibre-projects"] })}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
             </button>
-          )}
+            {isAdmin && (
+              <button onClick={() => setShowForm(true)}
+                className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"
+                style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.35)", border: "1px solid rgba(0,212,212,0.3)" }}>
+                <Plus className="w-4 h-4" /> New Project
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
