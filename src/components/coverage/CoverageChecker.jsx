@@ -12,7 +12,7 @@ export default function CoverageChecker({ onClose }) {
     setLoading(true);
     setResult(null);
     try {
-      await base44.entities.CoverageSearch.create({ address: address.trim() });
+      await base44.entities.CoverageSearch.create({ query: address.trim() });
       const res = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a coverage checker for a South African ISP called TouchNet.
 A customer is asking if fibre or wireless internet is available at: "${address}".

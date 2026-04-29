@@ -22,7 +22,7 @@ import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
-const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/68499f2d4_tnet2-removebg-preview.png";
+const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const STATUS_CFG = {
   active:     { color: "#10b981", label: "Active",     bg: "rgba(16,185,129,0.1)",  border: "rgba(16,185,129,0.25)" },
@@ -115,7 +115,7 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
               style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.18)" }}>
-              <img src={LOGO_BADGE} alt="TouchNet" className="w-9 h-9 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 1 }} />
+              <img src={LOGO_BADGE} alt="TouchNet Crest" className="w-10 h-10 object-contain" style={{ opacity: 0.92 }} />
             </div>
             <div>
               <img src={LOGO_WORDMARK} alt="TouchNet" className="h-6 object-contain"

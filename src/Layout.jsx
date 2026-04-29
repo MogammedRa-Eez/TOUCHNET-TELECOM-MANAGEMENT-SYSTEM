@@ -23,7 +23,7 @@ const NAVY_P  = "#00a0a0";
 const CRIMSN  = "#e02347";
 const CRIMSN_L = "#ff3358";
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
-const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/68499f2d4_tnet2-removebg-preview.png";
+const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const NAV_GROUPS = [
   {
@@ -135,13 +135,13 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
         >
           <div className="flex items-center gap-3">
             {/* Badge icon */}
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.18)" }}>
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)" }}>
               <img
                 src={LOGO_BADGE}
-                alt="TouchNet Badge"
-                className="w-9 h-9 object-contain"
-                style={{ filter: "brightness(0) invert(1)", opacity: 1 }}
+                alt="TouchNet Crest"
+                className="w-10 h-10 object-contain"
+                style={{ opacity: 0.92 }}
               />
             </div>
             <div>
