@@ -650,6 +650,19 @@ export default function UserManual() {
   const handleDownloadPdf = async () => {
     setGenerating(true);
     try {
+      // Pre-load images as base64
+      const toBase64 = (url) => fetch(url).then(r => r.blob()).then(blob => new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = () => res(reader.result);
+        reader.onerror = rej;
+        reader.readAsDataURL(blob);
+      }));
+
+      const [logoB64, crestB64] = await Promise.all([
+        toBase64(LOGO_TEAL).catch(() => null),
+        toBase64(CREST_WHITE).catch(() => null),
+      ]);
+
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pageW = 210;
       const pageH = 297;
@@ -666,10 +679,18 @@ export default function UserManual() {
       const addPage = () => {
         doc.addPage();
         y = margin;
-        // Header line
+        // Teal header line
         doc.setDrawColor(...teal);
         doc.setLineWidth(0.5);
         doc.line(margin, 10, pageW - margin, 10);
+        // Small crest in top-left header
+        if (crestB64) {
+          doc.addImage(crestB64, "PNG", margin, 4, 5, 5);
+        }
+        // Small wordmark in top-left after crest
+        if (logoB64) {
+          doc.addImage(logoB64, "PNG", margin + 6, 5, 22, 3.5);
+        }
         // Footer
         doc.setFontSize(7);
         doc.setTextColor(...muted);
@@ -686,27 +707,34 @@ export default function UserManual() {
       doc.setFillColor(...dark);
       doc.rect(0, 0, pageW, pageH, "F");
 
-      // Accent bar
+      // Top teal accent bar
       doc.setFillColor(...teal);
       doc.rect(0, 0, pageW, 2, "F");
 
+      // Crest centred on cover (~40mm wide, vertically centred above title)
+      if (crestB64) {
+        doc.addImage(crestB64, "PNG", pageW / 2 - 20, 70, 40, 40);
+      }
+
+      // Wordmark below crest
+      if (logoB64) {
+        doc.addImage(logoB64, "PNG", pageW / 2 - 28, 116, 56, 9);
+      }
+
       // Title block
-      doc.setFontSize(32);
+      doc.setFontSize(22);
       doc.setTextColor(...white);
       doc.setFont("helvetica", "bold");
-      doc.text("TouchNet TMS", pageW / 2, 120, { align: "center" });
-
-      doc.setFontSize(22);
-      doc.setTextColor(...teal);
-      doc.text("User Manual", pageW / 2, 136, { align: "center" });
+      doc.text("User Manual", pageW / 2, 134, { align: "center" });
 
       doc.setFontSize(10);
-      doc.setTextColor(...muted);
+      doc.setTextColor(...teal);
       doc.setFont("helvetica", "normal");
-      doc.text("TELECOMMUNICATIONS MANAGEMENT SYSTEM · TMS v3.0", pageW / 2, 150, { align: "center" });
+      doc.text("TELECOMMUNICATIONS MANAGEMENT SYSTEM · TMS v3.0", pageW / 2, 146, { align: "center" });
 
       doc.setFontSize(9);
-      doc.text(`Version 3.0  ·  ${new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long" })}  ·  TouchNet (Pty) Ltd`, pageW / 2, 165, { align: "center" });
+      doc.setTextColor(...muted);
+      doc.text(`Version 3.0  ·  ${new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long" })}  ·  TouchNet (Pty) Ltd`, pageW / 2, 158, { align: "center" });
 
       // Bottom accent
       doc.setFillColor(...crimson);
@@ -814,10 +842,17 @@ export default function UserManual() {
       doc.setFillColor(...dark);
       doc.rect(0, 0, pageW, pageH, "F");
 
+      if (crestB64) {
+        doc.addImage(crestB64, "PNG", pageW / 2 - 10, pageH / 2 - 38, 20, 20);
+      }
+      if (logoB64) {
+        doc.addImage(logoB64, "PNG", pageW / 2 - 20, pageH / 2 - 14, 40, 6.5);
+      }
+
       doc.setFontSize(11);
       doc.setTextColor(...teal);
       doc.setFont("helvetica", "bold");
-      doc.text("BUILD · CONNECT · PROTECT", pageW / 2, pageH / 2 - 10, { align: "center" });
+      doc.text("BUILD · CONNECT · PROTECT", pageW / 2, pageH / 2 + 2, { align: "center" });
       doc.setFontSize(9);
       doc.setTextColor(...muted);
       doc.setFont("helvetica", "normal");
