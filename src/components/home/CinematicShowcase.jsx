@@ -279,7 +279,7 @@ export default function CinematicShowcase() {
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", backdropFilter: "blur(16px)" }}>
               <Cpu className="w-3 h-3 text-white/40" />
-              <span className="text-[10px] font-bold tracking-widest uppercase text-white/40" style={{ fontFamily: "monospace" }}>TOUCHNET · TMS v2</span>
+              <span className="text-[10px] font-bold tracking-widest uppercase text-white/40" style={{ fontFamily: "monospace" }}>TOUCHNET · TMS v3.0</span>
             </div>
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
               style={{ background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)" }}>

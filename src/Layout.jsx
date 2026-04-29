@@ -22,7 +22,7 @@ const NAVY_L  = "#00d4d4";
 const NAVY_P  = "#00a0a0";
 const CRIMSN  = "#8B1A1A";
 const CRIMSN_L = "#a52020";
-const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/8a337a200_Touchnet_LogoLongWhite.png";
+const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const NAV_GROUPS = [

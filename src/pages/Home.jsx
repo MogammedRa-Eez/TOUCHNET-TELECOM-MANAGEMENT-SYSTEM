@@ -7,20 +7,25 @@ import {
 } from "lucide-react";
 import CinematicShowcase from "@/components/home/CinematicShowcase";
 
-const LOGO_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/8a337a200_Touchnet_LogoLongWhite.png";
+const LOGO_WHITE  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
+const LOGO_TEAL   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
+const LOGO_MAROON = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
+const LOGO_BLACK  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/cc31cbbda_Touchnet_LogoLongBlack.png";
 const CREST_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const NAVY   = "#00b4b4";
 const CRIMSN = "#8B1A1A";
 const TEAL_L = "#00d4d4";
+// eslint-disable-next-line no-unused-vars
+const _LOGO_BLACK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/cc31cbbda_Touchnet_LogoLongBlack.png";
 
 const FEATURES = [
-  { icon: Network,    title: "Fibre Project Management",      desc: "Track every fibre project from lead to go-live with milestone-based workflows and approval gates.",                                                         color: NAVY,     bg: "rgba(30,45,110,0.08)" },
-  { icon: Globe,      title: "Real-Time Network Monitoring",  desc: "Live visibility into every network node — online, degraded or offline — with instant multi-channel alerting.",                                             color: "#0ea5e9", bg: "rgba(14,165,233,0.08)" },
-  { icon: TicketCheck,title: "Smart Helpdesk",                desc: "Multi-department ticketing with SLA tracking, priority triage, and full resolution history.",                                                               color: "#8b5cf6", bg: "rgba(139,92,246,0.08)" },
-  { icon: Users,      title: "Customer Portal",               desc: "Customers can log tickets, view their account, track their service status and billing in one place.",                                                        color: "#059669", bg: "rgba(5,150,105,0.08)" },
-  { icon: BarChart3,  title: "Billing & Invoicing",           desc: "Automated monthly billing, Sage Business Cloud sync, and real-time revenue reporting.",                                                                      color: "#d97706", bg: "rgba(217,119,6,0.08)" },
-  { icon: Shield,     title: "Role-Based Access Control",     desc: "Granular permission sets per team — sales, finance, technical and more — keeping data secure.",                                                             color: CRIMSN,   bg: "rgba(196,30,58,0.08)" },
+  { icon: Network,    title: "Fibre Project Management",      desc: "Track every fibre project from lead to go-live with milestone-based workflows and approval gates.",            color: NAVY,     bg: "rgba(0,180,180,0.08)" },
+  { icon: Globe,      title: "Real-Time Network Monitoring",  desc: "Live visibility into every network node — online, degraded or offline — with instant multi-channel alerting.", color: "#0ea5e9", bg: "rgba(14,165,233,0.08)" },
+  { icon: TicketCheck,title: "Smart Helpdesk",                desc: "Multi-department ticketing with SLA tracking, priority triage, and full resolution history.",                  color: "#8b5cf6", bg: "rgba(139,92,246,0.08)" },
+  { icon: Users,      title: "Customer Portal",               desc: "Customers can log tickets, view their account, track their service status and billing in one place.",           color: "#059669", bg: "rgba(5,150,105,0.08)" },
+  { icon: BarChart3,  title: "Billing & Invoicing",           desc: "Automated monthly billing, Sage Business Cloud sync, and real-time revenue reporting.",                        color: "#d97706", bg: "rgba(217,119,6,0.08)" },
+  { icon: Shield,     title: "Role-Based Access Control",     desc: "Granular permission sets per team — sales, finance, technical and more — keeping data secure.",                color: CRIMSN,   bg: "rgba(139,26,26,0.08)" },
 ];
 
 const STATS = [
@@ -48,42 +53,53 @@ export default function Home() {
 
       {/* ── Ambient background ── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full opacity-30"
-          style={{ background: `radial-gradient(circle, rgba(0,180,180,0.4) 0%, transparent 70%)` }} />
-        <div className="absolute top-1/3 -right-40 w-[600px] h-[600px] rounded-full opacity-20"
-          style={{ background: `radial-gradient(circle, rgba(0,212,212,0.35) 0%, transparent 70%)` }} />
-        <div className="absolute -bottom-20 left-1/3 w-[400px] h-[400px] rounded-full opacity-15"
-          style={{ background: `radial-gradient(circle, rgba(224,35,71,0.5) 0%, transparent 70%)` }} />
-        {/* Whitish-teal dot grid */}
+        <div className="absolute -top-40 -left-40 w-[800px] h-[800px] rounded-full opacity-25"
+          style={{ background: `radial-gradient(circle, rgba(0,180,180,0.5) 0%, transparent 70%)` }} />
+        <div className="absolute top-1/4 -right-40 w-[700px] h-[700px] rounded-full opacity-18"
+          style={{ background: `radial-gradient(circle, rgba(0,212,212,0.4) 0%, transparent 70%)` }} />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] rounded-full opacity-18"
+          style={{ background: `radial-gradient(circle, rgba(139,26,26,0.55) 0%, transparent 70%)` }} />
+        <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] rounded-full opacity-10"
+          style={{ background: `radial-gradient(circle, rgba(139,26,26,0.4) 0%, transparent 70%)` }} />
+        {/* Dot grid */}
         <div className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,212,212,0.12) 1px, transparent 0)`,
-            backgroundSize: "28px 28px", opacity: 0.6
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,212,212,0.1) 1px, transparent 0)`,
+            backgroundSize: "28px 28px", opacity: 0.7
           }} />
         {/* Larger grid */}
         <div className="absolute inset-0"
           style={{
-            backgroundImage: `linear-gradient(rgba(0,180,180,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,180,0.04) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(0,180,180,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,180,0.035) 1px, transparent 1px)`,
             backgroundSize: "80px 80px"
           }} />
-        {/* Scanline effect */}
-        <div className="absolute inset-0 opacity-[0.015]"
+        {/* Scanlines */}
+        <div className="absolute inset-0 opacity-[0.012]"
           style={{
             backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,212,212,0.5) 3px, rgba(0,212,212,0.5) 4px)`
           }} />
+        {/* Diagonal accent */}
+        <div className="absolute top-0 right-0 w-[600px] h-[3px] origin-top-right rotate-[30deg]"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,212,0.3), transparent)", transformOrigin: "top right" }} />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[2px] origin-bottom-left rotate-[-20deg]"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(139,26,26,0.3), transparent)", transformOrigin: "bottom left" }} />
       </div>
 
       {/* ── NAVBAR ── */}
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 h-[72px]"
-        style={{ borderBottom: "1px solid rgba(0,180,180,0.2)", background: "rgba(10,15,15,0.94)", backdropFilter: "blur(24px)" }}>
-        {/* Teal + Maroon top accent bar */}
+        style={{ borderBottom: "1px solid rgba(0,180,180,0.18)", background: "rgba(8,12,12,0.96)", backdropFilter: "blur(32px)" }}>
+        {/* Animated accent bar */}
         <div className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.6),#00b4b4,#8B1A1A,transparent)" }} />
+          style={{ background: "linear-gradient(90deg,#8B1A1A,#00b4b4,#00d4d4,rgba(255,255,255,0.7),#00b4b4,#8B1A1A)", backgroundSize: "300% auto", animation: "border-rotate 6s ease infinite" }} />
+        {/* Corner accents */}
+        <div className="absolute bottom-0 left-0 w-20 h-px" style={{ background: "linear-gradient(90deg,rgba(0,212,212,0.5),transparent)" }} />
+        <div className="absolute bottom-0 right-0 w-20 h-px" style={{ background: "linear-gradient(270deg,rgba(139,26,26,0.5),transparent)" }} />
 
         <div className="flex items-center gap-3">
-          <img src={LOGO_WHITE} alt="TouchNet" className="h-8 object-contain" style={{ opacity: 0.95 }} />
-          <div className="hidden md:flex items-center gap-1 px-2 py-0.5 rounded-md"
-            style={{ background: "rgba(0,212,212,0.08)", border: "1px solid rgba(0,212,212,0.15)" }}>
+          <img src={LOGO_TEAL} alt="TouchNet" className="h-9 object-contain" style={{ opacity: 0.97 }} />
+          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+            style={{ background: "rgba(0,212,212,0.06)", border: "1px solid rgba(0,212,212,0.18)" }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#00d4d4", boxShadow: "0 0 6px #00d4d4" }} />
             <span className="text-[8px] font-black uppercase tracking-[0.2em] mono" style={{ color: "#00d4d4" }}>TMS v3.0</span>
           </div>
         </div>
@@ -96,8 +112,8 @@ export default function Home() {
           </span>
           <button
             onClick={() => base44.auth.redirectToLogin(createPageUrl("Home"))}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95"
-            style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.4)", border: "1px solid rgba(0,212,212,0.3)" }}>
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"
+            style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 24px rgba(0,180,180,0.45)", border: "1px solid rgba(0,212,212,0.3)" }}>
             <LogIn className="w-4 h-4" />
             Sign In
           </button>
@@ -105,7 +121,28 @@ export default function Home() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-20 pb-24">
+      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-16 pb-20">
+
+        {/* Logo showcase — three variants side by side */}
+        <div className="flex items-center justify-center gap-8 mb-10 flex-wrap">
+          <div className="flex flex-col items-center gap-2">
+            <div className="px-6 py-3 rounded-2xl teal-glass" style={{ border: "1px solid rgba(0,212,212,0.25)" }}>
+              <img src={LOGO_TEAL} alt="TouchNet Teal" className="h-8 object-contain" />
+            </div>
+          </div>
+          <div className="w-px h-12 hidden sm:block" style={{ background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent)" }} />
+          <div className="flex flex-col items-center gap-2">
+            <div className="px-6 py-3 rounded-2xl" style={{ background: "rgba(139,26,26,0.08)", border: "1px solid rgba(139,26,26,0.25)" }}>
+              <img src={LOGO_MAROON} alt="TouchNet Maroon" className="h-8 object-contain" />
+            </div>
+          </div>
+          <div className="w-px h-12 hidden sm:block" style={{ background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent)" }} />
+          <div className="flex flex-col items-center gap-2">
+            <div className="px-6 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+              <img src={LOGO_WHITE} alt="TouchNet White" className="h-8 object-contain" />
+            </div>
+          </div>
+        </div>
 
         {/* Futuristic badge */}
         <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full text-xs font-bold teal-glass"
@@ -120,7 +157,7 @@ export default function Home() {
         <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tight max-w-4xl">
           One Platform to Run Your
           <span className="block mt-1" style={{
-            background: "linear-gradient(90deg, #00b4b4, #00d4d4, rgba(255,255,255,0.9), #00b4b4, #e02347)",
+            background: "linear-gradient(90deg, #00b4b4, #00d4d4, rgba(255,255,255,0.9), #00b4b4, #8B1A1A, #a52020)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundSize: "200% auto", animation: "border-rotate 4s ease infinite"
           }}>
@@ -132,12 +169,17 @@ export default function Home() {
           TouchNet gives your team real-time network visibility, end-to-end fibre project tracking, smart helpdesk management, and seamless customer billing — all in one place.
         </p>
 
-        {/* Futuristic data chips */}
+        {/* Brand colour chips */}
         <div className="mt-6 flex flex-wrap gap-2 justify-center">
-          {["South Africa's ISP OS", "Sage Integrated", "AI-Powered", "99.9% SLA"].map(tag => (
-            <span key={tag} className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full teal-chip"
-              style={{ fontFamily: "monospace" }}>
-              {tag}
+          {[
+            { label: "South Africa's ISP OS", color: "rgba(0,212,212,0.12)", border: "rgba(0,212,212,0.3)", text: "#00d4d4" },
+            { label: "Sage Integrated",        color: "rgba(139,26,26,0.1)",  border: "rgba(139,26,26,0.3)",  text: "#c23030" },
+            { label: "AI-Powered",             color: "rgba(0,212,212,0.08)", border: "rgba(0,212,212,0.2)",  text: "#00b4b4" },
+            { label: "99.9% SLA",              color: "rgba(16,185,129,0.1)", border: "rgba(16,185,129,0.25)",text: "#34d399" },
+          ].map(tag => (
+            <span key={tag.label} className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full"
+              style={{ fontFamily: "monospace", background: tag.color, border: `1px solid ${tag.border}`, color: tag.text }}>
+              {tag.label}
             </span>
           ))}
         </div>
@@ -152,7 +194,7 @@ export default function Home() {
           </button>
           <a href="mailto:support@touchnet.co.za"
             className="flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
-            style={{ border: "1px solid rgba(0,212,212,0.25)", color: "rgba(160,240,240,0.8)", background: "rgba(0,212,212,0.05)", backdropFilter: "blur(8px)" }}>
+            style={{ border: "1px solid rgba(139,26,26,0.4)", color: "#c23030", background: "rgba(139,26,26,0.08)", backdropFilter: "blur(8px)" }}>
             <Phone className="w-4 h-4" />
             Contact Us
           </a>
@@ -161,14 +203,14 @@ export default function Home() {
         {/* Live metrics strip */}
         <div className="mt-12 flex flex-wrap gap-3 justify-center">
           {[
-            { val: "99.9%", lbl: "Network Uptime", color: "#10b981", icon: "⚡" },
-            { val: "< 2h",  lbl: "Ticket SLA",     color: "#00d4d4", icon: "🎯" },
-            { val: "500+",  lbl: "Customers",       color: "#a0f0f0", icon: "👥" },
-            { val: "24/7",  lbl: "Monitoring",      color: "#f59e0b", icon: "🛡" },
-            { val: "R0",    lbl: "Revenue Leakage",  color: "#34d399", icon: "📊" },
+            { val: "99.9%", lbl: "Network Uptime", color: "#10b981",  icon: "⚡" },
+            { val: "< 2h",  lbl: "Ticket SLA",     color: "#00d4d4",  icon: "🎯" },
+            { val: "500+",  lbl: "Customers",       color: "#a0f0f0",  icon: "👥" },
+            { val: "24/7",  lbl: "Monitoring",      color: "#f59e0b",  icon: "🛡️" },
+            { val: "R0",    lbl: "Revenue Leakage", color: "#34d399",  icon: "📊" },
           ].map(m => (
             <div key={m.lbl} className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl teal-glass cursor-default transition-all hover:scale-105"
-              style={{ border: `1px solid ${m.color}20` }}>
+              style={{ border: `1px solid ${m.color}25` }}>
               <span className="text-base">{m.icon}</span>
               <div>
                 <span className="text-lg font-black mono block leading-none" style={{ color: m.color, fontFamily: "'JetBrains Mono',monospace", textShadow: `0 0 16px ${m.color}60` }}>{m.val}</span>
@@ -262,12 +304,18 @@ export default function Home() {
       <section className="relative z-10 px-6 md:px-12 py-20 text-center"
         style={{ borderTop: "1px solid rgba(0,180,180,0.15)" }}>
         <div className="relative inline-flex flex-col items-center">
+          {/* Logo trio in CTA */}
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <img src={LOGO_TEAL} alt="TouchNet" className="h-7 object-contain opacity-80" />
+            <span style={{ color: "rgba(255,255,255,0.1)", fontSize: 20 }}>·</span>
+            <img src={LOGO_MAROON} alt="TouchNet" className="h-7 object-contain opacity-80" />
+          </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-3">Ready to get started?</h2>
           <p className="text-sm mb-8" style={{ color: "rgba(160,240,240,0.5)" }}>Sign in with your staff or customer account to access the platform.</p>
           <button
             onClick={() => base44.auth.redirectToLogin(createPageUrl("Home"))}
             className="inline-flex items-center gap-2 px-10 py-4 rounded-xl font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"
-            style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a,#e02347)", backgroundSize: "200% auto", animation: "border-rotate 4s ease infinite", boxShadow: "0 8px 40px rgba(0,180,180,0.4)", border: "1px solid rgba(0,212,212,0.4)" }}>
+            style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a,#8B1A1A)", backgroundSize: "200% auto", animation: "border-rotate 4s ease infinite", boxShadow: "0 8px 40px rgba(0,180,180,0.4)", border: "1px solid rgba(0,212,212,0.4)" }}>
             <LogIn className="w-4 h-4" />
             Sign In to TouchNet
           </button>
@@ -282,7 +330,7 @@ export default function Home() {
         style={{ borderTop: "1px solid rgba(0,180,180,0.15)", background: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src={LOGO_WHITE} alt="TouchNet" className="h-7 object-contain" style={{ opacity: 0.6 }} />
+            <img src={LOGO_WHITE} alt="TouchNet" className="h-7 object-contain" style={{ opacity: 0.5 }} />
             <span className="text-[8px] font-black mono px-2 py-0.5 rounded teal-chip" style={{ letterSpacing: "0.2em" }}>TMS v3.0</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-5 text-xs" style={{ color: "rgba(0,212,212,0.5)" }}>

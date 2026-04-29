@@ -21,7 +21,8 @@ import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
 import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 
-const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/8a337a200_Touchnet_LogoLongWhite.png";
+const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
+const LOGO_TEAL     = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
 const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const STATUS_CFG = {
@@ -354,7 +355,7 @@ export default function CustomerPortalMain() {
     return (
       <div className="min-h-screen flex items-center justify-center page-bg">
         <div className="flex flex-col items-center gap-4">
-          <img src={LOGO_WORDMARK} alt="TouchNet" className="h-8 object-contain" style={{ opacity: 0.9 }} />
+          <img src={LOGO_WORDMARK} alt="TouchNet" className="h-8 object-contain" style={{ opacity: 0.92 }} />
           <div className="flex items-center gap-2">
             <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#00b4b4" }} />
             <span className="text-sm font-semibold" style={{ color: "#00b4b4" }}>Loading your portal…</span>
@@ -367,7 +368,7 @@ export default function CustomerPortalMain() {
   if (!customer) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 page-bg">
-        <img src={LOGO_WORDMARK} alt="Logo" className="h-8 object-contain mb-2" style={{ opacity: 0.9 }} />
+        <img src={LOGO_TEAL} alt="Logo" className="h-8 object-contain mb-2" style={{ opacity: 0.92 }} />
         <div className="rounded-2xl p-8 max-w-md w-full text-center"
           style={{ background: "#1a1a1a", border: "1px solid rgba(139,26,26,0.3)", boxShadow: "0 8px 40px rgba(139,26,26,0.12)" }}>
           <div className="h-[2px] -mx-8 -mt-8 mb-6 rounded-t-2xl" style={{ background: "linear-gradient(90deg,#8B1A1A,#a52020,transparent)" }} />
@@ -422,7 +423,7 @@ export default function CustomerPortalMain() {
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-2.5 flex-1">
-            <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain hidden sm:block" style={{ opacity: 0.95 }} />
+            <img src={LOGO_TEAL} alt="TouchNet" className="h-6 object-contain hidden sm:block" style={{ opacity: 0.95 }} />
             {currentNavItem && (
               <>
                 <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 14 }} className="hidden sm:block">›</span>

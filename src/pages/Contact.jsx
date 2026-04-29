@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 
-const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
+const LOGO_WHITE   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
+const LOGO_TEAL    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
+const LOGO_MAROON  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -24,8 +26,7 @@ export default function Contact() {
       {/* Nav */}
       <header className="top-bar top-bar-futuristic h-[60px] flex items-center justify-between px-6 sticky top-0 z-30">
         <Link to="/">
-          <img src={LOGO_WORDMARK} alt="TouchNet" className="h-6 object-contain"
-            style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)" }} />
+          <img src={LOGO_WHITE} alt="TouchNet" className="h-6 object-contain" style={{ opacity: 0.95 }} />
         </Link>
         <nav className="flex items-center gap-4">
           <Link to="/about" className="text-[13px] font-medium" style={{ color: "rgba(255,255,255,0.5)" }}>About</Link>
@@ -98,7 +99,7 @@ export default function Contact() {
           {/* Contact form */}
           <div className="md:col-span-3 rounded-2xl overflow-hidden"
             style={{ background: "#1a1a1a", border: "1px solid rgba(0,212,212,0.18)" }}>
-            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#8B1A1A,transparent)" }} />
             <div className="p-6">
               {sent ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">

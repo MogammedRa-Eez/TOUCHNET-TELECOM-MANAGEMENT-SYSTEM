@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Wifi, Users, BarChart3, Network, ArrowRight } from "lucide-react";
 
-const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
+const LOGO_WHITE   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
+const LOGO_TEAL    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
+const LOGO_MAROON  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
 
 export default function About() {
   return (
@@ -10,8 +12,7 @@ export default function About() {
       {/* Simple top nav */}
       <header className="top-bar top-bar-futuristic h-[60px] flex items-center justify-between px-6 sticky top-0 z-30">
         <Link to="/">
-          <img src={LOGO_WORDMARK} alt="TouchNet" className="h-6 object-contain"
-            style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)" }} />
+          <img src={LOGO_WHITE} alt="TouchNet" className="h-6 object-contain" style={{ opacity: 0.95 }} />
         </Link>
         <nav className="flex items-center gap-4">
           <Link to="/about" className="text-[13px] font-bold" style={{ color: "#00b4b4" }}>About</Link>
@@ -79,8 +80,8 @@ export default function About() {
 
         {/* Who builds it */}
         <section className="rounded-2xl p-8 space-y-4"
-          style={{ background: "#1a1a1a", border: "1px solid rgba(224,35,71,0.18)" }}>
-          <div className="h-[2px] -mx-8 -mt-8 mb-6 rounded-t-2xl" style={{ background: "linear-gradient(90deg,#e02347,#ff3358,transparent)" }} />
+          style={{ background: "#1a1a1a", border: "1px solid rgba(139,26,26,0.18)" }}>
+          <div className="h-[2px] -mx-8 -mt-8 mb-6 rounded-t-2xl" style={{ background: "linear-gradient(90deg,#8B1A1A,#a52020,transparent)" }} />
           <h2 style={{ color: "#f0f0f0" }}>Who Builds It</h2>
           <p style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.8 }}>
             TouchNet TMS is developed and maintained by TouchNet — a South African technology company specialising in telecommunications software, network infrastructure, and managed connectivity solutions. Our team combines deep ISP industry knowledge with modern software engineering to deliver a platform that understands the unique challenges of African internet service providers: load-shedding resilience, last-mile diversity, ZAR-native billing, and multi-technology networks spanning fibre, wireless, and LTE.
