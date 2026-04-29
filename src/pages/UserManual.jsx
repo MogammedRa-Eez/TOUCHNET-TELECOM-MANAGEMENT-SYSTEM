@@ -744,9 +744,11 @@ export default function UserManual() {
               <Printer className="w-3.5 h-3.5" /> Print
             </button>
             <button onClick={handleDownloadPdf}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
-              style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 3px 12px rgba(0,180,180,0.3)" }}>
-              <Download className="w-3.5 h-3.5" /> Save PDF
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-black text-white transition-all hover:scale-105 active:scale-95 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a,#8B1A1A)", boxShadow: "0 4px 20px rgba(0,180,180,0.45)", border: "1px solid rgba(0,212,212,0.3)" }}>
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)", backgroundSize: "200% 100%", animation: "shimmer 2s infinite" }} />
+              <Download className="w-4 h-4 relative z-10" />
+              <span className="relative z-10">Download PDF</span>
             </button>
           </div>
         </header>
@@ -769,6 +771,43 @@ export default function UserManual() {
           {/* ── Main content ── */}
           <main ref={printRef} className="flex-1 overflow-y-auto content-scroll print-area print-main">
             <div className="max-w-4xl mx-auto px-6 py-8 print-content print-inner">
+
+              {/* ── Download Banner ── */}
+              <div className="no-print mb-8 rounded-2xl overflow-hidden relative"
+                style={{ background: "linear-gradient(135deg,#0d1f1f,#1a1a1a,#1a0a0a)", border: "1px solid rgba(0,212,212,0.3)", boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }}>
+                <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#8B1A1A,transparent)" }} />
+                <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.04) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+                <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderLeft: "1.5px solid rgba(0,212,212,0.5)" }} />
+                <div className="absolute bottom-3 right-3 w-4 h-4 pointer-events-none" style={{ borderBottom: "1.5px solid rgba(139,26,26,0.5)", borderRight: "1.5px solid rgba(139,26,26,0.5)" }} />
+                <div className="relative px-6 py-5 flex flex-col sm:flex-row items-center gap-5">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "linear-gradient(135deg,rgba(0,180,180,0.2),rgba(139,26,26,0.1))", border: "1px solid rgba(0,212,212,0.3)", boxShadow: "0 0 24px rgba(0,180,180,0.15)" }}>
+                    <Download className="w-7 h-7" style={{ color: "#00d4d4" }} />
+                  </div>
+                  <div className="flex-1 text-center sm:text-left">
+                    <p className="text-[16px] font-black mb-1" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>
+                      Export Full Manual as PDF
+                    </p>
+                    <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.45)" }}>
+                      Professionally formatted · All 14 chapters · Print-ready booklet layout · Each section on its own page
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <button onClick={handlePrint}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-105"
+                      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}>
+                      <Printer className="w-4 h-4" /> Print
+                    </button>
+                    <button onClick={handleDownloadPdf}
+                      className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-[13px] font-black text-white transition-all hover:scale-105 active:scale-95 relative overflow-hidden"
+                      style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 24px rgba(0,180,180,0.5)", border: "1px solid rgba(0,212,212,0.4)" }}>
+                      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent)", backgroundSize: "200% 100%", animation: "shimmer 2s infinite" }} />
+                      <Download className="w-4 h-4 relative z-10" />
+                      <span className="relative z-10">Download PDF</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
 
               {/* ── Cover page ── */}
               <div className="cover-page mb-12 rounded-2xl overflow-hidden relative text-center"
