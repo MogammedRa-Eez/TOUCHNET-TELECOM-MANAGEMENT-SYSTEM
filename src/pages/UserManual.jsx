@@ -661,24 +661,65 @@ export default function UserManual() {
           .no-print { display: none !important; }
           body { background: #111111 !important; margin: 0 !important; padding: 0 !important; }
 
-          /* Make the layout print as a single column */
+          /* Single column layout */
           .print-layout { display: block !important; }
           .print-sidebar { display: none !important; }
           .print-main { overflow: visible !important; height: auto !important; width: 100% !important; }
-          .print-inner { max-width: 100% !important; padding: 0 !important; }
+          .print-inner { max-width: 100% !important; padding: 20px 32px !important; }
 
-          /* Avoid breaking sections across pages */
-          .manual-section { page-break-inside: avoid; break-inside: avoid; }
-          .subsection-block { page-break-inside: avoid; break-inside: avoid; }
+          /* Cover page — own page */
+          .cover-page {
+            page-break-after: always !important;
+            break-after: always !important;
+            min-height: 220mm !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
 
-          /* Force page break before each major section heading */
-          .section-break { page-break-before: always; break-before: always; }
-          .section-break:first-of-type { page-break-before: avoid; break-before: avoid; }
+          /* Every section (chapter) starts on a new page */
+          .section-break {
+            page-break-before: always !important;
+            break-before: always !important;
+          }
 
-          /* Cover page fills first page */
-          .cover-page { page-break-after: always; break-after: always; }
+          /* Every subsection starts on a new page */
+          .subsection-block {
+            page-break-before: always !important;
+            break-before: always !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+          }
+
+          /* Section heading card stays with its first subsection */
+          .section-heading-card {
+            page-break-after: avoid !important;
+            break-after: avoid !important;
+          }
+
+          /* Footer on its own page */
+          .manual-footer {
+            page-break-before: always !important;
+            break-before: always !important;
+          }
+
+          /* Add page numbers via CSS */
+          @page {
+            @bottom-center {
+              content: "TouchNet TMS v3.0  |  Page " counter(page) " of " counter(pages);
+              font-size: 9pt;
+              color: #888;
+              font-family: 'JetBrains Mono', monospace;
+            }
+            @top-right {
+              content: "CONFIDENTIAL — TouchNet (Pty) Ltd";
+              font-size: 8pt;
+              color: #888;
+            }
+          }
         }
-        @page { margin: 15mm; size: A4; }
+        @page { margin: 18mm 15mm; size: A4; }
       `}</style>
 
       <div className="min-h-screen page-bg flex flex-col">
@@ -773,7 +814,7 @@ export default function UserManual() {
                 return (
                   <div key={sec.id} className="section-break">
                     {/* Section heading */}
-                    <div id={sec.id} className="mb-4" style={{ scrollMarginTop: 80 }}>
+                    <div id={sec.id} className="section-heading-card mb-4" style={{ scrollMarginTop: 80 }}>
                       <div className="flex items-center gap-3 mb-1">
                         <div className="h-[2px] flex-1" style={{ background: "linear-gradient(90deg,#00b4b4,rgba(0,180,180,0.2),transparent)" }} />
                       </div>
@@ -822,7 +863,7 @@ export default function UserManual() {
               })}
 
               {/* ── Footer ── */}
-              <div className="mt-12 rounded-2xl p-6 text-center"
+              <div className="manual-footer mt-12 rounded-2xl p-6 text-center"
                 style={{ background: "linear-gradient(135deg,rgba(0,180,180,0.06),rgba(139,26,26,0.04))", border: "1px solid rgba(0,212,212,0.12)" }}>
                 <img src={CREST_WHITE} alt="TouchNet" className="w-10 h-10 object-contain mx-auto mb-3 logo-print" style={{ opacity: 0.3 }} />
                 <p style={{ color: "rgba(0,212,212,0.4)", fontSize: 11, fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.18em" }}>
