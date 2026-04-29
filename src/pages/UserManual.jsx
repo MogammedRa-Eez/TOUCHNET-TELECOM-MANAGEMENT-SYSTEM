@@ -657,17 +657,28 @@ export default function UserManual() {
       {/* Print styles */}
       <style>{`
         @media print {
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
           .no-print { display: none !important; }
-          .print-area { margin: 0 !important; padding: 0 !important; }
-          body { background: #ffffff !important; color: #000 !important; }
-          .manual-section { page-break-inside: avoid; }
-          h1, h2, h3 { color: #000 !important; }
-          p, div, span { color: #222 !important; background: transparent !important; }
-          .print-page { background: #ffffff !important; color: #000000 !important; padding: 32px !important; }
-          .print-content { max-width: 100% !important; }
-          img.logo-print { filter: invert(1) !important; opacity: 1 !important; }
+          body { background: #111111 !important; margin: 0 !important; padding: 0 !important; }
+
+          /* Make the layout print as a single column */
+          .print-layout { display: block !important; }
+          .print-sidebar { display: none !important; }
+          .print-main { overflow: visible !important; height: auto !important; width: 100% !important; }
+          .print-inner { max-width: 100% !important; padding: 0 !important; }
+
+          /* Avoid breaking sections across pages */
+          .manual-section { page-break-inside: avoid; break-inside: avoid; }
+          .subsection-block { page-break-inside: avoid; break-inside: avoid; }
+
+          /* Force page break before each major section heading */
+          .section-break { page-break-before: always; break-before: always; }
+          .section-break:first-of-type { page-break-before: avoid; break-before: avoid; }
+
+          /* Cover page fills first page */
+          .cover-page { page-break-after: always; break-after: always; }
         }
-        @page { margin: 20mm; size: A4; }
+        @page { margin: 15mm; size: A4; }
       `}</style>
 
       <div className="min-h-screen page-bg flex flex-col">
@@ -699,10 +710,10 @@ export default function UserManual() {
           </div>
         </header>
 
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden print-layout">
 
           {/* ── TOC Sidebar ── */}
-          <aside className="no-print w-64 flex-shrink-0 overflow-y-auto sidebar-scroll"
+          <aside className="no-print print-sidebar w-64 flex-shrink-0 overflow-y-auto sidebar-scroll"
             style={{ background: "linear-gradient(180deg,#080d0d,#0f0f0f)", borderRight: "1px solid rgba(0,212,212,0.1)" }}>
             <div className="p-3 space-y-0.5">
               <p className="text-[9px] font-black uppercase tracking-[0.25em] px-2 mb-2" style={{ color: "rgba(0,212,212,0.4)", fontFamily: "'JetBrains Mono',monospace" }}>
@@ -715,11 +726,11 @@ export default function UserManual() {
           </aside>
 
           {/* ── Main content ── */}
-          <main ref={printRef} className="flex-1 overflow-y-auto content-scroll print-area">
-            <div className="max-w-4xl mx-auto px-6 py-8 print-content">
+          <main ref={printRef} className="flex-1 overflow-y-auto content-scroll print-area print-main">
+            <div className="max-w-4xl mx-auto px-6 py-8 print-content print-inner">
 
               {/* ── Cover page ── */}
-              <div className="mb-12 rounded-2xl overflow-hidden relative text-center"
+              <div className="cover-page mb-12 rounded-2xl overflow-hidden relative text-center"
                 style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: "1px solid rgba(0,212,212,0.25)", minHeight: 260 }}>
                 <div className="h-[3px]" style={{ background: "linear-gradient(90deg,#8B1A1A,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,transparent)" }} />
                 <div className="absolute top-3 left-3 w-6 h-6" style={{ borderTop: "2px solid rgba(0,212,212,0.4)", borderLeft: "2px solid rgba(0,212,212,0.4)" }} />
@@ -760,7 +771,7 @@ export default function UserManual() {
                 const Icon = sec.icon;
                 const topContent = CONTENT[sec.id];
                 return (
-                  <div key={sec.id}>
+                  <div key={sec.id} className="section-break">
                     {/* Section heading */}
                     <div id={sec.id} className="mb-4" style={{ scrollMarginTop: 80 }}>
                       <div className="flex items-center gap-3 mb-1">
@@ -791,7 +802,7 @@ export default function UserManual() {
                       const subContent = CONTENT[sub.id];
                       if (!subContent) return null;
                       return (
-                        <div key={sub.id} id={sub.id} className="ml-0 mb-4 rounded-xl overflow-hidden"
+                        <div key={sub.id} id={sub.id} className="subsection-block ml-0 mb-4 rounded-xl overflow-hidden"
                           style={{ background: "#161616", border: "1px solid rgba(255,255,255,0.07)", scrollMarginTop: 80 }}>
                           <div className="flex items-center gap-2 px-5 py-3"
                             style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,180,180,0.04)" }}>
