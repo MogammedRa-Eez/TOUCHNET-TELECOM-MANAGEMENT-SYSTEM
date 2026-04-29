@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
+import { jsPDF } from "jspdf";
 import { Link } from "react-router-dom";
 import {
-  Printer, Download, ChevronRight, ChevronDown,
+  Printer, Download, ChevronRight, ChevronDown, Loader2,
   LayoutDashboard, Users, Receipt, TicketCheck, Network,
   UserCog, Bot, Shield, Package, Settings, Mail,
   HeartHandshake, FileText, Activity, Zap, BookOpen,
@@ -642,9 +643,192 @@ export default function UserManual() {
   const [activeId, setActiveId] = useState("introduction");
   const printRef = useRef(null);
 
+  const [generating, setGenerating] = useState(false);
+
   const handlePrint = () => window.print();
 
-  const handleDownloadPdf = () => window.print();
+  const handleDownloadPdf = async () => {
+    setGenerating(true);
+    try {
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pageW = 210;
+      const pageH = 297;
+      const margin = 18;
+      const contentW = pageW - margin * 2;
+      let y = margin;
+
+      const teal = [0, 180, 180];
+      const crimson = [139, 26, 26];
+      const white = [240, 240, 240];
+      const muted = [160, 160, 160];
+      const dark = [26, 26, 26];
+
+      const addPage = () => {
+        doc.addPage();
+        y = margin;
+        // Header line
+        doc.setDrawColor(...teal);
+        doc.setLineWidth(0.5);
+        doc.line(margin, 10, pageW - margin, 10);
+        // Footer
+        doc.setFontSize(7);
+        doc.setTextColor(...muted);
+        doc.text(`TouchNet TMS v3.0  |  Page ${doc.internal.getNumberOfPages()}`, pageW / 2, pageH - 8, { align: "center" });
+        doc.text("CONFIDENTIAL — TouchNet (Pty) Ltd", pageW - margin, pageH - 8, { align: "right" });
+        y = 18;
+      };
+
+      const checkY = (needed) => {
+        if (y + needed > pageH - 20) addPage();
+      };
+
+      // ── Cover Page ──
+      doc.setFillColor(...dark);
+      doc.rect(0, 0, pageW, pageH, "F");
+
+      // Accent bar
+      doc.setFillColor(...teal);
+      doc.rect(0, 0, pageW, 2, "F");
+
+      // Title block
+      doc.setFontSize(32);
+      doc.setTextColor(...white);
+      doc.setFont("helvetica", "bold");
+      doc.text("TouchNet TMS", pageW / 2, 120, { align: "center" });
+
+      doc.setFontSize(22);
+      doc.setTextColor(...teal);
+      doc.text("User Manual", pageW / 2, 136, { align: "center" });
+
+      doc.setFontSize(10);
+      doc.setTextColor(...muted);
+      doc.setFont("helvetica", "normal");
+      doc.text("TELECOMMUNICATIONS MANAGEMENT SYSTEM · TMS v3.0", pageW / 2, 150, { align: "center" });
+
+      doc.setFontSize(9);
+      doc.text(`Version 3.0  ·  ${new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long" })}  ·  TouchNet (Pty) Ltd`, pageW / 2, 165, { align: "center" });
+
+      // Bottom accent
+      doc.setFillColor(...crimson);
+      doc.rect(0, pageH - 2, pageW, 2, "F");
+
+      // ── Table of Contents page ──
+      addPage();
+      doc.setFillColor(...dark);
+      doc.rect(0, 0, pageW, pageH, "F");
+
+      doc.setFontSize(16);
+      doc.setTextColor(...teal);
+      doc.setFont("helvetica", "bold");
+      doc.text("Table of Contents", margin, y);
+      y += 10;
+
+      doc.setDrawColor(...teal);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, pageW - margin, y);
+      y += 6;
+
+      SECTIONS.forEach((sec, idx) => {
+        checkY(8);
+        doc.setFontSize(10);
+        doc.setTextColor(...white);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${sec.title}`, margin + 2, y);
+        y += 5;
+        sec.subsections?.forEach(sub => {
+          checkY(5);
+          doc.setFontSize(9);
+          doc.setTextColor(...muted);
+          doc.setFont("helvetica", "normal");
+          doc.text(`    ${sub.title}`, margin + 6, y);
+          y += 4.5;
+        });
+        y += 1;
+      });
+
+      // ── Content pages ──
+      SECTIONS.forEach(sec => {
+        addPage();
+        doc.setFillColor(...dark);
+        doc.rect(0, 0, pageW, pageH, "F");
+
+        // Section header bar
+        doc.setFillColor(20, 20, 20);
+        doc.roundedRect(margin, y, contentW, 14, 2, 2, "F");
+        doc.setFillColor(...teal);
+        doc.rect(margin, y, 3, 14, "F");
+
+        doc.setFontSize(14);
+        doc.setTextColor(...white);
+        doc.setFont("helvetica", "bold");
+        doc.text(sec.title, margin + 8, y + 9.5);
+        y += 20;
+
+        // Section intro
+        const topContent = CONTENT[sec.id];
+        if (topContent?.body) {
+          doc.setFontSize(9);
+          doc.setTextColor(...muted);
+          doc.setFont("helvetica", "normal");
+          const lines = doc.splitTextToSize(topContent.body, contentW);
+          lines.forEach(line => {
+            checkY(5);
+            doc.text(line, margin, y);
+            y += 4.8;
+          });
+          y += 4;
+        }
+
+        // Subsections
+        sec.subsections?.forEach(sub => {
+          const subContent = CONTENT[sub.id];
+          if (!subContent) return;
+
+          checkY(20);
+
+          // Subsection heading
+          doc.setFillColor(22, 22, 22);
+          doc.roundedRect(margin, y, contentW, 10, 1.5, 1.5, "F");
+          doc.setFontSize(10);
+          doc.setTextColor(...teal);
+          doc.setFont("helvetica", "bold");
+          doc.text(`›  ${sub.title}`, margin + 5, y + 7);
+          y += 15;
+
+          // Subsection body
+          doc.setFontSize(9);
+          doc.setTextColor(...muted);
+          doc.setFont("helvetica", "normal");
+          const bodyLines = doc.splitTextToSize(subContent.body, contentW - 4);
+          bodyLines.forEach(line => {
+            checkY(5);
+            doc.text(line, margin + 2, y);
+            y += 4.8;
+          });
+          y += 6;
+        });
+      });
+
+      // ── Final footer page ──
+      addPage();
+      doc.setFillColor(...dark);
+      doc.rect(0, 0, pageW, pageH, "F");
+
+      doc.setFontSize(11);
+      doc.setTextColor(...teal);
+      doc.setFont("helvetica", "bold");
+      doc.text("BUILD · CONNECT · PROTECT", pageW / 2, pageH / 2 - 10, { align: "center" });
+      doc.setFontSize(9);
+      doc.setTextColor(...muted);
+      doc.setFont("helvetica", "normal");
+      doc.text(`© ${new Date().getFullYear()} TouchNet (Pty) Ltd · All rights reserved · TouchNet TMS v3.0`, pageW / 2, pageH / 2, { align: "center" });
+      doc.text("For technical support: support@touchnet.co.za", pageW / 2, pageH / 2 + 8, { align: "center" });
+
+      doc.save("TouchNet_TMS_User_Manual.pdf");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const scrollTo = (id) => {
     setActiveId(id);
@@ -743,12 +927,12 @@ export default function UserManual() {
               style={{ background: "rgba(0,180,180,0.08)", border: "1px solid rgba(0,180,180,0.2)", color: "#00b4b4" }}>
               <Printer className="w-3.5 h-3.5" /> Print
             </button>
-            <button onClick={handleDownloadPdf}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-black text-white transition-all hover:scale-105 active:scale-95 relative overflow-hidden"
+            <button onClick={handleDownloadPdf} disabled={generating}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-black text-white transition-all hover:scale-105 active:scale-95 relative overflow-hidden disabled:opacity-70"
               style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a,#8B1A1A)", boxShadow: "0 4px 20px rgba(0,180,180,0.45)", border: "1px solid rgba(0,212,212,0.3)" }}>
               <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)", backgroundSize: "200% 100%", animation: "shimmer 2s infinite" }} />
-              <Download className="w-4 h-4 relative z-10" />
-              <span className="relative z-10">Download PDF</span>
+              {generating ? <Loader2 className="w-4 h-4 relative z-10 animate-spin" /> : <Download className="w-4 h-4 relative z-10" />}
+              <span className="relative z-10">{generating ? "Generating…" : "Download PDF"}</span>
             </button>
           </div>
         </header>
@@ -798,12 +982,12 @@ export default function UserManual() {
                       style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}>
                       <Printer className="w-4 h-4" /> Print
                     </button>
-                    <button onClick={handleDownloadPdf}
-                      className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-[13px] font-black text-white transition-all hover:scale-105 active:scale-95 relative overflow-hidden"
+                    <button onClick={handleDownloadPdf} disabled={generating}
+                      className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-[13px] font-black text-white transition-all hover:scale-105 active:scale-95 relative overflow-hidden disabled:opacity-70"
                       style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 24px rgba(0,180,180,0.5)", border: "1px solid rgba(0,212,212,0.4)" }}>
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent)", backgroundSize: "200% 100%", animation: "shimmer 2s infinite" }} />
-                      <Download className="w-4 h-4 relative z-10" />
-                      <span className="relative z-10">Download PDF</span>
+                      {generating ? <Loader2 className="w-4 h-4 relative z-10 animate-spin" /> : <Download className="w-4 h-4 relative z-10" />}
+                      <span className="relative z-10">{generating ? "Generating…" : "Download PDF"}</span>
                     </button>
                   </div>
                 </div>
