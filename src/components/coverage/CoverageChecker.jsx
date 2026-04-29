@@ -37,19 +37,19 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
     }
   };
 
-  const strengthColor = { excellent: "#10b981", good: "#00b4b4", fair: "#f59e0b", none: "#e02347" };
+  const strengthColor = { excellent: "#10b981", good: "#00b4b4", fair: "#f59e0b", none: "#8B1A1A" };
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
       style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(16px)" }}>
       <div className="w-full max-w-md rounded-2xl overflow-hidden"
         style={{ background: "#1a1a1a", border: "1px solid rgba(0,180,180,0.3)", boxShadow: "0 24px 80px rgba(0,0,0,0.7)" }}>
-        <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+        <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#8B1A1A,transparent)" }} />
         <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-              style={{ background: "rgba(224,35,71,0.15)", border: "1px solid rgba(224,35,71,0.3)" }}>
-              <MapPin className="w-4 h-4" style={{ color: "#e02347" }} />
+              style={{ background: "rgba(139,26,26,0.15)", border: "1px solid rgba(139,26,26,0.3)" }}>
+              <MapPin className="w-4 h-4" style={{ color: "#8B1A1A" }} />
             </div>
             <div>
               <p className="text-[14px] font-black" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Coverage Checker</p>
@@ -87,15 +87,15 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
           {result && (
             <div className="rounded-xl p-4 space-y-3"
               style={{
-                background: result.covered ? "rgba(0,180,180,0.07)" : "rgba(224,35,71,0.07)",
-                border: `1px solid ${result.covered ? "rgba(0,180,180,0.3)" : "rgba(224,35,71,0.3)"}`
+                background: result.covered ? "rgba(0,180,180,0.07)" : "rgba(139,26,26,0.07)",
+                border: `1px solid ${result.covered ? "rgba(0,180,180,0.3)" : "rgba(139,26,26,0.3)"}`
               }}>
               <div className="flex items-center gap-3">
                 {result.covered
                   ? <CheckCircle2 className="w-6 h-6 flex-shrink-0" style={{ color: "#10b981" }} />
-                  : <XCircle className="w-6 h-6 flex-shrink-0" style={{ color: "#e02347" }} />}
+                  : <XCircle className="w-6 h-6 flex-shrink-0" style={{ color: "#8B1A1A" }} />}
                 <div>
-                  <p className="text-[14px] font-black" style={{ color: result.covered ? "#10b981" : "#e02347" }}>
+                  <p className="text-[14px] font-black" style={{ color: result.covered ? "#10b981" : "#8B1A1A" }}>
                     {result.covered ? "Coverage Available!" : "No Coverage"}
                   </p>
                   {result.covered && (

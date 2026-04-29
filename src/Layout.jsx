@@ -16,13 +16,13 @@ import EmployeeChat from "@/components/chat/EmployeeChat";
 import QuickActionButton from "@/components/layout/QuickActionButton";
 import KeyboardShortcutGuide from "@/components/layout/KeyboardShortcutGuide";
 
-/* ── Brand constants — Dark Teal+Red ─────────────────── */
+/* ── Brand constants — Teal + Maroon ─────────────────── */
 const NAVY    = "#00b4b4";
 const NAVY_L  = "#00d4d4";
 const NAVY_P  = "#00a0a0";
-const CRIMSN  = "#e02347";
-const CRIMSN_L = "#ff3358";
-const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
+const CRIMSN  = "#8B1A1A";
+const CRIMSN_L = "#a52020";
+const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/8a337a200_Touchnet_LogoLongWhite.png";
 const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const NAV_GROUPS = [
@@ -150,7 +150,7 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
                 src={LOGO_WORDMARK}
                 alt="TouchNet"
                 className="h-6 object-contain"
-                style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)", opacity: 0.95 }}
+                style={{ opacity: 0.95 }}
               />
               <p className="text-[8px] font-bold tracking-[0.28em] uppercase mt-0.5"
                 style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>
@@ -359,7 +359,7 @@ function LayoutInner({ children, currentPageName }) {
           {/* Breadcrumb */}
           <div className="hidden sm:flex items-center gap-2.5">
             <div className="flex items-center gap-1.5">
-              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.95, filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)" }} />
+              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.95 }} />
             </div>
             {currentItem && (
               <>

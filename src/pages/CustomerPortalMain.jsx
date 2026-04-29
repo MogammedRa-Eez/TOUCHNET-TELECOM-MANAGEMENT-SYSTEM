@@ -21,13 +21,13 @@ import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
 import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 
-const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/3ae578803_image0011.png";
+const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/8a337a200_Touchnet_LogoLongWhite.png";
 const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const STATUS_CFG = {
   active:     { color: "#10b981", label: "Active",     bg: "rgba(16,185,129,0.1)",  border: "rgba(16,185,129,0.25)" },
   pending:    { color: "#f59e0b", label: "Pending",    bg: "rgba(245,158,11,0.1)",  border: "rgba(245,158,11,0.25)" },
-  suspended:  { color: "#e02347", label: "Suspended",  bg: "rgba(224,35,71,0.1)",   border: "rgba(224,35,71,0.25)"  },
+  suspended:  { color: "#8B1A1A", label: "Suspended",  bg: "rgba(139,26,26,0.1)",   border: "rgba(139,26,26,0.25)"  },
   terminated: { color: "#64748b", label: "Terminated", bg: "rgba(100,116,139,0.1)", border: "rgba(100,116,139,0.25)" },
 };
 
@@ -106,8 +106,8 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "24px 24px", pointerEvents: "none", opacity: 0.5 }} />
         {/* Ambient teal glow */}
         <div style={{ position: "absolute", top: -60, left: -40, width: 260, height: 260, background: "radial-gradient(circle, rgba(0,212,212,0.18) 0%, rgba(255,255,255,0.03) 40%, transparent 70%)", pointerEvents: "none" }} />
-        {/* Ambient red glow */}
-        <div style={{ position: "absolute", bottom: 40, right: -60, width: 200, height: 200, background: "radial-gradient(circle, rgba(224,35,71,0.12) 0%, transparent 68%)", pointerEvents: "none" }} />
+        {/* Ambient maroon glow */}
+        <div style={{ position: "absolute", bottom: 40, right: -60, width: 200, height: 200, background: "radial-gradient(circle, rgba(139,26,26,0.12) 0%, transparent 68%)", pointerEvents: "none" }} />
 
         {/* Logo header */}
         <div className="flex items-center justify-between px-4 h-[68px] flex-shrink-0"
@@ -118,8 +118,7 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
               <img src={LOGO_BADGE} alt="TouchNet Crest" className="w-10 h-10 object-contain" style={{ opacity: 0.92 }} />
             </div>
             <div>
-              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-6 object-contain"
-                style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)", opacity: 0.95 }} />
+              <img src={LOGO_WORDMARK} alt="TouchNet" className="h-6 object-contain" style={{ opacity: 0.95 }} />
               <p className="text-[8px] font-bold tracking-[0.28em] uppercase mt-0.5"
                 style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>CUSTOMER PORTAL</p>
             </div>
@@ -193,11 +192,11 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   {badge > 0 && (
                     <span className="min-w-[18px] h-[18px] px-1 text-[9px] font-black rounded-full flex items-center justify-center text-white"
-                      style={{ background: item.key === "tickets" ? "#f59e0b" : "#e02347" }}>
+                      style={{ background: item.key === "tickets" ? "#f59e0b" : "#8B1A1A" }}>
                       {badge}
                     </span>
                   )}
-                  {isActive && <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#e02347", boxShadow: "0 0 8px #e02347", flexShrink: 0 }} />}
+                  {isActive && <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#8B1A1A", boxShadow: "0 0 8px #8B1A1A", flexShrink: 0 }} />}
                 </div>
               </button>
             );
@@ -221,7 +220,7 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
           </div>
           <button onClick={() => base44.auth.logout("/")}
             className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-[1.02] active:scale-95"
-            style={{ background: "rgba(224,35,71,0.08)", border: "1px solid rgba(224,35,71,0.2)", color: "#f87171" }}>
+            style={{ background: "rgba(139,26,26,0.08)", border: "1px solid rgba(139,26,26,0.2)", color: "#c23030" }}>
             <LogOut className="w-3.5 h-3.5" /> Sign Out
           </button>
         </div>
@@ -243,7 +242,7 @@ function OverviewTab({ customer, invoices, tickets, projects, setActiveTab, sc }
     <div className="space-y-5">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatChip icon={DollarSign}  label="Total Paid"   value={`R${(paid/1000).toFixed(1)}k`} color="#10b981" />
-        <StatChip icon={AlertCircle} label="Overdue Inv." value={overdue}                        color={overdue > 0 ? "#e02347" : "#10b981"} />
+        <StatChip icon={AlertCircle} label="Overdue Inv." value={overdue}                        color={overdue > 0 ? "#8B1A1A" : "#10b981"} />
         <StatChip icon={TicketCheck} label="Open Tickets" value={openTkts}                       color="#f59e0b" />
         <StatChip icon={Activity}    label="Active Proj."  value={activePrj}                      color="#00b4b4" />
       </div>
@@ -289,7 +288,7 @@ function OverviewTab({ customer, invoices, tickets, projects, setActiveTab, sc }
         {/* Recent tickets */}
         <div className="rounded-2xl overflow-hidden"
           style={{ background: "#1a1a1a", border: "1px solid rgba(0,212,212,0.18)", boxShadow: "0 4px 24px rgba(0,0,0,0.4)" }}>
-          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#f59e0b,#e02347,transparent)" }} />
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#f59e0b,#8B1A1A,transparent)" }} />
           <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "rgba(245,158,11,0.12)" }}>
@@ -304,7 +303,7 @@ function OverviewTab({ customer, invoices, tickets, projects, setActiveTab, sc }
           {recentTkt.length === 0 ? (
             <p className="text-[12px] text-center py-8" style={{ color: "rgba(255,255,255,0.3)" }}>No tickets yet</p>
           ) : recentTkt.map(tkt => {
-            const priColor = { critical: "#e02347", high: "#f97316", medium: "#f59e0b", low: "#10b981" }[tkt.priority] || "#64748b";
+            const priColor = { critical: "#8B1A1A", high: "#f97316", medium: "#f59e0b", low: "#10b981" }[tkt.priority] || "#64748b";
             return (
               <div key={tkt.id} className="flex items-center gap-3 px-4 py-3 interactive-row" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                 <span className="w-2 h-2 rounded-full flex-shrink-0 mt-0.5" style={{ background: priColor, boxShadow: `0 0 6px ${priColor}80` }} />
@@ -355,8 +354,7 @@ export default function CustomerPortalMain() {
     return (
       <div className="min-h-screen flex items-center justify-center page-bg">
         <div className="flex flex-col items-center gap-4">
-          <img src={LOGO_WORDMARK} alt="TouchNet" className="h-8 object-contain"
-            style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)" }} />
+          <img src={LOGO_WORDMARK} alt="TouchNet" className="h-8 object-contain" style={{ opacity: 0.9 }} />
           <div className="flex items-center gap-2">
             <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#00b4b4" }} />
             <span className="text-sm font-semibold" style={{ color: "#00b4b4" }}>Loading your portal…</span>
@@ -369,19 +367,18 @@ export default function CustomerPortalMain() {
   if (!customer) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 page-bg">
-        <img src={LOGO_WORDMARK} alt="Logo" className="h-8 object-contain mb-2"
-          style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)" }} />
+        <img src={LOGO_WORDMARK} alt="Logo" className="h-8 object-contain mb-2" style={{ opacity: 0.9 }} />
         <div className="rounded-2xl p-8 max-w-md w-full text-center"
-          style={{ background: "#1a1a1a", border: "1px solid rgba(224,35,71,0.3)", boxShadow: "0 8px 40px rgba(224,35,71,0.12)" }}>
-          <div className="h-[2px] -mx-8 -mt-8 mb-6 rounded-t-2xl" style={{ background: "linear-gradient(90deg,#e02347,#ff3358,transparent)" }} />
-          <AlertCircle className="w-10 h-10 mx-auto mb-3" style={{ color: "#e02347" }} />
+          style={{ background: "#1a1a1a", border: "1px solid rgba(139,26,26,0.3)", boxShadow: "0 8px 40px rgba(139,26,26,0.12)" }}>
+          <div className="h-[2px] -mx-8 -mt-8 mb-6 rounded-t-2xl" style={{ background: "linear-gradient(90deg,#8B1A1A,#a52020,transparent)" }} />
+          <AlertCircle className="w-10 h-10 mx-auto mb-3" style={{ color: "#8B1A1A" }} />
           <h2 className="text-lg font-black mb-1" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Account Not Found</h2>
           <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.45)" }}>
             No customer account is linked to <strong style={{ color: "#00b4b4" }}>{user?.email}</strong>. Please contact support.
           </p>
           <button onClick={() => base44.auth.logout("/")}
             className="flex items-center gap-2 mx-auto px-4 py-2 rounded-xl text-white text-sm font-bold"
-            style={{ background: "linear-gradient(135deg,#e02347,#ff3358)", boxShadow: "0 4px 16px rgba(224,35,71,0.3)" }}>
+            style={{ background: "linear-gradient(135deg,#8B1A1A,#a52020)", boxShadow: "0 4px 16px rgba(139,26,26,0.3)" }}>
             <LogOut className="w-4 h-4" /> Logout
           </button>
         </div>
@@ -400,7 +397,7 @@ export default function CustomerPortalMain() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px]"
           style={{ background: "radial-gradient(circle, rgba(0,180,180,0.07) 0%, transparent 65%)" }} />
         <div className="absolute bottom-0 left-64 w-[400px] h-[400px]"
-          style={{ background: "radial-gradient(circle, rgba(224,35,71,0.05) 0%, transparent 65%)" }} />
+          style={{ background: "radial-gradient(circle, rgba(139,26,26,0.05) 0%, transparent 65%)" }} />
         <div className="absolute inset-0"
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0)", backgroundSize: "28px 28px" }} />
       </div>
@@ -425,8 +422,7 @@ export default function CustomerPortalMain() {
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-2.5 flex-1">
-            <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain hidden sm:block"
-              style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)", opacity: 0.95 }} />
+            <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain hidden sm:block" style={{ opacity: 0.95 }} />
             {currentNavItem && (
               <>
                 <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 14 }} className="hidden sm:block">›</span>
@@ -444,7 +440,7 @@ export default function CustomerPortalMain() {
           <div className="flex items-center gap-2">
             <button onClick={() => setShowCoverage(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: "linear-gradient(135deg,#e02347,#ff3358)", color: "white", boxShadow: "0 3px 10px rgba(224,35,71,0.3)" }}>
+              style={{ background: "linear-gradient(135deg,#8B1A1A,#a52020)", color: "white", boxShadow: "0 3px 10px rgba(139,26,26,0.3)" }}>
               <MapPin className="w-3.5 h-3.5" /> Coverage
             </button>
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl"
@@ -463,12 +459,12 @@ export default function CustomerPortalMain() {
             {/* Welcome banner */}
             <div className="rounded-2xl overflow-hidden relative"
               style={{ background: "linear-gradient(135deg,#141414,#1a1a1a,#141414)", border: "1px solid rgba(0,212,212,0.25)", boxShadow: "0 8px 40px rgba(0,0,0,0.5), 0 0 40px rgba(0,180,180,0.04)" }}>
-              <div className="h-[2px]" style={{ background: `linear-gradient(90deg, ${sc.color}, #00b4b4, #00d4d4, rgba(255,255,255,0.5), #e02347, transparent)` }} />
+              <div className="h-[2px]" style={{ background: `linear-gradient(90deg, ${sc.color}, #00b4b4, #00d4d4, rgba(255,255,255,0.5), #8B1A1A, transparent)` }} />
               {/* Corner brackets */}
               <div className="absolute top-3 left-3 w-5 h-5 pointer-events-none" style={{ borderTop: "2px solid rgba(0,212,212,0.4)", borderLeft: "2px solid rgba(0,212,212,0.4)" }} />
-              <div className="absolute top-3 right-3 w-5 h-5 pointer-events-none" style={{ borderTop: "2px solid rgba(224,35,71,0.35)", borderRight: "2px solid rgba(224,35,71,0.35)" }} />
+              <div className="absolute top-3 right-3 w-5 h-5 pointer-events-none" style={{ borderTop: "2px solid rgba(139,26,26,0.4)", borderRight: "2px solid rgba(139,26,26,0.4)" }} />
               <div className="absolute bottom-3 left-3 w-5 h-5 pointer-events-none" style={{ borderBottom: "2px solid rgba(0,212,212,0.25)", borderLeft: "2px solid rgba(0,212,212,0.25)" }} />
-              <div className="absolute bottom-3 right-3 w-5 h-5 pointer-events-none" style={{ borderBottom: "2px solid rgba(224,35,71,0.25)", borderRight: "2px solid rgba(224,35,71,0.25)" }} />
+              <div className="absolute bottom-3 right-3 w-5 h-5 pointer-events-none" style={{ borderBottom: "2px solid rgba(139,26,26,0.25)", borderRight: "2px solid rgba(139,26,26,0.25)" }} />
               {/* Dot grid */}
               <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.05) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
               {/* Ambient glows */}
@@ -497,7 +493,7 @@ export default function CustomerPortalMain() {
                       </div>
                       {customer.connection_type && (
                         <div className="flex items-center gap-1.5">
-                          <Zap className="w-3 h-3" style={{ color: "#e02347" }} />
+                          <Zap className="w-3 h-3" style={{ color: "#8B1A1A" }} />
                           <span className="text-[12px] capitalize" style={{ color: "rgba(255,255,255,0.45)" }}>{customer.connection_type}</span>
                         </div>
                       )}
@@ -524,13 +520,13 @@ export default function CustomerPortalMain() {
                 {overdueInv > 0 && (
                   <div className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl"
                     style={{ background: "rgba(224,35,71,0.08)", border: "1px solid rgba(224,35,71,0.25)" }}>
-                    <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#e02347" }} />
-                    <p className="text-[12px] font-semibold" style={{ color: "#e02347" }}>
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: "#8B1A1A" }} />
+                    <p className="text-[12px] font-semibold" style={{ color: "#c23030" }}>
                       You have {overdueInv} overdue invoice{overdueInv > 1 ? "s" : ""}. Please review your billing.
                     </p>
                     <button onClick={() => setActiveTab("invoices")}
                       className="ml-auto text-[11px] font-bold px-3 py-1 rounded-lg flex-shrink-0 transition-all hover:scale-105"
-                      style={{ background: "rgba(224,35,71,0.12)", color: "#e02347", border: "1px solid rgba(224,35,71,0.3)" }}>
+                      style={{ background: "rgba(139,26,26,0.12)", color: "#c23030", border: "1px solid rgba(139,26,26,0.3)" }}>
                       View →
                     </button>
                   </div>

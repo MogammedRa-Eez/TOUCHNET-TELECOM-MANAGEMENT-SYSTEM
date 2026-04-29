@@ -7,10 +7,11 @@ import {
 } from "lucide-react";
 import CinematicShowcase from "@/components/home/CinematicShowcase";
 
-const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
+const LOGO_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/8a337a200_Touchnet_LogoLongWhite.png";
+const CREST_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const NAVY   = "#00b4b4";
-const CRIMSN = "#e02347";
+const CRIMSN = "#8B1A1A";
 const TEAL_L = "#00d4d4";
 
 const FEATURES = [
@@ -75,12 +76,12 @@ export default function Home() {
       {/* ── NAVBAR ── */}
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 h-[72px]"
         style={{ borderBottom: "1px solid rgba(0,180,180,0.2)", background: "rgba(10,15,15,0.94)", backdropFilter: "blur(24px)" }}>
-        {/* Whitish-teal top accent bar */}
+        {/* Teal + Maroon top accent bar */}
         <div className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.6),#00b4b4,#e02347,transparent)" }} />
+          style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.6),#00b4b4,#8B1A1A,transparent)" }} />
 
         <div className="flex items-center gap-3">
-          <img src={LOGO_URL} alt="TouchNet" className="h-9 object-contain" style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(99%) saturate(400%) hue-rotate(140deg) brightness(105%)", opacity: 0.95 }} />
+          <img src={LOGO_WHITE} alt="TouchNet" className="h-8 object-contain" style={{ opacity: 0.95 }} />
           <div className="hidden md:flex items-center gap-1 px-2 py-0.5 rounded-md"
             style={{ background: "rgba(0,212,212,0.08)", border: "1px solid rgba(0,212,212,0.15)" }}>
             <span className="text-[8px] font-black uppercase tracking-[0.2em] mono" style={{ color: "#00d4d4" }}>TMS v3.0</span>
@@ -281,7 +282,7 @@ export default function Home() {
         style={{ borderTop: "1px solid rgba(0,180,180,0.15)", background: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="TouchNet" className="h-7 object-contain" style={{ filter: "brightness(0) invert(1)", opacity: 0.6 }} />
+            <img src={LOGO_WHITE} alt="TouchNet" className="h-7 object-contain" style={{ opacity: 0.6 }} />
             <span className="text-[8px] font-black mono px-2 py-0.5 rounded teal-chip" style={{ letterSpacing: "0.2em" }}>TMS v3.0</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-5 text-xs" style={{ color: "rgba(0,212,212,0.5)" }}>

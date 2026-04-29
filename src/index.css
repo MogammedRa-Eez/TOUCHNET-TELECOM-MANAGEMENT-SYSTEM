@@ -24,15 +24,15 @@
     --secondary-foreground: 0 0% 80%;
     --muted:               0 0% 14%;
     --muted-foreground:    0 0% 55%;
-    --accent:              348 75% 50%;
+    --accent:              0 69% 32%;
     --accent-foreground:   0 0% 100%;
-    --destructive:         348 75% 50%;
+    --destructive:         0 69% 32%;
     --destructive-foreground: 0 0% 100%;
     --border:              0 0% 20%;
     --input:               0 0% 16%;
     --ring:                180 100% 35%;
     --chart-1:             180 100% 40%;
-    --chart-2:             348 75% 50%;
+    --chart-2:             0 69% 32%;
     --chart-3:             195 80% 50%;
     --chart-4:             38 85% 55%;
     --chart-5:             152 65% 45%;
@@ -44,7 +44,7 @@
     --sidebar-accent:      0 0% 12%;
     --sidebar-accent-foreground: 0 0% 80%;
     --sidebar-border:      0 0% 15%;
-    --sidebar-ring:        348 75% 50%;
+    --sidebar-ring:        0 69% 32%;
 
     /* ── Brand Palette — Teal & Red on Black ── */
     --teal:        #00b4b4;
@@ -53,11 +53,11 @@
     --teal-pale:   rgba(0,180,180,0.12);
     --teal-glow:   rgba(0,180,180,0.25);
 
-    --red:         #e02347;
-    --red-light:   #ff3358;
-    --red-soft:    #ff6680;
-    --red-pale:    rgba(224,35,71,0.12);
-    --red-glow:    rgba(224,35,71,0.25);
+    --red:         #8B1A1A;
+    --red-light:   #a52020;
+    --red-soft:    #c23030;
+    --red-pale:    rgba(139,26,26,0.12);
+    --red-glow:    rgba(139,26,26,0.25);
 
     /* Keep legacy vars pointing to new brand */
     --navy:        #00b4b4;
@@ -66,11 +66,11 @@
     --navy-pale:   rgba(0,180,180,0.10);
     --navy-glow:   rgba(0,180,180,0.2);
 
-    --crimson:     #e02347;
-    --crimson-light: #ff3358;
-    --crimson-soft:  #ff6680;
-    --crimson-pale:  rgba(224,35,71,0.10);
-    --crimson-glow:  rgba(224,35,71,0.2);
+    --crimson:     #8B1A1A;
+    --crimson-light: #a52020;
+    --crimson-soft:  #c23030;
+    --crimson-pale:  rgba(139,26,26,0.10);
+    --crimson-glow:  rgba(139,26,26,0.2);
 
     --sky:         #22d3ee;
     --sky-soft:    #67e8f9;
@@ -112,9 +112,9 @@
     --sidebar-mid:   #0f0f0f;
 
     /* ── Gradients ── */
-    --brand-gradient: linear-gradient(135deg, #00b4b4, #007a7a, #e02347);
+    --brand-gradient: linear-gradient(135deg, #00b4b4, #007a7a, #8B1A1A);
     --hero-gradient:  linear-gradient(135deg, #111111 0%, #1a1a1a 50%, #0f0f0f 100%);
-    --accent-bar:     linear-gradient(90deg, #00b4b4, #00d4d4, #e02347, #ff3358);
+    --accent-bar:     linear-gradient(90deg, #00b4b4, #00d4d4, #8B1A1A, #a52020);
     --shimmer-light:  linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
   }
 }
@@ -195,7 +195,7 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #00b4b4, #00d4d4, rgba(255,255,255,0.65), #00b4b4, #e02347, #00b4b4, transparent);
+  background: linear-gradient(90deg, #00b4b4, #00d4d4, rgba(255,255,255,0.65), #00b4b4, #8B1A1A, #00b4b4, transparent);
   background-size: 300% auto;
   animation: border-rotate 6s ease infinite;
 }
@@ -301,12 +301,12 @@
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #e02347, #ff3358);
+  background: linear-gradient(135deg, #8B1A1A, #a52020);
   color: #fff;
   font-weight: 700;
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(224,35,71,0.3);
-  border: 1px solid rgba(224,35,71,0.35);
+  box-shadow: 0 4px 16px rgba(139,26,26,0.3);
+  border: 1px solid rgba(139,26,26,0.35);
 }
 
 .btn-secondary {
@@ -829,8 +829,8 @@ tbody tr.fx-row { position: relative; transition: all 0.15s ease; }
 .neon-border { animation: neon-pulse 3s ease-in-out infinite; }
 
 @keyframes neon-pulse-crimson {
-  0%, 100% { box-shadow: 0 0 4px rgba(224,35,71,0.4), 0 0 12px rgba(224,35,71,0.15); }
-  50%       { box-shadow: 0 0 10px rgba(224,35,71,0.7), 0 0 28px rgba(224,35,71,0.3); }
+  0%, 100% { box-shadow: 0 0 4px rgba(139,26,26,0.4), 0 0 12px rgba(139,26,26,0.15); }
+  50%       { box-shadow: 0 0 10px rgba(139,26,26,0.7), 0 0 28px rgba(139,26,26,0.3); }
 }
 .neon-border-crimson { animation: neon-pulse-crimson 3s ease-in-out infinite; }
 
@@ -857,8 +857,8 @@ tbody tr.fx-row { position: relative; transition: all 0.15s ease; }
 }
 .bracket-card::after {
   bottom: 6px; right: 6px;
-  border-bottom: 2px solid rgba(224,35,71,0.35);
-  border-right: 2px solid rgba(224,35,71,0.35);
+  border-bottom: 2px solid rgba(139,26,26,0.4);
+  border-right: 2px solid rgba(139,26,26,0.4);
 }
 
 .data-indicator { display: inline-flex; gap: 2px; align-items: center; }
@@ -989,9 +989,9 @@ tbody tr.premium-row:hover::before {
   font-weight: 700;
 }
 .chip-crimson {
-  background: rgba(224,35,71,0.10);
-  color: #ff3358;
-  border: 1px solid rgba(224,35,71,0.2);
+  background: rgba(139,26,26,0.12);
+  color: #c23030;
+  border: 1px solid rgba(139,26,26,0.25);
   border-radius: 8px;
   padding: 2px 10px;
   font-size: 11px;
