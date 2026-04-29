@@ -23,7 +23,8 @@ const NAVY_P  = "#00a0a0";
 const CRIMSN  = "#8B1A1A";
 const CRIMSN_L = "#a52020";
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
-const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
+// New detailed crest — full white fill, works on dark backgrounds
+const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const NAV_GROUPS = [
   {
@@ -134,14 +135,18 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           }}
         >
           <div className="flex items-center gap-3">
-            {/* Badge icon */}
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)" }}>
+            {/* Badge icon — new detailed crest */}
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden relative"
+              style={{
+                background: "linear-gradient(135deg, rgba(0,180,180,0.15), rgba(139,26,26,0.08))",
+                border: "1px solid rgba(0,212,212,0.25)",
+                boxShadow: "0 0 16px rgba(0,180,180,0.15)"
+              }}>
               <img
                 src={LOGO_BADGE}
                 alt="TouchNet Crest"
-                className="w-10 h-10 object-contain"
-                style={{ opacity: 0.92 }}
+                className="w-9 h-9 object-contain"
+                style={{ opacity: 0.95, filter: "drop-shadow(0 0 6px rgba(0,212,212,0.4))" }}
               />
             </div>
             <div>
@@ -289,7 +294,13 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
             ))}
           </div>
 
-          <p className="text-center text-[9px]" style={{ color: "rgba(255,255,255,0.18)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.15em" }}>
+          <div className="flex items-center justify-center gap-2 mt-1">
+            <img src={LOGO_BADGE} alt="Crest" className="w-5 h-5 object-contain" style={{ opacity: 0.25, filter: "drop-shadow(0 0 4px rgba(0,212,212,0.3))" }} />
+            <p className="text-center text-[8px]" style={{ color: "rgba(0,212,212,0.2)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.18em" }}>
+              BUILD · CONNECT · PROTECT
+            </p>
+          </div>
+          <p className="text-center text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.12)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.15em" }}>
             TOUCHNET · TMS v3.0
           </p>
         </div>

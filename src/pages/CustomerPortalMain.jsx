@@ -23,7 +23,7 @@ import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_TEAL     = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
-const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
+const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const STATUS_CFG = {
   active:     { color: "#10b981", label: "Active",     bg: "rgba(16,185,129,0.1)",  border: "rgba(16,185,129,0.25)" },
@@ -218,6 +218,11 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
                 )}
               </div>
             </div>
+          </div>
+          {/* Crest motto strip */}
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <img src={LOGO_BADGE} alt="Crest" className="w-5 h-5 object-contain" style={{ opacity: 0.35 }} />
+            <span className="text-[7px] font-black uppercase tracking-[0.22em] mono" style={{ color: "rgba(0,212,212,0.25)" }}>BUILD · CONNECT · PROTECT</span>
           </div>
           <button onClick={() => base44.auth.logout("/")}
             className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-[1.02] active:scale-95"

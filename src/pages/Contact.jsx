@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 const LOGO_WHITE   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_TEAL    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
 const LOGO_MAROON  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
+const CREST_WHITE  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -41,6 +42,13 @@ export default function Contact() {
       <main className="max-w-4xl mx-auto px-6 py-16 space-y-12">
         {/* Hero */}
         <section className="text-center space-y-3">
+          <div className="flex justify-center mb-4">
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg,rgba(0,180,180,0.1),rgba(139,26,26,0.06))", border: "1px solid rgba(0,212,212,0.2)", boxShadow: "0 0 30px rgba(0,180,180,0.1)" }}>
+              <img src={CREST_WHITE} alt="TouchNet Crest" className="w-14 h-14 object-contain"
+                style={{ filter: "drop-shadow(0 0 8px rgba(0,212,212,0.3))", opacity: 0.88 }} />
+            </div>
+          </div>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider"
             style={{ background: "rgba(0,180,180,0.1)", color: "#00b4b4", border: "1px solid rgba(0,180,180,0.25)" }}>
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#00b4b4" }} />

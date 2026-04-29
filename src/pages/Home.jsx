@@ -7,11 +7,13 @@ import {
 } from "lucide-react";
 import CinematicShowcase from "@/components/home/CinematicShowcase";
 
-const LOGO_WHITE  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
-const LOGO_TEAL   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
-const LOGO_MAROON = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
-const LOGO_BLACK  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/cc31cbbda_Touchnet_LogoLongBlack.png";
-const CREST_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/2d938c587_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
+const LOGO_WHITE        = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
+const LOGO_TEAL         = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
+const LOGO_MAROON       = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
+const LOGO_BLACK        = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/cc31cbbda_Touchnet_LogoLongBlack.png";
+const CREST_WHITE       = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
+const CREST_BLACK       = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/c45eb271a_Touchnet-CrestDesogm_CrestFinalFullBlack.png";
+const CREST_OUTLINE     = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/1a6cf59be_Touchnet-CrestDesogm_CrestFinalBlackOutlines.png";
 
 const NAVY   = "#00b4b4";
 const CRIMSN = "#8B1A1A";
@@ -121,25 +123,50 @@ export default function Home() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-16 pb-20">
+      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-14 pb-20">
 
-        {/* Logo showcase — three variants side by side */}
-        <div className="flex items-center justify-center gap-8 mb-10 flex-wrap">
-          <div className="flex flex-col items-center gap-2">
-            <div className="px-6 py-3 rounded-2xl teal-glass" style={{ border: "1px solid rgba(0,212,212,0.25)" }}>
-              <img src={LOGO_TEAL} alt="TouchNet Teal" className="h-8 object-contain" />
-            </div>
+        {/* ── Crest hero centrepiece ── */}
+        <div className="relative flex items-center justify-center mb-10">
+          {/* Outer glow rings */}
+          <div className="absolute w-72 h-72 rounded-full pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(0,180,180,0.18) 0%, transparent 65%)", animation: "pulse-navy 3s ease-in-out infinite" }} />
+          <div className="absolute w-52 h-52 rounded-full pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(139,26,26,0.12) 0%, transparent 65%)", animation: "pulse-crimson 4s ease-in-out infinite" }} />
+          {/* Rotating orbit ring */}
+          <div className="absolute w-60 h-60 rounded-full border pointer-events-none"
+            style={{ borderColor: "rgba(0,212,212,0.15)", borderStyle: "dashed", animation: "border-spin 20s linear infinite" }} />
+          {/* Crest container */}
+          <div className="relative w-44 h-44 rounded-3xl flex items-center justify-center"
+            style={{
+              background: "linear-gradient(135deg, rgba(0,180,180,0.12) 0%, rgba(0,0,0,0.4) 50%, rgba(139,26,26,0.08) 100%)",
+              border: "1px solid rgba(0,212,212,0.3)",
+              boxShadow: "0 0 60px rgba(0,180,180,0.2), 0 0 120px rgba(139,26,26,0.08), inset 0 1px 0 rgba(255,255,255,0.06)"
+            }}>
+            {/* Corner brackets */}
+            <div className="absolute top-3 left-3 w-5 h-5" style={{ borderTop: "2px solid rgba(0,212,212,0.6)", borderLeft: "2px solid rgba(0,212,212,0.6)" }} />
+            <div className="absolute top-3 right-3 w-5 h-5" style={{ borderTop: "2px solid rgba(0,212,212,0.6)", borderRight: "2px solid rgba(0,212,212,0.6)" }} />
+            <div className="absolute bottom-3 left-3 w-5 h-5" style={{ borderBottom: "2px solid rgba(139,26,26,0.5)", borderLeft: "2px solid rgba(139,26,26,0.5)" }} />
+            <div className="absolute bottom-3 right-3 w-5 h-5" style={{ borderBottom: "2px solid rgba(139,26,26,0.5)", borderRight: "2px solid rgba(139,26,26,0.5)" }} />
+            <img src={CREST_WHITE} alt="TouchNet Crest" className="w-28 h-28 object-contain"
+              style={{ filter: "drop-shadow(0 0 20px rgba(0,212,212,0.5)) drop-shadow(0 0 40px rgba(0,180,180,0.2))", opacity: 0.95 }} />
           </div>
-          <div className="w-px h-12 hidden sm:block" style={{ background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent)" }} />
-          <div className="flex flex-col items-center gap-2">
-            <div className="px-6 py-3 rounded-2xl" style={{ background: "rgba(139,26,26,0.08)", border: "1px solid rgba(139,26,26,0.25)" }}>
-              <img src={LOGO_MAROON} alt="TouchNet Maroon" className="h-8 object-contain" />
-            </div>
-          </div>
-          <div className="w-px h-12 hidden sm:block" style={{ background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent)" }} />
-          <div className="flex flex-col items-center gap-2">
-            <div className="px-6 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
-              <img src={LOGO_WHITE} alt="TouchNet White" className="h-8 object-contain" />
+        </div>
+
+        {/* Motto ribbon */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-px w-16" style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,212,0.4))" }} />
+          <span className="text-[9px] font-black uppercase tracking-[0.35em] mono" style={{ color: "rgba(0,212,212,0.5)" }}>BUILD · CONNECT · PROTECT</span>
+          <div className="h-px w-16" style={{ background: "linear-gradient(90deg, rgba(0,212,212,0.4), transparent)" }} />
+        </div>
+
+        {/* Logo + version */}
+        <div className="flex items-center gap-3 mb-4">
+          <img src={LOGO_TEAL} alt="TouchNet" className="h-10 object-contain" style={{ opacity: 0.97 }} />
+          <div className="flex flex-col items-start">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+              style={{ background: "rgba(0,212,212,0.06)", border: "1px solid rgba(0,212,212,0.18)" }}>
+              <span className="w-1.5 h-1.5 rounded-full teal-pulse" style={{ background: "#00d4d4" }} />
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] mono" style={{ color: "#00d4d4" }}>TMS v3.0</span>
             </div>
           </div>
         </div>
@@ -149,7 +176,7 @@ export default function Home() {
           style={{ color: "#a0f0f0" }}>
           <Activity className="w-3.5 h-3.5" style={{ color: "#00d4d4" }} />
           <span style={{ fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.12em" }}>
-            TOUCHNET TELECOMMUNICATION MANAGEMENT SYSTEM
+            TELECOMMUNICATION MANAGEMENT SYSTEM
           </span>
           <span className="w-1.5 h-1.5 rounded-full teal-pulse" style={{ background: "#00d4d4", flexShrink: 0 }} />
         </div>
@@ -304,11 +331,22 @@ export default function Home() {
       <section className="relative z-10 px-6 md:px-12 py-20 text-center"
         style={{ borderTop: "1px solid rgba(0,180,180,0.15)" }}>
         <div className="relative inline-flex flex-col items-center">
-          {/* Logo trio in CTA */}
-          <div className="flex items-center justify-center gap-6 mb-8">
-            <img src={LOGO_TEAL} alt="TouchNet" className="h-7 object-contain opacity-80" />
-            <span style={{ color: "rgba(255,255,255,0.1)", fontSize: 20 }}>·</span>
-            <img src={LOGO_MAROON} alt="TouchNet" className="h-7 object-contain opacity-80" />
+          {/* Crest + motto */}
+          <div className="relative mb-8 flex flex-col items-center gap-3">
+            <div className="w-24 h-24 rounded-2xl flex items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg,rgba(0,180,180,0.1),rgba(139,26,26,0.08))",
+                border: "1px solid rgba(0,212,212,0.25)",
+                boxShadow: "0 0 40px rgba(0,180,180,0.15)"
+              }}>
+              <img src={CREST_WHITE} alt="TouchNet Crest" className="w-16 h-16 object-contain"
+                style={{ filter: "drop-shadow(0 0 12px rgba(0,212,212,0.4))", opacity: 0.9 }} />
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-px w-10" style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,212,0.4))" }} />
+              <span className="text-[8px] font-black uppercase tracking-[0.3em] mono" style={{ color: "rgba(0,212,212,0.4)" }}>BUILD · CONNECT · PROTECT</span>
+              <div className="h-px w-10" style={{ background: "linear-gradient(90deg, rgba(0,212,212,0.4), transparent)" }} />
+            </div>
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-3">Ready to get started?</h2>
           <p className="text-sm mb-8" style={{ color: "rgba(160,240,240,0.5)" }}>Sign in with your staff or customer account to access the platform.</p>
@@ -330,6 +368,7 @@ export default function Home() {
         style={{ borderTop: "1px solid rgba(0,180,180,0.15)", background: "rgba(0,0,0,0.3)", backdropFilter: "blur(8px)" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
+            <img src={CREST_WHITE} alt="TouchNet Crest" className="h-8 w-8 object-contain" style={{ opacity: 0.4 }} />
             <img src={LOGO_WHITE} alt="TouchNet" className="h-7 object-contain" style={{ opacity: 0.5 }} />
             <span className="text-[8px] font-black mono px-2 py-0.5 rounded teal-chip" style={{ letterSpacing: "0.2em" }}>TMS v3.0</span>
           </div>

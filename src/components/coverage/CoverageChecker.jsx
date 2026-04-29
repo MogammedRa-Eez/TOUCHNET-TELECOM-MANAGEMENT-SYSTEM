@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { MapPin, X, Search, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
+const CREST_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
+
 export default function CoverageChecker({ onClose }) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,10 +48,10 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
         style={{ background: "#1a1a1a", border: "1px solid rgba(0,180,180,0.3)", boxShadow: "0 24px 80px rgba(0,0,0,0.7)" }}>
         <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#8B1A1A,transparent)" }} />
         <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-              style={{ background: "rgba(139,26,26,0.15)", border: "1px solid rgba(139,26,26,0.3)" }}>
-              <MapPin className="w-4 h-4" style={{ color: "#8B1A1A" }} />
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg,rgba(0,180,180,0.15),rgba(139,26,26,0.08))", border: "1px solid rgba(0,212,212,0.25)" }}>
+              <img src={CREST_WHITE} alt="TouchNet" className="w-6 h-6 object-contain" style={{ opacity: 0.9 }} />
             </div>
             <div>
               <p className="text-[14px] font-black" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Coverage Checker</p>

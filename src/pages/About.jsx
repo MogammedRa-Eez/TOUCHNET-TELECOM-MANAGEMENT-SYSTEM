@@ -5,6 +5,8 @@ import { Wifi, Users, BarChart3, Network, ArrowRight } from "lucide-react";
 const LOGO_WHITE   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_TEAL    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
 const LOGO_MAROON  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/644418237_Touchnet_LogoLongMaroon.png";
+const CREST_WHITE  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
+const CREST_OUTLINE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/1a6cf59be_Touchnet-CrestDesogm_CrestFinalBlackOutlines.png";
 
 export default function About() {
   return (
@@ -27,6 +29,27 @@ export default function About() {
       <main className="max-w-4xl mx-auto px-6 py-16 space-y-16">
         {/* Hero */}
         <section className="text-center space-y-4">
+          {/* Crest centrepiece */}
+          <div className="flex justify-center mb-6">
+            <div className="relative w-28 h-28 rounded-2xl flex items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, rgba(0,180,180,0.1), rgba(139,26,26,0.06))",
+                border: "1px solid rgba(0,212,212,0.2)",
+                boxShadow: "0 0 40px rgba(0,180,180,0.12)"
+              }}>
+              <div className="absolute top-2 left-2 w-3 h-3" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderLeft: "1.5px solid rgba(0,212,212,0.5)" }} />
+              <div className="absolute top-2 right-2 w-3 h-3" style={{ borderTop: "1.5px solid rgba(0,212,212,0.5)", borderRight: "1.5px solid rgba(0,212,212,0.5)" }} />
+              <div className="absolute bottom-2 left-2 w-3 h-3" style={{ borderBottom: "1.5px solid rgba(139,26,26,0.4)", borderLeft: "1.5px solid rgba(139,26,26,0.4)" }} />
+              <div className="absolute bottom-2 right-2 w-3 h-3" style={{ borderBottom: "1.5px solid rgba(139,26,26,0.4)", borderRight: "1.5px solid rgba(139,26,26,0.4)" }} />
+              <img src={CREST_WHITE} alt="TouchNet Crest" className="w-20 h-20 object-contain"
+                style={{ filter: "drop-shadow(0 0 12px rgba(0,212,212,0.35))", opacity: 0.9 }} />
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="h-px w-12" style={{ background: "linear-gradient(90deg, transparent, rgba(0,212,212,0.4))" }} />
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] mono" style={{ color: "rgba(0,212,212,0.5)" }}>BUILD · CONNECT · PROTECT</span>
+            <div className="h-px w-12" style={{ background: "linear-gradient(90deg, rgba(0,212,212,0.4), transparent)" }} />
+          </div>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider"
             style={{ background: "rgba(0,180,180,0.1)", color: "#00b4b4", border: "1px solid rgba(0,180,180,0.25)" }}>
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#00b4b4" }} />
