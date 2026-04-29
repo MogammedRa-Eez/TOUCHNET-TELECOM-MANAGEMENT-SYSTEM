@@ -1,0 +1,53 @@
+{
+  "name": "ProjectActivity",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Linked FibreProject ID"
+    },
+    "quote_number": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "status_change",
+        "task_update",
+        "document_upload",
+        "approval",
+        "milestone",
+        "note",
+        "field_update"
+      ],
+      "default": "note"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short summary of the activity"
+    },
+    "detail": {
+      "type": "string",
+      "description": "Extra detail / old \u2192 new value"
+    },
+    "actor": {
+      "type": "string",
+      "description": "Email of user who triggered this"
+    },
+    "old_value": {
+      "type": "string"
+    },
+    "new_value": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional extended description for this activity entry (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "project_id",
+    "title"
+  ]
+}

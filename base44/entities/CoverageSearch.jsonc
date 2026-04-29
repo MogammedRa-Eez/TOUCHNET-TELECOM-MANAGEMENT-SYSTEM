@@ -33,6 +33,11 @@
     "province": {
       "type": "string",
       "description": "Province extracted from display_name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional notes or context about this coverage search result (up to 1000 characters)",
+      "maxLength": 1000
     }
   },
   "required": [

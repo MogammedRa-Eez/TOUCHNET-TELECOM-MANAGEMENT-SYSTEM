@@ -1,0 +1,59 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "The email of the user this notification is for"
+    },
+    "title": {
+      "type": "string",
+      "description": "Notification title"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message body"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "success"
+      ],
+      "default": "info",
+      "description": "Notification type"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "network",
+        "billing",
+        "ticket",
+        "system",
+        "customer"
+      ],
+      "default": "system",
+      "description": "Notification category"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "link_page": {
+      "type": "string",
+      "description": "Optional page name to navigate to"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional extended detail for this notification (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "user_email",
+    "title",
+    "message"
+  ]
+}

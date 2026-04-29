@@ -1,0 +1,60 @@
+{
+  "name": "Employee",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string",
+      "enum": [
+        "sales",
+        "projects",
+        "finance",
+        "cyber_security",
+        "technical",
+        "hr"
+      ],
+      "description": "Department"
+    },
+    "role": {
+      "type": "string",
+      "description": "Job title/role"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "on_leave",
+        "terminated"
+      ],
+      "default": "active"
+    },
+    "hire_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "salary": {
+      "type": "number"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional notes or bio for this employee (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "full_name",
+    "email",
+    "department"
+  ]
+}

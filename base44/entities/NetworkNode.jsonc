@@ -1,0 +1,80 @@
+{
+  "name": "NetworkNode",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Node name/identifier"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "core_router",
+        "distribution_switch",
+        "access_point",
+        "olt",
+        "bts",
+        "server"
+      ],
+      "description": "Node type"
+    },
+    "location": {
+      "type": "string",
+      "description": "Physical location"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "online",
+        "offline",
+        "degraded",
+        "maintenance"
+      ],
+      "default": "online"
+    },
+    "uptime_percent": {
+      "type": "number",
+      "description": "Uptime percentage"
+    },
+    "bandwidth_utilization": {
+      "type": "number",
+      "description": "Current bandwidth utilization percentage"
+    },
+    "connected_customers": {
+      "type": "number",
+      "description": "Number of connected customers"
+    },
+    "max_capacity": {
+      "type": "number",
+      "description": "Maximum capacity"
+    },
+    "last_maintenance": {
+      "type": "string",
+      "format": "date"
+    },
+    "firmware_version": {
+      "type": "string"
+    },
+    "parent_node_id": {
+      "type": "string",
+      "description": "ID of the parent node this node connects to"
+    },
+    "custom_fields": {
+      "type": "object",
+      "description": "Custom key-value fields for device-specific information"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this network node (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "status"
+  ]
+}

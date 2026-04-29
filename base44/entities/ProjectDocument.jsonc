@@ -1,0 +1,50 @@
+{
+  "name": "ProjectDocument",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Linked FibreProject ID"
+    },
+    "quote_number": {
+      "type": "string"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "vendor_quote",
+        "purchase_order",
+        "site_survey",
+        "planning_lla",
+        "wayleave",
+        "handover_doc",
+        "client_takeon_form",
+        "contract",
+        "other"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "description": "Document name/description"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of uploaded document"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Email of uploader"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional notes or context about this document (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "project_id",
+    "document_type",
+    "name",
+    "file_url"
+  ]
+}

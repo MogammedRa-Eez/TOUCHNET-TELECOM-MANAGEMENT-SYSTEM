@@ -1,0 +1,56 @@
+{
+  "name": "CustomerDocument",
+  "type": "object",
+  "properties": {
+    "customer_id": {
+      "type": "string",
+      "description": "Linked Customer ID"
+    },
+    "customer_name": {
+      "type": "string",
+      "description": "Customer display name"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "signed_contract",
+        "installation_photo",
+        "id_copy",
+        "proof_of_address",
+        "other"
+      ],
+      "default": "other",
+      "description": "Category of document"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable document name"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Uploaded file URL"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "file_mime": {
+      "type": "string",
+      "description": "MIME type of the file"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Email of the uploader"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional notes or context about this document (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "customer_id",
+    "name",
+    "file_url"
+  ]
+}

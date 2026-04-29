@@ -13,6 +13,8 @@ import NotificationSettings from './pages/NotificationSettings';
 import Quotes from './pages/Quotes.jsx';
 import AIAssistant from './pages/AIAssistant';
 import Home from './pages/Home';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import SystemDemo from './pages/SystemDemo';
 import CoverageCheck from './pages/CoverageCheck.jsx';
@@ -98,6 +100,8 @@ const AuthenticatedApp = () => {
       <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
       <Route path="/CoverageCheck" element={<CoverageCheck />} />
       <Route path="/quote" element={<QuoteView />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/CynetSecurity" element={
         <LayoutWrapper currentPageName="CynetSecurity">
           <CynetSecurity />

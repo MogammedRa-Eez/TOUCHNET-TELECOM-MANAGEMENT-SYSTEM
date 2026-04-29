@@ -1,0 +1,94 @@
+{
+  "name": "NotificationRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Rule name/description"
+    },
+    "entity_name": {
+      "type": "string",
+      "enum": [
+        "Customer",
+        "Ticket",
+        "Invoice",
+        "FibreProject"
+      ],
+      "description": "Entity to watch"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update",
+        "any"
+      ],
+      "default": "any",
+      "description": "Trigger on create, update, or any"
+    },
+    "field_name": {
+      "type": "string",
+      "description": "Field to watch for changes (e.g. status). Leave blank to trigger on any change."
+    },
+    "field_value": {
+      "type": "string",
+      "description": "Trigger only when field equals this value (e.g. overdue). Leave blank for any value."
+    },
+    "notify_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of email addresses to notify"
+    },
+    "send_email": {
+      "type": "boolean",
+      "default": false,
+      "description": "Send email notification"
+    },
+    "send_in_app": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send in-app notification"
+    },
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "success"
+      ],
+      "default": "info"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "network",
+        "billing",
+        "ticket",
+        "system",
+        "customer"
+      ],
+      "default": "system"
+    },
+    "message_template": {
+      "type": "string",
+      "description": "Custom message template. Use {name} and {status} as placeholders."
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description explaining what this rule does (up to 1000 characters)",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "name",
+    "entity_name",
+    "event_type"
+  ]
+}
