@@ -5,7 +5,7 @@ import { base44 } from "@/api/base44Client";
 import {
   LayoutDashboard, Users, Receipt, TicketCheck, Network, UserCog,
   Bot, Shield, Package, Settings, Mail, HeartHandshake,
-  Home, Play, FileText, Bell, X, Menu, Activity, Zap,
+  Home, Play, FileText, Bell, X, Menu, Activity, Zap, BookOpen,
 } from "lucide-react";
 import { RBACProvider, useRBAC } from "@/components/rbac/RBACContext";
 import UserMenu from "@/components/layout/UserMenu";
@@ -74,6 +74,7 @@ const NAV_GROUPS = [
     items: [
       { name: "Roles",          page: "RolesManagement",      icon: Shield,   perm: "roles_management" },
       { name: "Notifications",  page: "NotificationSettings", icon: Bell,     perm: "roles_management" },
+      { name: "User Manual",    page: "UserManual",           icon: BookOpen, perm: null },
       { name: "Settings",       page: "UserSettings",         icon: Settings, perm: null },
     ],
   },

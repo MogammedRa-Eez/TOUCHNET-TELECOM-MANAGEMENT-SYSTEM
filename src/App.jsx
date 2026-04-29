@@ -19,6 +19,7 @@ import Dashboard from './pages/Dashboard';
 import SystemDemo from './pages/SystemDemo';
 import CoverageCheck from './pages/CoverageCheck.jsx';
 import QuoteView from './pages/QuoteView';
+import UserManual from './pages/UserManual';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -99,6 +100,11 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
       <Route path="/CoverageCheck" element={<CoverageCheck />} />
+      <Route path="/UserManual" element={
+        <LayoutWrapper currentPageName="UserManual">
+          <UserManual />
+        </LayoutWrapper>
+      } />
       <Route path="/quote" element={<QuoteView />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
