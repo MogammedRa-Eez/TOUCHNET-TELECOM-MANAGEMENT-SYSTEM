@@ -768,9 +768,12 @@ export default function UserManual() {
       doc.setFont("helvetica", "normal");
       doc.text("TELECOMMUNICATIONS MANAGEMENT SYSTEM · TMS v3.0", pageW / 2, 146, { align: "center" });
 
+      const generatedDate = new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long", day: "numeric" });
+      const generatedDateTime = new Date().toLocaleString("en-ZA", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+
       doc.setFontSize(9);
       doc.setTextColor(...muted);
-      doc.text(`Version 3.0  ·  ${new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long" })}  ·  TouchNet (Pty) Ltd`, pageW / 2, 158, { align: "center" });
+      doc.text(`Version 3.0  ·  Generated: ${generatedDateTime}  ·  TouchNet (Pty) Ltd`, pageW / 2, 158, { align: "center" });
 
       // Bottom accent
       doc.setFillColor(...crimson);
@@ -895,7 +898,8 @@ export default function UserManual() {
       doc.text(`© ${new Date().getFullYear()} TouchNet (Pty) Ltd · All rights reserved · TouchNet TMS v3.0`, pageW / 2, pageH / 2, { align: "center" });
       doc.text("For technical support: support@touchnet.co.za", pageW / 2, pageH / 2 + 8, { align: "center" });
 
-      doc.save("TouchNet_TMS_User_Manual.pdf");
+      const dateStamp = new Date().toISOString().slice(0, 10);
+      doc.save(`TouchNet_TMS_User_Manual_${dateStamp}.pdf`);
     } finally {
       setGenerating(false);
     }
@@ -1096,7 +1100,7 @@ export default function UserManual() {
                     ))}
                   </div>
                   <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11 }}>
-                    Version 3.0 · {new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long" })} · TouchNet (Pty) Ltd
+                    Version 3.0 · {new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long", day: "numeric" })} · TouchNet (Pty) Ltd
                   </p>
                 </div>
               </div>
