@@ -45,7 +45,7 @@ export default function CoverageChecker({ onClose }) {
       const available = PROVIDERS_QUICK.filter(p =>
         p.zones.some(z => haversine(geo.lat,geo.lng,z.lat,z.lng) <= z.r)
       );
-      setResult({available, displayName:geo.displayName, lat:geo.lat, lng:geo.lng});
+      setResult({available, displayName:geo.displayName});
       base44.entities.CoverageSearch.create({
         query:address.trim(), display_name:geo.displayName,
         lat:geo.lat, lng:geo.lng, covered:available.length>0
