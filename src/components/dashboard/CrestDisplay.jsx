@@ -41,6 +41,23 @@ export default function CrestDisplay({ nodes = [] }) {
           0%   { background-position: -200% 0; }
           100% { background-position:  200% 0; }
         }
+        @keyframes glass-rotate {
+          0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 1; }
+          100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); opacity: 0; }
+        }
+        @keyframes glass-sweep {
+          0%   { transform: rotate(-30deg) scaleX(0); opacity: 0; }
+          20%  { transform: rotate(-30deg) scaleX(1); opacity: 1; }
+          80%  { transform: rotate(210deg) scaleX(1); opacity: 1; }
+          100% { transform: rotate(210deg) scaleX(0); opacity: 0; }
+        }
+        @keyframes crest-holo {
+          0%   { background-position: 0% 50%; opacity: 0.5; }
+          50%  { background-position: 100% 50%; opacity: 1; }
+          100% { background-position: 0% 50%; opacity: 0.5; }
+        }
         @keyframes particle-orbit {
           from { transform: rotate(0deg) translateX(var(--orbit-r)) rotate(0deg); }
           to   { transform: rotate(360deg) translateX(var(--orbit-r)) rotate(-360deg); }
@@ -134,20 +151,20 @@ export default function CrestDisplay({ nodes = [] }) {
 
         {/* Centre glow platform */}
         <div className="absolute rounded-full" style={{
-          width:148, height:148,
-          background:"radial-gradient(circle, rgba(0,212,212,0.08) 0%, rgba(0,180,180,0.04) 50%, transparent 100%)",
-          border:"1px solid rgba(0,212,212,0.15)",
-          boxShadow:"0 0 40px rgba(0,180,180,0.15), 0 0 80px rgba(0,180,180,0.06)",
+          width:188, height:188,
+          background:"radial-gradient(circle, rgba(0,212,212,0.1) 0%, rgba(0,180,180,0.05) 50%, transparent 100%)",
+          border:"1px solid rgba(0,212,212,0.18)",
+          boxShadow:"0 0 60px rgba(0,180,180,0.2), 0 0 120px rgba(0,180,180,0.08)",
         }}/>
 
         {/* ── Beacon ping ── */}
         <div className="absolute rounded-full" style={{
-          width:148, height:148,
+          width:188, height:188,
           border:"2px solid rgba(0,212,212,0.35)",
           animation:"beacon-ping 3s ease-out infinite",
         }}/>
         <div className="absolute rounded-full" style={{
-          width:148, height:148,
+          width:188, height:188,
           border:"2px solid rgba(0,212,212,0.2)",
           animation:"beacon-ping 3s ease-out infinite",
           animationDelay:"1s",
@@ -159,25 +176,59 @@ export default function CrestDisplay({ nodes = [] }) {
           zIndex:10,
           animation:"crest-float 6s ease-in-out infinite",
           transformStyle:"preserve-3d",
-          filter:"drop-shadow(0 0 24px rgba(0,212,212,0.5)) drop-shadow(0 12px 40px rgba(0,0,0,0.7)) drop-shadow(0 0 60px rgba(0,180,180,0.2))",
+          filter:"drop-shadow(0 0 32px rgba(0,212,212,0.65)) drop-shadow(0 16px 48px rgba(0,0,0,0.8)) drop-shadow(0 0 80px rgba(0,180,180,0.3))",
         }}>
-          {/* Shimmer overlay */}
+          {/* Glass rotation ring */}
           <div style={{
-            position:"absolute", inset:0,
-            background:"linear-gradient(115deg,transparent 30%,rgba(0,212,212,0.18) 50%,transparent 70%)",
-            backgroundSize:"200% 100%",
-            animation:"shimmer-crest 3s ease-in-out infinite",
+            position:"absolute",
+            inset:-24,
+            borderRadius:"50%",
+            background:"conic-gradient(from 0deg, transparent 0%, rgba(0,212,212,0.35) 15%, rgba(255,255,255,0.5) 25%, rgba(0,212,212,0.35) 35%, transparent 50%, rgba(139,26,26,0.2) 65%, rgba(255,255,255,0.25) 75%, rgba(139,26,26,0.15) 85%, transparent 100%)",
+            animation:"glass-rotate 4s linear infinite",
+            WebkitMaskImage:"radial-gradient(circle, transparent 55%, black 57%, black 100%)",
+            maskImage:"radial-gradient(circle, transparent 55%, black 57%, black 100%)",
+            pointerEvents:"none",
+            zIndex:9,
+          }}/>
+          {/* Second glass ring — counter */}
+          <div style={{
+            position:"absolute",
+            inset:-14,
+            borderRadius:"50%",
+            background:"conic-gradient(from 180deg, transparent 0%, rgba(0,180,180,0.2) 20%, rgba(255,255,255,0.3) 30%, transparent 45%, rgba(0,212,212,0.15) 70%, rgba(255,255,255,0.2) 80%, transparent 100%)",
+            animation:"glass-rotate 7s linear infinite reverse",
+            WebkitMaskImage:"radial-gradient(circle, transparent 66%, black 68%, black 100%)",
+            maskImage:"radial-gradient(circle, transparent 66%, black 68%, black 100%)",
+            pointerEvents:"none",
+            zIndex:9,
+          }}/>
+          {/* Holo shimmer overlay */}
+          <div style={{
+            position:"absolute", inset:-8,
+            background:"linear-gradient(135deg, transparent 0%, rgba(0,212,212,0.15) 25%, rgba(255,255,255,0.25) 50%, rgba(0,212,212,0.1) 75%, transparent 100%)",
+            backgroundSize:"300% 300%",
+            animation:"crest-holo 3.5s ease-in-out infinite",
             borderRadius:"50%",
             pointerEvents:"none",
-            zIndex:11,
+            zIndex:12,
+          }}/>
+          {/* Main shimmer sweep */}
+          <div style={{
+            position:"absolute", inset:0,
+            background:"linear-gradient(115deg,transparent 30%,rgba(255,255,255,0.22) 50%,transparent 70%)",
+            backgroundSize:"200% 100%",
+            animation:"shimmer-crest 2.5s ease-in-out infinite",
+            borderRadius:"50%",
+            pointerEvents:"none",
+            zIndex:13,
           }}/>
           <img
             src={CREST_URL}
             alt="TouchNet Crest"
             style={{
-              width:112, height:112,
+              width:152, height:152,
               objectFit:"contain",
-              opacity:0.95,
+              opacity:0.97,
               position:"relative",
               zIndex:10,
             }}
