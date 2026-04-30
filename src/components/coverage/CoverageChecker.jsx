@@ -30,7 +30,6 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
           }
         }
       });
-      // Log the search
       base44.entities.CoverageSearch.create({
         query: address.trim(),
         covered: res.covered,

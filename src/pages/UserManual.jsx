@@ -1,5 +1,11 @@
 import React, { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
+import {
+  KPICardsDemo, RevenueChartDemo, SLADemo, TicketStatusFlowDemo,
+  ProjectPipelineDemo, ProjectTasksDemo, NetworkNodesDemo,
+  PermissionsMatrixDemo, QuoteLifecycleDemo, DepartmentDonutDemo,
+  NotificationTypesDemo
+} from "@/components/manual/ManualVisualizations";
 import { Link } from "react-router-dom";
 import {
   Printer, Download, ChevronRight, ChevronDown, Loader2,
@@ -196,6 +202,7 @@ If your account is not found, contact your system administrator to have your acc
     body: `The Dashboard is the central operational hub of TouchNet TMS. It displays a live overview of the entire business and is available to users with the "dashboard" permission.`
   },
   "dash-kpis": {
+    viz: "kpi-cards",
     body: `The top section of the Dashboard displays four key performance indicator (KPI) cards:
 
 • Total Customers — count of all active customer records
@@ -206,6 +213,7 @@ If your account is not found, contact your system administrator to have your acc
 Each KPI card shows a trend indicator and links to the relevant module. Cards update in real time as data changes.`
   },
   "dash-alerts": {
+    viz: "notification-types",
     body: `The alert ticker at the top of the Dashboard cycles through:
 
 • Critical and high-priority support tickets
@@ -263,6 +271,7 @@ Status changes take effect immediately and affect the customer's portal access.`
     body: `The Billing module manages all financial transactions. Access is controlled by the "billing" permission.`
   },
   "bill-create": {
+    viz: "revenue-chart",
     body: `To create a new invoice:
 
 1. Navigate to Billing in the sidebar.
@@ -311,6 +320,7 @@ Batch-generated invoices are created in "Sent" status. Use this feature for mont
 8. Save as Draft.`
   },
   "quote-send": {
+    viz: "quote-lifecycle",
     body: `To send a quote to a customer:
 
 1. Open the quote and click "Send Quote".
@@ -325,6 +335,7 @@ Quote status lifecycle: Draft → Sent → Viewed → Accepted / Declined / Expi
     body: `The Tickets module is the helpdesk system for managing customer and internal support requests.`
   },
   "tkt-create": {
+    viz: "ticket-status",
     body: `Tickets can be created by:
 
 • Staff: Navigate to Tickets → New Ticket. Select the customer, set subject, description, category, department, and priority.
@@ -334,6 +345,7 @@ Quote status lifecycle: Draft → Sent → Viewed → Accepted / Declined / Expi
 Ticket number is auto-assigned. Assign the ticket to a staff member using the "Assigned To" field.`
   },
   "tkt-sla": {
+    viz: "sla",
     body: `Each ticket has an SLA deadline based on its priority:
 
 • Critical — 2 hours
@@ -352,6 +364,7 @@ To reassign a ticket to a different department, edit the "Department" field on t
     body: `The Fibre Projects module tracks infrastructure deployments from initial lead through to live service and billing.`
   },
   "prj-create": {
+    viz: "project-pipeline",
     body: `To create a fibre project:
 
 1. Navigate to Fibre Projects → New Project.
@@ -365,6 +378,7 @@ To reassign a ticket to a different department, edit the "Department" field on t
 A set of standard project tasks and milestones is automatically created for each project.`
   },
   "prj-tasks": {
+    viz: "project-tasks",
     body: `Each project has seven sequential tasks:
 
 1. Welcome Communication — send welcome email to customer
@@ -394,6 +408,7 @@ Approval requests are also visible in the Approvals section of the project detai
     body: `The Network module provides real-time infrastructure monitoring for all registered network nodes.`
   },
   "net-nodes": {
+    viz: "network-nodes",
     body: `Network nodes represent physical devices: core routers, distribution switches, access points, OLTs, BTS towers, and servers.
 
 To add a node:
@@ -442,6 +457,7 @@ The employee's email is used to link them to user accounts and to route departme
 Task statuses: To Do → In Progress → Review → Completed → Cancelled. Employees can update their own task status. Overdue tasks are highlighted in the HR Dashboard.`
   },
   "emp-dept": {
+    viz: "department-donut",
     body: `The Department Dashboard gives each department a tailored view:
 
 • Sales — pipeline, quotes, and customer counts
@@ -492,6 +508,7 @@ Categories: Connectivity, Billing, Installation, General, Security, Speed Issues
 Changes take effect on the user's next page load. Users can be assigned to only one custom role at a time.`
   },
   "role-perms": {
+    viz: "permissions-matrix",
     body: `Available permissions:
 
 Page Access: Dashboard, Customers, Billing, Tickets, Network, Employees, AI Assistant, Roles Management, Fibre Projects, Outlook Mail
@@ -506,6 +523,7 @@ Admin users (role = "admin") bypass all permission checks and have full system a
     body: `The Notifications system allows you to define rules that trigger alerts when data changes in the system.`
   },
   "notif-rules": {
+    viz: "notification-types",
     body: `To create a notification rule:
 
 1. Navigate to Admin → Notifications → New Rule.
@@ -581,6 +599,24 @@ To configure:
 Slack notification content is configured per alert type in the backend functions (slackNodeAlert, slackSlaMonitor, slackOutageNotify).`
   },
 };
+
+/* ── Visualisation renderer ───────────────────────────── */
+function VizBlock({ vizKey }) {
+  const map = {
+    "kpi-cards":          <KPICardsDemo />,
+    "revenue-chart":      <RevenueChartDemo />,
+    "sla":                <SLADemo />,
+    "ticket-status":      <TicketStatusFlowDemo />,
+    "project-pipeline":   <ProjectPipelineDemo />,
+    "project-tasks":      <ProjectTasksDemo />,
+    "network-nodes":      <NetworkNodesDemo />,
+    "permissions-matrix": <PermissionsMatrixDemo />,
+    "quote-lifecycle":    <QuoteLifecycleDemo />,
+    "department-donut":   <DepartmentDonutDemo />,
+    "notification-types": <NotificationTypesDemo />,
+  };
+  return map[vizKey] || null;
+}
 
 /* ── Collapsible TOC item ─────────────────────────────── */
 function TocSection({ section, activeId, onNavigate }) {
@@ -1112,6 +1148,7 @@ export default function UserManual() {
                           </div>
                           <div className="px-5 py-4" style={{ color: "rgba(255,255,255,0.55)", fontSize: 13.5, lineHeight: 1.9, whiteSpace: "pre-line" }}>
                             {subContent.body}
+                            {subContent.viz && <VizBlock vizKey={subContent.viz} />}
                           </div>
                         </div>
                       );
