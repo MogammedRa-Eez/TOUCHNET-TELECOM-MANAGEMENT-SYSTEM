@@ -8,6 +8,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import AICustomerSummary from "@/components/customers/AICustomerSummary";
 
 const STATUS_CFG = {
   active:     { color: "#10b981", bg: "rgba(16,185,129,0.12)",  label: "Active",     glow: "rgba(16,185,129,0.4)" },
@@ -94,6 +95,11 @@ export default function CustomerDetailPanel({ customer, onClose, onEdit, onDelet
             style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
             <X className="w-4 h-4" style={{ color: "rgba(255,255,255,0.5)" }} />
           </button>
+        </div>
+
+        {/* AI Summary */}
+        <div className="px-6 py-3 flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <AICustomerSummary customer={customer} />
         </div>
 
         {/* Stats row */}

@@ -6,7 +6,7 @@ import {
   Plus, Search, Pencil, Trash2, Receipt, DollarSign, AlertCircle,
   CheckCircle2, FileText, RefreshCw, ChevronDown, ChevronUp, Zap,
   BarChart3, Clock, CalendarDays, CreditCard, ArrowUpRight, Sparkles,
-  TrendingUp, Activity, Layers, CircleDollarSign, Download, Cpu
+  TrendingUp, Activity, Layers, CircleDollarSign, Download, Cpu, Mail
 } from "lucide-react";
 import LiveClock from "@/components/shared/LiveClock";
 import { exportToCsv } from "@/utils/exportCsv";
@@ -405,6 +405,18 @@ export default function Billing() {
               style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
               <Download className="w-3.5 h-3.5" /> Export CSV
             </button>
+            {isAdmin && (
+              <button onClick={async () => {
+                toast.promise(base44.functions.invoke("monthlyRevenueReport", {}), {
+                  loading: "Generating report…",
+                  success: "Report sent to your email!",
+                  error: "Failed to generate report"
+                });
+              }} className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
+                style={{ background: "rgba(168,85,247,0.1)", border: "1px solid rgba(168,85,247,0.25)", color: "#a855f7" }}>
+                <Mail className="w-3.5 h-3.5" /> Email Report
+              </button>
+            )}
             {isAdmin && (
               <button onClick={() => { setEditing(null); setShowForm(true); }}
                 className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"

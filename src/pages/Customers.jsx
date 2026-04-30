@@ -14,6 +14,7 @@ import CustomerForm from "../components/customers/CustomerForm";
 import CustomerImport from "../components/customers/CustomerImport";
 import OnboardingWizard from "../components/customers/OnboardingWizard";
 import CustomerDetailPanel from "../components/customers/CustomerDetailPanel";
+import ChurnRiskPanel from "@/components/customers/ChurnRiskPanel";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
@@ -336,6 +337,9 @@ export default function Customers() {
           </div>
         </div>
       </div>
+
+      {/* ── Churn Risk ── */}
+      {!isLoading && customers.length > 0 && <ChurnRiskPanel customers={customers} />}
 
       {/* ── KPI Strip ── */}
       {isLoading ? (

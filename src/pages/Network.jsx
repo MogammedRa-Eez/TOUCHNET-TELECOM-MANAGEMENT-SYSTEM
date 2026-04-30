@@ -11,6 +11,7 @@ import AccessDenied from "@/components/rbac/AccessDenied";
 import NetworkMetricsChart from "@/components/network/NetworkMetricsChart";
 import NetworkTrends from "@/components/network/NetworkTrends";
 import NetworkTopology from "@/components/network/NetworkTopology";
+import BandwidthAlerts from "@/components/network/BandwidthAlerts";
 
 const statusConfig = {
   online:      { bg: "rgba(16,185,129,0.12)",  color: "#10b981", border: "rgba(16,185,129,0.3)",  icon: Wifi,          dot: "#34d399" },
@@ -107,6 +108,10 @@ export default function Network() {
   const [search,   setSearch]   = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [activeTab,    setActiveTab]    = useState("nodes");
+  const [showOutage,   setShowOutage]   = useState(false);
+  const [outageNode,   setOutageNode]   = useState("");
+  const [outageMsg,    setOutageMsg]    = useState("");
+  const [outageLoading, setOutageLoading] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: nodes = [], isLoading } = useQuery({ queryKey: ["network-nodes"], queryFn: () => base44.entities.NetworkNode.list(), enabled: !rbacLoading && can("network") });
@@ -181,6 +186,11 @@ export default function Network() {
               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
               <RefreshCw className="w-3.5 h-3.5" /> Refresh
             </button>
+            <button onClick={() => setShowOutage(true)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-105"
+              style={{ background: "rgba(224,35,71,0.1)", border: "1px solid rgba(224,35,71,0.25)", color: "#e02347" }}>
+              <Zap className="w-3.5 h-3.5" /> Outage Broadcast
+            </button>
             <button onClick={() => { setEditing(null); setShowForm(true); }}
               className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
               style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 20px rgba(0,180,180,0.3)" }}>
@@ -216,6 +226,9 @@ export default function Network() {
           </div>
         ))}
       </div>
+
+      {/* Bandwidth Alerts */}
+      {nodes.length > 0 && <BandwidthAlerts nodes={nodes} />}
 
       {/* Bandwidth bar */}
       {nodes.length > 0 && (
@@ -419,6 +432,66 @@ export default function Network() {
             </div>
           )}
         </>
+      )}
+
+      {showOutage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(16px)" }}>
+          <div className="w-full max-w-md rounded-2xl overflow-hidden" style={{ background: "#1a1a1a", border: "1px solid rgba(224,35,71,0.3)", boxShadow: "0 24px 80px rgba(0,0,0,0.7)" }}>
+            <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#e02347,#f97316,transparent)" }} />
+            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4" style={{ color: "#e02347" }} />
+                <p className="text-[14px] font-black" style={{ color: "#f0f0f0" }}>Outage Broadcast</p>
+              </div>
+              <button onClick={() => setShowOutage(false)} className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.45)" }}>
+                Send an outage notification email to all active customers assigned to a specific node.
+              </p>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>Select Node</label>
+                <select value={outageNode} onChange={e => setOutageNode(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl text-[13px] outline-none"
+                  style={{ background: "#252525", border: "1px solid rgba(255,255,255,0.12)", color: "#f0f0f0" }}>
+                  <option value="">-- Select node --</option>
+                  {nodes.map(n => <option key={n.id} value={n.id}>{n.name} ({n.location || n.type})</option>)}
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>Message to Customers</label>
+                <textarea value={outageMsg} onChange={e => setOutageMsg(e.target.value)} rows={4}
+                  placeholder="We are currently experiencing a service disruption in your area. Our team is investigating and working to restore service as soon as possible."
+                  className="w-full px-3 py-2.5 rounded-xl text-[13px] outline-none resize-none"
+                  style={{ background: "#252525", border: "1px solid rgba(255,255,255,0.12)", color: "#f0f0f0" }} />
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setShowOutage(false)}
+                  className="flex-1 py-2.5 rounded-xl text-[12px] font-bold"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#b0b0b0" }}>
+                  Cancel
+                </button>
+                <button
+                  disabled={!outageNode || !outageMsg.trim() || outageLoading}
+                  onClick={async () => {
+                    setOutageLoading(true);
+                    const { base44 } = await import("@/api/base44Client");
+                    const res = await base44.functions.invoke("networkOutageBroadcast", { nodeId: outageNode, message: outageMsg });
+                    setOutageLoading(false);
+                    setShowOutage(false);
+                    setOutageNode(""); setOutageMsg("");
+                    toast.success(`Broadcast sent to ${res.data?.sent || 0} customers`);
+                  }}
+                  className="flex-1 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 disabled:opacity-40"
+                  style={{ background: "linear-gradient(135deg,#e02347,#a51430)", boxShadow: "0 4px 16px rgba(224,35,71,0.3)" }}>
+                  {outageLoading ? "Sending…" : "Send Broadcast"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {showForm && <NodeForm node={editing} allNodes={nodes} onSubmit={handleSubmit} onCancel={() => { setShowForm(false); setEditing(null); }} />}

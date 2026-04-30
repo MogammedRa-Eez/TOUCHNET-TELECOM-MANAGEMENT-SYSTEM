@@ -75,6 +75,7 @@ const NAV_GROUPS = [
       { name: "Roles",          page: "RolesManagement",      icon: Shield,   perm: "roles_management" },
       { name: "Notifications",  page: "NotificationSettings", icon: Bell,     perm: "roles_management" },
       { name: "User Manual",    page: "UserManual",           icon: BookOpen, perm: null },
+      { name: "Audit Log",      page: "AuditLog",             icon: Shield,   perm: "roles_management" },
       { name: "Settings",       page: "UserSettings",         icon: Settings, perm: null },
     ],
   },

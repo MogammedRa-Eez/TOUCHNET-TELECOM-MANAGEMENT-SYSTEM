@@ -20,6 +20,7 @@ import SystemDemo from './pages/SystemDemo';
 import CoverageCheck from './pages/CoverageCheck.jsx';
 import QuoteView from './pages/QuoteView';
 import UserManual from './pages/UserManual';
+import AuditLog from './pages/AuditLog';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -100,6 +101,11 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
       <Route path="/CoverageCheck" element={<CoverageCheck />} />
+      <Route path="/AuditLog" element={
+        <LayoutWrapper currentPageName="AuditLog">
+          <AuditLog />
+        </LayoutWrapper>
+      } />
       <Route path="/UserManual" element={
         <LayoutWrapper currentPageName="UserManual">
           <UserManual />

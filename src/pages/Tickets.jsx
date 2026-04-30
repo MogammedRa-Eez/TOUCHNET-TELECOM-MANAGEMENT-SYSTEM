@@ -15,6 +15,7 @@ import SLAWorkflowPanel from "@/components/tickets/SLAWorkflowPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import TicketForm from "../components/tickets/TicketForm";
+import InlineTicketComments from "@/components/tickets/InlineTicketComments";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
 
@@ -133,6 +134,8 @@ function TicketRow({ ticket, isAdmin, onEdit, onDelete, onStatusChange }) {
               <p className="text-[12px]" style={{ color: "rgba(16,185,129,0.9)" }}>{ticket.resolution_notes}</p>
             </div>
           )}
+
+          <InlineTicketComments ticketId={ticket.id} />
 
           {isAdmin && (
             <div className="flex flex-wrap gap-2 pt-1">

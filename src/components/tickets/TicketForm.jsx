@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { X, Zap, UserCheck } from "lucide-react";
 import { toTitleCase } from "@/utils/nameUtils";
+import AITicketTriage from "@/components/ai/AITicketTriage";
 
 // Region keyword → assigned engineer
 const REGION_ASSIGNMENTS = {
@@ -118,6 +119,13 @@ export default function TicketForm({ ticket, customers, onSubmit, onCancel }) {
             <Label className="text-xs font-medium text-slate-600">Description *</Label>
             <Textarea value={form.description} onChange={e => handleSubjectOrDescChange("description", e.target.value)} rows={3} required />
           </div>
+
+          {form.subject && form.description && (
+            <AITicketTriage
+              ticket={form}
+              onApply={(s) => setForm(f => ({ ...f, category: s.category, department: s.department, priority: s.priority }))}
+            />
+          )}
 
           {autoAssignHint && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-700">
