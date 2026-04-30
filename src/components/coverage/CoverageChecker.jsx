@@ -14,7 +14,6 @@ export default function CoverageChecker({ onClose }) {
     setLoading(true);
     setResult(null);
     try {
-      await base44.entities.CoverageSearch.create({ query: address.trim() });
       const res = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a coverage checker for a South African ISP called TouchNet.
 A customer is asking if fibre or wireless internet is available at: "${address}".
@@ -31,6 +30,12 @@ Return JSON with: { covered: boolean, coverage_type: "fibre" | "wireless" | "non
           }
         }
       });
+      // Log the search
+      base44.entities.CoverageSearch.create({
+        query: address.trim(),
+        covered: res.covered,
+        nearest_zone: res.coverage_type,
+      }).catch(() => {});
       setResult(res);
     } catch {
       setResult({ covered: false, coverage_type: "none", strength: "none", message: "Unable to check coverage at this time. Please contact us directly." });
