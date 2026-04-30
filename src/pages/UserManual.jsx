@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
+import { base44 } from "@/api/base44Client";
 import {
   KPICardsDemo, RevenueChartDemo, SLADemo, TicketStatusFlowDemo,
   ProjectPipelineDemo, ProjectTasksDemo, NetworkNodesDemo,
@@ -12,7 +13,7 @@ import {
   LayoutDashboard, Users, Receipt, TicketCheck, Network,
   UserCog, Bot, Shield, Package, Settings, Mail,
   HeartHandshake, FileText, Activity, Zap, BookOpen,
-  Home, HelpCircle, Globe, BarChart3, FolderOpen, Star
+  Home, HelpCircle, Globe, BarChart3, FolderOpen, Star, Sparkles
 } from "lucide-react";
 
 const LOGO_WHITE  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
@@ -680,6 +681,67 @@ export default function UserManual() {
   const printRef = useRef(null);
 
   const [generating, setGenerating] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshStatus, setRefreshStatus] = useState(null); // null | "success" | "error"
+  const [content, setContent] = useState(CONTENT);
+
+  const handleAIRefresh = async () => {
+    setRefreshing(true);
+    setRefreshStatus(null);
+    try {
+      const sectionList = SECTIONS.map(sec => ({
+        id: sec.id,
+        title: sec.title,
+        subsections: sec.subsections?.map(s => ({ id: s.id, title: s.title })) || []
+      }));
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are updating the User Manual for TouchNet TMS (Telecommunications Management System), a comprehensive ISP management platform built for South African internet service providers.
+
+The system includes these modules: Dashboard, Customers, Billing & Invoicing, Quotes, Support Tickets, Fibre Projects, Network Monitoring, Employees & HR, AI Assistant, Roles & Permissions, Notifications, Customer Portal, and Settings & Integrations.
+
+Key integrations: Sage Business Cloud (accounting), Microsoft Outlook (email), Slack (alerts), Google Maps (coverage), Cynet (security), WhatsApp (customer support via AI agent).
+
+For each section and subsection below, write clear, accurate, professional documentation content. Keep each body text concise but thorough (3-10 sentences or bullet points). Use bullet points with "•" for lists. Write in second-person ("To do X: 1. Navigate to...").
+
+Return a JSON object where each key is the section/subsection ID and the value is an object with a "body" string field.
+
+Sections to document:
+${JSON.stringify(sectionList, null, 2)}
+
+Important notes:
+- Customer Portal is at /CustomerPortalMain
+- Roles use email-based assignment
+- SLA: Critical=2h, High=8h, Medium=24h, Low=72h  
+- Projects have 7 sequential tasks: Welcome Communication, Vendor Process, Internal Cutover Booking, Engineer On-Site Booking, IRIS Monitoring, Activate Contract, TNET Billing
+- Project milestones: Site Survey, Planning/LLA, Wayleave, Civil Build, Optical Build, Test & Handover, Cutover, Go Live
+- Departments: Sales, Projects, Finance, Cyber Security, Technical, HR`,
+        response_json_schema: {
+          type: "object",
+          additionalProperties: {
+            type: "object",
+            properties: { body: { type: "string" } }
+          }
+        }
+      });
+
+      // Merge AI result with existing content (preserve viz keys)
+      const merged = { ...content };
+      Object.entries(result).forEach(([key, val]) => {
+        if (val?.body) {
+          merged[key] = { ...merged[key], body: val.body };
+        }
+      });
+      setContent(merged);
+      setRefreshStatus("success");
+      setTimeout(() => setRefreshStatus(null), 4000);
+    } catch {
+      setRefreshStatus("error");
+      setTimeout(() => setRefreshStatus(null), 4000);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handlePrint = () => window.print();
 
@@ -832,7 +894,7 @@ export default function UserManual() {
         y += 20;
 
         // Section intro
-        const topContent = CONTENT[sec.id];
+        const topContent = content[sec.id];
         if (topContent?.body) {
           doc.setFontSize(9);
           doc.setTextColor(...muted);
@@ -848,7 +910,7 @@ export default function UserManual() {
 
         // Subsections
         sec.subsections?.forEach(sub => {
-          const subContent = CONTENT[sub.id];
+          const subContent = content[sub.id];
           if (!subContent) return;
 
           checkY(20);
@@ -997,6 +1059,16 @@ export default function UserManual() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={handleAIRefresh} disabled={refreshing}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold transition-all hover:scale-105 disabled:opacity-60 relative overflow-hidden"
+              style={{
+                background: refreshStatus === "success" ? "rgba(16,185,129,0.12)" : refreshStatus === "error" ? "rgba(139,26,26,0.12)" : "rgba(139,26,26,0.1)",
+                border: `1px solid ${refreshStatus === "success" ? "rgba(16,185,129,0.4)" : refreshStatus === "error" ? "rgba(139,26,26,0.4)" : "rgba(139,26,26,0.25)"}`,
+                color: refreshStatus === "success" ? "#10b981" : refreshStatus === "error" ? "#c23030" : "#c23030"
+              }}>
+              {refreshing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+              {refreshing ? "Refreshing…" : refreshStatus === "success" ? "Updated!" : refreshStatus === "error" ? "Failed" : "AI Refresh"}
+            </button>
             <button onClick={handlePrint}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold transition-all hover:scale-105"
               style={{ background: "rgba(0,180,180,0.08)", border: "1px solid rgba(0,180,180,0.2)", color: "#00b4b4" }}>
@@ -1108,7 +1180,7 @@ export default function UserManual() {
               {/* ── Sections ── */}
               {SECTIONS.map(sec => {
                 const Icon = sec.icon;
-                const topContent = CONTENT[sec.id];
+                const topContent = content[sec.id];
                 return (
                   <div key={sec.id} className="section-break">
                     {/* Section heading */}
@@ -1138,7 +1210,7 @@ export default function UserManual() {
 
                     {/* Subsections */}
                     {sec.subsections?.map(sub => {
-                      const subContent = CONTENT[sub.id];
+                      const subContent = content[sub.id];
                       if (!subContent) return null;
                       return (
                         <div key={sub.id} id={sub.id} className="subsection-block ml-0 mb-4 rounded-xl overflow-hidden"
