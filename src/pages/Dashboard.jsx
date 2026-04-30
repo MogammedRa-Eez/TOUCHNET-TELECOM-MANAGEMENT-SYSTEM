@@ -14,7 +14,7 @@ import TicketOverview from "../components/dashboard/TicketOverview";
 import NetworkHealth from "../components/dashboard/NetworkHealth";
 import RecentActivity from "../components/dashboard/RecentActivity";
 import UserActivityPanel from "../components/dashboard/UserActivityPanel";
-import NetworkGlobe from "../components/dashboard/NetworkGlobe";
+import CrestDisplay from "../components/dashboard/CrestDisplay";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
 import CoverageSearchChart from "@/components/coverage/CoverageSearchChart";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -461,7 +461,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="w-full h-full" style={{ minHeight: 360 }}>
-              <NetworkGlobe nodes={nodes} onNodeSelect={() => {}} />
+              <CrestDisplay nodes={nodes} />
             </div>
           </div>
 
