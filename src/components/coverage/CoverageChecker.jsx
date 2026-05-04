@@ -1,172 +1,368 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { base44 } from "@/api/base44Client";
-import { MapPin, X, Search, CheckCircle2, XCircle, Loader2, ChevronRight, Zap } from "lucide-react";
-import { Link } from "react-router-dom";
+import {
+  MapPin, Search, CheckCircle2, XCircle, AlertCircle, Loader2,
+  X, Zap, Shield, Clock, TrendingUp, RefreshCw, FileText,
+  Mail, Phone, User, Send
+} from "lucide-react";
 
-const CREST = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
-
-const PROVIDERS_QUICK = [
-  { name:"TouchNet",   color:"#00b4b4", type:"fibre",    zones:[{lat:-26.1041,lng:28.1073,r:10000},{lat:-25.8579,lng:28.1893,r:11000},{lat:-26.0274,lng:28.1527,r:9000},{lat:-33.9249,lng:18.4241,r:10000},{lat:-29.8587,lng:31.0218,r:10000}] },
-  { name:"Openserve",  color:"#06b6d4", type:"fibre",    zones:[{lat:-26.1041,lng:28.1073,r:14000},{lat:-25.7479,lng:28.2293,r:16000},{lat:-26.2041,lng:28.0473,r:15000},{lat:-33.9249,lng:18.4241,r:14000},{lat:-29.8587,lng:31.0218,r:13000}] },
-  { name:"Vumatel",    color:"#f59e0b", type:"fibre",    zones:[{lat:-26.1041,lng:28.1073,r:9000},{lat:-26.0274,lng:28.1527,r:8500},{lat:-33.9249,lng:18.4241,r:10000},{lat:-25.8579,lng:28.1893,r:8000}] },
-  { name:"Frogfoot",   color:"#10b981", type:"fibre",    zones:[{lat:-26.0274,lng:28.1527,r:7500},{lat:-25.9025,lng:28.4211,r:8000},{lat:-26.2309,lng:28.2772,r:7500},{lat:-25.8579,lng:28.1893,r:7500}] },
-  { name:"Octotel",    color:"#8b5cf6", type:"fibre",    zones:[{lat:-33.9249,lng:18.4241,r:9000},{lat:-33.8668,lng:18.6302,r:8000},{lat:-33.9602,lng:18.4732,r:7500}] },
-  { name:"Dark Fibre", color:"#fb923c", type:"fibre",    zones:[{lat:-26.1041,lng:28.1073,r:12000},{lat:-26.2041,lng:28.0473,r:14000},{lat:-33.9249,lng:18.4241,r:13000},{lat:-29.8587,lng:31.0218,r:12000}] },
-  { name:"Herotel",    color:"#f472b6", type:"wireless", zones:[{lat:-29.1197,lng:26.214,r:10000},{lat:-28.7282,lng:24.7499,r:9000},{lat:-23.9045,lng:29.4686,r:8000}] },
-  { name:"MetroFibre", color:"#0ea5e9", type:"fibre",    zones:[{lat:-26.1041,lng:28.1073,r:8500},{lat:-26.0274,lng:28.1527,r:8000},{lat:-33.9249,lng:18.4241,r:9000}] },
-];
+/* ── Provider zones (same as CoverageCheck page) ─────── */
+const PROVIDERS = {
+  touchnet: {
+    id:"touchnet", name:"TouchNet", emoji:"⬡", color:"#00b4b4", type:"fibre",
+    plans:[
+      { label:"Basic",      speed:"10 Mbps",  price:399,  upload:"5 Mbps",   contract:24 },
+      { label:"Standard",   speed:"50 Mbps",  price:599,  upload:"25 Mbps",  contract:24 },
+      { label:"Premium",    speed:"100 Mbps", price:899,  upload:"50 Mbps",  contract:24 },
+      { label:"Enterprise", speed:"500 Mbps", price:1499, upload:"250 Mbps", contract:24 },
+      { label:"Gigabit",    speed:"1 Gbps",   price:2999, upload:"500 Mbps", contract:24 },
+    ],
+    zones:[
+      { lat:-26.1041,lng:28.1073,label:"Sandton",        r:10000 },
+      { lat:-26.0274,lng:28.1527,label:"Fourways",        r:9000  },
+      { lat:-25.8579,lng:28.1893,label:"Centurion",       r:11000 },
+      { lat:-26.0765,lng:28.0556,label:"Randburg",        r:9000  },
+      { lat:-25.7479,lng:28.2293,label:"Pretoria East",   r:11000 },
+      { lat:-26.2041,lng:28.0473,label:"JHB South",       r:10000 },
+      { lat:-33.9249,lng:18.4241,label:"Cape Town CBD",   r:10000 },
+      { lat:-29.8587,lng:31.0218,label:"Durban North",    r:10000 },
+    ],
+    rating:4.8, uptime:"99.9%",
+  },
+  openserve: {
+    id:"openserve", name:"Openserve", emoji:"🌐", color:"#06b6d4", type:"fibre",
+    plans:[
+      { label:"10M",speed:"10 Mbps",price:349,upload:"5 Mbps",contract:24 },
+      { label:"100M",speed:"100 Mbps",price:799,upload:"50 Mbps",contract:24 },
+    ],
+    zones:[
+      { lat:-26.1041,lng:28.1073,label:"Sandton/Midrand",r:14000 },
+      { lat:-25.7479,lng:28.2293,label:"Pretoria",r:16000 },
+      { lat:-26.2041,lng:28.0473,label:"Johannesburg",r:15000 },
+      { lat:-33.9249,lng:18.4241,label:"Cape Town",r:14000 },
+      { lat:-29.8587,lng:31.0218,label:"Durban",r:13000 },
+    ],
+    rating:4.1, uptime:"99.5%",
+  },
+  vumatel: {
+    id:"vumatel", name:"Vumatel", emoji:"⚡", color:"#f59e0b", type:"fibre",
+    plans:[
+      { label:"25M",speed:"25 Mbps",price:459,upload:"12 Mbps",contract:12 },
+      { label:"1G",speed:"1 Gbps",price:2499,upload:"500 Mbps",contract:12 },
+    ],
+    zones:[
+      { lat:-26.1041,lng:28.1073,label:"Sandton",r:9000 },
+      { lat:-26.0274,lng:28.1527,label:"Fourways",r:8500 },
+      { lat:-33.9249,lng:18.4241,label:"Cape Town",r:10000 },
+      { lat:-29.8587,lng:31.0218,label:"Durban",r:10000 },
+    ],
+    rating:4.5, uptime:"99.7%",
+  },
+};
 
 const haversine = (la1,lo1,la2,lo2) => {
-  const R=6371000,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180;
+  const R=6371000, dL=(la2-la1)*Math.PI/180, dO=(lo2-lo1)*Math.PI/180;
   const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 };
 
+const checkProviders = (lat,lng) =>
+  Object.values(PROVIDERS).map(p => {
+    let best=null, bestD=Infinity;
+    for (const z of p.zones) {
+      const d=haversine(lat,lng,z.lat,z.lng);
+      if (d<=z.r && d<bestD) { bestD=d; best=z; }
+    }
+    return { provider:p, covered:!!best, zone:best };
+  }).sort((a,b) => a.covered===b.covered ? 0 : a.covered ? -1 : 1);
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
+
+function MapFlyTo({ center, zoom }) {
+  const map = useMap();
+  useEffect(() => { if (center) map.flyTo(center, zoom||14, { duration:1 }); }, [center]);
+  return null;
+}
+
 async function geocodeAddress(query) {
   const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query+", South Africa")}&format=json&limit=1&countrycodes=za`;
-  const res=await fetch(url,{headers:{"Accept-Language":"en"}});
+  const res=await fetch(url, { headers:{ "Accept-Language":"en" } });
   const data=await res.json();
   if (!data?.length) throw new Error("Address not found");
-  return {lat:parseFloat(data[0].lat),lng:parseFloat(data[0].lon),displayName:data[0].display_name};
+  return { lat:parseFloat(data[0].lat), lng:parseFloat(data[0].lon), displayName:data[0].display_name };
 }
 
 export default function CoverageChecker({ onClose }) {
-  const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result,  setResult]  = useState(null);
-  const [error,   setError]   = useState(null);
+  const [address,   setAddress]   = useState("");
+  const [searching, setSearching] = useState(false);
+  const [result,    setResult]    = useState(null);
+  const [results,   setResults]   = useState([]);
+  const [flyTarget, setFlyTarget] = useState(null);
+  const [step,      setStep]      = useState("search");
+  const [form,      setForm]      = useState({ name:"", email:"", phone:"" });
+  const [submitting,setSubmitting]= useState(false);
 
-  const check = async (e) => {
+  const handleSearch = async (e) => {
     e?.preventDefault();
     if (!address.trim()) return;
-    setLoading(true); setResult(null); setError(null);
+    setSearching(true); setResult(null); setResults([]);
     try {
       const geo = await geocodeAddress(address);
-      const available = PROVIDERS_QUICK.filter(p =>
-        p.zones.some(z => haversine(geo.lat,geo.lng,z.lat,z.lng) <= z.r)
-      );
-      setResult({available, displayName:geo.displayName});
+      const allResults = checkProviders(geo.lat, geo.lng);
+      const tn = allResults.find(r=>r.provider.id==="touchnet");
+      setResult({ lat:geo.lat, lng:geo.lng, displayName:geo.displayName, covered:tn?.covered, zone:tn?.zone });
+      setResults(allResults);
+      setFlyTarget({ center:[geo.lat, geo.lng] });
+      setStep("result");
       base44.entities.CoverageSearch.create({
-        query:address.trim(), display_name:geo.displayName,
-        lat:geo.lat, lng:geo.lng, covered:available.length>0
+        query:address, display_name:geo.displayName, lat:geo.lat, lng:geo.lng,
+        covered:tn?.covered, nearest_zone:tn?.zone?.label||""
       }).catch(()=>{});
     } catch {
-      setError("Address not found. Try a suburb or city name.");
-    } finally {
-      setLoading(false);
-    }
+      setResult({ error:"Address not found. Try a suburb or city name." });
+    } finally { setSearching(false); }
   };
 
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-      style={{background:"rgba(0,0,0,0.88)",backdropFilter:"blur(20px)"}}>
-      <div className="w-full max-w-md rounded-2xl overflow-hidden"
-        style={{background:"#1a1a1a",border:"1px solid rgba(0,212,212,0.25)",boxShadow:"0 32px 80px rgba(0,0,0,0.7)"}}>
-        <div className="h-[2px]" style={{background:"linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.4),#8B1A1A,transparent)"}}/>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await base44.entities.Referral.create({
+        referrer_customer_id:"website_lead", referrer_name:"Coverage Checker",
+        referrer_email:"website@touchnet.co.za",
+        referred_name:form.name, referred_email:form.email, referred_phone:form.phone,
+        referred_address:result?.displayName, status:"submitted",
+      });
+      setStep("success");
+    } finally { setSubmitting(false); }
+  };
 
-        <div className="flex items-center justify-between px-5 py-4"
-          style={{borderBottom:"1px solid rgba(255,255,255,0.07)",background:"rgba(255,255,255,0.02)"}}>
+  const available = results.filter(r=>r.covered);
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3"
+      style={{ background:"rgba(0,0,0,0.85)", backdropFilter:"blur(20px)" }}>
+      <style>{`
+        .cc-leaflet .leaflet-container { background:#1a1a1a !important; }
+        .cc-leaflet .leaflet-tile { filter: brightness(0.8) saturate(0.6) invert(1) hue-rotate(180deg); }
+        .cc-leaflet .leaflet-popup-content-wrapper { background:#1e1e1e !important; border:1px solid rgba(0,212,212,0.25) !important; border-radius:12px !important; color:#f0f0f0 !important; }
+        .cc-leaflet .leaflet-popup-tip { background:#1e1e1e !important; }
+        .cc-leaflet .leaflet-control-zoom a { background:#1e1e1e !important; border-color:rgba(0,212,212,0.2) !important; color:#00b4b4 !important; }
+      `}</style>
+
+      <div className="relative w-full max-w-4xl rounded-2xl overflow-hidden flex flex-col"
+        style={{ background:"#1a1a1a", border:"1px solid rgba(0,212,212,0.25)", boxShadow:"0 40px 100px rgba(0,0,0,0.8)", maxHeight:"90vh" }}>
+        <div className="h-[2px]" style={{ background:"linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.4),#8B1A1A,transparent)" }} />
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+          style={{ borderBottom:"1px solid rgba(255,255,255,0.07)", background:"rgba(255,255,255,0.02)" }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{background:"linear-gradient(135deg,rgba(0,180,180,0.18),rgba(139,26,26,0.08))",border:"1px solid rgba(0,212,212,0.25)"}}>
-              <img src={CREST} alt="TN" className="w-6 h-6 object-contain" style={{opacity:0.9}}/>
+              style={{ background:"rgba(0,180,180,0.12)", border:"1px solid rgba(0,212,212,0.3)" }}>
+              <MapPin className="w-4 h-4" style={{ color:"#00b4b4" }} />
             </div>
             <div>
-              <p className="text-[14px] font-black" style={{color:"#f0f0f0",fontFamily:"'Space Grotesk',sans-serif"}}>Coverage Checker</p>
-              <p className="text-[10px]" style={{color:"rgba(0,212,212,0.5)",fontFamily:"'JetBrains Mono',monospace"}}>FIBRE · WIRELESS · SOUTH AFRICA</p>
+              <h2 className="text-[15px] font-black" style={{ color:"#f0f0f0", fontFamily:"'Space Grotesk',sans-serif" }}>Fibre Coverage Checker</h2>
+              <p className="text-[11px]" style={{ color:"rgba(0,212,212,0.45)" }}>Check coverage at any South African address</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Link to="/CoverageCheck"
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all hover:scale-105"
-              style={{background:"rgba(0,180,180,0.1)",border:"1px solid rgba(0,212,212,0.2)",color:"#00d4d4"}}
-              onClick={onClose}>
-              Full Map <ChevronRight className="w-3 h-3"/>
-            </Link>
-            {onClose && (
-              <button onClick={onClose}
-                className="w-7 h-7 rounded-lg flex items-center justify-center transition-all hover:bg-white/5"
-                style={{border:"1px solid rgba(255,255,255,0.1)",color:"rgba(255,255,255,0.5)"}}>
-                <X className="w-3.5 h-3.5"/>
-              </button>
-            )}
-          </div>
+          <button onClick={onClose}
+            className="w-8 h-8 rounded-xl flex items-center justify-center transition-all hover:bg-white/10"
+            style={{ border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.5)" }}>
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        <div className="p-5 space-y-4">
-          <form onSubmit={check} className="space-y-3">
-            <div>
-              <label className="text-[10px] font-black uppercase tracking-widest block mb-1.5" style={{color:"rgba(255,255,255,0.35)"}}>Enter your address or suburb</label>
+        <div className="flex flex-1 overflow-hidden min-h-0">
+          {/* Sidebar */}
+          <div className="w-72 flex-shrink-0 flex flex-col overflow-y-auto p-4 space-y-4"
+            style={{ borderRight:"1px solid rgba(255,255,255,0.07)", background:"rgba(0,0,0,0.2)" }}>
+
+            {/* Search */}
+            <form onSubmit={handleSearch} className="space-y-2">
               <div className="relative">
-                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{color:"rgba(0,212,212,0.6)"}}/>
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color:"rgba(0,212,212,0.5)" }} />
                 <input value={address} onChange={e=>setAddress(e.target.value)}
-                  placeholder="e.g. 12 Rivonia Rd, Sandton…"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl text-[13px] outline-none transition-all"
-                  style={{background:"#252525",border:"1px solid rgba(255,255,255,0.1)",color:"#f0f0f0"}}
-                  onFocus={e=>e.target.style.borderColor="rgba(0,212,212,0.5)"}
-                  onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"}/>
+                  placeholder="Enter suburb or address…"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl text-[12px] outline-none"
+                  style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", color:"#f0f0f0" }} />
               </div>
-            </div>
-            <button type="submit" disabled={loading||!address.trim()}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-black text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
-              style={{background:"linear-gradient(135deg,#00b4b4,#007a7a)",boxShadow:"0 6px 24px rgba(0,180,180,0.4)",border:"1px solid rgba(0,212,212,0.3)"}}>
-              <div className="absolute inset-0 pointer-events-none" style={{background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)",backgroundSize:"200% 100%",animation:"shimmer 2s infinite"}}/>
-              {loading?<Loader2 className="w-4 h-4 animate-spin relative z-10"/>:<Search className="w-4 h-4 relative z-10"/>}
-              <span className="relative z-10">{loading?"Checking coverage…":"Check Coverage"}</span>
-            </button>
-          </form>
+              <button type="submit" disabled={searching||!address.trim()}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-black text-white transition-all hover:scale-[1.02] disabled:opacity-50"
+                style={{ background:"linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow:"0 4px 16px rgba(0,180,180,0.35)" }}>
+                {searching ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : <Search className="w-3.5 h-3.5"/>}
+                {searching ? "Checking…" : "Check Coverage"}
+              </button>
+            </form>
 
-          {error && (
-            <div className="rounded-xl px-4 py-3 flex items-center gap-2"
-              style={{background:"rgba(139,26,26,0.1)",border:"1px solid rgba(139,26,26,0.3)"}}>
-              <XCircle className="w-4 h-4 flex-shrink-0" style={{color:"#c23030"}}/>
-              <p className="text-[12px]" style={{color:"#c23030"}}>{error}</p>
-            </div>
-          )}
+            {result?.error && (
+              <div className="rounded-xl p-3 flex items-start gap-2"
+                style={{ background:"rgba(139,26,26,0.1)", border:"1px solid rgba(139,26,26,0.3)" }}>
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color:"#8B1A1A" }} />
+                <p className="text-[11px]" style={{ color:"#c23030" }}>{result.error}</p>
+              </div>
+            )}
 
-          {result && (
-            <div className="space-y-3">
-              <div className="rounded-xl p-4"
-                style={{background:result.available.length>0?"rgba(0,180,180,0.07)":"rgba(139,26,26,0.07)",border:`1px solid ${result.available.length>0?"rgba(0,180,180,0.3)":"rgba(139,26,26,0.3)"}`}}>
-                <div className="flex items-start gap-3">
-                  {result.available.length>0
-                    ?<CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" style={{color:"#10b981"}}/>
-                    :<XCircle className="w-6 h-6 flex-shrink-0 mt-0.5" style={{color:"#8B1A1A"}}/>}
-                  <div className="min-w-0">
-                    <p className="text-[14px] font-black" style={{color:result.available.length>0?"#10b981":"#8B1A1A"}}>
-                      {result.available.length>0?`${result.available.length} Provider${result.available.length>1?"s":""} Available!`:"No Coverage Found"}
-                    </p>
-                    <p className="text-[11px] mt-0.5 truncate" style={{color:"rgba(255,255,255,0.35)"}}>
-                      {result.displayName?.split(",").slice(0,3).join(",")}
-                    </p>
+            {/* Results */}
+            {step === "result" && result && !result.error && (
+              <div className="space-y-3">
+                <div className="rounded-xl p-3"
+                  style={{ background:available.length>0?"rgba(0,180,180,0.07)":"rgba(139,26,26,0.07)", border:`1px solid ${available.length>0?"rgba(0,180,180,0.3)":"rgba(139,26,26,0.3)"}` }}>
+                  <div className="flex items-center gap-2">
+                    {available.length>0
+                      ? <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color:"#10b981" }}/>
+                      : <XCircle className="w-5 h-5 flex-shrink-0" style={{ color:"#8B1A1A" }}/>}
+                    <div>
+                      <p className="text-[12px] font-black" style={{ color:available.length>0?"#10b981":"#8B1A1A" }}>
+                        {available.length>0 ? `${available.length} provider${available.length!==1?"s":""} available` : "No coverage found"}
+                      </p>
+                      <p className="text-[10px]" style={{ color:"rgba(255,255,255,0.3)" }}>
+                        {result.displayName?.split(",").slice(0,2).join(",")}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {result.available.length>0 && (
-                <div className="space-y-1.5">
-                  <p className="text-[9px] font-black uppercase tracking-widest" style={{color:"rgba(255,255,255,0.25)"}}>Available at this address</p>
-                  {result.available.map(p=>(
-                    <div key={p.name} className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-                      style={{background:`${p.color}0d`,border:`1px solid ${p.color}28`}}>
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{background:p.color,boxShadow:`0 0 8px ${p.color}`}}/>
-                      <span className="flex-1 text-[12px] font-bold" style={{color:"#e0e0e0"}}>{p.name}</span>
-                      <span className="text-[9px] font-black px-2 py-0.5 rounded-full uppercase"
-                        style={{background:p.type==="fibre"?"rgba(0,180,180,0.12)":"rgba(14,165,233,0.12)",color:p.type==="fibre"?"#00d4d4":"#38bdf8",border:`1px solid ${p.type==="fibre"?"rgba(0,180,180,0.25)":"rgba(14,165,233,0.25)"}`}}>
-                        {p.type==="fibre"?"FTTH":"FWA"}
-                      </span>
+                {available.length > 0 && (
+                  <div className="space-y-1.5">
+                    {available.map(({ provider, zone }) => (
+                      <div key={provider.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl"
+                        style={{ background:`${provider.color}0d`, border:`1px solid ${provider.color}25` }}>
+                        <span className="text-base flex-shrink-0">{provider.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-black" style={{ color:"#f0f0f0" }}>{provider.name}</p>
+                          <p className="text-[9px]" style={{ color:provider.color }}>✓ {zone?.label}</p>
+                        </div>
+                        <p className="text-[11px] font-black flex-shrink-0" style={{ color:provider.color }}>
+                          R{Math.min(...provider.plans.map(p=>p.price))}/mo
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  {result.covered ? (
+                    <button onClick={()=>setStep("form")}
+                      className="flex-1 py-2 rounded-xl text-[11px] font-bold text-white"
+                      style={{ background:"linear-gradient(135deg,#10b981,#059669)" }}>
+                      <Zap className="w-3.5 h-3.5 inline mr-1"/> Sign Up
+                    </button>
+                  ) : (
+                    <button onClick={()=>setStep("form")}
+                      className="flex-1 py-2 rounded-xl text-[11px] font-bold text-white"
+                      style={{ background:"linear-gradient(135deg,#00b4b4,#007a7a)" }}>
+                      <Mail className="w-3.5 h-3.5 inline mr-1"/> Notify Me
+                    </button>
+                  )}
+                  <button onClick={()=>{ setStep("search"); setResult(null); setResults([]); setAddress(""); }}
+                    className="py-2 px-3 rounded-xl text-[11px] font-bold"
+                    style={{ border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.4)" }}>
+                    <RefreshCw className="w-3.5 h-3.5"/>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Sign up form */}
+            {step === "form" && (
+              <div className="rounded-2xl overflow-hidden" style={{ background:"rgba(0,0,0,0.3)", border:"1px solid rgba(0,212,212,0.15)" }}>
+                <div className="h-[2px]" style={{ background:"linear-gradient(90deg,#00b4b4,#8B1A1A,transparent)" }} />
+                <form onSubmit={handleSubmit} className="p-4 space-y-3">
+                  <p className="text-[12px] font-black" style={{ color:"#00d4d4" }}>
+                    {result?.covered ? "Connect with TouchNet" : "Get notified when available"}
+                  </p>
+                  {[
+                    { field:"name",  icon:User,  type:"text",  placeholder:"Full name *",     req:true },
+                    { field:"email", icon:Mail,  type:"email", placeholder:"Email address *",  req:true },
+                    { field:"phone", icon:Phone, type:"tel",   placeholder:"Phone number",     req:false },
+                  ].map(({ field, icon:Icon, type, placeholder, req }) => (
+                    <div key={field} className="relative">
+                      <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color:"rgba(0,212,212,0.4)" }} />
+                      <input required={req} type={type} value={form[field]}
+                        onChange={e=>setForm(f=>({...f,[field]:e.target.value}))}
+                        placeholder={placeholder}
+                        className="w-full pl-9 pr-3 py-2.5 rounded-xl text-[12px] outline-none"
+                        style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", color:"#f0f0f0" }} />
                     </div>
                   ))}
-                </div>
-              )}
+                  <div className="flex gap-2 pt-1">
+                    <button type="button" onClick={()=>setStep("result")}
+                      className="px-3 py-2 rounded-xl text-[11px] font-bold"
+                      style={{ border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.4)" }}>← Back</button>
+                    <button type="submit" disabled={submitting}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[12px] font-bold text-white disabled:opacity-60"
+                      style={{ background:"linear-gradient(135deg,#00b4b4,#007a7a)" }}>
+                      {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : <Send className="w-3.5 h-3.5"/>}
+                      {submitting ? "Submitting…" : result?.covered ? "Get Connected" : "Notify Me"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
 
-              <Link to="/CoverageCheck" onClick={onClose}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[12px] font-black text-white transition-all hover:scale-[1.02]"
-                style={{background:"linear-gradient(135deg,#8B1A1A,#a52020)",boxShadow:"0 4px 18px rgba(139,26,26,0.4)",border:"1px solid rgba(139,26,26,0.35)"}}>
-                <Zap className="w-4 h-4"/> View Full Map & Feasibility Report
-              </Link>
-            </div>
-          )}
+            {/* Success */}
+            {step === "success" && (
+              <div className="rounded-2xl p-5 text-center" style={{ background:"rgba(0,180,180,0.07)", border:"1px solid rgba(0,180,180,0.25)" }}>
+                <CheckCircle2 className="w-10 h-10 mx-auto mb-2" style={{ color:"#10b981" }} />
+                <p className="text-[13px] font-black" style={{ color:"#10b981" }}>Submitted!</p>
+                <p className="text-[11px] mt-1 mb-3" style={{ color:"rgba(255,255,255,0.4)" }}>We'll be in touch within 24 hours.</p>
+                <button onClick={()=>{ setStep("search"); setResult(null); setResults([]); setAddress(""); }}
+                  className="text-[11px] font-bold px-4 py-2 rounded-xl"
+                  style={{ background:"rgba(0,180,180,0.08)", border:"1px solid rgba(0,180,180,0.2)", color:"#00b4b4" }}>
+                  Check Another Address
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Map */}
+          <div className="flex-1 cc-leaflet" style={{ minHeight:400 }}>
+            <MapContainer center={[-29.0,26.0]} zoom={6} style={{ width:"100%", height:"100%" }}>
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>' />
+              {Object.values(PROVIDERS).map(provider =>
+                provider.zones.map((zone,zi) => (
+                  <Circle key={`${provider.id}-${zi}`}
+                    center={[zone.lat,zone.lng]} radius={zone.r}
+                    pathOptions={{ color:provider.color, fillColor:provider.color,
+                      fillOpacity:provider.id==="touchnet"?0.18:0.08,
+                      weight:provider.id==="touchnet"?2:1.5, opacity:0.6 }}>
+                    <Popup>
+                      <div style={{ fontFamily:"'Inter',sans-serif" }}>
+                        <p style={{ fontWeight:900, color:provider.color, margin:"0 0 4px" }}>{provider.emoji} {provider.name}</p>
+                        <p style={{ fontSize:11, color:"rgba(255,255,255,0.5)", margin:0 }}>{zone.label} · from R{Math.min(...provider.plans.map(p=>p.price))}/mo</p>
+                      </div>
+                    </Popup>
+                  </Circle>
+                ))
+              )}
+              {result && !result.error && (
+                <Marker position={[result.lat,result.lng]}
+                  icon={L.divIcon({
+                    className:"",
+                    html:`<div style="width:20px;height:20px;border-radius:50%;background:${available.length>0?"#10b981":"#8B1A1A"};border:3px solid white;box-shadow:0 2px 10px rgba(0,0,0,0.6)"></div>`,
+                    iconSize:[20,20], iconAnchor:[10,10],
+                  })}>
+                  <Popup>
+                    <p style={{ fontWeight:700, color:"#f0f0f0", margin:0 }}>
+                      {available.length>0 ? `✅ ${available.length} provider(s) available` : "❌ No coverage here"}
+                    </p>
+                  </Popup>
+                </Marker>
+              )}
+              {flyTarget && <MapFlyTo center={flyTarget.center} zoom={13} />}
+            </MapContainer>
+          </div>
         </div>
       </div>
     </div>
