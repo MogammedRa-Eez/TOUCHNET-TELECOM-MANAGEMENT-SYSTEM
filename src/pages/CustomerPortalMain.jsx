@@ -20,7 +20,7 @@ import PortalNetworkTab from "@/components/portal/PortalNetworkTab";
 import PortalServicePlanTab from "@/components/portal/PortalServicePlanTab";
 import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
 import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
-import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
+import CoverageChecker from "@/components/coverage/CoverageChecker";
 
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_TEAL     = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
