@@ -5,61 +5,56 @@ import "leaflet/dist/leaflet.css";
 import { base44 } from "@/api/base44Client";
 import {
   MapPin, Search, CheckCircle2, XCircle, AlertCircle, Loader2,
-  X, Zap, Shield, Clock, TrendingUp, RefreshCw, FileText,
-  Mail, Phone, User, Send
+  X, Zap, RefreshCw, Mail, Phone, User, Send
 } from "lucide-react";
 
-/* ── Provider zones (same as CoverageCheck page) ─────── */
 const PROVIDERS = {
   touchnet: {
     id:"touchnet", name:"TouchNet", emoji:"⬡", color:"#00b4b4", type:"fibre",
     plans:[
-      { label:"Basic",      speed:"10 Mbps",  price:399,  upload:"5 Mbps",   contract:24 },
-      { label:"Standard",   speed:"50 Mbps",  price:599,  upload:"25 Mbps",  contract:24 },
-      { label:"Premium",    speed:"100 Mbps", price:899,  upload:"50 Mbps",  contract:24 },
-      { label:"Enterprise", speed:"500 Mbps", price:1499, upload:"250 Mbps", contract:24 },
-      { label:"Gigabit",    speed:"1 Gbps",   price:2999, upload:"500 Mbps", contract:24 },
+      { label:"Basic",      speed:"10 Mbps",  price:399  },
+      { label:"Standard",   speed:"50 Mbps",  price:599  },
+      { label:"Premium",    speed:"100 Mbps", price:899  },
+      { label:"Enterprise", speed:"500 Mbps", price:1499 },
+      { label:"Gigabit",    speed:"1 Gbps",   price:2999 },
     ],
     zones:[
-      { lat:-26.1041,lng:28.1073,label:"Sandton",        r:10000 },
-      { lat:-26.0274,lng:28.1527,label:"Fourways",        r:9000  },
-      { lat:-25.8579,lng:28.1893,label:"Centurion",       r:11000 },
-      { lat:-26.0765,lng:28.0556,label:"Randburg",        r:9000  },
-      { lat:-25.7479,lng:28.2293,label:"Pretoria East",   r:11000 },
-      { lat:-26.2041,lng:28.0473,label:"JHB South",       r:10000 },
-      { lat:-33.9249,lng:18.4241,label:"Cape Town CBD",   r:10000 },
-      { lat:-29.8587,lng:31.0218,label:"Durban North",    r:10000 },
+      { lat:-26.1041,lng:28.1073,label:"Sandton",      r:10000 },
+      { lat:-26.0274,lng:28.1527,label:"Fourways",     r:9000  },
+      { lat:-25.8579,lng:28.1893,label:"Centurion",    r:11000 },
+      { lat:-26.0765,lng:28.0556,label:"Randburg",     r:9000  },
+      { lat:-25.7479,lng:28.2293,label:"Pretoria East",r:11000 },
+      { lat:-26.2041,lng:28.0473,label:"JHB South",   r:10000 },
+      { lat:-33.9249,lng:18.4241,label:"Cape Town CBD",r:10000 },
+      { lat:-29.8587,lng:31.0218,label:"Durban North", r:10000 },
     ],
-    rating:4.8, uptime:"99.9%",
   },
   openserve: {
     id:"openserve", name:"Openserve", emoji:"🌐", color:"#06b6d4", type:"fibre",
     plans:[
-      { label:"10M",speed:"10 Mbps",price:349,upload:"5 Mbps",contract:24 },
-      { label:"100M",speed:"100 Mbps",price:799,upload:"50 Mbps",contract:24 },
+      { label:"10M",  speed:"10 Mbps",  price:349 },
+      { label:"100M", speed:"100 Mbps", price:799 },
     ],
     zones:[
       { lat:-26.1041,lng:28.1073,label:"Sandton/Midrand",r:14000 },
-      { lat:-25.7479,lng:28.2293,label:"Pretoria",r:16000 },
-      { lat:-26.2041,lng:28.0473,label:"Johannesburg",r:15000 },
-      { lat:-33.9249,lng:18.4241,label:"Cape Town",r:14000 },
-      { lat:-29.8587,lng:31.0218,label:"Durban",r:13000 },
+      { lat:-25.7479,lng:28.2293,label:"Pretoria",       r:16000 },
+      { lat:-26.2041,lng:28.0473,label:"Johannesburg",   r:15000 },
+      { lat:-33.9249,lng:18.4241,label:"Cape Town",      r:14000 },
+      { lat:-29.8587,lng:31.0218,label:"Durban",         r:13000 },
     ],
-    rating:4.1, uptime:"99.5%",
   },
   vumatel: {
     id:"vumatel", name:"Vumatel", emoji:"⚡", color:"#f59e0b", type:"fibre",
     plans:[
-      { label:"25M",speed:"25 Mbps",price:459,upload:"12 Mbps",contract:12 },
-      { label:"1G",speed:"1 Gbps",price:2499,upload:"500 Mbps",contract:12 },
+      { label:"25M", speed:"25 Mbps", price:459 },
+      { label:"1G",  speed:"1 Gbps",  price:2499 },
     ],
     zones:[
-      { lat:-26.1041,lng:28.1073,label:"Sandton",r:9000 },
-      { lat:-26.0274,lng:28.1527,label:"Fourways",r:8500 },
+      { lat:-26.1041,lng:28.1073,label:"Sandton", r:9000  },
+      { lat:-26.0274,lng:28.1527,label:"Fourways",r:8500  },
       { lat:-33.9249,lng:18.4241,label:"Cape Town",r:10000 },
-      { lat:-29.8587,lng:31.0218,label:"Durban",r:10000 },
+      { lat:-29.8587,lng:31.0218,label:"Durban",  r:10000 },
     ],
-    rating:4.5, uptime:"99.7%",
   },
 };
 
@@ -86,9 +81,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-function MapFlyTo({ center, zoom }) {
+function MapFlyTo({ center }) {
   const map = useMap();
-  useEffect(() => { if (center) map.flyTo(center, zoom||14, { duration:1 }); }, [center]);
+  useEffect(() => { if (center) map.flyTo(center, 13, { duration:1 }); }, [center]);
   return null;
 }
 
@@ -101,14 +96,14 @@ async function geocodeAddress(query) {
 }
 
 export default function CoverageChecker({ onClose }) {
-  const [address,   setAddress]   = useState("");
-  const [searching, setSearching] = useState(false);
-  const [result,    setResult]    = useState(null);
-  const [results,   setResults]   = useState([]);
-  const [flyTarget, setFlyTarget] = useState(null);
-  const [step,      setStep]      = useState("search");
-  const [form,      setForm]      = useState({ name:"", email:"", phone:"" });
-  const [submitting,setSubmitting]= useState(false);
+  const [address,    setAddress]    = useState("");
+  const [searching,  setSearching]  = useState(false);
+  const [result,     setResult]     = useState(null);
+  const [results,    setResults]    = useState([]);
+  const [flyTarget,  setFlyTarget]  = useState(null);
+  const [step,       setStep]       = useState("search");
+  const [form,       setForm]       = useState({ name:"", email:"", phone:"" });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSearch = async (e) => {
     e?.preventDefault();
@@ -120,7 +115,7 @@ export default function CoverageChecker({ onClose }) {
       const tn = allResults.find(r=>r.provider.id==="touchnet");
       setResult({ lat:geo.lat, lng:geo.lng, displayName:geo.displayName, covered:tn?.covered, zone:tn?.zone });
       setResults(allResults);
-      setFlyTarget({ center:[geo.lat, geo.lng] });
+      setFlyTarget([geo.lat, geo.lng]);
       setStep("result");
       base44.entities.CoverageSearch.create({
         query:address, display_name:geo.displayName, lat:geo.lat, lng:geo.lng,
@@ -145,17 +140,20 @@ export default function CoverageChecker({ onClose }) {
     } finally { setSubmitting(false); }
   };
 
+  const reset = () => { setStep("search"); setResult(null); setResults([]); setAddress(""); };
+
   const available = results.filter(r=>r.covered);
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3"
       style={{ background:"rgba(0,0,0,0.85)", backdropFilter:"blur(20px)" }}>
       <style>{`
-        .cc-leaflet .leaflet-container { background:#1a1a1a !important; }
-        .cc-leaflet .leaflet-tile { filter: brightness(0.8) saturate(0.6) invert(1) hue-rotate(180deg); }
-        .cc-leaflet .leaflet-popup-content-wrapper { background:#1e1e1e !important; border:1px solid rgba(0,212,212,0.25) !important; border-radius:12px !important; color:#f0f0f0 !important; }
-        .cc-leaflet .leaflet-popup-tip { background:#1e1e1e !important; }
-        .cc-leaflet .leaflet-control-zoom a { background:#1e1e1e !important; border-color:rgba(0,212,212,0.2) !important; color:#00b4b4 !important; }
+        .cc-map .leaflet-container { background:#1a1a1a !important; }
+        .cc-map .leaflet-tile { filter: brightness(0.8) saturate(0.6) invert(1) hue-rotate(180deg); }
+        .cc-map .leaflet-popup-content-wrapper { background:#1e1e1e !important; border:1px solid rgba(0,212,212,0.25) !important; border-radius:12px !important; color:#f0f0f0 !important; }
+        .cc-map .leaflet-popup-tip { background:#1e1e1e !important; }
+        .cc-map .leaflet-control-zoom a { background:#1e1e1e !important; border-color:rgba(0,212,212,0.2) !important; color:#00b4b4 !important; }
+        .cc-map .leaflet-control-attribution { background:rgba(17,17,17,0.8) !important; color:rgba(255,255,255,0.3) !important; font-size:9px !important; }
       `}</style>
 
       <div className="relative w-full max-w-4xl rounded-2xl overflow-hidden flex flex-col"
@@ -187,7 +185,6 @@ export default function CoverageChecker({ onClose }) {
           <div className="w-72 flex-shrink-0 flex flex-col overflow-y-auto p-4 space-y-4"
             style={{ borderRight:"1px solid rgba(255,255,255,0.07)", background:"rgba(0,0,0,0.2)" }}>
 
-            {/* Search */}
             <form onSubmit={handleSearch} className="space-y-2">
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color:"rgba(0,212,212,0.5)" }} />
@@ -212,7 +209,6 @@ export default function CoverageChecker({ onClose }) {
               </div>
             )}
 
-            {/* Results */}
             {step === "result" && result && !result.error && (
               <div className="space-y-3">
                 <div className="rounded-xl p-3"
@@ -264,7 +260,7 @@ export default function CoverageChecker({ onClose }) {
                       <Mail className="w-3.5 h-3.5 inline mr-1"/> Notify Me
                     </button>
                   )}
-                  <button onClick={()=>{ setStep("search"); setResult(null); setResults([]); setAddress(""); }}
+                  <button onClick={reset}
                     className="py-2 px-3 rounded-xl text-[11px] font-bold"
                     style={{ border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.4)" }}>
                     <RefreshCw className="w-3.5 h-3.5"/>
@@ -273,7 +269,6 @@ export default function CoverageChecker({ onClose }) {
               </div>
             )}
 
-            {/* Sign up form */}
             {step === "form" && (
               <div className="rounded-2xl overflow-hidden" style={{ background:"rgba(0,0,0,0.3)", border:"1px solid rgba(0,212,212,0.15)" }}>
                 <div className="h-[2px]" style={{ background:"linear-gradient(90deg,#00b4b4,#8B1A1A,transparent)" }} />
@@ -282,9 +277,9 @@ export default function CoverageChecker({ onClose }) {
                     {result?.covered ? "Connect with TouchNet" : "Get notified when available"}
                   </p>
                   {[
-                    { field:"name",  icon:User,  type:"text",  placeholder:"Full name *",     req:true },
-                    { field:"email", icon:Mail,  type:"email", placeholder:"Email address *",  req:true },
-                    { field:"phone", icon:Phone, type:"tel",   placeholder:"Phone number",     req:false },
+                    { field:"name",  icon:User,  type:"text",  placeholder:"Full name *",    req:true  },
+                    { field:"email", icon:Mail,  type:"email", placeholder:"Email address *", req:true  },
+                    { field:"phone", icon:Phone, type:"tel",   placeholder:"Phone number",    req:false },
                   ].map(({ field, icon:Icon, type, placeholder, req }) => (
                     <div key={field} className="relative">
                       <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color:"rgba(0,212,212,0.4)" }} />
@@ -310,13 +305,12 @@ export default function CoverageChecker({ onClose }) {
               </div>
             )}
 
-            {/* Success */}
             {step === "success" && (
               <div className="rounded-2xl p-5 text-center" style={{ background:"rgba(0,180,180,0.07)", border:"1px solid rgba(0,180,180,0.25)" }}>
                 <CheckCircle2 className="w-10 h-10 mx-auto mb-2" style={{ color:"#10b981" }} />
                 <p className="text-[13px] font-black" style={{ color:"#10b981" }}>Submitted!</p>
                 <p className="text-[11px] mt-1 mb-3" style={{ color:"rgba(255,255,255,0.4)" }}>We'll be in touch within 24 hours.</p>
-                <button onClick={()=>{ setStep("search"); setResult(null); setResults([]); setAddress(""); }}
+                <button onClick={reset}
                   className="text-[11px] font-bold px-4 py-2 rounded-xl"
                   style={{ background:"rgba(0,180,180,0.08)", border:"1px solid rgba(0,180,180,0.2)", color:"#00b4b4" }}>
                   Check Another Address
@@ -326,7 +320,7 @@ export default function CoverageChecker({ onClose }) {
           </div>
 
           {/* Map */}
-          <div className="flex-1 cc-leaflet" style={{ minHeight:400 }}>
+          <div className="flex-1 cc-map" style={{ minHeight:400 }}>
             <MapContainer center={[-29.0,26.0]} zoom={6} style={{ width:"100%", height:"100%" }}>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>' />
@@ -360,7 +354,7 @@ export default function CoverageChecker({ onClose }) {
                   </Popup>
                 </Marker>
               )}
-              {flyTarget && <MapFlyTo center={flyTarget.center} zoom={13} />}
+              {flyTarget && <MapFlyTo center={flyTarget} />}
             </MapContainer>
           </div>
         </div>

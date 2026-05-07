@@ -3,10 +3,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { ALL_PERMISSIONS, useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import {
   Plus, Trash2, Shield, Users, Check, Save,
   LayoutDashboard, Database, Zap, Search, Lock, Unlock,
-  Crown, UserCheck, X, Eye, ChevronRight, AlertTriangle, UserX
+  Crown, UserCheck, X, Eye, ChevronRight, AlertTriangle, UserX,
+  GripVertical, LayoutGrid
 } from "lucide-react";
 
 const TEAL   = "#00b4b4";
@@ -484,6 +486,246 @@ function UserRow({ user, role, isAdmin, onEditRole }) {
   );
 }
 
+// ── User Role Grid (Drag & Drop) ──────────────────────────────────────────────
+function UserRoleGrid({ users, roles, onUpdateRole }) {
+  const [search, setSearch] = useState("");
+  const [toast, setToast]   = useState(null);
+
+  // Build roleId → role map and email → roleId map
+  const roleMap = {};
+  roles.forEach(r => {
+    (r.assigned_user_emails || []).forEach(email => { roleMap[email] = r.id; });
+  });
+
+  // Columns: one per role + "unassigned" + "admin"
+  const columns = [
+    { id: "__unassigned__", label: "No Role",  color: "#64748b", icon: null },
+    ...roles.map(r => ({ id: r.id, label: r.name, color: r.color || TEAL, icon: r.is_system ? "crown" : "shield" })),
+  ];
+
+  const filteredUsers = users.filter(u =>
+    u.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+    u.email?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const getUsersForColumn = (colId) => {
+    if (colId === "__unassigned__") return filteredUsers.filter(u => u.role !== "admin" && !roleMap[u.email]);
+    return filteredUsers.filter(u => u.role !== "admin" && roleMap[u.email] === colId);
+  };
+
+  const adminUsers = filteredUsers.filter(u => u.role === "admin");
+
+  const handleDragEnd = async (result) => {
+    const { draggableId: userEmail, destination } = result;
+    if (!destination) return;
+
+    const targetColId = destination.droppableId;
+    const currentRoleId = roleMap[userEmail];
+
+    // No change
+    if (targetColId === (currentRoleId || "__unassigned__")) return;
+
+    // Build updates: remove from old role, add to new role
+    const updates = [];
+
+    // Remove from old role
+    if (currentRoleId) {
+      const oldRole = roles.find(r => r.id === currentRoleId);
+      if (oldRole) {
+        updates.push({
+          id: oldRole.id,
+          data: { ...oldRole, assigned_user_emails: (oldRole.assigned_user_emails || []).filter(e => e !== userEmail) }
+        });
+      }
+    }
+
+    // Add to new role
+    if (targetColId !== "__unassigned__") {
+      const newRole = roles.find(r => r.id === targetColId);
+      if (newRole) {
+        const existing = updates.find(u => u.id === newRole.id);
+        if (existing) {
+          existing.data.assigned_user_emails = [...(existing.data.assigned_user_emails || []), userEmail];
+        } else {
+          updates.push({
+            id: newRole.id,
+            data: { ...newRole, assigned_user_emails: [...(newRole.assigned_user_emails || []), userEmail] }
+          });
+        }
+      }
+    }
+
+    const userName = users.find(u => u.email === userEmail)?.full_name || userEmail;
+    const targetName = targetColId === "__unassigned__" ? "No Role" : roles.find(r => r.id === targetColId)?.name;
+    setToast(`Moved ${userName} → ${targetName}`);
+    setTimeout(() => setToast(null), 3000);
+
+    await onUpdateRole(updates);
+  };
+
+  return (
+    <div className="flex flex-col h-full page-bg">
+      {/* Header */}
+      <div className="px-6 pt-5 pb-4 flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-[16px] font-black" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>
+              User → Role Assignment Board
+            </h2>
+            <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Drag any user card into a role column to instantly reassign them.
+            </p>
+          </div>
+          <div className="relative flex-shrink-0 w-56">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.2)" }} />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Filter users…"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl text-[11px] outline-none"
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: "#e0e0e0" }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Board */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="flex-1 overflow-x-auto overflow-y-hidden p-5">
+          <div className="flex gap-4 h-full" style={{ minWidth: columns.length * 240 }}>
+
+            {/* Admin column (non-droppable) */}
+            {adminUsers.length > 0 && (
+              <div className="flex flex-col rounded-2xl overflow-hidden flex-shrink-0" style={{ width: 220, background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                <div className="px-3 py-3 flex-shrink-0" style={{ borderBottom: "1px solid rgba(245,158,11,0.15)", background: "rgba(245,158,11,0.08)" }}>
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#f59e0b" }} />
+                    <span className="text-[11px] font-black uppercase tracking-wider truncate" style={{ color: "#f59e0b" }}>Administrators</span>
+                    <span className="ml-auto text-[10px] font-black px-2 py-0.5 rounded-full flex-shrink-0"
+                      style={{ background: "rgba(245,158,11,0.15)", color: "#f59e0b" }}>{adminUsers.length}</span>
+                  </div>
+                  <p className="text-[9px] mt-1" style={{ color: "rgba(255,255,255,0.25)" }}>Full system access · cannot drag</p>
+                </div>
+                <div className="flex-1 overflow-y-auto p-2 space-y-1.5 content-scroll">
+                  {adminUsers.map(u => (
+                    <UserDragCard key={u.email} user={u} color="#f59e0b" draggable={false} index={0} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Role columns */}
+            {columns.map(col => {
+              const colUsers = getUsersForColumn(col.id);
+              const isUnassigned = col.id === "__unassigned__";
+              return (
+                <div key={col.id} className="flex flex-col rounded-2xl overflow-hidden flex-shrink-0"
+                  style={{ width: 220, background: `${col.color}06`, border: `1px solid ${col.color}${isUnassigned ? "18" : "25"}` }}>
+                  {/* Column header */}
+                  <div className="px-3 py-3 flex-shrink-0"
+                    style={{ borderBottom: `1px solid ${col.color}18`, background: `${col.color}0a` }}>
+                    <div className="flex items-center gap-2">
+                      {isUnassigned
+                        ? <UserX className="w-3.5 h-3.5 flex-shrink-0" style={{ color: col.color }} />
+                        : col.icon === "crown"
+                          ? <Crown className="w-3.5 h-3.5 flex-shrink-0" style={{ color: col.color }} />
+                          : <Shield className="w-3.5 h-3.5 flex-shrink-0" style={{ color: col.color }} />
+                      }
+                      <span className="text-[11px] font-black uppercase tracking-wider truncate" style={{ color: col.color }}>{col.label}</span>
+                      <span className="ml-auto text-[10px] font-black px-2 py-0.5 rounded-full flex-shrink-0"
+                        style={{ background: `${col.color}18`, color: col.color }}>{colUsers.length}</span>
+                    </div>
+                    {!isUnassigned && (() => {
+                      const role = roles.find(r => r.id === col.id);
+                      const pct  = role ? Math.round((permCount(role) / ALL_PERMISSIONS.length) * 100) : 0;
+                      return (
+                        <div className="mt-2">
+                          <div className="h-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                            <div className="h-full rounded-full" style={{ width: `${pct}%`, background: col.color }} />
+                          </div>
+                          <p className="text-[9px] mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>{pct}% permissions granted</p>
+                        </div>
+                      );
+                    })()}
+                    {isUnassigned && (
+                      <p className="text-[9px] mt-1" style={{ color: "rgba(255,255,255,0.2)" }}>Drop here to remove role</p>
+                    )}
+                  </div>
+
+                  {/* Droppable area */}
+                  <Droppable droppableId={col.id}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className="flex-1 overflow-y-auto p-2 space-y-1.5 content-scroll transition-all"
+                        style={{
+                          minHeight: 80,
+                          background: snapshot.isDraggingOver ? `${col.color}12` : "transparent",
+                          outline: snapshot.isDraggingOver ? `2px dashed ${col.color}60` : "none",
+                          outlineOffset: -4,
+                          borderRadius: 8,
+                        }}>
+                        {colUsers.map((u, index) => (
+                          <Draggable key={u.email} draggableId={u.email} index={index}>
+                            {(prov, snap) => (
+                              <div ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps}>
+                                <UserDragCard user={u} color={col.color} dragging={snap.isDragging} />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                        {colUsers.length === 0 && !snapshot.isDraggingOver && (
+                          <div className="flex flex-col items-center justify-center py-8 gap-1">
+                            <div className="w-6 h-6 rounded-full border-2 border-dashed flex items-center justify-center"
+                              style={{ borderColor: `${col.color}30` }}>
+                              <Plus className="w-3 h-3" style={{ color: `${col.color}40` }} />
+                            </div>
+                            <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.15)" }}>Drop users here</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </DragDropContext>
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-2xl shadow-xl"
+          style={{ background: "#1a1a1a", border: "1px solid rgba(0,212,212,0.3)", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}>
+          <Check className="w-4 h-4" style={{ color: "#10b981" }} />
+          <span className="text-[12px] font-bold" style={{ color: "#f0f0f0" }}>{toast}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function UserDragCard({ user, color, dragging, draggable = true }) {
+  const initials = user.full_name?.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase() || "?";
+  return (
+    <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl transition-all select-none"
+      style={{
+        background: dragging ? `${color}20` : "rgba(255,255,255,0.04)",
+        border: `1px solid ${dragging ? color + "50" : "rgba(255,255,255,0.07)"}`,
+        boxShadow: dragging ? `0 8px 24px rgba(0,0,0,0.5), 0 0 0 2px ${color}40` : "none",
+        cursor: draggable ? "grab" : "default",
+      }}>
+      {draggable && <GripVertical className="w-3 h-3 flex-shrink-0" style={{ color: "rgba(255,255,255,0.15)" }} />}
+      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-black flex-shrink-0"
+        style={{ background: `${color}20`, color, border: `1px solid ${color}30` }}>
+        {initials}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[11px] font-bold truncate leading-tight" style={{ color: "#e0e0e0" }}>{user.full_name}</p>
+        <p className="text-[9px] truncate" style={{ color: "rgba(255,255,255,0.2)", fontFamily: "monospace" }}>{user.email}</p>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function RolesManagement() {
   const { can, loading: rbacLoading } = useRBAC();
@@ -492,7 +734,7 @@ export default function RolesManagement() {
   const [isNew, setIsNew]           = useState(false);
   const [saving, setSaving]         = useState(false);
   const [search, setSearch]         = useState("");
-  const [mainTab, setMainTab]       = useState("roles"); // "roles" | "users"
+  const [mainTab, setMainTab]       = useState("roles"); // "roles" | "users" | "grid"
 
   const { data: roles = [], isLoading } = useQuery({ queryKey: ["roles"], queryFn: () => base44.entities.Role.list() });
   const { data: users = [] }            = useQuery({ queryKey: ["users"], queryFn: () => base44.entities.User.list() });
@@ -515,6 +757,11 @@ export default function RolesManagement() {
   const handleSubmit  = (form) => { setSaving(true); isNew ? createMut.mutate(form) : updateMut.mutate({ id: selectedId, data: form }); };
   const handleNewRole = () => { setSelectedId(null); setIsNew(true); setMainTab("roles"); };
   const handleEditRole = (id) => { setSelectedId(id); setIsNew(false); setMainTab("roles"); };
+
+  const handleGridRoleUpdate = async (updates) => {
+    await Promise.all(updates.map(u => updateMut.mutateAsync({ id: u.id, data: u.data })));
+    qc.invalidateQueries(["roles"]);
+  };
 
   if (rbacLoading) return null;
   if (!can("roles_management")) return <AccessDenied />;
@@ -576,6 +823,7 @@ export default function RolesManagement() {
             {[
               { key: "roles", label: "Roles",   icon: Shield },
               { key: "users", label: "Users",   icon: Users  },
+              { key: "grid",  label: "Board",   icon: LayoutGrid },
             ].map(t => {
               const Icon = t.icon;
               const active = mainTab === t.key;
@@ -590,7 +838,7 @@ export default function RolesManagement() {
           </div>
         </div>
 
-        {/* Roles list (only shown on "roles" tab) */}
+        {/* Roles list (only shown on "roles" tab, not grid/users) */}
         {mainTab === "roles" && (
           <>
             <div className="px-3 pt-3 flex-shrink-0">
@@ -669,6 +917,11 @@ export default function RolesManagement() {
         {/* User Overview tab */}
         {mainTab === "users" && (
           <UserOverview users={users} roles={roles} onEditRole={handleEditRole} />
+        )}
+
+        {/* Drag & Drop Grid tab */}
+        {mainTab === "grid" && (
+          <UserRoleGrid users={users} roles={roles} onUpdateRole={handleGridRoleUpdate} />
         )}
 
         {/* Roles tab — editor or empty state */}
