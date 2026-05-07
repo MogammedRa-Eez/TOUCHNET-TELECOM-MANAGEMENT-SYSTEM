@@ -352,7 +352,7 @@ export default function Billing() {
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
-    <div className="p-4 lg:p-8 space-y-5 max-w-[1600px] mx-auto">
+    <div className="p-4 lg:p-8 space-y-5 max-w-[1600px] mx-auto section-reveal">
 
       {/* Ticker */}
       <div className="relative overflow-hidden rounded-xl h-8 flex items-center"

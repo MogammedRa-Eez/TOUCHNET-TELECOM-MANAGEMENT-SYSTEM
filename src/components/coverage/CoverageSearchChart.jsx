@@ -2,119 +2,91 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { MapPin, CheckCircle2, XCircle } from "lucide-react";
+import { MapPin, TrendingUp } from "lucide-react";
 
 export default function CoverageSearchChart() {
   const { data: searches = [], isLoading } = useQuery({
     queryKey: ["coverage-searches"],
-    queryFn: () => base44.entities.CoverageSearch.list("-created_date", 100),
+    queryFn: () => base44.entities.CoverageSearch.list("-created_date", 200),
   });
 
-  const covered   = searches.filter(s => s.covered).length;
-  const uncovered = searches.filter(s => !s.covered).length;
-  const total     = searches.length;
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl p-6 animate-pulse" style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.15)", height: 200 }} />
+    );
+  }
 
-  // Group by suburb
+  if (searches.length === 0) {
+    return (
+      <div className="rounded-2xl p-8 flex flex-col items-center justify-center gap-2"
+        style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.15)" }}>
+        <MapPin className="w-8 h-8" style={{ color: "rgba(0,180,180,0.3)" }} />
+        <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.3)" }}>No coverage searches yet</p>
+      </div>
+    );
+  }
+
+  // Aggregate by suburb
   const suburbMap = {};
   searches.forEach(s => {
-    const key = s.suburb || s.query?.split(",")[0]?.trim() || "Unknown";
-    if (!suburbMap[key]) suburbMap[key] = { name: key, count: 0, covered: 0 };
-    suburbMap[key].count++;
+    const key = s.suburb || s.nearest_zone || s.query?.split(",")[0] || "Unknown";
+    if (!suburbMap[key]) suburbMap[key] = { name: key, total: 0, covered: 0 };
+    suburbMap[key].total++;
     if (s.covered) suburbMap[key].covered++;
   });
 
   const chartData = Object.values(suburbMap)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10);
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10)
+    .map(d => ({ ...d, pct: Math.round((d.covered / d.total) * 100) }));
 
-  if (isLoading) {
-    return (
-      <div className="rounded-2xl p-6 flex items-center justify-center"
-        style={{ background: "#1a1a1a", border: "1px solid rgba(0,212,212,0.15)", minHeight: 200 }}>
-        <div className="animate-pulse w-6 h-6 rounded-full" style={{ background: "rgba(0,212,212,0.3)" }} />
-      </div>
-    );
-  }
-
-  if (total === 0) {
-    return (
-      <div className="rounded-2xl p-8 flex flex-col items-center justify-center gap-3"
-        style={{ background: "#1a1a1a", border: "1px solid rgba(0,212,212,0.15)", minHeight: 200 }}>
-        <MapPin className="w-8 h-8" style={{ color: "rgba(0,212,212,0.2)" }} />
-        <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.3)" }}>No coverage searches yet</p>
-      </div>
-    );
-  }
+  const totalSearches  = searches.length;
+  const coveredSearches = searches.filter(s => s.covered).length;
+  const coverageRate   = totalSearches ? Math.round((coveredSearches / totalSearches) * 100) : 0;
 
   return (
-    <div className="rounded-2xl overflow-hidden"
-      style={{ background: "#1a1a1a", border: "1px solid rgba(0,212,212,0.18)" }}>
-      <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#e02347,#00b4b4,transparent)" }} />
-      <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(224,35,71,0.1)" }}>
-              <MapPin className="w-3.5 h-3.5" style={{ color: "#e02347" }} />
-            </div>
-            <p className="text-[14px] font-black" style={{ color: "#f0f0f0", fontFamily: "'Space Grotesk',sans-serif" }}>Coverage Search Analytics</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg"
-              style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
-              <CheckCircle2 className="w-3 h-3" style={{ color: "#10b981" }} />
-              <span className="text-[11px] font-bold" style={{ color: "#10b981" }}>{covered} Covered</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg"
-              style={{ background: "rgba(139,26,26,0.1)", border: "1px solid rgba(139,26,26,0.2)" }}>
-              <XCircle className="w-3 h-3" style={{ color: "#c23030" }} />
-              <span className="text-[11px] font-bold" style={{ color: "#c23030" }}>{uncovered} Not Covered</span>
-            </div>
-            <div className="px-3 py-1 rounded-lg"
-              style={{ background: "rgba(0,180,180,0.08)", border: "1px solid rgba(0,180,180,0.2)" }}>
-              <span className="text-[11px] font-bold" style={{ color: "#00b4b4" }}>{total} Total</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {chartData.length > 0 && (
-        <div className="p-5">
-          <p className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.25)" }}>Top searched areas</p>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={chartData} barSize={20}>
-              <XAxis dataKey="name" tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "rgba(255,255,255,0.25)", fontSize: 10 }} axisLine={false} tickLine={false} width={25} />
-              <Tooltip
-                contentStyle={{ background: "#1e1e1e", border: "1px solid rgba(0,212,212,0.2)", borderRadius: 8, color: "#f0f0f0", fontSize: 11 }}
-                cursor={{ fill: "rgba(255,255,255,0.03)" }}
-              />
-              <Bar dataKey="count" name="Searches" radius={[4, 4, 0, 0]}>
-                {chartData.map((entry, i) => (
-                  <Cell key={i} fill={entry.covered > entry.count / 2 ? "#00b4b4" : "#8B1A1A"} opacity={0.85} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
-
-      {/* Recent searches */}
-      <div className="px-5 pb-5 space-y-1.5">
-        <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.25)" }}>Recent searches</p>
-        {searches.slice(0, 5).map(s => (
-          <div key={s.id} className="flex items-center gap-3 px-3 py-2 rounded-xl"
-            style={{ background: s.covered ? "rgba(0,180,180,0.05)" : "rgba(139,26,26,0.05)", border: `1px solid ${s.covered ? "rgba(0,180,180,0.15)" : "rgba(139,26,26,0.15)"}` }}>
-            {s.covered
-              ? <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#10b981" }} />
-              : <XCircle className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#c23030" }} />}
-            <span className="text-[11px] flex-1 truncate" style={{ color: "rgba(255,255,255,0.6)" }}>{s.query}</span>
-            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: s.covered ? "rgba(0,180,180,0.12)" : "rgba(139,26,26,0.12)", color: s.covered ? "#00b4b4" : "#c23030" }}>
-              {s.covered ? "COVERED" : "NO COVERAGE"}
-            </span>
+    <div className="space-y-4">
+      {/* Summary */}
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: "Total Searches", value: totalSearches, color: "#00b4b4" },
+          { label: "Coverage Hits",  value: coveredSearches, color: "#10b981" },
+          { label: "Coverage Rate",  value: `${coverageRate}%`, color: coverageRate >= 60 ? "#10b981" : "#f59e0b" },
+        ].map(s => (
+          <div key={s.label} className="rounded-xl px-4 py-3 relative overflow-hidden"
+            style={{ background: `${s.color}08`, border: `1px solid ${s.color}22` }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${s.color}, transparent)` }} />
+            <p className="text-[22px] font-black mono" style={{ color: s.color, fontFamily: "'JetBrains Mono',monospace" }}>{s.value}</p>
+            <p className="text-[9px] font-black uppercase tracking-wider mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{s.label}</p>
           </div>
         ))}
       </div>
+
+      {/* Bar chart */}
+      {chartData.length > 0 && (
+        <div className="rounded-2xl overflow-hidden"
+          style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.15)" }}>
+          <div className="h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#e02347,transparent)" }} />
+          <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <TrendingUp className="w-3.5 h-3.5" style={{ color: "#00b4b4" }} />
+            <p className="text-[11px] font-black uppercase tracking-wider" style={{ color: "#00b4b4" }}>Top Searched Areas</p>
+          </div>
+          <div className="p-4" style={{ height: 240 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+                <XAxis dataKey="name" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{ background: "#1e1e1e", border: "1px solid rgba(0,212,212,0.25)", borderRadius: 10, color: "#f0f0f0", fontSize: 11 }}
+                  formatter={(v, name) => [v, name === "covered" ? "Covered" : "Not Covered"]}
+                />
+                <Bar dataKey="covered" stackId="a" fill="#10b981" radius={[0,0,0,0]} />
+                <Bar dataKey="total" stackId="b" fill="rgba(0,180,180,0.2)" radius={[4,4,0,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
