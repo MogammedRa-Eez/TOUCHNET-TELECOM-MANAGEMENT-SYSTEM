@@ -298,13 +298,19 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-2 mt-1">
-            <img src={LOGO_BADGE} alt="Crest" className="w-5 h-5 object-contain" style={{ opacity: 0.25, filter: "drop-shadow(0 0 4px rgba(0,212,212,0.3))" }} />
-            <p className="text-center text-[8px]" style={{ color: "rgba(0,212,212,0.2)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.18em" }}>
+          <div className="flex flex-col items-center gap-1.5 mt-1">
+            <div className="relative">
+              <img src={LOGO_BADGE} alt="Crest" className="w-8 h-8 object-contain"
+                style={{ opacity: 0.35, filter: "drop-shadow(0 0 8px rgba(0,212,212,0.5))" }} />
+              <div className="absolute inset-0 rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(0,212,212,0.15), transparent 70%)", animation: "pulse-navy 3s ease-in-out infinite" }} />
+            </div>
+            <p className="text-center text-[8px]" style={{ color: "rgba(0,212,212,0.3)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.18em" }}>
               BUILD · CONNECT · PROTECT
             </p>
+            <div className="neon-bar w-24" />
           </div>
-          <p className="text-center text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.12)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.15em" }}>
+          <p className="text-center text-[8px] mt-1" style={{ color: "rgba(255,255,255,0.15)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.15em" }}>
             TOUCHNET · TMS v3.0
           </p>
         </div>
@@ -373,14 +379,20 @@ function LayoutInner({ children, currentPageName }) {
 
           {/* Breadcrumb */}
           <div className="hidden sm:flex items-center gap-2.5">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: "linear-gradient(135deg,rgba(0,180,180,0.15),rgba(139,26,26,0.08))", border: "1px solid rgba(0,212,212,0.22)" }}>
+                <img src={LOGO_BADGE} alt="Crest" className="w-5 h-5 object-contain" style={{ opacity: 0.9 }} />
+              </div>
               <img src={LOGO_WORDMARK} alt="TouchNet" className="h-5 object-contain" style={{ opacity: 0.95 }} />
             </div>
             {currentItem && (
               <>
-                <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 14 }}>›</span>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+                <span style={{ color: "rgba(0,212,212,0.3)", fontSize: 16 }}>›</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg relative overflow-hidden"
                   style={{ background: "rgba(0,180,180,0.08)", border: "1px solid rgba(0,180,180,0.2)" }}>
+                  <div className="absolute top-0 left-0 right-0 h-[1px]"
+                    style={{ background: "linear-gradient(90deg,transparent,rgba(0,212,212,0.5),transparent)" }} />
                   {CurrentIcon && <CurrentIcon className="w-3.5 h-3.5" style={{ color: NAVY }} />}
                   <span className="text-[13px] font-bold"
                     style={{ color: NAVY, fontFamily: "'Space Grotesk', sans-serif" }}>

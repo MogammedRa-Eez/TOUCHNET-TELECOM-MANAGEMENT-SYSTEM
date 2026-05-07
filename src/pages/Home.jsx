@@ -13,23 +13,33 @@ const LOGO_TEAL   = "https://media.base44.com/images/public/69a157d4dbdca56a3bcc
 const CREST_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
 
 const MODULES = [
-  { icon: Network,    label: "Fibre Projects",   color: "#00b4b4" },
-  { icon: Globe,      label: "Network Monitoring",color: "#0ea5e9" },
-  { icon: TicketCheck,label: "Smart Helpdesk",   color: "#8b5cf6" },
-  { icon: Users,      label: "Customer Portal",  color: "#10b981" },
-  { icon: BarChart3,  label: "Billing & Invoicing",color: "#f59e0b" },
-  { icon: Shield,     label: "Access Control",   color: "#8B1A1A" },
+  { icon: Network,    label: "Fibre Projects",     color: "#00b4b4", desc: "End-to-end deployment" },
+  { icon: Globe,      label: "Network Monitoring", color: "#0ea5e9", desc: "Live node telemetry"    },
+  { icon: TicketCheck,label: "Smart Helpdesk",     color: "#8b5cf6", desc: "SLA-driven support"    },
+  { icon: Users,      label: "Customer Portal",    color: "#10b981", desc: "Self-service access"   },
+  { icon: BarChart3,  label: "Billing & Invoicing",color: "#f59e0b", desc: "Sage Cloud integrated" },
+  { icon: Shield,     label: "Access Control",     color: "#8B1A1A", desc: "RBAC permissions"      },
 ];
 
 const STATS = [
-  { value: "99.9%", label: "Network Uptime",    color: "#10b981" },
-  { value: "< 2h",  label: "Ticket SLA",        color: "#00d4d4" },
-  { value: "500+",  label: "Active Customers",  color: "#a0f0f0" },
-  { value: "24/7",  label: "Monitoring",        color: "#f59e0b" },
+  { value: "99.9%", label: "Network Uptime",   color: "#10b981" },
+  { value: "< 2h",  label: "Ticket SLA",       color: "#00d4d4" },
+  { value: "500+",  label: "Active Customers", color: "#a0f0f0" },
+  { value: "24/7",  label: "Monitoring",       color: "#f59e0b" },
 ];
 
 export default function Home() {
   const [tick, setTick] = useState(0);
+  const [particles] = useState(() =>
+    Array.from({ length: 18 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 3 + 1,
+      delay: Math.random() * 4,
+      dur: Math.random() * 4 + 4,
+    }))
+  );
 
   useEffect(() => {
     const id = setInterval(() => setTick(t => t + 1), 1000);
@@ -69,6 +79,18 @@ export default function Home() {
         {/* Subtle scan lines */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.015]"
           style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,212,212,0.6) 3px, rgba(0,212,212,0.6) 4px)" }} />
+        {/* Floating particles */}
+        {particles.map(p => (
+          <div key={p.id} className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `${p.x}%`, top: `${p.y}%`,
+              width: p.size, height: p.size,
+              background: p.id % 3 === 0 ? "#00d4d4" : p.id % 3 === 1 ? "#8B1A1A" : "rgba(255,255,255,0.4)",
+              boxShadow: `0 0 ${p.size * 3}px currentColor`,
+              animation: `float ${p.dur}s ease-in-out ${p.delay}s infinite`,
+              opacity: 0.5,
+            }} />
+        ))}
 
         {/* Animated top accent bar */}
         <div className="absolute top-0 left-0 right-0 h-[2px] z-10"
@@ -152,14 +174,21 @@ export default function Home() {
 
           {/* Module grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-10">
-            {MODULES.map(({ icon: Icon, label, color }) => (
-              <div key={label} className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all hover:scale-[1.02]"
-                style={{ background: `${color}08`, border: `1px solid ${color}1a` }}>
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${color}15`, border: `1px solid ${color}28` }}>
-                  <Icon className="w-3.5 h-3.5" style={{ color }} />
+            {MODULES.map(({ icon: Icon, label, color, desc }) => (
+              <div key={label}
+                className="relative flex flex-col gap-1.5 px-3 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] overflow-hidden group"
+                style={{ background: `${color}08`, border: `1px solid ${color}22`, boxShadow: `0 2px 12px ${color}08` }}>
+                {/* Top shimmer on hover */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: `${color}18`, border: `1px solid ${color}30`, boxShadow: `0 0 8px ${color}20` }}>
+                    <Icon className="w-3.5 h-3.5" style={{ color }} />
+                  </div>
+                  <span className="text-[11px] font-bold" style={{ color: "rgba(255,255,255,0.7)" }}>{label}</span>
                 </div>
-                <span className="text-[11px] font-semibold" style={{ color: "rgba(255,255,255,0.6)" }}>{label}</span>
+                <p className="text-[9px] pl-9" style={{ color: "rgba(255,255,255,0.28)" }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -167,14 +196,16 @@ export default function Home() {
           {/* Stats strip */}
           <div className="grid grid-cols-4 gap-2 mb-auto">
             {STATS.map(s => (
-              <div key={s.label} className="flex flex-col items-center py-3 px-2 rounded-xl"
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div key={s.label} className="relative flex flex-col items-center py-3 px-2 rounded-xl overflow-hidden group hover:scale-105 transition-transform"
+                style={{ background: `linear-gradient(135deg, ${s.color}0a, rgba(0,0,0,0.3))`, border: `1px solid ${s.color}20` }}>
+                <div className="absolute top-0 left-0 right-0 h-[1px]"
+                  style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }} />
                 <span className="text-lg font-black leading-none mb-1"
-                  style={{ color: s.color, fontFamily: "'JetBrains Mono',monospace", textShadow: `0 0 16px ${s.color}60` }}>
+                  style={{ color: s.color, fontFamily: "'JetBrains Mono',monospace", textShadow: `0 0 20px ${s.color}80` }}>
                   {s.value}
                 </span>
                 <span className="text-[8px] font-bold uppercase tracking-wider text-center"
-                  style={{ color: "rgba(255,255,255,0.25)" }}>{s.label}</span>
+                  style={{ color: "rgba(255,255,255,0.3)" }}>{s.label}</span>
               </div>
             ))}
           </div>
@@ -215,20 +246,28 @@ export default function Home() {
 
           {/* Live clock */}
           <div className="flex flex-col items-center mb-8">
-            <div className="px-4 py-2 rounded-2xl mb-3"
-              style={{ background: "rgba(0,180,180,0.05)", border: "1px solid rgba(0,212,212,0.12)" }}>
-              <p className="text-2xl font-black text-center tracking-widest"
-                style={{ color: "#00d4d4", fontFamily: "'JetBrains Mono',monospace", textShadow: "0 0 20px rgba(0,212,212,0.4)" }}>
+            <div className="relative px-6 py-3 rounded-2xl mb-3 overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(0,180,180,0.07), rgba(0,0,0,0.4))", border: "1px solid rgba(0,212,212,0.2)", boxShadow: "0 0 40px rgba(0,180,180,0.08)" }}>
+              <div className="absolute top-0 left-0 right-0 h-[1px]"
+                style={{ background: "linear-gradient(90deg,transparent,rgba(0,212,212,0.6),transparent)" }} />
+              <div className="absolute bottom-0 left-0 right-0 h-[1px]"
+                style={{ background: "linear-gradient(90deg,transparent,rgba(139,26,26,0.4),transparent)" }} />
+              <div className="data-indicator absolute top-3 right-3">
+                <span /><span /><span />
+              </div>
+              <p className="text-3xl font-black text-center tracking-widest"
+                style={{ color: "#00d4d4", fontFamily: "'JetBrains Mono',monospace", textShadow: "0 0 30px rgba(0,212,212,0.6), 0 0 60px rgba(0,180,180,0.2)" }}>
                 {timeStr}
               </p>
-              <p className="text-[10px] text-center mt-0.5" style={{ color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono',monospace" }}>
+              <p className="text-[10px] text-center mt-0.5" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'JetBrains Mono',monospace" }}>
                 {dateStr}
               </p>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981", boxShadow: "0 0 6px #10b981" }} />
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+              style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.2)" }}>
+              <span className="w-1.5 h-1.5 rounded-full status-breathe" style={{ background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
               <span className="text-[9px] font-black uppercase tracking-[0.2em]"
-                style={{ color: "rgba(16,185,129,0.7)", fontFamily: "'JetBrains Mono',monospace" }}>All Systems Operational</span>
+                style={{ color: "rgba(16,185,129,0.8)", fontFamily: "'JetBrains Mono',monospace" }}>All Systems Operational</span>
             </div>
           </div>
 
@@ -251,18 +290,29 @@ export default function Home() {
 
               {/* Crest + title */}
               <div className="flex flex-col items-center mb-7">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-4"
-                  style={{
-                    background: "linear-gradient(135deg,rgba(0,180,180,0.12),rgba(139,26,26,0.06))",
-                    border: "1px solid rgba(0,212,212,0.22)",
-                    boxShadow: "0 0 30px rgba(0,180,180,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
-                  }}>
-                  <img src={CREST_WHITE} alt="TouchNet Crest" className="w-14 h-14 object-contain"
-                    style={{ filter: "drop-shadow(0 0 12px rgba(0,212,212,0.4))", opacity: 0.92 }} />
+                <div className="relative w-24 h-24 flex items-center justify-center mb-4">
+                  {/* Outer spinning ring */}
+                  <div className="absolute inset-0 rounded-full"
+                    style={{ border: "1px dashed rgba(0,212,212,0.3)", animation: "border-spin 12s linear infinite" }} />
+                  {/* Inner counter-spin */}
+                  <div className="absolute inset-2 rounded-full"
+                    style={{ border: "1px solid rgba(139,26,26,0.25)", animation: "border-spin 8s linear infinite reverse" }} />
+                  {/* Glow platform */}
+                  <div className="absolute inset-3 rounded-2xl"
+                    style={{
+                      background: "linear-gradient(135deg,rgba(0,180,180,0.14),rgba(139,26,26,0.06))",
+                      border: "1px solid rgba(0,212,212,0.28)",
+                      boxShadow: "0 0 40px rgba(0,180,180,0.2), 0 0 80px rgba(0,180,180,0.08), inset 0 1px 0 rgba(255,255,255,0.08)"
+                    }} />
+                  <img src={CREST_WHITE} alt="TouchNet Crest" className="w-14 h-14 object-contain relative z-10"
+                    style={{ filter: "drop-shadow(0 0 16px rgba(0,212,212,0.6)) drop-shadow(0 0 40px rgba(0,180,180,0.3))", opacity: 0.95 }} />
+                  {/* Beacon pings */}
+                  <div className="absolute inset-0 rounded-full status-beacon" style={{ color: "#00b4b4" }} />
                 </div>
                 <img src={LOGO_TEAL} alt="TouchNet" className="h-8 object-contain mb-2" style={{ opacity: 0.95 }} />
-                <p className="text-[11px] font-bold text-center" style={{ color: "rgba(255,255,255,0.35)" }}>
-                  Telecommunications Management System
+                <p className="text-[11px] font-bold text-center tracking-wide"
+                  style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.05em" }}>
+                  TELECOMMUNICATIONS MANAGEMENT SYSTEM
                 </p>
               </div>
 

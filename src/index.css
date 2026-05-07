@@ -1008,6 +1008,106 @@ tbody tr.premium-row:hover::before {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   GLOBAL CREST WATERMARK — subtle brand presence on every page
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.page-bg::after {
+  content: '';
+  position: fixed;
+  bottom: -80px;
+  right: -80px;
+  width: 340px;
+  height: 340px;
+  background-image: url("https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(1px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENHANCED KPI CARDS — stronger glow on hover
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.kpi-card:hover {
+  border-color: rgba(0,212,212,0.45) !important;
+  transform: translateY(-6px) scale(1.015) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,212,0.2), 0 0 40px rgba(0,180,180,0.1) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEON DATA BAR — animated loading/progress indicator
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.neon-bar {
+  position: relative;
+  height: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.05);
+}
+.neon-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -50%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, #00d4d4, rgba(255,255,255,0.8), #00d4d4, transparent);
+  animation: shimmer 2s ease infinite;
+  border-radius: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUTURISTIC TABLE HEADER GLOW
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+thead tr {
+  background: linear-gradient(90deg, rgba(0,180,180,0.06), rgba(255,255,255,0.03), rgba(0,180,180,0.04)) !important;
+  border-bottom: 1px solid rgba(0,212,212,0.12) !important;
+}
+thead th {
+  color: rgba(0,212,212,0.6) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENHANCED BUTTONS — pulse glow on hover
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-primary:hover {
+  box-shadow: 0 8px 32px rgba(0,180,180,0.5), 0 0 0 2px rgba(0,212,212,0.2) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARD HOLOGRAPHIC BORDER — premium card variant
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.card-holo {
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.card-holo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0,212,212,0.5), rgba(255,255,255,0.1), rgba(139,26,26,0.3), rgba(0,212,212,0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: border-rotate 5s ease infinite;
+  background-size: 300% 300%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIDEBAR ACTIVE ITEM — enhanced glow
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
    INTERACTIVE ENHANCEMENTS v4.1
    ═══════════════════════════════════════════════════════════════════════════ */
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import {
   MapPin, Search, CheckCircle2, XCircle, Loader2,
@@ -158,34 +158,22 @@ export default function CoverageChecker({ onClose }) {
                     </p>
                   </div>
                 </div>
-                {result.covered && (
-                  <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
-                    Fibre connectivity is available in your area. Sign up below to get connected.
-                  </p>
-                )}
-                {!result.covered && (
-                  <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
-                    We're expanding our network. Register below to be notified when coverage reaches you.
-                  </p>
-                )}
+                <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  {result.covered
+                    ? "Fibre connectivity is available in your area. Sign up below to get connected."
+                    : "We're expanding our network. Register below to be notified when coverage reaches you."}
+                </p>
               </div>
 
               <div className="flex gap-2">
-                {result.covered ? (
-                  <button onClick={() => setStep("form")}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold text-white"
-                    style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
-                    <Zap className="w-3.5 h-3.5" /> Sign Up Now
-                  </button>
-                ) : (
-                  <button onClick={() => setStep("form")}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold text-white"
-                    style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)" }}>
-                    <Mail className="w-3.5 h-3.5" /> Notify Me
-                  </button>
-                )}
+                <button onClick={() => setStep("form")}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold text-white"
+                  style={{ background: result.covered ? "linear-gradient(135deg,#10b981,#059669)" : "linear-gradient(135deg,#00b4b4,#007a7a)" }}>
+                  {result.covered ? <Zap className="w-3.5 h-3.5" /> : <Mail className="w-3.5 h-3.5" />}
+                  {result.covered ? "Sign Up Now" : "Notify Me"}
+                </button>
                 <button onClick={reset}
-                  className="py-2.5 px-3 rounded-xl text-[12px] font-bold"
+                  className="py-2.5 px-3 rounded-xl"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)" }}>
                   <RefreshCw className="w-3.5 h-3.5" />
                 </button>
@@ -201,9 +189,9 @@ export default function CoverageChecker({ onClose }) {
                 {result?.covered ? "Get Connected with TouchNet" : "Register for Coverage Notification"}
               </p>
               {[
-                { field: "name",  Icon: User,  type: "text",  placeholder: "Full name *",     req: true  },
-                { field: "email", Icon: Mail,  type: "email", placeholder: "Email address *",  req: true  },
-                { field: "phone", Icon: Phone, type: "tel",   placeholder: "Phone number",     req: false },
+                { field: "name",  Icon: User,  type: "text",  placeholder: "Full name *",    req: true  },
+                { field: "email", Icon: Mail,  type: "email", placeholder: "Email address *", req: true  },
+                { field: "phone", Icon: Phone, type: "tel",   placeholder: "Phone number",    req: false },
               ].map(({ field, Icon, type, placeholder, req }) => (
                 <div key={field} className="relative">
                   <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "rgba(0,212,212,0.4)" }} />
@@ -247,7 +235,7 @@ export default function CoverageChecker({ onClose }) {
           {step === "search" && (
             <div className="rounded-xl p-4"
               style={{ background: "rgba(0,180,180,0.04)", border: "1px solid rgba(0,212,212,0.1)" }}>
-              <p className="text-[11px] font-black uppercase tracking-wider mb-2" style={{ color: "rgba(0,212,212,0.5)" }}>Coverage Areas</p>
+              <p className="text-[11px] font-black uppercase tracking-wider mb-2" style={{ color: "rgba(0,212,212,0.5)" }}>Current Coverage Areas</p>
               <div className="flex flex-wrap gap-1.5">
                 {ZONES.map(z => (
                   <span key={z.label} className="text-[10px] px-2 py-0.5 rounded-full"
