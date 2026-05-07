@@ -20,6 +20,7 @@ import AccessDenied from "@/components/rbac/AccessDenied";
 import InvoicePDFModal from "@/components/billing/InvoicePDFModal";
 import { AreaChart, Area, ResponsiveContainer, Tooltip } from "recharts";
 import jsPDF from "jspdf";
+import InvoiceAgingReport from "@/components/billing/InvoiceAgingReport";
 
 const STATUS_CFG = {
   draft:     { color: "#94a3b8", bg: "rgba(148,163,184,0.12)", border: "rgba(148,163,184,0.25)", label: "Draft",     dot: "#94a3b8" },
@@ -442,6 +443,8 @@ export default function Billing() {
       )}
 
       {!isLoading && invoices.length > 0 && <RevenueBreakdown invoices={invoices} />}
+
+      {!isLoading && invoices.length > 0 && <InvoiceAgingReport invoices={invoices} />}
 
       {isAdmin && <BatchInvoiceGenerator onInvoicesCreated={() => queryClient.invalidateQueries({ queryKey: ["invoices"] })} />}
 

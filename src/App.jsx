@@ -21,6 +21,8 @@ import CoverageCheck from './pages/CoverageCheck.jsx';
 import QuoteView from './pages/QuoteView';
 import UserManual from './pages/UserManual';
 import AuditLog from './pages/AuditLog';
+import SLADashboard from './pages/SLADashboard';
+import NOCView from './pages/NOCView';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -112,6 +114,12 @@ const AuthenticatedApp = () => {
         </LayoutWrapper>
       } />
       <Route path="/quote" element={<QuoteView />} />
+      <Route path="/SLADashboard" element={
+        <LayoutWrapper currentPageName="SLADashboard">
+          <SLADashboard />
+        </LayoutWrapper>
+      } />
+      <Route path="/NOCView" element={<NOCView />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/CynetSecurity" element={

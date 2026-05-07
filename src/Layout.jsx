@@ -41,6 +41,7 @@ const NAV_GROUPS = [
       { name: "Billing",        page: "Billing",       icon: Receipt,      perm: "billing" },
       { name: "Quotes",         page: "Quotes",        icon: FileText,     perm: "customers" },
       { name: "Tickets",        page: "Tickets",       icon: TicketCheck,  perm: "tickets" },
+      { name: "SLA Dashboard",  page: "SLADashboard",  icon: Zap,          perm: "tickets" },
       { name: "Fibre Projects", page: "FibreProjects", icon: Network,      perm: "projects" },
     ],
   },
@@ -50,6 +51,7 @@ const NAV_GROUPS = [
       { name: "Network",        page: "Network",       icon: Activity, perm: "network" },
       { name: "Inventory",      page: "Inventory",     icon: Package,  perm: "network" },
       { name: "Cynet Security", page: "CynetSecurity", icon: Shield,   perm: "cyber_security" },
+      { name: "NOC View",       page: "NOCView",       icon: Activity, perm: "network" },
     ],
   },
   {

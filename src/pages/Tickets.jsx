@@ -18,6 +18,7 @@ import TicketForm from "../components/tickets/TicketForm";
 import InlineTicketComments from "@/components/tickets/InlineTicketComments";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
+import BulkTicketAssign from "@/components/tickets/BulkTicketAssign";
 
 const STATUS_CFG = {
   open:             { color: "#f59e0b", bg: "rgba(245,158,11,0.12)",  border: "rgba(245,158,11,0.3)",   label: "Open",        dot: "#fbbf24" },
@@ -178,6 +179,7 @@ export default function Tickets() {
 
   const { data: tickets = [], isLoading, refetch } = useQuery({ queryKey: ["tickets"], queryFn: () => base44.entities.Ticket.list("-created_date"), enabled: !rbacLoading && can("tickets") });
   const { data: customers = [] } = useQuery({ queryKey: ["customers"], queryFn: () => base44.entities.Customer.list(), enabled: !rbacLoading && can("tickets") });
+  const { data: employees = [] } = useQuery({ queryKey: ["employees"], queryFn: () => base44.entities.Employee.list(), enabled: !rbacLoading && can("tickets") });
 
   const createMut = useMutation({ mutationFn: (data) => base44.entities.Ticket.create(data), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["tickets"] }); setShowForm(false); } });
   const updateMut = useMutation({ mutationFn: ({ id, data }) => base44.entities.Ticket.update(id, data), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["tickets"] }); setShowForm(false); setEditing(null); } });
@@ -255,6 +257,9 @@ export default function Tickets() {
               style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
               <Download className="w-3.5 h-3.5" /> Export CSV
             </button>
+            {isAdmin && (
+              <BulkTicketAssign tickets={filtered} employees={employees} onDone={() => queryClient.invalidateQueries({ queryKey: ["tickets"] })} />
+            )}
             {isAdmin && (
               <button onClick={() => { setEditing(null); setShowForm(true); }}
                 className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 ripple-btn"

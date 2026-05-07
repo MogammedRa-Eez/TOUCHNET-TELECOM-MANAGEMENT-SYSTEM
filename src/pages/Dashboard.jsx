@@ -247,10 +247,10 @@ export default function Dashboard() {
     return () => clearInterval(id);
   }, []);
 
-  const { data: customers = [], isLoading: lC, refetch: rC } = useQuery({ queryKey: ["customers"],     queryFn: () => base44.entities.Customer.list("-created_date", 100) });
-  const { data: invoices  = [], isLoading: lI, refetch: rI } = useQuery({ queryKey: ["invoices"],      queryFn: () => base44.entities.Invoice.list("-created_date", 100) });
-  const { data: tickets   = [], isLoading: lT, refetch: rT } = useQuery({ queryKey: ["tickets"],       queryFn: () => base44.entities.Ticket.list("-created_date", 100) });
-  const { data: nodes     = [], isLoading: lN, refetch: rN } = useQuery({ queryKey: ["network-nodes"], queryFn: () => base44.entities.NetworkNode.list() });
+  const { data: customers = [], isLoading: lC, refetch: rC } = useQuery({ queryKey: ["customers"],     queryFn: () => base44.entities.Customer.list("-created_date", 100), refetchInterval: 60000 });
+  const { data: invoices  = [], isLoading: lI, refetch: rI } = useQuery({ queryKey: ["invoices"],      queryFn: () => base44.entities.Invoice.list("-created_date", 100), refetchInterval: 60000 });
+  const { data: tickets   = [], isLoading: lT, refetch: rT } = useQuery({ queryKey: ["tickets"],       queryFn: () => base44.entities.Ticket.list("-created_date", 100), refetchInterval: 60000 });
+  const { data: nodes     = [], isLoading: lN, refetch: rN } = useQuery({ queryKey: ["network-nodes"], queryFn: () => base44.entities.NetworkNode.list(), refetchInterval: 60000 });
 
   const isLoading = lC || lI || lT || lN;
   if (!rbacLoading && !can("dashboard")) return <AccessDenied />;
