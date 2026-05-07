@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { LogOut, User, ChevronDown, Settings, Moon, Sun, Bell, Shield, Copy, Check } from "lucide-react";
+import { LogOut, User, ChevronDown, Settings, Shield, Copy, Check, Camera, Loader2 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,9 @@ export default function UserMenu() {
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const ref = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     base44.auth.me().then((u) => { setUser(u); setName(u?.full_name || ""); }).catch(() => {});
@@ -31,6 +33,20 @@ export default function UserMenu() {
     setUser((u) => ({ ...u, display_name: name }));
     setSaving(false);
     setEditOpen(false);
+  };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.auth.updateMe({ avatar_url: file_url });
+      setUser((u) => ({ ...u, avatar_url: file_url }));
+    } finally {
+      setUploadingAvatar(false);
+      e.target.value = "";
+    }
   };
 
   const handleCopyEmail = () => {
@@ -53,9 +69,11 @@ export default function UserMenu() {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all hover:bg-slate-100"
         style={{ border: "1px solid rgba(0,0,0,0.08)" }}>
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+        <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
           style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
-          {initials}
+          {user?.avatar_url
+            ? <img src={user.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+            : initials}
         </div>
         <div className="hidden sm:block text-left">
           <p className="text-xs font-semibold text-slate-700 leading-tight">{user?.full_name || "User"}</p>
@@ -71,9 +89,19 @@ export default function UserMenu() {
           {/* User info header */}
           <div className="px-4 py-3" style={{ borderBottom: "1px solid rgba(0,0,0,0.07)", background: "linear-gradient(135deg, #f8fafc, #f0f4ff)" }}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
-                style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
-                {initials}
+              <div className="relative w-10 h-10 flex-shrink-0 group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center text-sm font-bold text-white"
+                  style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
+                  {user?.avatar_url
+                    ? <img src={user.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                    : initials}
+                </div>
+                <div className="absolute inset-0 rounded-xl bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  {uploadingAvatar
+                    ? <Loader2 className="w-4 h-4 text-white animate-spin" />
+                    : <Camera className="w-4 h-4 text-white" />}
+                </div>
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-slate-800 truncate">{user?.full_name || "User"}</p>
