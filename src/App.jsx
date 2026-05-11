@@ -6,6 +6,13 @@ import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
+
+// ── Sales Prototype ──────────────────────────────────────────────────────────
+import SalesLayout from './sales-proto/SalesLayout';
+import SalesHome from './sales-proto/SalesHome';
+import SalesCoverageWrapper from './sales-proto/SalesCoverageWrapper';
+import Customers from './pages/Customers';
+import Billing from './pages/Billing';
 import DepartmentDashboard from './pages/DepartmentDashboard';
 import CustomerPortalMain from './pages/CustomerPortalMain';
 import CynetSecurity from './pages/CynetSecurity';
@@ -127,6 +134,14 @@ const AuthenticatedApp = () => {
           <CynetSecurity />
         </LayoutWrapper>
       } />
+      {/* ── Sales Prototype Routes ─────────────────────────────────────── */}
+      <Route path="/sales" element={<SalesLayout><SalesHome /></SalesLayout>} />
+      <Route path="/sales/dashboard" element={<SalesLayout><Dashboard /></SalesLayout>} />
+      <Route path="/sales/quotes" element={<SalesLayout><Quotes /></SalesLayout>} />
+      <Route path="/sales/customers" element={<SalesLayout><Customers /></SalesLayout>} />
+      <Route path="/sales/billing" element={<SalesLayout><Billing /></SalesLayout>} />
+      <Route path="/sales/coverage" element={<SalesCoverageWrapper />} />
+
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
