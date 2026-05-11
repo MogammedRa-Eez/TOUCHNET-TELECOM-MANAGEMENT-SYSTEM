@@ -2,10 +2,6 @@ import React from "react";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 
-/**
- * CoverageChecker — modal overlay that links to the full /CoverageCheck page.
- * Used from Dashboard and CustomerPortalMain via the Coverage button.
- */
 export default function CoverageChecker({ onClose }) {
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
@@ -23,14 +19,14 @@ export default function CoverageChecker({ onClose }) {
             </p>
           </div>
           <button onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-xl transition-all hover:scale-110"
+            className="w-8 h-8 flex items-center justify-center rounded-xl"
             style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
             <X className="w-4 h-4" />
           </button>
         </div>
         <div className="p-6 flex flex-col items-center gap-4">
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
-            style={{ background: "rgba(0,180,180,0.1)", border: "1px solid rgba(0,212,212,0.25)", boxShadow: "0 0 30px rgba(0,180,180,0.15)" }}>
+            style={{ background: "rgba(0,180,180,0.1)", border: "1px solid rgba(0,212,212,0.25)" }}>
             <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="#00d4d4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
               <circle cx="12" cy="9" r="2.5"/>
@@ -46,12 +42,12 @@ export default function CoverageChecker({ onClose }) {
           </div>
           <div className="flex gap-3 w-full">
             <button onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:scale-105"
+              className="flex-1 py-2.5 rounded-xl text-[12px] font-bold"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
               Cancel
             </button>
             <Link to="/CoverageCheck" onClick={onClose}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold text-white"
               style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow: "0 4px 16px rgba(0,180,180,0.35)" }}>
               Open Coverage Map →
             </Link>

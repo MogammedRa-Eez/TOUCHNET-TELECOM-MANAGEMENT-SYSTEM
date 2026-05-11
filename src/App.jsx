@@ -4,7 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 
 // ── Sales Prototype ──────────────────────────────────────────────────────────
@@ -41,6 +41,17 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
+/**
+ * AdminOnly — renders children only for admin users.
+ * Non-admins are silently redirected to the Sales prototype.
+ */
+const AdminOnly = ({ children }) => {
+  const { user, isLoadingAuth } = useAuth();
+  if (isLoadingAuth) return null;
+  if (user?.role !== 'admin') return <Navigate to="/sales" replace />;
+  return children;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
@@ -67,74 +78,46 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
+      {/* Root: admins go to TMS dashboard, everyone else goes to Sales prototype */}
       <Route path="/" element={
-        <LayoutWrapper currentPageName="Dashboard">
-          <Dashboard />
-        </LayoutWrapper>
+        <AdminOnly>
+          <LayoutWrapper currentPageName="Dashboard">
+            <Dashboard />
+          </LayoutWrapper>
+        </AdminOnly>
       } />
+
+      {/* ── Full TMS — admin only ──────────────────────────────────────── */}
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
           path={`/${path}`}
           element={
-            <LayoutWrapper currentPageName={path}>
-              <Page />
-            </LayoutWrapper>
+            <AdminOnly>
+              <LayoutWrapper currentPageName={path}>
+                <Page />
+              </LayoutWrapper>
+            </AdminOnly>
           }
         />
       ))}
-      <Route path="/AIAssistant" element={
-        <LayoutWrapper currentPageName="AIAssistant">
-          <AIAssistant />
-        </LayoutWrapper>
-      } />
-      <Route path="/SystemDemo" element={
-        <LayoutWrapper currentPageName="SystemDemo">
-          <SystemDemo />
-        </LayoutWrapper>
-      } />
-      <Route path="/Quotes" element={
-        <LayoutWrapper currentPageName="Quotes">
-          <Quotes />
-        </LayoutWrapper>
-      } />
-      <Route path="/NotificationSettings" element={
-        <LayoutWrapper currentPageName="NotificationSettings">
-          <NotificationSettings />
-        </LayoutWrapper>
-      } />
-      <Route path="/DepartmentDashboard" element={
-        <LayoutWrapper currentPageName="DepartmentDashboard">
-          <DepartmentDashboard />
-        </LayoutWrapper>
-      } />
-      <Route path="/CustomerPortalMain" element={<CustomerPortalMain />} />
+      <Route path="/AIAssistant" element={<AdminOnly><LayoutWrapper currentPageName="AIAssistant"><AIAssistant /></LayoutWrapper></AdminOnly>} />
+      <Route path="/SystemDemo" element={<AdminOnly><LayoutWrapper currentPageName="SystemDemo"><SystemDemo /></LayoutWrapper></AdminOnly>} />
+      <Route path="/Quotes" element={<AdminOnly><LayoutWrapper currentPageName="Quotes"><Quotes /></LayoutWrapper></AdminOnly>} />
+      <Route path="/NotificationSettings" element={<AdminOnly><LayoutWrapper currentPageName="NotificationSettings"><NotificationSettings /></LayoutWrapper></AdminOnly>} />
+      <Route path="/DepartmentDashboard" element={<AdminOnly><LayoutWrapper currentPageName="DepartmentDashboard"><DepartmentDashboard /></LayoutWrapper></AdminOnly>} />
+      <Route path="/CustomerPortalMain" element={<AdminOnly><CustomerPortalMain /></AdminOnly>} />
       <Route path="/CoverageCheck" element={<CoverageCheck />} />
-      <Route path="/AuditLog" element={
-        <LayoutWrapper currentPageName="AuditLog">
-          <AuditLog />
-        </LayoutWrapper>
-      } />
-      <Route path="/UserManual" element={
-        <LayoutWrapper currentPageName="UserManual">
-          <UserManual />
-        </LayoutWrapper>
-      } />
+      <Route path="/AuditLog" element={<AdminOnly><LayoutWrapper currentPageName="AuditLog"><AuditLog /></LayoutWrapper></AdminOnly>} />
+      <Route path="/UserManual" element={<AdminOnly><LayoutWrapper currentPageName="UserManual"><UserManual /></LayoutWrapper></AdminOnly>} />
       <Route path="/quote" element={<QuoteView />} />
-      <Route path="/SLADashboard" element={
-        <LayoutWrapper currentPageName="SLADashboard">
-          <SLADashboard />
-        </LayoutWrapper>
-      } />
-      <Route path="/NOCView" element={<NOCView />} />
+      <Route path="/SLADashboard" element={<AdminOnly><LayoutWrapper currentPageName="SLADashboard"><SLADashboard /></LayoutWrapper></AdminOnly>} />
+      <Route path="/NOCView" element={<AdminOnly><NOCView /></AdminOnly>} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/CynetSecurity" element={
-        <LayoutWrapper currentPageName="CynetSecurity">
-          <CynetSecurity />
-        </LayoutWrapper>
-      } />
-      {/* ── Sales Prototype Routes ─────────────────────────────────────── */}
+      <Route path="/CynetSecurity" element={<AdminOnly><LayoutWrapper currentPageName="CynetSecurity"><CynetSecurity /></LayoutWrapper></AdminOnly>} />
+
+      {/* ── Sales Prototype Routes — all authenticated users ───────────── */}
       <Route path="/sales" element={<SalesLayout><SalesHome /></SalesLayout>} />
       <Route path="/sales/dashboard" element={<SalesLayout><Dashboard /></SalesLayout>} />
       <Route path="/sales/quotes" element={<SalesLayout><Quotes /></SalesLayout>} />
