@@ -584,6 +584,9 @@ export default function CoverageCheck() {
   const [filterType,      setFilterType]      = useState("all");
   const [flyTarget,       setFlyTarget]       = useState(null);
   const [selectedProvider,setSelectedProvider]= useState(null);
+  const [searchMode,      setSearchMode]      = useState("address"); // "address" | "coords"
+  const [coordLat,        setCoordLat]        = useState("");
+  const [coordLng,        setCoordLng]        = useState("");
 
   const doSearch = (lat,lng,displayName) => {
     setSearching(false); setScanAnim(true);
@@ -610,6 +613,33 @@ export default function CoverageCheck() {
     } catch {
       setResult({ error:"Address not found. Try a suburb, street, or city name." });
       setScanAnim(false);
+    } finally { setSearching(false); }
+  };
+
+  const handleCoordSearch = async (e) => {
+    e?.preventDefault();
+    const lat = parseFloat(coordLat);
+    const lng = parseFloat(coordLng);
+    if (isNaN(lat) || isNaN(lng)) {
+      setResult({ error:"Please enter valid decimal coordinates (e.g. -26.1041, 28.1073)." });
+      return;
+    }
+    if (lat < -35 || lat > -22 || lng < 16 || lng > 33) {
+      setResult({ error:"Coordinates appear to be outside South Africa. Please check and try again." });
+      return;
+    }
+    setSearching(true); setScanAnim(true); setResult(null); setProviderResults([]);
+    try {
+      // Reverse geocode to get a human-readable address
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+      const res = await fetch(url, { headers: { "Accept-Language": "en" } });
+      const data = await res.json();
+      const displayName = data?.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      setAddress(displayName.split(",").slice(0,3).join(","));
+      doSearch(lat, lng, displayName);
+    } catch {
+      // Still run coverage check even if reverse geocode fails
+      doSearch(lat, lng, `${lat.toFixed(5)}, ${lng.toFixed(5)}`);
     } finally { setSearching(false); }
   };
 
@@ -726,26 +756,112 @@ export default function CoverageCheck() {
               <div className="space-y-4 fade-up">
                 <div>
                   <h1 className="text-[18px] font-black leading-tight mb-1" style={{ color:"#f0f0f0", fontFamily:"'Space Grotesk',sans-serif" }}>Fibre Feasibility Check</h1>
-                  <p className="text-[12px]" style={{ color:"rgba(255,255,255,0.35)" }}>Search any SA address to see all available fibre and wireless providers, plans and pricing.</p>
+                  <p className="text-[12px]" style={{ color:"rgba(255,255,255,0.35)" }}>Search any SA address or enter GPS coordinates to see all available providers, plans and pricing.</p>
                 </div>
-                <form onSubmit={handleSearch} className="space-y-2">
-                  <div className="relative">
-                    <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color:"rgba(0,212,212,0.6)" }}/>
-                    <input value={address} onChange={e=>setAddress(e.target.value)}
-                      placeholder="e.g. 12 Rivonia Rd, Sandton…"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl text-[13px] outline-none transition-all"
-                      style={{ background:"#252525", border:"1px solid rgba(255,255,255,0.1)", color:"#f0f0f0" }}
-                      onFocus={e=>e.target.style.borderColor="rgba(0,212,212,0.5)"}
-                      onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"} />
-                  </div>
-                  <button type="submit" disabled={searching||!address.trim()}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[13px] text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 relative overflow-hidden"
-                    style={{ background:"linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow:"0 6px 24px rgba(0,180,180,0.4)", border:"1px solid rgba(0,212,212,0.3)" }}>
-                    <div className="absolute inset-0 pointer-events-none" style={{ background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)", backgroundSize:"200% 100%", animation:"shimmer 2s infinite" }}/>
-                    {searching?<Loader2 className="w-4 h-4 animate-spin relative z-10"/>:<Search className="w-4 h-4 relative z-10"/>}
-                    <span className="relative z-10">{searching?"Checking coverage…":"Run Feasibility Check"}</span>
-                  </button>
-                </form>
+
+                {/* Mode toggle */}
+                <div className="flex rounded-xl overflow-hidden" style={{ border:"1px solid rgba(255,255,255,0.08)" }}>
+                  {[{ k:"address", l:"Address", emoji:"🏠" }, { k:"coords", l:"Coordinates", emoji:"📡" }].map(m=>(
+                    <button key={m.k} onClick={()=>{ setSearchMode(m.k); setResult(null); }}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 text-[11px] font-black uppercase tracking-wider transition-all"
+                      style={{
+                        background:searchMode===m.k?"linear-gradient(135deg,rgba(0,180,180,0.15),rgba(0,180,180,0.08))":"rgba(255,255,255,0.02)",
+                        borderBottom:searchMode===m.k?"2px solid #00b4b4":"2px solid transparent",
+                        color:searchMode===m.k?"#00d4d4":"rgba(255,255,255,0.3)",
+                      }}>
+                      <span>{m.emoji}</span> {m.l}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Address search */}
+                {searchMode==="address" && (
+                  <form onSubmit={handleSearch} className="space-y-2">
+                    <div className="relative">
+                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color:"rgba(0,212,212,0.6)" }}/>
+                      <input value={address} onChange={e=>setAddress(e.target.value)}
+                        placeholder="e.g. 12 Rivonia Rd, Sandton…"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl text-[13px] outline-none transition-all"
+                        style={{ background:"#252525", border:"1px solid rgba(255,255,255,0.1)", color:"#f0f0f0" }}
+                        onFocus={e=>e.target.style.borderColor="rgba(0,212,212,0.5)"}
+                        onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"} />
+                    </div>
+                    <button type="submit" disabled={searching||!address.trim()}
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[13px] text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 relative overflow-hidden"
+                      style={{ background:"linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow:"0 6px 24px rgba(0,180,180,0.4)", border:"1px solid rgba(0,212,212,0.3)" }}>
+                      <div className="absolute inset-0 pointer-events-none" style={{ background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)", backgroundSize:"200% 100%", animation:"shimmer 2s infinite" }}/>
+                      {searching?<Loader2 className="w-4 h-4 animate-spin relative z-10"/>:<Search className="w-4 h-4 relative z-10"/>}
+                      <span className="relative z-10">{searching?"Checking coverage…":"Run Feasibility Check"}</span>
+                    </button>
+                  </form>
+                )}
+
+                {/* Coordinates search */}
+                {searchMode==="coords" && (
+                  <form onSubmit={handleCoordSearch} className="space-y-2">
+                    <div className="rounded-xl p-3 mb-1" style={{ background:"rgba(0,180,180,0.05)", border:"1px solid rgba(0,212,212,0.12)" }}>
+                      <p className="text-[10px]" style={{ color:"rgba(0,212,212,0.6)" }}>
+                        Enter decimal GPS coordinates. Latitude is negative for South Africa (e.g. <span className="font-mono font-bold">-26.1041, 28.1073</span> for Sandton).
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-[9px] font-black uppercase tracking-widest block mb-1" style={{ color:"rgba(255,255,255,0.3)" }}>Latitude</label>
+                        <input
+                          value={coordLat}
+                          onChange={e=>setCoordLat(e.target.value)}
+                          placeholder="-26.1041"
+                          type="number"
+                          step="any"
+                          className="w-full px-3 py-2.5 rounded-xl text-[13px] outline-none font-mono"
+                          style={{ background:"#252525", border:"1px solid rgba(255,255,255,0.1)", color:"#00d4d4" }}
+                          onFocus={e=>e.target.style.borderColor="rgba(0,212,212,0.5)"}
+                          onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[9px] font-black uppercase tracking-widest block mb-1" style={{ color:"rgba(255,255,255,0.3)" }}>Longitude</label>
+                        <input
+                          value={coordLng}
+                          onChange={e=>setCoordLng(e.target.value)}
+                          placeholder="28.1073"
+                          type="number"
+                          step="any"
+                          className="w-full px-3 py-2.5 rounded-xl text-[13px] outline-none font-mono"
+                          style={{ background:"#252525", border:"1px solid rgba(255,255,255,0.1)", color:"#00d4d4" }}
+                          onFocus={e=>e.target.style.borderColor="rgba(0,212,212,0.5)"}
+                          onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"}
+                        />
+                      </div>
+                    </div>
+                    {/* Quick presets */}
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-widest mb-1.5" style={{ color:"rgba(255,255,255,0.2)" }}>Quick Presets</p>
+                      <div className="flex flex-wrap gap-1">
+                        {[
+                          { label:"Sandton",    lat:"-26.1041", lng:"28.1073" },
+                          { label:"Pretoria",   lat:"-25.7479", lng:"28.2293" },
+                          { label:"Cape Town",  lat:"-33.9249", lng:"18.4241" },
+                          { label:"Durban",     lat:"-29.8587", lng:"31.0218" },
+                        ].map(p=>(
+                          <button key={p.label} type="button"
+                            onClick={()=>{ setCoordLat(p.lat); setCoordLng(p.lng); }}
+                            className="px-2 py-1 rounded-lg text-[10px] font-bold transition-all hover:scale-105"
+                            style={{ background:"rgba(0,180,180,0.08)", border:"1px solid rgba(0,180,180,0.18)", color:"#00b4b4" }}>
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <button type="submit" disabled={searching||!coordLat.trim()||!coordLng.trim()}
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[13px] text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 relative overflow-hidden"
+                      style={{ background:"linear-gradient(135deg,#00b4b4,#007a7a)", boxShadow:"0 6px 24px rgba(0,180,180,0.4)", border:"1px solid rgba(0,212,212,0.3)" }}>
+                      <div className="absolute inset-0 pointer-events-none" style={{ background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)", backgroundSize:"200% 100%", animation:"shimmer 2s infinite" }}/>
+                      {searching?<Loader2 className="w-4 h-4 animate-spin relative z-10"/>:<MapPin className="w-4 h-4 relative z-10"/>}
+                      <span className="relative z-10">{searching?"Checking coverage…":"Check These Coordinates"}</span>
+                    </button>
+                  </form>
+                )}
                 {result?.error && (
                   <div className="rounded-xl p-3 flex items-start gap-2" style={{ background:"rgba(139,26,26,0.1)", border:"1px solid rgba(139,26,26,0.3)" }}>
                     <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color:"#8B1A1A" }}/>
