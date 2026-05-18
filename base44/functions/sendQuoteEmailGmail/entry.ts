@@ -43,8 +43,8 @@ Deno.serve(async (req) => {
     const result = await res.json();
 
     // Mark quote as sent if quote_id provided
-    // Build a direct quote view link
-    const appBaseUrl = 'https://app.base44.com/apps/69a157d4dbdca56a3bccf4d3';
+    // Build a direct quote view link using the custom domain
+    const appBaseUrl = 'https://tms.touchnet.co.za';
     const quoteLink = quote_id
       ? `${appBaseUrl}/quote?id=${quote_id}`
       : quote_number

@@ -287,7 +287,7 @@ export default function Quotes() {
     setSendingEmailId(quote.id);
 
     const contractMonths = quote.contract_months || 24;
-    const appBaseUrl = 'https://app.base44.com/apps/69a157d4dbdca56a3bccf4d3';
+    const appBaseUrl = window.location.origin;
     const quoteLink = `${appBaseUrl}/quote?id=${quote.id}`;
     const includedItems = (quote.line_items || []).filter(i => !i.optional || i.included);
     const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a157d4dbdca56a3bccf4d3/bce74e947_image0011.png";
@@ -340,10 +340,11 @@ export default function Quotes() {
 <body style="margin:0;padding:0;background:#f1f5f9;font-family:'Helvetica Neue',Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 12px;">
 <table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-  <tr><td style="background:#1e2d6e;padding:28px 36px;text-align:center;">
-    <img src="${LOGO_URL}" alt="TouchNet" style="height:44px;object-fit:contain;display:block;margin:0 auto 16px;filter:brightness(0) invert(1);" />
-    <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 4px;">${quote.title}</h1>
-    <p style="color:rgba(255,255,255,0.45);font-size:12px;margin:0;">Ref: ${quote.quote_number || '—'} &nbsp;·&nbsp; ${contractMonths}-month contract</p>
+  <tr><td style="background:linear-gradient(135deg,#0a0f1a 0%,#0f1f2e 60%,#0a0f1a 100%);padding:32px 36px;text-align:center;position:relative;">
+    <div style="height:4px;background:linear-gradient(90deg,#00b4b4,#007a7a,#8B1A1A,#00b4b4);position:absolute;top:0;left:0;right:0;"></div>
+    <img src="${LOGO_URL}" alt="TouchNet" style="height:40px;object-fit:contain;display:block;margin:0 auto 16px;" />
+    <h1 style="color:#ffffff;font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-0.5px;">${quote.title}</h1>
+    <p style="color:rgba(0,212,212,0.6);font-size:12px;margin:0;font-family:monospace;letter-spacing:0.08em;">Ref: ${quote.quote_number || '—'} &nbsp;·&nbsp; ${contractMonths}-month contract</p>
   </td></tr>
   <tr><td><table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #e2e8f0;">
     <tr>
@@ -366,9 +367,10 @@ export default function Quotes() {
   </td></tr>
   ${includedItems.length > 0 ? `<tr><td style="padding:0 36px 24px;">${lineItemsHtml}</td></tr>` : ''}
   ${sectionsHtml ? `<tr><td style="padding:0 36px 8px;">${sectionsHtml}</td></tr>` : ''}
-  <tr><td style="padding:16px 36px 24px;text-align:center;">
-    <a href="${quoteLink}" style="display:inline-block;padding:14px 36px;background:#1e2d6e;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;">View &amp; Accept Quote →</a>
-    <p style="font-size:11px;color:#9ca3af;margin:10px 0 0;">Or open: <a href="${quoteLink}" style="color:#1e2d6e;">${quoteLink}</a></p>
+  <tr><td style="padding:20px 36px 28px;text-align:center;background:#f8fafc;border-top:2px solid #e2e8f0;border-bottom:2px solid #e2e8f0;">
+    <p style="font-size:13px;color:#374151;margin:0 0 14px;">Please review your quote and let us know your decision by clicking the button below.</p>
+    <a href="${quoteLink}" style="display:inline-block;padding:16px 44px;background:linear-gradient(135deg,#00b4b4,#007a7a);color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;border-radius:10px;letter-spacing:0.04em;box-shadow:0 4px 18px rgba(0,180,180,0.35);">View &amp; Accept Quote →</a>
+    <p style="font-size:11px;color:#9ca3af;margin:12px 0 0;">Or copy this link: <a href="${quoteLink}" style="color:#00b4b4;word-break:break-all;">${quoteLink}</a></p>
   </td></tr>
   <tr><td style="padding:0 36px 24px;">
     <table width="100%" cellpadding="12" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
@@ -384,8 +386,9 @@ export default function Quotes() {
     <p style="font-size:11px;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 8px;">Terms &amp; Conditions</p>
     <p style="font-size:11px;color:#475569;line-height:1.7;white-space:pre-line;">${quote.terms}</p>
   </td></tr>` : ''}
-  <tr><td style="background:#f8fafc;padding:16px 36px;text-align:center;border-top:1px solid #e2e8f0;">
-    <p style="font-size:11px;color:#94a3b8;margin:0;">© TouchNet Telecommunications · 151 Katherine Street, Sandton, Johannesburg</p>
+  <tr><td style="background:#0a0f1a;padding:20px 36px;text-align:center;">
+    <p style="font-size:11px;color:rgba(255,255,255,0.3);margin:0;">© TouchNet Telecommunications (PTY) LTD · 151 Katherine Street, Sandton, Johannesburg</p>
+    <p style="font-size:10px;color:rgba(255,255,255,0.15);margin:6px 0 0;">This quote was sent securely. If you did not request this, please ignore this email.</p>
   </td></tr>
 </table>
 </td></tr></table>
