@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import {
   Home, LayoutDashboard, FileText, Users, Receipt, MapPin,
-  Menu, X, Zap, LogOut
+  Menu, X, Zap, Activity, TicketCheck
 } from "lucide-react";
 import UserMenu from "@/components/layout/UserMenu";
 import NotificationBell from "@/components/notifications/NotificationBell";
@@ -120,17 +120,69 @@ function SalesSidebar({ open, onClose }) {
           })}
         </nav>
 
-        {/* Footer */}
+        {/* Quick nav shortcuts */}
+        <div className="px-3 py-2 flex-shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 2 }}>
+          <div className="flex gap-1 justify-center">
+            {[
+              { path: "/sales/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+              { path: "/sales/quotes",    icon: FileText,         label: "Quotes" },
+              { path: "/sales/customers", icon: Users,            label: "Customers" },
+              { path: "/sales/coverage",  icon: MapPin,           label: "Coverage" },
+            ].map(({ path, icon: Ic, label }) => (
+              <Link key={path} to={path} title={label}
+                className="flex-1 flex items-center justify-center p-1.5 rounded-lg transition-all hover:bg-white/5"
+                style={{ color: "rgba(255,255,255,0.3)" }}>
+                <Ic className="w-3.5 h-3.5" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer status */}
         <div className="px-3 pb-4 flex-shrink-0"
           style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12, position: "relative", zIndex: 2 }}>
-          <div className="flex items-center justify-center gap-1.5 mb-2">
-            <img src={LOGO_BADGE} alt="Crest" className="w-6 h-6 object-contain" style={{ opacity: 0.3 }} />
-            <p className="text-[8px] font-black uppercase tracking-[0.2em]"
-              style={{ color: "rgba(0,212,212,0.25)", fontFamily: "'JetBrains Mono', monospace" }}>
+
+          {/* System health bar */}
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(0,212,212,0.15)", borderRadius: 14, padding: "10px 12px", marginBottom: 8, position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,rgba(0,212,212,0.5),transparent)", animation: "shimmer 2.5s infinite" }} />
+            <div style={{ position: "absolute", top: 5, left: 5, width: 8, height: 8, borderTop: "1px solid rgba(0,212,212,0.4)", borderLeft: "1px solid rgba(0,212,212,0.4)" }} />
+            <div style={{ position: "absolute", bottom: 5, right: 5, width: 8, height: 8, borderBottom: "1px solid rgba(224,35,71,0.35)", borderRight: "1px solid rgba(224,35,71,0.35)" }} />
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <Zap className="w-3 h-3" style={{ color: "#00b4b4" }} />
+                <span className="text-[9px] font-black uppercase tracking-wider" style={{ color: "rgba(0,212,212,0.5)" }}>Sales Status</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#34d399", boxShadow: "0 0 6px #34d399" }} />
+                <span className="text-[9px] font-black tracking-wider" style={{ color: "#34d399" }}>ACTIVE</span>
+              </div>
+            </div>
+            {[
+              { label: "Quotes",    pct: 95, color: "#10b981" },
+              { label: "Pipeline",  pct: 82, color: "#00b4b4" },
+              { label: "Billing",   pct: 100, color: "#fbbf24" },
+            ].map(s => (
+              <div key={s.label} className="flex items-center gap-2 mb-1.5 last:mb-0">
+                <span className="text-[8px] font-bold w-12 flex-shrink-0" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "monospace" }}>{s.label}</span>
+                <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full" style={{ width: `${s.pct}%`, background: `linear-gradient(90deg,${s.color},${s.color}88)`, boxShadow: `0 0 6px ${s.color}50` }} />
+                </div>
+                <span className="text-[8px] font-black w-7 text-right" style={{ color: s.color, fontFamily: "monospace" }}>{s.pct}%</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col items-center gap-1.5 mt-1">
+            <div className="relative">
+              <img src={LOGO_BADGE} alt="Crest" className="w-8 h-8 object-contain"
+                style={{ opacity: 0.35, filter: "drop-shadow(0 0 8px rgba(0,212,212,0.5))" }} />
+            </div>
+            <p className="text-center text-[8px]" style={{ color: "rgba(0,212,212,0.3)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.18em" }}>
               BUILD · CONNECT · PROTECT
             </p>
+            <div className="neon-bar w-24" />
           </div>
-          <p className="text-center text-[8px]" style={{ color: "rgba(255,255,255,0.12)", fontFamily: "'JetBrains Mono', monospace" }}>
+          <p className="text-center text-[8px] mt-1" style={{ color: "rgba(255,255,255,0.15)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.15em" }}>
             TOUCHNET · SALES PROTO v1.0
           </p>
         </div>
@@ -199,10 +251,18 @@ export default function SalesLayout({ children }) {
           {/* Live clock */}
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-            <span className="w-2 h-2 rounded-full" style={{ background: "#059669", boxShadow: "0 0 7px rgba(5,150,105,0.8)" }} />
+            <span className="w-2 h-2 rounded-full status-breathe"
+              style={{ background: "#059669", color: "#059669", boxShadow: "0 0 7px rgba(5,150,105,0.8)" }} />
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: "#00d4d4", letterSpacing: "0.07em" }}>
               {timeStr}
             </span>
+          </div>
+
+          {/* Online pill */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+            style={{ background: "rgba(5,150,105,0.06)", border: "1px solid rgba(5,150,105,0.18)" }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#059669" }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 800, color: "#059669", letterSpacing: "0.12em" }}>ONLINE</span>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { LayoutDashboard, FileText, Users, Receipt, MapPin, ArrowRight, Zap, TrendingUp, Shield, Phone } from "lucide-react";
+import { LayoutDashboard, FileText, Users, Receipt, MapPin, ArrowRight, Zap, TrendingUp, Shield, Phone, Activity } from "lucide-react";
 
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_BADGE    = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
@@ -21,7 +21,7 @@ export default function SalesHome() {
       <div className="relative overflow-hidden rounded-3xl px-8 py-10"
         style={{ background: "linear-gradient(135deg,#141414,#1a1a1a,#141414)", border: "1px solid rgba(0,212,212,0.28)", boxShadow: "0 8px 60px rgba(0,0,0,0.6)" }}>
         <div className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.7),#00b4b4,#e02347,transparent)", backgroundSize: "300% auto", animation: "border-rotate 5s ease infinite" }} />
+          style={{ background: "linear-gradient(90deg,transparent,#00b4b4,#00d4d4,rgba(255,255,255,0.7),#00d4d4,#00b4b4,#e02347,transparent)", backgroundSize: "300% auto", animation: "border-rotate 5s ease infinite" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(0,212,212,0.05) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
         <div className="absolute top-0 right-0 w-96 h-64 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at 100% 0%, rgba(0,212,212,0.12) 0%, transparent 60%)" }} />
@@ -43,6 +43,11 @@ export default function SalesHome() {
               <span className="text-[9px] font-black uppercase tracking-[0.28em] px-2.5 py-1 rounded-lg"
                 style={{ background: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>
                 Sales Prototype
+              </span>
+              <span className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-[0.3em] px-2.5 py-1 rounded-lg"
+                style={{ background: "rgba(0,180,180,0.12)", color: "#00d4d4", border: "1px solid rgba(0,212,212,0.3)", boxShadow: "0 0 12px rgba(0,180,180,0.15)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#00d4d4", boxShadow: "0 0 6px #00d4d4" }} />
+                LIVE
               </span>
             </div>
             <h1 className="text-3xl font-black leading-tight mb-2"
@@ -112,15 +117,25 @@ export default function SalesHome() {
       </div>
 
       {/* Feedback notice */}
-      <div className="rounded-2xl px-5 py-4 flex items-start gap-3"
+      <div className="relative overflow-hidden rounded-2xl px-5 py-4 flex items-start gap-3"
         style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
+        <div className="absolute top-0 left-0 right-0 h-[2px]"
+          style={{ background: "linear-gradient(90deg,#f59e0b,rgba(245,158,11,0.5),transparent)" }} />
+        <div className="absolute top-3 left-3 w-4 h-4 pointer-events-none" style={{ borderTop: "1px solid rgba(245,158,11,0.4)", borderLeft: "1px solid rgba(245,158,11,0.4)" }} />
+        <div className="absolute bottom-3 right-3 w-4 h-4 pointer-events-none" style={{ borderBottom: "1px solid rgba(245,158,11,0.3)", borderRight: "1px solid rgba(245,158,11,0.3)" }} />
         <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
           style={{ background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.3)" }}>
           <Zap className="w-4 h-4" style={{ color: "#f59e0b" }} />
         </div>
-        <div>
-          <p className="text-[13px] font-bold" style={{ color: "#f0f0f0" }}>Prototype for Feedback & Testing</p>
-          <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-0.5">
+            <p className="text-[13px] font-bold" style={{ color: "#f0f0f0" }}>Prototype for Feedback & Testing</p>
+            <span className="flex items-center gap-1 text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded"
+              style={{ background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.25)" }}>
+              <Activity className="w-2.5 h-2.5" /> Sales Dept
+            </span>
+          </div>
+          <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
             This is a scoped prototype for the Sales department only. Please test all features and provide feedback before the full TouchNet TMS rollout. Changes made here use the same live database.
           </p>
         </div>
