@@ -7,10 +7,16 @@ import QuoteDocument from "./QuoteDocument.jsx";
 
 export async function generateQuotePDF(quote, docRef) {
   const el = docRef.current;
-  // Temporarily expand for full render
   const prevWidth = el.style.width;
   el.style.width = "900px";
-  const canvas = await html2canvas(el, { scale: 2.5, useCORS: true, logging: false, backgroundColor: "#ffffff" });
+  const canvas = await html2canvas(el, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+    backgroundColor: "#ffffff",
+    windowWidth: 900,
+  });
   el.style.width = prevWidth;
 
   const imgData  = canvas.toDataURL("image/png");

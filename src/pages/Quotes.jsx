@@ -240,9 +240,21 @@ export default function Quotes() {
   const handleDownloadPDF = async (quote) => {
     setDownloadingId(quote.id);
     setPdfQuote(quote);
-    await new Promise(r => setTimeout(r, 300));
+    // Wait for DOM render + image loads
+    await new Promise(r => setTimeout(r, 800));
     if (hiddenDocRef.current) {
-      const canvas = await html2canvas(hiddenDocRef.current, { scale: 2, useCORS: true, logging: false });
+      const el = hiddenDocRef.current;
+      // Temporarily give it a fixed width so html2canvas can measure it properly
+      el.style.width = "900px";
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        windowWidth: 900,
+      });
+      el.style.width = "";
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -705,7 +717,7 @@ export default function Quotes() {
       )}
 
       {pdfQuote && (
-        <div style={{ position: "fixed", left: "-9999px", top: 0, width: 900, zIndex: -1 }}>
+        <div style={{ position: "fixed", top: 0, left: 0, width: 900, visibility: "hidden", pointerEvents: "none", zIndex: 9999 }}>
           <QuoteDocument quote={pdfQuote} docRef={hiddenDocRef} />
         </div>
       )}
