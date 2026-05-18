@@ -143,9 +143,9 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
     <>
     {showNotes && quote?.id && <QuoteNotesPanel quote={form} onClose={() => setShowNotes(false)} />}
     <div className="fixed inset-0 z-50 flex overflow-hidden" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
-      <div className="flex flex-col w-full max-w-5xl mx-auto my-4 rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#ffffff" }}>
+      <div className="flex flex-col w-full max-w-5xl mx-auto my-4 rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#1a1a1a" }}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0" style={{ background: "linear-gradient(135deg,#e11d48,#9f1239)", color: "#fff" }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0" style={{ background: "linear-gradient(135deg,#00b4b4,#007a7a)", color: "#fff" }}>
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5" />
             <h2 className="text-lg font-bold">{quote ? "Edit Quote" : "New Quote"}</h2>
@@ -165,10 +165,10 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
                 )}
               </Button>
             )}
-            <Button size="sm" className="bg-white text-rose-600 hover:bg-rose-50 gap-1 font-bold" onClick={() => handleSave("draft")} disabled={saving}>
+            <Button size="sm" className="bg-slate-700 text-white hover:bg-slate-600 gap-1 font-bold" onClick={() => handleSave("draft")} disabled={saving}>
               <Save className="w-4 h-4" /> {saving ? "Saving…" : "Save Draft"}
             </Button>
-            <Button size="sm" className="bg-emerald-500 text-white hover:bg-emerald-600 gap-1 font-bold" onClick={() => handleSave("sent")} disabled={saving}>
+            <Button size="sm" className="bg-teal-600 text-white hover:bg-teal-700 gap-1 font-bold" onClick={() => handleSave("sent")} disabled={saving}>
               Send Quote
             </Button>
             <button onClick={onClose} className="ml-2 w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 hover:bg-white/30">
@@ -178,25 +178,25 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-3" style={{ background: "#ffffff" }}>
+        <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-3" style={{ background: "#1a1a1a" }}>
         {/* LEFT */}
-        <div className="lg:col-span-2 p-6 space-y-6 border-r overflow-y-auto" style={{ background: "#ffffff" }}>
+        <div className="lg:col-span-2 p-6 space-y-6 border-r overflow-y-auto" style={{ background: "#1a1a1a", borderColor: "rgba(0,180,180,0.2)" }}>
             <FormSection title="Quote Details">
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Quote Title *</label>
+                  <label className="text-xs font-semibold text-slate-400 mb-1 block">Quote Title *</label>
                   <Input value={form.title} onChange={e => set("title", e.target.value)} placeholder="e.g. TouchNet Quotation: Fibre Business 100 Mbps" />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Salesperson Name</label>
-                  <Input value={form.salesperson_name} onChange={e => set("salesperson_name", e.target.value)} placeholder="e.g. Prasheel Thakor" />
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Salesperson Name</label>
+                   <Input value={form.salesperson_name} onChange={e => set("salesperson_name", e.target.value)} placeholder="e.g. Prasheel Thakor" />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Valid Until</label>
-                  <Input type="date" value={form.valid_until} onChange={e => set("valid_until", e.target.value)} />
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Valid Until</label>
+                   <Input type="date" value={form.valid_until} onChange={e => set("valid_until", e.target.value)} />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Contract Duration (months)</label>
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Contract Duration (months)</label>
                   <Input type="number" min="1" value={form.contract_months} onChange={e => set("contract_months", +e.target.value)} placeholder="24" />
                 </div>
                 <div className="col-span-2">
@@ -231,7 +231,7 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
               <div className="grid grid-cols-2 gap-3">
                 {customers.length > 0 && (
                   <div className="col-span-2">
-                    <label className="text-xs font-semibold text-slate-500 mb-1 block">Select Existing Customer</label>
+                    <label className="text-xs font-semibold text-slate-400 mb-1 block">Select Existing Customer</label>
                     <select className="w-full h-9 rounded-md border border-input px-3 text-sm bg-white" value={form.customer_id} onChange={e => selectCustomer(e.target.value)}>
                       <option value="">— or enter manually below —</option>
                       {customers.map(c => <option key={c.id} value={c.id}>{c.full_name}{c.email ? ` (${c.email})` : ""}</option>)}
@@ -239,19 +239,19 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
                   </div>
                 )}
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Contact Name *</label>
-                  <Input value={form.customer_name} onChange={e => set("customer_name", e.target.value)} placeholder="John Smith" />
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Contact Name *</label>
+                   <Input value={form.customer_name} onChange={e => set("customer_name", e.target.value)} placeholder="John Smith" />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Company</label>
-                  <Input value={form.customer_company} onChange={e => set("customer_company", e.target.value)} placeholder="Acme Corp" />
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Company</label>
+                   <Input value={form.customer_company} onChange={e => set("customer_company", e.target.value)} placeholder="Acme Corp" />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Email</label>
-                  <Input type="email" value={form.customer_email} onChange={e => set("customer_email", e.target.value)} placeholder="john@acme.com" />
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Email</label>
+                   <Input type="email" value={form.customer_email} onChange={e => set("customer_email", e.target.value)} placeholder="john@acme.com" />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Phone</label>
+                   <label className="text-xs font-semibold text-slate-400 mb-1 block">Phone</label>
                   <Input value={form.customer_phone} onChange={e => set("customer_phone", e.target.value)} placeholder="+27 71 000 0000" />
                 </div>
               </div>
@@ -315,7 +315,7 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
           </div>
 
           {/* RIGHT */}
-          <div className="p-6 space-y-6 overflow-y-auto" style={{ background: "#f8fafc" }}>
+          <div className="p-6 space-y-6 overflow-y-auto" style={{ background: "#161616" }}>
             <FormSection title="Quote Status">
               <select className="w-full h-9 rounded-md border border-input px-3 text-sm bg-white" value={form.status} onChange={e => set("status", e.target.value)}>
                 {["draft","sent","viewed","accepted","declined","expired"].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>)}
@@ -336,10 +336,10 @@ export default function QuoteBuilder({ quote, customers = [], onSave, onClose, o
 }
 
 function FormSection({ title, children, action }) {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-slate-700">{title}</h3>
+   return (
+     <div>
+       <div className="flex items-center justify-between mb-3">
+         <h3 className="text-sm font-bold text-slate-200">{title}</h3>
         {action}
       </div>
       {children}

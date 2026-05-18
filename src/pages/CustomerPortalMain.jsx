@@ -20,7 +20,7 @@ import PortalNetworkTab from "@/components/portal/PortalNetworkTab";
 import PortalServicePlanTab from "@/components/portal/PortalServicePlanTab";
 import DataUsageDashboard from "@/components/portal/DataUsageDashboard";
 import KnowledgeBaseAdmin from "@/components/support/KnowledgeBaseAdmin";
-import CoverageChecker from "@/components/coverage/CoverageChecker";
+
 
 const LOGO_WORDMARK = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_TEAL     = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
@@ -559,10 +559,9 @@ function PortalSidebar({ customer, activeTab, setActiveTab, open, onClose, invoi
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export default function CustomerPortalMain() {
   const [user, setUser]               = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [activeTab, setActiveTab]     = useState("overview");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showCoverage, setShowCoverage] = useState(false);
+   const [authLoading, setAuthLoading] = useState(true);
+   const [activeTab, setActiveTab]     = useState("overview");
+   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     base44.auth.me()
@@ -691,11 +690,7 @@ export default function CustomerPortalMain() {
                 {new Date().toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit" })}
               </span>
             </div>
-            <button onClick={() => setShowCoverage(true)}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:scale-105 active:scale-95"
-              style={{ background: "linear-gradient(135deg,#8B1A1A,#a52020)", color: "white", boxShadow: "0 3px 10px rgba(139,26,26,0.3)" }}>
-              <MapPin className="w-3.5 h-3.5" /> Coverage
-            </button>
+
             <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
               style={{ background: sc.bg, border: `1px solid ${sc.border}` }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: sc.color, boxShadow: `0 0 6px ${sc.color}` }} />
@@ -813,7 +808,7 @@ export default function CustomerPortalMain() {
           </div>
         </main>
       </div>
-      {showCoverage && <CoverageChecker onClose={() => setShowCoverage(false)} />}
+
     </div>
   );
 }
