@@ -336,60 +336,139 @@ export default function Quotes() {
     }).join('');
 
     const htmlBody = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8" /></head>
-<body style="margin:0;padding:0;background:#f1f5f9;font-family:'Helvetica Neue',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 12px;">
-<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-  <tr><td style="background:linear-gradient(135deg,#0a0f1a 0%,#0f1f2e 60%,#0a0f1a 100%);padding:32px 36px;text-align:center;position:relative;">
-    <div style="height:4px;background:linear-gradient(90deg,#00b4b4,#007a7a,#8B1A1A,#00b4b4);position:absolute;top:0;left:0;right:0;"></div>
-    <img src="${LOGO_URL}" alt="TouchNet" style="height:40px;object-fit:contain;display:block;margin:0 auto 16px;" />
-    <h1 style="color:#ffffff;font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-0.5px;">${quote.title}</h1>
-    <p style="color:rgba(0,212,212,0.6);font-size:12px;margin:0;font-family:monospace;letter-spacing:0.08em;">Ref: ${quote.quote_number || '—'} &nbsp;·&nbsp; ${contractMonths}-month contract</p>
-  </td></tr>
-  <tr><td><table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #e2e8f0;">
-    <tr>
-      <td style="padding:18px 24px;width:50%;border-right:1px solid #e2e8f0;vertical-align:top;">
-        <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">Prepared For</p>
-        <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.customer_company || quote.customer_name}</p>
-        ${quote.customer_email ? `<p style="font-size:12px;color:#c41e3a;margin:4px 0 0;">${quote.customer_email}</p>` : ''}
+<html><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0"/></head>
+<body style="margin:0;padding:0;background:#0f0f0f;font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f0f;"><tr><td align="center" style="padding:32px 16px;">
+
+<!-- Outer wrapper -->
+<table width="640" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,0.5);">
+
+  <!-- ── HEADER ── -->
+  <tr><td style="background:linear-gradient(160deg,#0a0f1a 0%,#1e2d3d 60%,#0a0f1a 100%);padding:0;position:relative;">
+    <div style="height:5px;background:linear-gradient(90deg,#00b4b4,#00d4d4,rgba(255,255,255,0.5),#00b4b4,#8B1A1A,#00b4b4);"></div>
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="padding:36px 40px 32px;vertical-align:middle;">
+        <img src="${LOGO_URL}" alt="TouchNet" style="height:44px;object-fit:contain;display:block;margin-bottom:18px;" />
+        <div style="font-size:26px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;line-height:1.2;margin-bottom:6px;">${quote.title}</div>
+        <div style="font-size:12px;color:rgba(0,212,212,0.7);font-family:monospace;letter-spacing:0.08em;">
+          Ref: ${quote.quote_number || '—'} &nbsp;·&nbsp; ${contractMonths}-month contract
+        </div>
       </td>
-      <td style="padding:18px 24px;width:50%;vertical-align:top;">
-        <p style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.12em;margin:0 0 4px;">From</p>
-        <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">${quote.salesperson_name || 'TouchNet Sales'}</p>
-        <p style="font-size:12px;color:#c41e3a;margin:2px 0 0;">Touchnet · www.touchnet.co.za</p>
-        ${quote.valid_until ? `<p style="font-size:11px;color:#b91c1c;margin:6px 0 0;font-weight:600;">Valid until: ${quote.valid_until}</p>` : ''}
+      <td style="padding:36px 40px 32px;text-align:right;vertical-align:middle;min-width:160px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:4px;">STATUS</div>
+        <div style="display:inline-block;padding:7px 16px;border-radius:6px;background:rgba(0,212,212,0.12);border:1px solid rgba(0,212,212,0.3);color:#00d4d4;font-size:11px;font-weight:900;letter-spacing:0.14em;text-transform:uppercase;">
+          ${(quote.status || 'DRAFT').toUpperCase()}
+        </div>
+        ${quote.valid_until ? `<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">Valid until:<br/><strong style="color:#ff6b6b;">${quote.valid_until}</strong></div>` : ''}
       </td>
-    </tr>
-  </table></td></tr>
-  <tr><td style="padding:24px 36px 16px;">
-    <p style="font-size:14px;color:#374151;line-height:1.7;margin:0;">Dear <strong>${quote.customer_name}</strong>,</p>
-    <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:12px 0 0;">${quote.cover_message || 'Please find your quotation below. We look forward to doing business with you.'}</p>
+    </tr></table>
+    <div style="height:3px;background:linear-gradient(90deg,rgba(0,180,180,0.4),transparent,rgba(139,26,26,0.3));"></div>
   </td></tr>
-  ${includedItems.length > 0 ? `<tr><td style="padding:0 36px 24px;">${lineItemsHtml}</td></tr>` : ''}
-  ${sectionsHtml ? `<tr><td style="padding:0 36px 8px;">${sectionsHtml}</td></tr>` : ''}
-  <tr><td style="padding:20px 36px 28px;text-align:center;background:#f8fafc;border-top:2px solid #e2e8f0;border-bottom:2px solid #e2e8f0;">
-    <p style="font-size:13px;color:#374151;margin:0 0 14px;">Please review your quote and let us know your decision by clicking the button below.</p>
-    <a href="${quoteLink}" style="display:inline-block;padding:16px 44px;background:linear-gradient(135deg,#00b4b4,#007a7a);color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;border-radius:10px;letter-spacing:0.04em;box-shadow:0 4px 18px rgba(0,180,180,0.35);">View &amp; Accept Quote →</a>
-    <p style="font-size:11px;color:#9ca3af;margin:12px 0 0;">Or copy this link: <a href="${quoteLink}" style="color:#00b4b4;word-break:break-all;">${quoteLink}</a></p>
+
+  <!-- ── INFO STRIP ── -->
+  <tr><td style="border-bottom:3px solid #00b4b4;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="padding:22px 28px;width:50%;border-right:1px solid #eef2f7;vertical-align:top;background:#f7f9fc;">
+        <div style="font-size:10px;font-weight:900;color:#00b4b4;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:8px;">PREPARED FOR</div>
+        <div style="font-size:15px;font-weight:800;color:#0f172a;line-height:1.3;">${quote.customer_company || quote.customer_name}</div>
+        ${quote.customer_company ? `<div style="font-size:12px;color:#334155;margin-top:3px;font-weight:600;">${quote.customer_name}</div>` : ''}
+        ${quote.customer_email ? `<div style="font-size:12px;color:#8B1A1A;margin-top:8px;font-weight:700;">${quote.customer_email}</div>` : ''}
+        ${quote.customer_phone ? `<div style="font-size:12px;color:#5a6b7f;margin-top:3px;">${quote.customer_phone}</div>` : ''}
+      </td>
+      <td style="padding:22px 28px;width:50%;vertical-align:top;background:#ffffff;">
+        <div style="font-size:10px;font-weight:900;color:#00b4b4;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:8px;">PREPARED BY</div>
+        <div style="font-size:15px;font-weight:800;color:#0f172a;">${quote.salesperson_name || 'TouchNet Sales'}</div>
+        <div style="font-size:12px;color:#8B1A1A;margin-top:2px;font-weight:700;">Touchnet Telecommunications</div>
+        <div style="font-size:12px;color:#5a6b7f;margin-top:8px;line-height:1.6;">
+          sales@touchnet.co.za<br/>010 060 0400 · www.touchnet.co.za
+        </div>
+      </td>
+    </tr></table>
   </td></tr>
-  <tr><td style="padding:0 36px 24px;">
-    <table width="100%" cellpadding="12" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
-      <tr><td>
-        <p style="font-size:11px;font-weight:800;color:#0f172a;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 8px;">Banking Details</p>
-        <p style="font-size:12px;color:#334155;margin:2px 0;">Account Name: <strong>Touchnet Telecommunications (PTY) LTD</strong></p>
-        <p style="font-size:12px;color:#334155;margin:2px 0;">Account Number: <strong>001991264</strong> &nbsp;·&nbsp; Standard Bank</p>
-        <p style="font-size:12px;color:#334155;margin:2px 0;">Branch Code: <strong>00 43 05</strong> (Rosebank)</p>
+
+  <!-- ── GREETING ── -->
+  <tr><td style="padding:28px 36px 20px;background:#ffffff;border-bottom:1px solid #eef2f7;">
+    <p style="font-size:14px;color:#1a1a1a;line-height:1.7;margin:0 0 10px;">Dear <strong>${quote.customer_name}</strong>,</p>
+    <p style="font-size:13px;color:#4a5568;line-height:1.8;margin:0;padding:12px 18px;background:#f7fbfc;border-left:4px solid #00b4b4;border-radius:0 6px 6px 0;">
+      ${quote.cover_message || 'Please find your quotation below. We look forward to doing business with you.'}
+    </p>
+  </td></tr>
+
+  <!-- ── LINE ITEMS ── -->
+  ${includedItems.length > 0 ? `
+  <tr><td style="padding:24px 36px;">
+    <div style="font-size:10px;font-weight:900;color:#00b4b4;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:12px;">SERVICE ITEMS</div>
+    ${lineItemsHtml}
+  </td></tr>` : ''}
+
+  <!-- ── RICH SECTIONS ── -->
+  ${sectionsHtml ? `<tr><td style="padding:8px 36px 16px;">${sectionsHtml}</td></tr>` : ''}
+
+  <!-- ── CTA ── -->
+  <tr><td style="padding:28px 36px 32px;text-align:center;background:#f7f9fc;border-top:2px solid #e8ecf3;border-bottom:2px solid #e8ecf3;">
+    <p style="font-size:13px;color:#374151;margin:0 0 18px;line-height:1.7;">
+      Please review your quote and let us know your decision. Click the button below to view, accept or decline your quote online.
+    </p>
+    <a href="${quoteLink}" style="display:inline-block;padding:18px 48px;background:linear-gradient(135deg,#00b4b4,#007a7a);color:#ffffff;font-size:15px;font-weight:900;text-decoration:none;border-radius:10px;letter-spacing:0.04em;box-shadow:0 6px 24px rgba(0,180,180,0.4);">
+      View &amp; Accept Quote →
+    </a>
+    <p style="font-size:11px;color:#9ca3af;margin:14px 0 0;">
+      Or copy this link: <a href="${quoteLink}" style="color:#00b4b4;word-break:break-all;">${quoteLink}</a>
+    </p>
+  </td></tr>
+
+  <!-- ── BANKING ── -->
+  <tr><td style="padding:24px 36px;background:#ffffff;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:8px;overflow:hidden;">
+      <tr><td style="background:linear-gradient(135deg,#0a0f1a,#1e2d3d);padding:18px 22px;border-top:4px solid #00b4b4;position:relative;">
+        <div style="font-size:10px;font-weight:900;color:#00d4d4;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:12px;">BANKING DETAILS</div>
+        <table width="100%" cellpadding="3" cellspacing="0">
+          <tr>
+            <td style="font-size:11px;color:rgba(255,255,255,0.4);width:130px;">Account Name:</td>
+            <td style="font-size:12px;color:#ffffff;font-weight:700;">Touchnet Telecommunications (PTY) LTD</td>
+          </tr>
+          <tr>
+            <td style="font-size:11px;color:rgba(255,255,255,0.4);">Bank:</td>
+            <td style="font-size:12px;color:#ffffff;font-weight:700;">Standard Bank</td>
+          </tr>
+          <tr>
+            <td style="font-size:11px;color:rgba(255,255,255,0.4);">Account No.:</td>
+            <td style="font-size:12px;color:#ffffff;font-weight:700;">001991264</td>
+          </tr>
+          <tr>
+            <td style="font-size:11px;color:rgba(255,255,255,0.4);">Branch Code:</td>
+            <td style="font-size:12px;color:#ffffff;font-weight:700;">00 43 05 (Rosebank)</td>
+          </tr>
+        </table>
+      </td></tr>
+      <tr><td style="background:rgba(0,180,180,0.08);border-top:1px solid rgba(0,180,180,0.2);padding:10px 22px;">
+        <span style="font-size:11px;color:#3a4450;font-weight:600;">
+          ● Please use <strong>${quote.quote_number || 'your quote number'}</strong> as the payment reference.
+        </span>
       </td></tr>
     </table>
   </td></tr>
-  ${quote.terms ? `<tr><td style="padding:0 36px 28px;border-top:1px solid #e2e8f0;">
-    <p style="font-size:11px;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 8px;">Terms &amp; Conditions</p>
-    <p style="font-size:11px;color:#475569;line-height:1.7;white-space:pre-line;">${quote.terms}</p>
+
+  <!-- ── TERMS ── -->
+  ${quote.terms ? `
+  <tr><td style="padding:20px 36px 28px;border-top:1px solid #eef2f7;">
+    <div style="font-size:10px;font-weight:900;color:#5a6b7f;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:10px;">TERMS &amp; CONDITIONS</div>
+    <div style="font-size:11px;color:#475569;line-height:1.9;white-space:pre-line;">${quote.terms}</div>
   </td></tr>` : ''}
-  <tr><td style="background:#0a0f1a;padding:20px 36px;text-align:center;">
-    <p style="font-size:11px;color:rgba(255,255,255,0.3);margin:0;">© TouchNet Telecommunications (PTY) LTD · 151 Katherine Street, Sandton, Johannesburg</p>
-    <p style="font-size:10px;color:rgba(255,255,255,0.15);margin:6px 0 0;">This quote was sent securely. If you did not request this, please ignore this email.</p>
+
+  <!-- ── FOOTER ── -->
+  <tr><td style="background:linear-gradient(135deg,#0a0f1a,#1e2d3d);padding:24px 36px;text-align:center;border-top:3px solid rgba(0,180,180,0.2);">
+    <div style="font-size:12px;color:#00d4d4;font-weight:900;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">
+      BUILD · CONNECT · PROTECT
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:4px;">
+      © TouchNet Telecommunications (PTY) LTD · 151 Katherine Street, Sandton, Johannesburg
+    </div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.18);">
+      This quote was sent securely. If you did not request this, please ignore this email.
+    </div>
   </td></tr>
+
 </table>
 </td></tr></table>
 </body></html>`;
