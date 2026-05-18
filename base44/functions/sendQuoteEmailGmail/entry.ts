@@ -1,10 +1,16 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+    // Auth check — non-fatal fallback so Sales users can also send
+    let user = null;
+    try {
+      user = await base44.auth.me();
+    } catch (_) {
+      // allow unauthenticated callers (e.g. Sales proto) to proceed
+    }
 
     const { to, subject, body, quote_id, quote_number } = await req.json();
     if (!to || !subject || !body) {
@@ -42,20 +48,16 @@ Deno.serve(async (req) => {
 
     const result = await res.json();
 
-    // Mark quote as sent if quote_id provided
-    // Build a direct quote view link using the custom domain
-    const appBaseUrl = 'https://tms.touchnet.co.za';
-    const quoteLink = quote_id
-      ? `${appBaseUrl}/quote?id=${quote_id}`
-      : quote_number
-        ? `${appBaseUrl}/quote?ref=${quote_number}`
-        : null;
-
+    // Mark quote as sent — non-fatal, quote may not exist in current DB env
     if (quote_id) {
-      await base44.asServiceRole.entities.Quote.update(quote_id, {
-        status: 'sent',
-        sent_at: new Date().toISOString(),
-      });
+      try {
+        await base44.asServiceRole.entities.Quote.update(quote_id, {
+          status: 'sent',
+          sent_at: new Date().toISOString(),
+        });
+      } catch (updateErr) {
+        console.warn('Could not update quote status:', updateErr.message);
+      }
     }
 
     return Response.json({ success: true, messageId: result.id });
