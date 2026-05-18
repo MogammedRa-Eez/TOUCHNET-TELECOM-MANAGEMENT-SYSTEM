@@ -6,7 +6,7 @@ import {
   Users, Receipt, TicketCheck, Wifi, DollarSign, Globe, Activity,
   Zap, ArrowUpRight, RefreshCw, ChevronDown, ChevronUp, AlertTriangle,
   XCircle, Clock, TrendingUp, Eye, X, CheckCircle2, BarChart3,
-  Shield, Cpu, Network, MapPin
+  Shield, Cpu, Network, MapPin, FileText, Package
 } from "lucide-react";
 import KPICard from "../components/dashboard/KPICard";
 import RevenueChart from "../components/dashboard/RevenueChart";
@@ -16,7 +16,6 @@ import RecentActivity from "../components/dashboard/RecentActivity";
 import UserActivityPanel from "../components/dashboard/UserActivityPanel";
 import CrestDisplay from "../components/dashboard/CrestDisplay";
 import CoverageChecker from "@/components/coverage/CoverageChecker.jsx";
-import CoverageSearchChart from "@/components/coverage/CoverageSearchChart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRBAC } from "@/components/rbac/RBACContext";
 import AccessDenied from "@/components/rbac/AccessDenied";
@@ -247,10 +246,11 @@ export default function Dashboard() {
     return () => clearInterval(id);
   }, []);
 
-  const { data: customers = [], isLoading: lC, refetch: rC } = useQuery({ queryKey: ["customers"],     queryFn: () => base44.entities.Customer.list("-created_date", 100), refetchInterval: 60000 });
-  const { data: invoices  = [], isLoading: lI, refetch: rI } = useQuery({ queryKey: ["invoices"],      queryFn: () => base44.entities.Invoice.list("-created_date", 100), refetchInterval: 60000 });
-  const { data: tickets   = [], isLoading: lT, refetch: rT } = useQuery({ queryKey: ["tickets"],       queryFn: () => base44.entities.Ticket.list("-created_date", 100), refetchInterval: 60000 });
+  const { data: customers = [], isLoading: lC, refetch: rC } = useQuery({ queryKey: ["customers"],     queryFn: () => base44.entities.Customer.list("-created_date", 200), refetchInterval: 60000 });
+  const { data: invoices  = [], isLoading: lI, refetch: rI } = useQuery({ queryKey: ["invoices"],      queryFn: () => base44.entities.Invoice.list("-created_date", 200), refetchInterval: 60000 });
+  const { data: tickets   = [], isLoading: lT, refetch: rT } = useQuery({ queryKey: ["tickets"],       queryFn: () => base44.entities.Ticket.list("-created_date", 200), refetchInterval: 60000 });
   const { data: nodes     = [], isLoading: lN, refetch: rN } = useQuery({ queryKey: ["network-nodes"], queryFn: () => base44.entities.NetworkNode.list(), refetchInterval: 60000 });
+  const { data: projects  = [] } = useQuery({ queryKey: ["fibre-projects"], queryFn: () => base44.entities.FibreProject.list("-created_date", 100), refetchInterval: 120000 });
 
   const isLoading = lC || lI || lT || lN;
   if (!rbacLoading && !can("dashboard")) return <AccessDenied />;
@@ -261,6 +261,10 @@ export default function Dashboard() {
   const onlineNodes     = nodes.filter(n => n.status === "online").length;
   const offlineNodes    = nodes.filter(n => n.status === "offline").length;
   const degradedNodes   = nodes.filter(n => n.status === "degraded").length;
+  const liveProjects    = projects.filter(p => p.status === "live").length;
+  const inProgressProjects = projects.filter(p => p.status === "in_progress").length;
+  const overdueInvoices = invoices.filter(i => i.status === "overdue");
+  const totalOverdue    = overdueInvoices.reduce((a, i) => a + (i.total || 0), 0);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -400,10 +404,10 @@ export default function Dashboard() {
       {/* ── KPI Row ── */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 section-reveal section-reveal-delay-1">
         {[
-          { key: "customers", card: <KPICard title="Active Customers" value={activeCustomers.toLocaleString()} subtitle={`${customers.length} total accounts`} icon={Users} color="blue" trend="up" trendValue="+12%" /> },
-          { key: "revenue",   card: <KPICard title="Monthly Revenue"  value={`R${(totalRevenue/1000).toFixed(1)}k`} subtitle="From paid invoices" icon={DollarSign} color="emerald" trend="up" trendValue="+8.5%" /> },
-          { key: "tickets",   card: <KPICard title="Open Tickets"     value={openTickets} subtitle={`${tickets.length} total`} icon={TicketCheck} color="amber" trend={openTickets > 10 ? "up" : "down"} trendValue={openTickets > 10 ? "High" : "Normal"} /> },
-          { key: "nodes",     card: <KPICard title="Network Nodes"    value={`${onlineNodes}/${nodes.length}`} subtitle="Currently online" icon={Wifi} color="violet" /> },
+          { key: "customers", card: <KPICard title="Active Customers" value={activeCustomers.toLocaleString()} subtitle={`${customers.length} total accounts`} icon={Users} color="blue" trend="up" trendValue={`${customers.length > 0 ? Math.round(activeCustomers/customers.length*100) : 0}% active`} /> },
+          { key: "revenue",   card: <KPICard title="Revenue Collected"  value={`R${(totalRevenue/1000).toFixed(1)}k`} subtitle={overdueInvoices.length > 0 ? `R${(totalOverdue/1000).toFixed(1)}k overdue` : "No overdue"} icon={DollarSign} color="emerald" trend={overdueInvoices.length > 0 ? "down" : "up"} trendValue={overdueInvoices.length > 0 ? `${overdueInvoices.length} overdue` : "All clear"} /> },
+          { key: "tickets",   card: <KPICard title="Open Tickets"     value={openTickets} subtitle={`${tickets.filter(t=>t.priority==="critical"&&!["resolved","closed"].includes(t.status)).length} critical`} icon={TicketCheck} color="amber" trend={openTickets > 10 ? "up" : "down"} trendValue={openTickets > 10 ? "High load" : "Normal"} /> },
+          { key: "nodes",     card: <KPICard title="Network Nodes"    value={`${onlineNodes}/${nodes.length}`} subtitle={`${degradedNodes > 0 ? degradedNodes + " degraded · " : ""}${offlineNodes > 0 ? offlineNodes + " offline" : "All online"}`} icon={Wifi} color="violet" /> },
         ].map(({ key, card }) => (
           <div key={key} className="relative" onClick={e => { e.stopPropagation(); setActiveKPI(activeKPI === key ? null : key); }}>
             <div className={`cursor-pointer transition-all duration-200 rounded-2xl holo-card ${activeKPI === key ? "scale-[1.02]" : "hover:scale-[1.01]"}`}
@@ -516,16 +520,108 @@ export default function Dashboard() {
         </div>
       </Section>
 
-      {/* ── Coverage Demand Analytics (admin only) ── */}
-      <Section title="Coverage Demand Analytics" icon={MapPin} color="#e02347" defaultOpen={false}>
-        <CoverageSearchChart />
-      </Section>
+      {/* ── Projects Overview ── */}
+      {projects.length > 0 && (
+        <Section title="Fibre Projects" icon={Network} badge={`${liveProjects} live`} color="#a855f7" defaultOpen={false}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            {[
+              { label: "Total",       value: projects.length,                                               color: "#00b4b4" },
+              { label: "Lead",        value: projects.filter(p=>p.status==="lead").length,        color: "#64748b" },
+              { label: "Quoted",      value: projects.filter(p=>p.status==="quoted").length,      color: "#22d3ee" },
+              { label: "In Progress", value: inProgressProjects,                                             color: "#f59e0b" },
+              { label: "Testing",     value: projects.filter(p=>p.status==="testing").length,     color: "#a855f7" },
+              { label: "Live",        value: liveProjects,                                                   color: "#10b981" },
+              { label: "Billed",      value: projects.filter(p=>p.status==="billed").length,      color: "#00b4b4" },
+              { label: "Cancelled",   value: projects.filter(p=>p.status==="cancelled").length,   color: "#e02347" },
+            ].map(k => (
+              <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3 text-center holo-card group transition-all hover:-translate-y-1 cursor-default"
+                style={{ background: "#181818", border: `1px solid ${k.color}28` }}>
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${k.color},transparent)` }} />
+                <p className="text-2xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
+                <p className="text-[9px] font-black uppercase tracking-wider mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{k.label}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex justify-end">
+            <Link to="/FibreProjects" className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg,#a855f7,#7c3aed)", boxShadow: "0 4px 14px rgba(168,85,247,0.3)" }}>
+              <Network className="w-3.5 h-3.5" /> Manage Projects <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </Section>
+      )}
+
 
       {/* ── Activity ── */}
       <Section title="Recent Activity" icon={Activity} color="#22d3ee">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <RecentActivity customers={customers} tickets={tickets} invoices={invoices} />
           <UserActivityPanel customers={customers} tickets={tickets} invoices={invoices} />
+        </div>
+      </Section>
+
+      {/* ── Today's Summary ── */}
+      <Section title="Today at a Glance" icon={Zap} color="#f59e0b" defaultOpen={false}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Invoice summary */}
+          <div className="rounded-2xl p-5 relative overflow-hidden"
+            style={{ background: "#181818", border: "1px solid rgba(16,185,129,0.2)" }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#10b981,transparent)" }} />
+            <p className="text-[10px] font-black uppercase tracking-wider mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Billing Status</p>
+            <div className="space-y-2">
+              {[
+                { label: "Paid",    value: invoices.filter(i=>i.status==="paid").length,    color: "#10b981" },
+                { label: "Overdue", value: invoices.filter(i=>i.status==="overdue").length, color: "#e02347" },
+                { label: "Pending", value: invoices.filter(i=>i.status==="sent").length,    color: "#f59e0b" },
+              ].map(s => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: s.color }} />
+                  <span className="text-[11px] flex-1" style={{ color: "rgba(255,255,255,0.4)" }}>{s.label}</span>
+                  <span className="text-[13px] font-black mono" style={{ color: s.color }}>{s.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Customer status */}
+          <div className="rounded-2xl p-5 relative overflow-hidden"
+            style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.2)" }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,transparent)" }} />
+            <p className="text-[10px] font-black uppercase tracking-wider mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Customer Status</p>
+            <div className="space-y-2">
+              {[
+                { label: "Active",     value: customers.filter(c=>c.status==="active").length,     color: "#10b981" },
+                { label: "Suspended",  value: customers.filter(c=>c.status==="suspended").length,  color: "#e02347" },
+                { label: "Pending",    value: customers.filter(c=>c.status==="pending").length,    color: "#f59e0b" },
+              ].map(s => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: s.color }} />
+                  <span className="text-[11px] flex-1" style={{ color: "rgba(255,255,255,0.4)" }}>{s.label}</span>
+                  <span className="text-[13px] font-black mono" style={{ color: s.color }}>{s.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tickets & network */}
+          <div className="rounded-2xl p-5 relative overflow-hidden"
+            style={{ background: "#181818", border: "1px solid rgba(245,158,11,0.2)" }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#f59e0b,transparent)" }} />
+            <p className="text-[10px] font-black uppercase tracking-wider mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Operations</p>
+            <div className="space-y-2">
+              {[
+                { label: "Open Tickets",   value: tickets.filter(t=>t.status==="open").length,       color: "#f59e0b" },
+                { label: "Critical",       value: tickets.filter(t=>t.priority==="critical"&&!["resolved","closed"].includes(t.status)).length, color: "#e02347" },
+                { label: "Nodes Offline",  value: nodes.filter(n=>n.status==="offline").length,      color: "#e02347" },
+              ].map(s => (
+                <div key={s.label} className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: s.color }} />
+                  <span className="text-[11px] flex-1" style={{ color: "rgba(255,255,255,0.4)" }}>{s.label}</span>
+                  <span className="text-[13px] font-black mono" style={{ color: s.color }}>{s.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </Section>
 

@@ -227,6 +227,56 @@ export default function Network() {
         ))}
       </div>
 
+      {/* Network Health Score */}
+      {nodes.length > 0 && (() => {
+        const healthScore = nodes.length > 0 ? Math.round(
+          (onlineCount / nodes.length * 60) +
+          (nodes.reduce((a,n) => a + (n.uptime_percent||0), 0) / nodes.length / 100 * 30) +
+          (Math.max(0, 100 - avgBw) / 100 * 10)
+        ) : 0;
+        const healthColor = healthScore >= 80 ? "#10b981" : healthScore >= 60 ? "#f59e0b" : "#e02347";
+        const healthLabel = healthScore >= 80 ? "Excellent" : healthScore >= 60 ? "Degraded" : "Critical";
+        return (
+          <div className="relative overflow-hidden rounded-2xl px-5 py-4 flex items-center gap-5"
+            style={{ background: "linear-gradient(135deg,#141414,#1a1a1a)", border: `1px solid ${healthColor}30` }}>
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${healthColor},${healthColor}55,transparent)` }} />
+            <div className="relative w-16 h-16 flex-shrink-0">
+              <svg viewBox="0 0 64 64" className="w-full h-full -rotate-90">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
+                <circle cx="32" cy="32" r="26" fill="none" stroke={healthColor} strokeWidth="6" strokeLinecap="round"
+                  strokeDasharray={`${healthScore / 100 * 163} 163`} />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[14px] font-black mono" style={{ color: healthColor }}>{healthScore}</span>
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-wider mb-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>Network Health Score</p>
+              <p className="text-[18px] font-black" style={{ color: healthColor }}>{healthLabel}</p>
+              <p className="text-[10px] mono" style={{ color: "rgba(255,255,255,0.3)" }}>
+                {onlineCount}/{nodes.length} online · {avgUptime}% avg uptime · {avgBw}% bw
+              </p>
+            </div>
+            <div className="ml-auto hidden sm:flex flex-col gap-1.5">
+              {offlineCount > 0 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
+                  style={{ background: "rgba(224,35,71,0.1)", border: "1px solid rgba(224,35,71,0.25)" }}>
+                  <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#e02347" }} />
+                  <span className="text-[11px] font-black" style={{ color: "#e02347" }}>{offlineCount} node{offlineCount > 1 ? "s" : ""} offline</span>
+                </div>
+              )}
+              {degraded > 0 && (
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
+                  style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.25)" }}>
+                  <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#f59e0b" }} />
+                  <span className="text-[11px] font-black" style={{ color: "#f59e0b" }}>{degraded} degraded</span>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Bandwidth Alerts */}
       {nodes.length > 0 && <BandwidthAlerts nodes={nodes} />}
 

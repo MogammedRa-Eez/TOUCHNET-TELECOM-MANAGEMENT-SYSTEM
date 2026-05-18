@@ -6,7 +6,7 @@ import {
   Plus, Search, Pencil, Trash2, TicketCheck, AlertTriangle, Clock,
   CheckCircle2, ChevronDown, ChevronUp, RefreshCw,
   User, Building2, Tag, Calendar, MessageSquare, Zap,
-  Smartphone, ExternalLink, Download
+  Smartphone, ExternalLink, Download, Filter, TrendingUp, BarChart3
 } from "lucide-react";
 import { toast } from "sonner";
 import { exportToCsv } from "@/utils/exportCsv";
@@ -195,7 +195,13 @@ export default function Tickets() {
 
   if (!rbacLoading && !can("tickets")) return <AccessDenied />;
   const handleSubmit = (data) => { if (editing) updateMut.mutate({ id: editing.id, data }); else createMut.mutate(data); };
-  const criticalCount = visibleTickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length;
+  const criticalCount   = visibleTickets.filter(t => t.priority === "critical" && !["resolved","closed"].includes(t.status)).length;
+  const resolvedToday   = visibleTickets.filter(t => {
+    if (!t.updated_date) return false;
+    const d = new Date(t.updated_date); const today = new Date();
+    return t.status === "resolved" && d.toDateString() === today.toDateString();
+  }).length;
+  const avgResolutionPct = visibleTickets.length ? Math.round(visibleTickets.filter(t=>["resolved","closed"].includes(t.status)).length / visibleTickets.length * 100) : 0;
 
   return (
     <div className="p-4 lg:p-8 space-y-5 max-w-[1600px] mx-auto section-reveal">
@@ -288,6 +294,26 @@ export default function Tickets() {
           <ExternalLink className="w-3.5 h-3.5" /> Connect WhatsApp
         </a>
       </div>
+
+      {/* Analytics mini-strip */}
+      {!isLoading && visibleTickets.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: "Resolution Rate", value: `${avgResolutionPct}%`, color: "#10b981", sub: "of all tickets" },
+            { label: "Resolved Today",  value: resolvedToday,           color: "#00b4b4", sub: "tickets closed" },
+            { label: "Avg Priority",    value: criticalCount > 0 ? "Critical" : visibleTickets.filter(t=>t.priority==="high"&&!["resolved","closed"].includes(t.status)).length > 0 ? "High" : "Normal", color: criticalCount > 0 ? "#e02347" : "#10b981", sub: "current severity" },
+            { label: "Dept Load",       value: visibleTickets.filter(t=>!["resolved","closed"].includes(t.status)).length, color: "#f59e0b", sub: "tickets pending" },
+          ].map(k => (
+            <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3 holo-card"
+              style={{ background: "#181818", border: `1px solid ${k.color}22` }}>
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${k.color},transparent)` }} />
+              <p className="text-[9px] font-black uppercase tracking-wider mb-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{k.label}</p>
+              <p className="text-xl font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
+              <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>{k.sub}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <SLAWorkflowPanel />
 

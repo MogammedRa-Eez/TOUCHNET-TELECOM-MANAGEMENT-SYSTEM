@@ -259,6 +259,24 @@ function Sidebar({ currentPageName, open, onClose, can, loading }) {
           })}
         </nav>
 
+        {/* ── Quick nav shortcuts at bottom ── */}
+        <div className="px-3 py-2 flex-shrink-0" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", position: "relative", zIndex: 2 }}>
+          <div className="flex gap-1 justify-center">
+            {[
+              { page: "Dashboard", icon: LayoutDashboard, label: "Dashboard" },
+              { page: "Customers", icon: Users, label: "Customers" },
+              { page: "Tickets",   icon: TicketCheck, label: "Tickets" },
+              { page: "Network",   icon: Activity, label: "Network" },
+            ].map(({ page, icon: Ic, label }) => (
+              <Link key={page} to={createPageUrl(page)} title={label}
+                className="flex-1 flex items-center justify-center p-1.5 rounded-lg transition-all hover:bg-white/5"
+                style={{ color: "rgba(255,255,255,0.3)" }}>
+                <Ic className="w-3.5 h-3.5" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* ── Footer status ── */}
         <div className="px-3 pb-4 flex-shrink-0"
           style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 12, position: "relative", zIndex: 2 }}>

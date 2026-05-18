@@ -152,6 +152,32 @@ export default function FibreProjects() {
         ))}
       </div>
 
+      {/* Pipeline funnel strip */}
+      {projects.length > 0 && (
+        <div className="relative overflow-hidden rounded-2xl px-5 py-4"
+          style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.18)" }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>Pipeline Funnel</p>
+          <div className="flex gap-1 items-end h-10">
+            {[
+              { s: "lead", color: "#64748b" }, { s: "quoted", color: "#22d3ee" }, { s: "approved", color: "#a855f7" },
+              { s: "in_progress", color: "#f59e0b" }, { s: "testing", color: "#f97316" }, { s: "live", color: "#10b981" }, { s: "billed", color: "#00b4b4" },
+            ].map(({ s, color }) => {
+              const count = projects.filter(p => p.status === s).length;
+              const maxCount = Math.max(...[...["lead","quoted","approved","in_progress","testing","live","billed"].map(st => projects.filter(p=>p.status===st).length)], 1);
+              const h = Math.max(12, Math.round(count / maxCount * 40));
+              return (
+                <div key={s} className="flex-1 flex flex-col items-center gap-1">
+                  <span className="text-[9px] font-black mono" style={{ color }}>{count}</span>
+                  <div className="w-full rounded-t-md transition-all" style={{ height: h, background: color, opacity: count === 0 ? 0.2 : 0.8 }} />
+                  <span className="text-[7px] font-bold uppercase" style={{ color: "rgba(255,255,255,0.25)", textAlign: "center" }}>{s.replace(/_/g," ")}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Toolbar */}
       <div className="flex flex-wrap gap-3 items-center justify-between">
         <div className="flex gap-2 flex-1 min-w-0">

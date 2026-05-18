@@ -8,6 +8,8 @@ import {
   ChevronRight, ArrowRight
 } from "lucide-react";
 
+
+
 const LOGO_WHITE  = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/b3b518de6_Touchnet_LogoLongWhite.png";
 const LOGO_TEAL   = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/fa247a9df_Touchnet_LogoLongTeal.png";
 const CREST_WHITE = "https://media.base44.com/images/public/69a157d4dbdca56a3bccf4d3/639b91697_Touchnet-CrestDesogm_CrestFinalFullWhite.png";
@@ -26,6 +28,15 @@ const STATS = [
   { value: "< 2h",  label: "Ticket SLA",       color: "#00d4d4" },
   { value: "500+",  label: "Active Customers", color: "#a0f0f0" },
   { value: "24/7",  label: "Monitoring",       color: "#f59e0b" },
+];
+
+const MODULES_EXTENDED = [
+  { icon: Network,    label: "Fibre Projects",     color: "#00b4b4", desc: "End-to-end deployment" },
+  { icon: Globe,      label: "Network Monitoring", color: "#0ea5e9", desc: "Live node telemetry"    },
+  { icon: TicketCheck,label: "Smart Helpdesk",     color: "#8b5cf6", desc: "SLA-driven support"    },
+  { icon: Users,      label: "Customer Portal",    color: "#10b981", desc: "Self-service access"   },
+  { icon: BarChart3,  label: "Billing & Invoicing",color: "#f59e0b", desc: "Sage Cloud integrated" },
+  { icon: Shield,     label: "Cynet Security",     color: "#e02347", desc: "360° threat protection" },
 ];
 
 export default function Home() {
@@ -174,7 +185,7 @@ export default function Home() {
 
           {/* Module grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-10">
-            {MODULES.map(({ icon: Icon, label, color, desc }) => (
+            {MODULES_EXTENDED.map(({ icon: Icon, label, color, desc }) => (
               <div key={label}
                 className="relative flex flex-col gap-1.5 px-3 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] overflow-hidden group"
                 style={{ background: `${color}08`, border: `1px solid ${color}22`, boxShadow: `0 2px 12px ${color}08` }}>
@@ -369,6 +380,21 @@ export default function Home() {
                 <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.3)" }}>
                   Staff and customers use the same authentication. You'll be routed to your portal automatically after signing in.
                 </p>
+              </div>
+
+              {/* Quick access links */}
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {[
+                  { label: "Coverage Check", path: "/CoverageCheck", color: "#00b4b4" },
+                  { label: "Submit Ticket",  path: "/CustomerPortalMain", color: "#8B1A1A" },
+                ].map(({ label, path, color }) => (
+                  <Link key={label} to={path}
+                    className="flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-bold transition-all hover:scale-[1.02]"
+                    style={{ background: `${color}10`, border: `1px solid ${color}25`, color }}>
+                    <ArrowRight className="w-3 h-3" />
+                    {label}
+                  </Link>
+                ))}
               </div>
 
               {/* Bottom corner brackets */}

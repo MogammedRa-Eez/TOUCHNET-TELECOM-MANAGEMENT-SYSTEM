@@ -184,10 +184,10 @@ export default function Employees() {
       {!isLoading && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Total Staff", value: visibleEmployees.length, color: "#00b4b4" },
-            { label: "Active", value: visibleEmployees.filter(e => e.status === "active").length, color: "#10b981" },
-            { label: "On Leave", value: visibleEmployees.filter(e => e.status === "on_leave").length, color: "#f59e0b" },
-            { label: "Departments", value: Object.keys(deptCounts).length, color: "#a855f7" },
+            { label: "Total Staff",  value: visibleEmployees.length,                                     color: "#00b4b4" },
+            { label: "Active",       value: visibleEmployees.filter(e => e.status === "active").length,  color: "#10b981" },
+            { label: "On Leave",     value: visibleEmployees.filter(e => e.status === "on_leave").length,color: "#f59e0b" },
+            { label: "Departments",  value: Object.keys(deptCounts).length,                              color: "#a855f7" },
           ].map(k => (
             <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3.5 holo-card group transition-all hover:-translate-y-0.5"
               style={{ background: "#181818", border: `1px solid ${k.color}25` }}>
@@ -198,6 +198,38 @@ export default function Employees() {
           ))}
         </div>
       )}
+
+      {/* ── Hire timeline highlight ── */}
+      {!isLoading && visibleEmployees.length > 0 && (() => {
+        const thisYear = new Date().getFullYear();
+        const recentHires = visibleEmployees.filter(e => e.hire_date && new Date(e.hire_date).getFullYear() === thisYear);
+        const avgTenure = visibleEmployees.filter(e => e.hire_date).length > 0
+          ? Math.round(visibleEmployees.filter(e=>e.hire_date).reduce((a,e) => a + (thisYear - new Date(e.hire_date).getFullYear()), 0) / visibleEmployees.filter(e=>e.hire_date).length * 10) / 10
+          : 0;
+        return (
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl"
+              style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
+              <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>New hires this year:</span>
+              <span className="text-[14px] font-black mono" style={{ color: "#10b981" }}>{recentHires.length}</span>
+            </div>
+            {avgTenure > 0 && (
+              <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl"
+                style={{ background: "rgba(0,180,180,0.08)", border: "1px solid rgba(0,180,180,0.2)" }}>
+                <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>Avg tenure:</span>
+                <span className="text-[14px] font-black mono" style={{ color: "#00b4b4" }}>{avgTenure} yrs</span>
+              </div>
+            )}
+            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl"
+              style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)" }}>
+              <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>Headcount utilisation:</span>
+              <span className="text-[14px] font-black mono" style={{ color: "#f59e0b" }}>
+                {visibleEmployees.length > 0 ? Math.round(visibleEmployees.filter(e=>e.status==="active").length/visibleEmployees.length*100) : 0}%
+              </span>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Department summary */}
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">

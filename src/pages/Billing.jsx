@@ -444,6 +444,37 @@ export default function Billing() {
 
       {!isLoading && invoices.length > 0 && <RevenueBreakdown invoices={invoices} />}
 
+      {/* Month comparison */}
+      {!isLoading && invoices.length > 0 && (() => {
+        const now = new Date();
+        const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+        const lastMonthDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+        const lastMonth = `${lastMonthDate.getFullYear()}-${String(lastMonthDate.getMonth()+1).padStart(2,"0")}`;
+        const thisRevenue = invoices.filter(i=>i.status==="paid"&&i.created_date?.startsWith(thisMonth)).reduce((a,i)=>a+(i.total||0),0);
+        const lastRevenue = invoices.filter(i=>i.status==="paid"&&i.created_date?.startsWith(lastMonth)).reduce((a,i)=>a+(i.total||0),0);
+        const change = lastRevenue > 0 ? ((thisRevenue - lastRevenue) / lastRevenue * 100).toFixed(1) : null;
+        const thisCount = invoices.filter(i=>i.created_date?.startsWith(thisMonth)).length;
+        const lastCount = invoices.filter(i=>i.created_date?.startsWith(lastMonth)).length;
+        return (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { label: "This Month Revenue", value: `R${thisRevenue.toLocaleString()}`, color: "#10b981", sub: now.toLocaleString("en",{month:"long"}) },
+              { label: "Last Month Revenue", value: `R${lastRevenue.toLocaleString()}`, color: "#00b4b4", sub: lastMonthDate.toLocaleString("en",{month:"long"}) },
+              { label: "M/M Change", value: change !== null ? `${change > 0 ? "+" : ""}${change}%` : "N/A", color: change !== null && parseFloat(change) >= 0 ? "#10b981" : "#e02347", sub: "revenue growth" },
+              { label: "Invoices This Month", value: thisCount, color: "#f59e0b", sub: `vs ${lastCount} last month` },
+            ].map(k => (
+              <div key={k.label} className="relative overflow-hidden rounded-2xl px-4 py-3.5 holo-card"
+                style={{ background: "#181818", border: `1px solid ${k.color}22` }}>
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg,${k.color},transparent)` }} />
+                <p className="text-[9px] font-black uppercase tracking-[0.18em] mb-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>{k.label}</p>
+                <p className="text-[22px] font-black mono" style={{ color: k.color, fontFamily: "'JetBrains Mono',monospace" }}>{k.value}</p>
+                <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>{k.sub}</p>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
+
       {!isLoading && invoices.length > 0 && <InvoiceAgingReport invoices={invoices} />}
 
       {isAdmin && <BatchInvoiceGenerator onInvoicesCreated={() => queryClient.invalidateQueries({ queryKey: ["invoices"] })} />}

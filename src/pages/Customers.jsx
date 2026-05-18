@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, Upload, Users, Wifi, DollarSign, AlertTriangle,
-         LayoutGrid, List, TrendingUp, Zap, Activity, ChevronDown, RefreshCw, Download, Heart } from "lucide-react";
+         LayoutGrid, List, TrendingUp, Zap, Activity, ChevronDown, RefreshCw, Download, Heart, Filter } from "lucide-react";
 import { toast } from "sonner";
 import { exportToCsv } from "@/utils/exportCsv";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
@@ -337,6 +337,38 @@ export default function Customers() {
           </div>
         </div>
       </div>
+
+      {/* ── Plan Distribution ── */}
+      {!isLoading && customers.length > 0 && (
+        <div className="relative overflow-hidden rounded-2xl px-5 py-4"
+          style={{ background: "#181818", border: "1px solid rgba(0,180,180,0.18)", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }}>
+          <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg,#00b4b4,#00d4d4,#e02347,transparent)" }} />
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "rgba(0,180,180,0.15)", border: "1px solid rgba(0,180,180,0.3)" }}>
+              <Wifi className="w-3.5 h-3.5" style={{ color: "#00b4b4" }} />
+            </div>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em]" style={{ color: "#00b4b4" }}>Service Plan Distribution</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {Object.entries(PLAN_SHORT).map(([key, label]) => {
+              const count = customers.filter(c => c.service_plan === key && c.status === "active").length;
+              if (count === 0) return null;
+              const pct = Math.round(count / customers.filter(c=>c.status==="active").length * 100);
+              const colors = { basic_10mbps: "#64748b", standard_50mbps: "#22d3ee", premium_100mbps: "#00b4b4", enterprise_500mbps: "#10b981", dedicated_1gbps: "#a855f7" };
+              const color = colors[key] || "#00b4b4";
+              return (
+                <div key={key} className="flex items-center gap-2 px-3 py-2 rounded-xl"
+                  style={{ background: `${color}10`, border: `1px solid ${color}25` }}>
+                  <span className="w-2 h-2 rounded-full" style={{ background: color }} />
+                  <span className="text-[11px] font-bold" style={{ color }}>{label}</span>
+                  <span className="text-[12px] font-black mono" style={{ color }}>{count}</span>
+                  <span className="text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>{pct}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* ── Churn Risk ── */}
       {!isLoading && customers.length > 0 && <ChurnRiskPanel customers={customers} />}
