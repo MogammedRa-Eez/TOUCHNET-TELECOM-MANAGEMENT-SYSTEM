@@ -1,0 +1,38 @@
+{
+  "name": "Customer Notification \u2014 Ticket Changes",
+  "description": "Notifies customers when support tickets are opened, updated, resolved, escalated or waiting for their response.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create",
+        "update"
+      ],
+      "entity_name": "Ticket"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "customer_notification_ticket_changes",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "customerNotificationEngine",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "customerNotificationEngine"
+  }
+}

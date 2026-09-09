@@ -1,0 +1,37 @@
+{
+  "name": "Customer Notification \u2014 Account Status Changes",
+  "description": "Notifies customers when their account status changes (activated, suspended, terminated) or service plan is updated.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "Customer"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "customer_notification_account_status_changes",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "customerNotificationEngine",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "customerNotificationEngine"
+  }
+}
